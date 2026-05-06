@@ -115,7 +115,7 @@ const ShortVideoSection = () => {
         </div>
       </div>
 
-      <style jsx>{`
+      <style>{`
         .no-scrollbar::-webkit-scrollbar {
           display: none;
         }

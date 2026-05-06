@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { FiChevronLeft, FiChevronRight, FiBookOpen } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiBookOpen, FiArrowRight } from "react-icons/fi";
 import BlogServices from "@services/BlogServices";
 import CMSkeleton from "@components/preloader/CMSkeleton";
 
@@ -24,7 +25,6 @@ const HomeBlogSection = () => {
       try {
         setLoading(true);
         const data = await BlogServices.getShowingBlogs();
-        // Fetch at least 5 blogs as requested, up to 10 for a good scroll
         setBlogs(data?.slice(0, 10) || []);
       } catch (err) {
         console.error("Error fetching blogs:", err);
@@ -70,119 +70,130 @@ const HomeBlogSection = () => {
   if (!loading && blogs.length === 0) return null;
 
   return (
-    <section className="bg-gray-50 pt-16 pb-6">
+    <section className="bg-[#f8fafc] py-16">
       <div className="max-w-screen-2xl mx-auto px-4 lg:px-12">
-        {/* Header - Left Aligned */}
+        {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-[#ED1C24] rounded-xl flex items-center justify-center text-white shadow-lg">
-                <FiBookOpen className="w-6 h-6" />
+            <div className="w-10 h-10 bg-[#0b1d3d] rounded-xl flex items-center justify-center text-white shadow-lg shadow-[#0b1d3d]/20">
+              <FiBookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h2 className="text-3xl font-black text-gray-900 leading-none">Latest Blog Posts</h2>
-              <div className="w-16 h-1 bg-[#ED1C24] mt-2 rounded-full"></div>
+              <h2 className="text-xl font-black text-gray-900 tracking-tight">Latest Insights</h2>
+              <div className="w-8 h-0.5 bg-[#ED1C24] mt-1.5 rounded-full" />
             </div>
           </div>
 
-          {/* Navigation Arrows */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="flex items-center gap-3">
+            <Link
+              href="/blog"
+              className="hidden md:flex items-center gap-1.5 text-[11px] font-black text-gray-500 hover:text-[#0b1d3d] transition-colors uppercase tracking-widest mr-2"
+            >
+              View All <FiArrowRight className="w-3 h-3" />
+            </Link>
             <button
               onClick={() => scroll("left")}
               disabled={!canLeft}
-              className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center
-                         text-gray-500 hover:border-[#ED1C24] hover:text-[#ED1C24]
-                         disabled:opacity-25 disabled:cursor-not-allowed transition-all bg-white"
+              className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center
+                         text-gray-400 hover:border-[#0b1d3d] hover:text-[#0b1d3d] hover:bg-white
+                         disabled:opacity-20 disabled:cursor-not-allowed transition-all bg-white shadow-sm"
             >
-              <FiChevronLeft className="w-5 h-5" />
+              <FiChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => scroll("right")}
               disabled={!canRight}
-              className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center
-                         text-gray-500 hover:border-[#ED1C24] hover:text-[#ED1C24]
-                         disabled:opacity-25 disabled:cursor-not-allowed transition-all bg-white"
+              className="w-9 h-9 rounded-full border border-gray-200 flex items-center justify-center
+                         text-gray-400 hover:border-[#0b1d3d] hover:text-[#0b1d3d] hover:bg-white
+                         disabled:opacity-20 disabled:cursor-not-allowed transition-all bg-white shadow-sm"
             >
-              <FiChevronRight className="w-5 h-5" />
+              <FiChevronRight className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {loading ? (
-          <div className="flex gap-4 overflow-hidden">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex-shrink-0 bg-white p-3 rounded-xl shadow-sm" style={{ width: 280 }}>
-                <CMSkeleton count={1} height={160} loading={true} />
-                <div className="mt-4">
-                  <CMSkeleton count={1} height={20} loading={true} />
+          <div className="flex gap-5 overflow-hidden">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="flex-shrink-0 bg-white rounded-2xl overflow-hidden shadow-sm" style={{ width: 290 }}>
+                <CMSkeleton count={1} height={175} loading={true} />
+                <div className="p-4">
+                  <CMSkeleton count={1} height={16} loading={true} />
                   <CMSkeleton count={1} height={14} loading={true} />
                 </div>
               </div>
             ))}
           </div>
         ) : (
-          <div 
-             ref={scrollRef}
-             onScroll={checkScroll}
-             className="flex gap-4 overflow-x-auto pb-6 scrollbar-hide"
-             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          <div
+            ref={scrollRef}
+            onScroll={checkScroll}
+            className="flex gap-4 overflow-x-auto pb-3"
+            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {blogs.map((blog) => (
               <div
                 key={blog._id}
-                className="flex-shrink-0 bg-white rounded-xl shadow-md overflow-hidden group transition-all duration-300 hover:shadow-xl border border-gray-100 flex flex-col h-full"
-                style={{ width: 280 }}
+                className="flex-shrink-0 bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-gray-100/80 flex flex-col hover:-translate-y-1 blog-card-wrap"
               >
                 <Link href={`/blog/${blog.slug}`}>
-                  <div className="relative w-full h-[160px] overflow-hidden">
+                  <div className="relative w-full h-[175px] overflow-hidden bg-gray-50">
                     {blog.image ? (
                       <Image
                         src={blog.image}
                         alt={getTitle(blog.title)}
                         fill
-                        className="object-cover transition-transform duration-500 group-hover:scale-110"
+                        className="object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                     ) : (
-                      <div className="w-full h-full bg-gray-200 flex items-center justify-center">
-                         <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                         <svg className="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                          </svg>
                       </div>
                     )}
                     <div className="absolute top-3 left-3">
-                      <span className="bg-[#ED1C24] text-white text-[8px] font-bold px-2 py-0.5 rounded shadow-sm uppercase tracking-wider">
+                      <span className="bg-[#ED1C24] text-white text-[8px] font-black px-2.5 py-1 rounded-full shadow-sm uppercase tracking-wider">
                         Compliance
                       </span>
                     </div>
                   </div>
                 </Link>
                 <div className="p-4 flex flex-col flex-grow">
-                   <p className="text-[10px] text-gray-500 mb-2 font-bold uppercase tracking-tight">
+                   <p className="text-[9px] text-gray-400 mb-2 font-bold uppercase tracking-wider">
                      {formatDate(blog.publishedAt || blog.createdAt)}
                    </p>
                   <Link href={`/blog/${blog.slug}`}>
-                    <h3 className="text-sm font-black text-gray-900 mb-3 group-hover:text-[#ED1C24] transition-colors duration-300 line-clamp-2 min-h-[40px] leading-tight">
+                    <h3 className="text-[13px] font-black text-gray-900 mb-3 group-hover:text-[#0b1d3d] transition-colors duration-300 line-clamp-2 leading-snug">
                       {getTitle(blog.title)}
                     </h3>
                   </Link>
                   <Link
                     href={`/blog/${blog.slug}`}
-                    className="mt-auto inline-flex items-center text-[#0b1d3d] font-bold text-[11px] tracking-widest hover:text-[#ED1C24] transition-colors"
+                    className="mt-auto inline-flex items-center text-[#ED1C24] font-black text-[10px] tracking-widest hover:gap-2 gap-1 transition-all uppercase"
                   >
-                    READ MORE <span className="ml-1.5 text-lg">→</span>
+                    Read More <FiArrowRight className="w-3 h-3" />
                   </Link>
                 </div>
               </div>
             ))}
           </div>
         )}
+
+        <style>{`
+          .blog-card-wrap { width: 240px; }
+          @media (min-width: 480px)  { .blog-card-wrap { width: 260px; } }
+          @media (min-width: 640px)  { .blog-card-wrap { width: 280px; } }
+          @media (min-width: 1024px) { .blog-card-wrap { width: 290px; } }
+        `}</style>
         
-        <div className="mt-4 flex justify-end">
-            <Link 
-                href="/blog" 
-                className="inline-flex items-center gap-2 text-gray-600 hover:text-[#ED1C24] font-bold transition-all group"
-            >
-                View All Insights <FiChevronRight className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+        <div className="mt-6 flex md:hidden justify-center">
+          <Link 
+            href="/blog" 
+            className="inline-flex items-center gap-2 text-[11px] font-black text-gray-500 hover:text-[#0b1d3d] transition-all uppercase tracking-widest"
+          >
+            View All Insights <FiArrowRight className="w-3 h-3" />
+          </Link>
         </div>
       </div>
     </section>

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiArrowRight, FiInfo, FiTag, FiShoppingCart, FiSettings } from 'react-icons/fi';
+import { FiArrowRight, FiInfo, FiTag, FiShoppingCart, FiSettings, FiChevronRight } from 'react-icons/fi';
 import ServiceServices from '@services/ServiceServices';
 import ProductServices from '@services/ProductServices';
 import useUtilsFunction from '@hooks/useUtilsFunction';
@@ -57,35 +57,41 @@ const ServicesSection = () => {
     };
 
     return (
-        <section className="bg-[#0b1d3d] py-16 md:py-24 overflow-hidden relative">
-            {/* Decorative background element */}
-            <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-blue-500/5 blur-[120px] rounded-full pointer-events-none"></div>
-            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-red-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+        <section className="bg-[#0b1d3d] py-12 sm:py-16 md:py-20 overflow-hidden relative">
+            {/* Subtle background accents */}
+            <div className="absolute top-0 right-0 w-1/3 h-1/2 bg-blue-500/5 blur-[150px] rounded-full pointer-events-none" />
+            <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-red-500/5 blur-[150px] rounded-full pointer-events-none" />
 
             <div className="max-w-screen-2xl mx-auto px-4 lg:px-12 relative z-10">
-                <div className="text-center mb-16">
+                
+                {/* Header */}
+                <div className="text-center mb-12">
                     <motion.div
-                        initial={{ opacity: 0, y: -20 }}
+                        initial={{ opacity: 0, y: -16 }}
                         whileInView={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.5 }}
                         className="flex flex-col items-center"
                     >
-                        <h2 className="text-3xl md:text-3xl font-black text-white mb-6 uppercase tracking-tight">
+                        <div className="inline-block px-4 py-1.5 mb-5 rounded-full bg-white/5 border border-white/10 text-[10px] font-black text-white/60 uppercase tracking-[0.2em]">
+                            What We Offer
+                        </div>
+                        <h2 className="text-3xl md:text-4xl font-black text-white mb-5 tracking-tight">
                             Explore Our Services
                         </h2>
-                        <div className="w-24 h-1.5 bg-[#ED1C24] rounded-full mb-10"></div>
+                        <div className="w-12 h-1 bg-[#ED1C24] rounded-full mb-10" />
                     </motion.div>
                     
-                    {/* Service Tabs - Fixed to show correctly */}
-                    <div className="flex flex-wrap justify-center gap-3 md:gap-5 mb-16">
+                    {/* Service Tabs — wraps correctly on all screens */}
+                    <div className="flex flex-wrap justify-center gap-2 mb-10 sm:mb-14">
                         {services.map((service) => (
                             <button
                                 key={service._id}
                                 onClick={() => setActiveService(service)}
-                                className={`px-6 md:px-10 py-3 md:py-2 rounded font-bold text-sm md:text-base transition-all duration-300 transform active:scale-95 border-2 ${
+                                className={`px-6 py-2.5 rounded-full font-bold text-sm transition-all duration-300 active:scale-95 border ${
                                     activeService?._id === service._id
-                                        ? "bg-white text-[#0b1d3d] border-white shadow-[0_0_30px_rgba(255,255,255,0.2)]"
-                                        : "bg-white/5 text-white border-white/20 hover:bg-white/10 hover:border-white/40"
+                                        ? "bg-white text-[#0b1d3d] border-white shadow-[0_0_20px_rgba(255,255,255,0.15)]"
+                                        : "bg-white/0 text-white/70 border-white/15 hover:bg-white/8 hover:text-white hover:border-white/30"
                                 }`}
                             >
                                 {showingTranslateValue(service.name)}
@@ -94,20 +100,20 @@ const ServicesSection = () => {
                     </div>
                 </div>
 
-                {/* Products Grid - Using standard ProductCard UI */}
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-                    <AnimatePresence mode="wait">
+                {/* Products Grid — 1 col mobile, 2 sm, 3 md, 4 lg, 5 xl */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
+                    <AnimatePresence mode="sync">
                         {loading ? (
                             Array.from({ length: 5 }).map((_, i) => (
-                                <div key={`skeleton-${i}`} className="bg-white/5 rounded-xl h-[320px] animate-pulse"></div>
+                                <div key={`skeleton-${i}`} className="bg-white/5 rounded-2xl h-[320px] animate-pulse border border-white/5" />
                             ))
                         ) : (
                             products.map((product, index) => (
                                 <motion.div
                                     key={product._id}
-                                    initial={{ opacity: 0, y: 30 }}
+                                    initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.5, delay: index * 0.05 }}
+                                    transition={{ duration: 0.4, delay: index * 0.05 }}
                                     className="h-full"
                                 >
                                     <ProductCard 
@@ -125,15 +131,15 @@ const ServicesSection = () => {
                 </div>
 
                 {products.length === 0 && !loading && (
-                    <div className="text-center py-24 bg-white/5 rounded-3xl border border-white/10">
-                        <FiSettings className="w-16 h-16 mx-auto mb-6 text-white/20 animate-spin-slow" />
-                        <h3 className="text-2xl font-bold text-white mb-2">No Products Found</h3>
-                        <p className="text-white/50">We are currently updating our products for {showingTranslateValue(activeService?.name)}. Please check back soon!</p>
+                    <div className="text-center py-20 bg-white/[0.03] rounded-2xl border border-white/8">
+                        <FiSettings className="w-12 h-12 mx-auto mb-4 text-white/20 animate-spin-slow" />
+                        <h3 className="text-xl font-bold text-white/70 mb-2">No Products Found</h3>
+                        <p className="text-white/40 text-sm">We're updating our products for {showingTranslateValue(activeService?.name)}. Check back soon!</p>
                     </div>
                 )}
             </div>
 
-            {/* Product Enquiry Modal - Reusable */}
+            {/* Product Enquiry Modal */}
             <ProductEnquiryModal
                 modalOpen={isModalOpen}
                 setModalOpen={setIsModalOpen}
@@ -141,36 +147,7 @@ const ServicesSection = () => {
                 selectedVariant={selectedProduct?.variants?.[0]}
             />
 
-
-            <style jsx>{`
-                .custom-modal-scroll {
-                    scrollbar-width: thin;
-                    scrollbar-color: #cbd5e1 transparent;
-                }
-                .custom-modal-scroll::-webkit-scrollbar {
-                    width: 6px;
-                }
-                .custom-modal-scroll::-webkit-scrollbar-track {
-                    background: transparent;
-                }
-                .custom-modal-scroll::-webkit-scrollbar-thumb {
-                    background-color: #cbd5e1;
-                    border-radius: 20px;
-                }
-                .custom-scrollbar::-webkit-scrollbar {
-                    width: 5px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-track {
-                    background: #f1f1f1;
-                    border-radius: 10px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb {
-                    background: #ccc;
-                    border-radius: 10px;
-                }
-                .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-                    background: #999;
-                }
+            <style>{`
                 @keyframes spin-slow {
                     from { transform: rotate(0deg); }
                     to { transform: rotate(360deg); }
@@ -179,11 +156,8 @@ const ServicesSection = () => {
                     animation: spin-slow 8s linear infinite;
                 }
             `}</style>
-
         </section>
     );
 };
 
 export default ServicesSection;
-
-

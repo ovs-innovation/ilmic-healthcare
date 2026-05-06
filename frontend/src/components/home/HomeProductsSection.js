@@ -1,111 +1,79 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FiChevronLeft, FiChevronRight, FiStar, FiTrendingUp } from "react-icons/fi";
+import React, { useState, useEffect } from "react";
+import { FiStar, FiTrendingUp, FiArrowRight } from "react-icons/fi";
+import Link from "next/link";
 import ProductServices from "@services/ProductServices";
 import ProductCard from "@components/product/ProductCard";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
 
-/* ════════════════════════════════════════════════════════════════
-   HORIZONTAL SCROLL SECTION
-══════════════════════════════════════════════════════════════════ */
-const ScrollSection = ({ title, icon, accent, products }) => {
-  const scrollRef = useRef(null);
-  const [canLeft, setCanLeft] = useState(false);
-  const [canRight, setCanRight] = useState(false);
-
-  const checkScroll = () => {
-    if (!scrollRef.current) return;
-    const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-    setCanLeft(scrollLeft > 10);
-    setCanRight(scrollLeft < scrollWidth - clientWidth - 10);
-  };
-
-  useEffect(() => {
-    // Small delay to let DOM settle before measuring
-    const t = setTimeout(checkScroll, 100);
-    window.addEventListener("resize", checkScroll);
-    return () => {
-      clearTimeout(t);
-      window.removeEventListener("resize", checkScroll);
-    };
-  }, [products]);
-
-  const scroll = (dir) => {
-    if (!scrollRef.current) return;
-    scrollRef.current.scrollTo({
-      left: scrollRef.current.scrollLeft + (dir === "left" ? -320 : 320),
-      behavior: "smooth",
-    });
-  };
+/* ══════════════════════════════════════════════════════════
+   GRID SECTION  — fills full width, no side gaps
+══════════════════════════════════════════════════════════ */
+const GridSection = ({ title, icon, accent, products, onEnquire }) => {
+  const [showAll, setShowAll] = useState(false);
 
   if (!products || products.length === 0) return null;
 
+  // Show 10 by default, "show all" reveals rest
+  const visible = showAll ? products : products.slice(0, 10);
+
   return (
-    <div className="mb-14">
-      {/* ── Section header ─────────────────────────────────────── */}
-      <div className="flex items-center justify-between mb-7">
+    <div className="mb-12 last:mb-0">
+      {/* Section header */}
+      <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-white shadow-lg"
+            className="w-9 h-9 rounded-xl flex items-center justify-center text-white shadow-md"
             style={{ background: accent }}
           >
             {icon}
           </div>
           <div>
-            <h2 className="text-2xl font-black text-gray-900">{title}</h2>
-            <div
-              className="h-1 w-12 rounded-full mt-1"
-              style={{ background: accent }}
-            />
+            <h2 className="text-lg sm:text-xl font-black text-gray-900 tracking-tight">{title}</h2>
+            <div className="h-0.5 w-8 rounded-full mt-1" style={{ background: accent }} />
           </div>
         </div>
 
-        {/* Scroll arrows */}
-        <div className="flex items-center gap-2">
-          <button
-            onClick={() => scroll("left")}
-            disabled={!canLeft}
-            className="w-9 h-9 rounded-full border-2 border-gray-200 flex items-center justify-center
-                       text-gray-500 hover:border-[#A821A8] hover:text-[#A821A8]
-                       disabled:opacity-25 disabled:cursor-not-allowed transition-all bg-white"
-          >
-            <FiChevronLeft className="w-4 h-4" />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            disabled={!canRight}
-            className="w-9 h-9 rounded-full border-2 border-gray-200 flex items-center justify-center
-                       text-gray-500 hover:border-[#A821A8] hover:text-[#A821A8]
-                       disabled:opacity-25 disabled:cursor-not-allowed transition-all bg-white"
-          >
-            <FiChevronRight className="w-4 h-4" />
-          </button>
-        </div>
+        <Link
+          href="/search"
+          className="hidden sm:flex items-center gap-1.5 text-[11px] font-black text-gray-400 hover:text-[#0b1d3d] uppercase tracking-widest transition-colors"
+        >
+          View All <FiArrowRight className="w-3 h-3" />
+        </Link>
       </div>
 
-      {/* ── Cards strip ─────────────────────────────────────────── */}
-      <div
-        ref={scrollRef}
-        onScroll={checkScroll}
-        className="flex gap-5 overflow-x-auto pb-3"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
-        <style>{`.hp-scroll::-webkit-scrollbar{display:none}`}</style>
-        {products.map((product) => (
-          /* Each card gets a fixed width wrapper so the grid card fills it */
-          <div key={product._id} className="flex-shrink-0" style={{ width: 210 }}>
-            <ProductCard 
-              product={product} 
-            />
+      {/* Product grid — fills full width with no gaps */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+        {visible.map((product) => (
+          <div key={product._id} className="min-w-0">
+            <ProductCard product={product} onEnquire={onEnquire} />
           </div>
         ))}
+      </div>
+
+      {/* Show more / Mobile view all */}
+      <div className="flex items-center justify-between mt-5">
+        {products.length > 10 && (
+          <button
+            onClick={() => setShowAll(!showAll)}
+            className="text-[11px] font-black text-gray-400 hover:text-[#0b1d3d] uppercase tracking-widest transition-colors"
+          >
+            {showAll ? "Show Less ↑" : `Show All ${products.length} Products ↓`}
+          </button>
+        )}
+        <Link
+          href="/search"
+          className="sm:hidden ml-auto flex items-center gap-1.5 text-[11px] font-black text-gray-400 hover:text-[#0b1d3d] uppercase tracking-widest transition-colors"
+        >
+          View All <FiArrowRight className="w-3 h-3" />
+        </Link>
       </div>
     </div>
   );
 };
 
-/* ════════════════════════════════════════════════════════════════
+/* ══════════════════════════════════════════════════════════
    MAIN EXPORT
-══════════════════════════════════════════════════════════════════ */
+══════════════════════════════════════════════════════════ */
 const HomeProductsSection = () => {
   const [popularProducts, setPopularProducts] = useState([]);
   const [trendingProducts, setTrendingProducts] = useState([]);
@@ -119,7 +87,7 @@ const HomeProductsSection = () => {
   };
 
   useEffect(() => {
-    const fetchFeaturedProducts = async () => {
+    const fetchProducts = async () => {
       try {
         setLoading(true);
         const [popular, trending] = await Promise.all([
@@ -134,50 +102,64 @@ const HomeProductsSection = () => {
         setLoading(false);
       }
     };
-    fetchFeaturedProducts();
+    fetchProducts();
   }, []);
 
-  /* Nothing to show → render nothing */
-  if (!loading && popularProducts.length === 0 && trendingProducts.length === 0) {
-    return null;
-  }
+  if (!loading && popularProducts.length === 0 && trendingProducts.length === 0) return null;
 
   /* Loading skeleton */
   if (loading) {
     return (
-      <section className="bg-gray-50 py-10">
+      <section className="bg-white py-10 lg:py-14">
         <div className="max-w-screen-2xl mx-auto px-4 lg:px-12">
-          <div className="flex gap-5 overflow-hidden">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div
-                key={i}
-                className="flex-shrink-0 bg-white rounded-lg animate-pulse"
-                style={{ width: 210, height: 310 }}
-              />
-            ))}
-          </div>
+          {[0, 1].map((s) => (
+            <div key={s} className="mb-12">
+              {/* Header skeleton */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-9 h-9 bg-gray-100 rounded-xl animate-pulse" />
+                <div className="h-5 bg-gray-100 rounded w-40 animate-pulse" />
+              </div>
+              {/* Grid skeleton */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <div key={i} className="bg-gray-50 rounded-2xl animate-pulse" style={{ height: 320 }} />
+                ))}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
     );
   }
 
   return (
-    <section className="bg-gray-50 py-6">
-      <div className="max-w-screen-2xl mx-auto px-4 lg:px-12">
-        <ScrollSection
-          title="Popular Products"
-          icon={<FiStar className="w-5 h-5" />}
-          accent="#0b1d3d"
-          products={popularProducts}
-        />
-        <ScrollSection
-          title="Trending Products"
-          icon={<FiTrendingUp className="w-5 h-5" />}
-          accent="#0b1d3d"
-          products={trendingProducts}
-        />
-      </div>
-    </section>
+    <>
+      <section className="bg-white py-10 lg:py-14">
+        <div className="max-w-screen-2xl mx-auto px-4 lg:px-12">
+          <GridSection
+            title="Popular Products"
+            icon={<FiStar className="w-4 h-4" />}
+            accent="#0b1d3d"
+            products={popularProducts}
+            onEnquire={handleEnquire}
+          />
+          <GridSection
+            title="Trending Products"
+            icon={<FiTrendingUp className="w-4 h-4" />}
+            accent="#ED1C24"
+            products={trendingProducts}
+            onEnquire={handleEnquire}
+          />
+        </div>
+      </section>
+
+      <ProductEnquiryModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        product={selectedProduct}
+        selectedVariant={selectedProduct?.variants?.[0]}
+      />
+    </>
   );
 };
 
