@@ -12,35 +12,20 @@ const {
   updateManyCoupons,
   deleteManyCoupons,
 } = require('../controller/couponController');
+const { adminOnly } = require('../config/auth');
 
-//add a coupon
-router.post('/add', addCoupon);
-
-//add multiple coupon
-router.post('/add/all', addAllCoupon);
-
-//get all coupon
-router.get('/', getAllCoupons);
-
-//get only enable coupon
+// Public storefront read
 router.get('/show', getShowingCoupons);
 
-//get a coupon
-router.get('/:id', getCouponById);
-
-//update a coupon
-router.put('/:id', updateCoupon);
-
-//update many coupon
-router.patch('/update/many', updateManyCoupons);
-
-//show/hide a coupon
-router.put('/status/:id', updateStatus);
-
-//delete a coupon
-router.delete('/:id', deleteCoupon);
-
-//delete many coupon
-router.patch('/delete/many', deleteManyCoupons);
+// Admin-only coupon management
+router.post('/add', adminOnly, addCoupon);
+router.post('/add/all', adminOnly, addAllCoupon);
+router.get('/', adminOnly, getAllCoupons);
+router.get('/:id', adminOnly, getCouponById);
+router.put('/:id', adminOnly, updateCoupon);
+router.patch('/update/many', adminOnly, updateManyCoupons);
+router.put('/status/:id', adminOnly, updateStatus);
+router.delete('/:id', adminOnly, deleteCoupon);
+router.patch('/delete/many', adminOnly, deleteManyCoupons);
 
 module.exports = router;

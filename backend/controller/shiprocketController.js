@@ -101,6 +101,20 @@ const createShiprocketOrder = async (req, res) => {
 
 const handleShiprocketWebhook = async (req, res) => {
   try {
+    const webhookSecret = process.env.SHIPROCKET_WEBHOOK_SECRET;
+    if (!webhookSecret) {
+      return res.status(503).send({ message: "Shiprocket webhook secret is not configured." });
+    }
+
+    const providedSecret =
+      req.headers["x-shiprocket-token"] ||
+      req.headers["x-webhook-secret"] ||
+      req.body?.webhook_secret;
+
+    if (providedSecret !== webhookSecret) {
+      return res.status(401).send({ message: "Unauthorized webhook request." });
+    }
+
     const { order_id, shipment_id, status } = req.body;
     console.log('Shiprocket Webhook received:', { order_id, shipment_id, status });
 

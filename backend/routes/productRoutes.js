@@ -17,50 +17,25 @@ const {
   getProductsByType,
   getProductsByService,
 } = require("../controller/productController");
+const { adminOnly } = require("../config/auth");
 
-//add a product
-router.post("/add", addProduct);
-
-//add multiple products
-router.post("/all", addAllProducts);
-
-//get a product
-router.post("/:id", getProductById);
-
-//get showing products only
+// Public storefront reads
 router.get("/show", getShowingProducts);
-
-//get showing products in store
 router.get("/store", getShowingStoreProducts);
-
-//get products by tag
 router.get("/tag", getProductsByTag);
-
-//get products by type (popular, trending, new)
 router.get("/type", getProductsByType);
-
-//get products by service
 router.get("/service", getProductsByService);
-
-//get all products
-router.get("/", getAllProducts);
-
-//get a product by slug
 router.get("/product/:slug", getProductBySlug);
 
-//update a product
-router.patch("/:id", updateProduct);
-
-//update many products
-router.patch("/update/many", updateManyProducts);
-
-//update a product status
-router.put("/status/:id", updateStatus);
-
-//delete a product
-router.delete("/:id", deleteProduct);
-
-//delete many product
-router.patch("/delete/many", deleteManyProducts);
+// Admin-only product management
+router.post("/add", adminOnly, addProduct);
+router.post("/all", adminOnly, addAllProducts);
+router.post("/:id", adminOnly, getProductById);
+router.get("/", adminOnly, getAllProducts);
+router.patch("/:id", adminOnly, updateProduct);
+router.patch("/update/many", adminOnly, updateManyProducts);
+router.put("/status/:id", adminOnly, updateStatus);
+router.delete("/:id", adminOnly, deleteProduct);
+router.patch("/delete/many", adminOnly, deleteManyProducts);
 
 module.exports = router;

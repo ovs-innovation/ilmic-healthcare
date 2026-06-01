@@ -14,41 +14,21 @@ const {
   deleteCurrency,
   deleteManyCurrency,
 } = require('../controller/currencyController');
+const { adminOnly } = require('../config/auth');
 
-//add a addCurrency
-router.post('/add', addCurrency);
-
-//add all Currency
-router.post('/add/all', addAllCurrency);
-
-//get only showing Currency
+// Public storefront read
 router.get('/show', getShowingCurrency);
 
-//get all Currency
-router.get('/', getAllCurrency);
-
-//get a Currency
-router.get('/:id', getCurrencyById);
-
-//update a Currency
-router.put('/:id', updateCurrency);
-
-// update many Currency
-router.patch('/update/many', updateManyCurrency);
-
-//delete many product
-router.patch('/delete/many', deleteManyCurrency);
-
-//delete a Currency
-router.delete('/:id', deleteCurrency);
-
-// show/hide a Currency
-router.put('/status/enabled/:id', updateEnabledStatus);
-
-// show/hide a Currency
-router.put('/status/live-exchange-rates/:id', updateLiveExchangeRateStatus);
-
-//delete a Currency
-router.delete('/:id', deleteCurrency);
+// Admin-only currency management
+router.post('/add', adminOnly, addCurrency);
+router.post('/add/all', adminOnly, addAllCurrency);
+router.get('/', adminOnly, getAllCurrency);
+router.get('/:id', adminOnly, getCurrencyById);
+router.put('/:id', adminOnly, updateCurrency);
+router.patch('/update/many', adminOnly, updateManyCurrency);
+router.patch('/delete/many', adminOnly, deleteManyCurrency);
+router.delete('/:id', adminOnly, deleteCurrency);
+router.put('/status/enabled/:id', adminOnly, updateEnabledStatus);
+router.put('/status/live-exchange-rates/:id', adminOnly, updateLiveExchangeRateStatus);
 
 module.exports = router;

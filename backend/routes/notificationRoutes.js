@@ -9,26 +9,15 @@ const {
   deleteManyNotification,
   updateManyStatusNotification,
 } = require("../controller/notificationController");
+const { adminOnly } = require("../config/auth");
 
-// add a notification on database
-router.post("/add", addNotification);
-
-// get all notification
-router.get("/", getAllNotification);
-
-// update notification status
-router.put("/:id", updateStatusNotification);
-
-// update many
-router.patch("/update/many", updateManyStatusNotification);
-
-// delete notification by id
-router.delete("/:id", deleteNotificationById);
-
-// delete notification by product id
-router.delete("/product-id/:id", deleteNotificationByProductId);
-
-// delete many
-router.patch("/delete/many", deleteManyNotification);
+// Admin-only notification management
+router.post("/add", adminOnly, addNotification);
+router.get("/", adminOnly, getAllNotification);
+router.put("/:id", adminOnly, updateStatusNotification);
+router.patch("/update/many", adminOnly, updateManyStatusNotification);
+router.delete("/:id", adminOnly, deleteNotificationById);
+router.delete("/product-id/:id", adminOnly, deleteNotificationByProductId);
+router.patch("/delete/many", adminOnly, deleteManyNotification);
 
 module.exports = router;

@@ -7,14 +7,15 @@ const {
   updateReviewStatus,
   deleteReview,
 } = require("../controller/reviewController");
+const { adminOnly } = require("../config/auth");
 
-// frontend routes
+// Public storefront routes
 router.post("/add", addReview);
 router.get("/product/:id", getReviewsByProduct);
 
-// admin routes
-router.get("/", getAllReviews);
-router.put("/:id", updateReviewStatus);
-router.delete("/:id", deleteReview);
+// Admin-only review management
+router.get("/", adminOnly, getAllReviews);
+router.put("/:id", adminOnly, updateReviewStatus);
+router.delete("/:id", adminOnly, deleteReview);
 
 module.exports = router;

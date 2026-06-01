@@ -1,28 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const leadController = require('../controller/leadController');
+const { adminOnly, isAuth, ensureSelfOrAdmin } = require('../config/auth');
 
-// Create a new lead
+// Public lead submission
 router.post('/', leadController.createLead);
 
-// Get all leads
-router.get('/', leadController.getLeads);
+// Customer can view own leads
+router.get('/user/:userId', isAuth, ensureSelfOrAdmin, leadController.getUserLeads);
 
-// Dashboard routes (should be before /:id route)
-router.get('/dashboard/count', leadController.getDashboardCount);
-router.get('/dashboard/recent', leadController.getDashboardRecentLeads);
-router.get('/dashboard/data', leadController.getDashboardLeadData);
+// Admin-only lead management
+router.get('/', adminOnly, leadController.getLeads);
+router.get('/dashboard/count', adminOnly, leadController.getDashboardCount);
+router.get('/dashboard/recent', adminOnly, leadController.getDashboardRecentLeads);
+router.get('/dashboard/data', adminOnly, leadController.getDashboardLeadData);
+router.get('/:id', adminOnly, leadController.getLeadById);
+router.put('/:id', adminOnly, leadController.updateLead);
+router.delete('/:id', adminOnly, leadController.deleteLead);
 
-// Get user leads
-router.get('/user/:userId', leadController.getUserLeads);
-
-// Get a single lead by ID
-router.get('/:id', leadController.getLeadById);
-
-// Update a lead
-router.put('/:id', leadController.updateLead);
-
-// Delete a lead
-router.delete('/:id', leadController.deleteLead);
-
-module.exports = router; 
+module.exports = router;

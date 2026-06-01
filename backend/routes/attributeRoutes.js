@@ -21,58 +21,28 @@ const {
   updateManyChildAttribute,
   deleteManyChildAttribute,
 } = require('../controller/attributeController');
+const { adminOnly } = require('../config/auth');
 
-//add attribute
-router.post('/add', addAttribute);
-
-//add all attributes
-router.post('/add/all', addAllAttributes);
-
-// add child attribute
-router.put('/add/child/:id', addChildAttributes);
-
-//get all attribute
+// Public storefront reads
 router.get('/', getAllAttributes);
-
-// router.get('/show', getShowingProducts);
 router.get('/show', getShowingAttributes);
-
-router.put('/show/test', getShowingAttributesTest);
-
-// update many attributes
-router.patch('/update/many', updateManyAttribute);
-
-//get attribute by id
+router.get('/child/:id/:ids', getChildAttributeById);
 router.get('/:id', getAttributeById);
 
-// child get attributes by id
-router.get('/child/:id/:ids', getChildAttributeById);
-
-//update attribute
-router.put('/:id', updateAttributes);
-
-// update child attribute
-router.patch('/update/child/many', updateManyChildAttribute);
-
-// update child attribute
-router.put('/update/child/:attributeId/:childId', updateChildAttributes);
-
-//show/hide a attribute
-router.put('/status/:id', updateStatus);
-
-// show and hide a child status
-router.put('/status/child/:id', updateChildStatus);
-
-//delete attribute
-router.delete('/:id', deleteAttribute);
-
-// delete child attribute
-router.put('/delete/child/:attributeId/:childId', deleteChildAttribute);
-
-// delete many attribute
-router.patch('/delete/many', deleteManyAttribute);
-
-// delete many child attribute
-router.patch('/delete/child/many', deleteManyChildAttribute);
+// Admin-only attribute management
+router.post('/add', adminOnly, addAttribute);
+router.post('/add/all', adminOnly, addAllAttributes);
+router.put('/add/child/:id', adminOnly, addChildAttributes);
+router.put('/show/test', adminOnly, getShowingAttributesTest);
+router.patch('/update/many', adminOnly, updateManyAttribute);
+router.put('/:id', adminOnly, updateAttributes);
+router.patch('/update/child/many', adminOnly, updateManyChildAttribute);
+router.put('/update/child/:attributeId/:childId', adminOnly, updateChildAttributes);
+router.put('/status/:id', adminOnly, updateStatus);
+router.put('/status/child/:id', adminOnly, updateChildStatus);
+router.delete('/:id', adminOnly, deleteAttribute);
+router.put('/delete/child/:attributeId/:childId', adminOnly, deleteChildAttribute);
+router.patch('/delete/many', adminOnly, deleteManyAttribute);
+router.patch('/delete/child/many', adminOnly, deleteManyChildAttribute);
 
 module.exports = router;

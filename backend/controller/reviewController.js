@@ -1,9 +1,23 @@
 const Review = require("../models/Review");
+const Product = require("../models/Product");
+const {
+  queueReviewNotificationEmail,
+} = require("../lib/email-sender/adminNotificationEmail");
 
 const addReview = async (req, res) => {
   try {
     const newReview = new Review(req.body);
     await newReview.save();
+
+    let productTitle = "Product";
+    try {
+      const product = await Product.findById(newReview.product).select("title");
+      productTitle = product?.title || productTitle;
+    } catch (lookupErr) {
+      // Non-blocking if product lookup fails
+    }
+
+    queueReviewNotificationEmail(newReview, productTitle);
     res.status(200).send({
       message: "Review Added Successfully!",
       review: newReview,

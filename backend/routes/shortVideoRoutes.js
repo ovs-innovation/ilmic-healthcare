@@ -9,26 +9,17 @@ const {
   updateStatus,
   deleteShortVideo,
 } = require("../controller/shortVideoController");
+const { adminOnly } = require("../config/auth");
 
-// Add a short video
-router.post("/add", addShortVideo);
-
-// Get all short videos (for admin)
-router.get("/all", getAllShortVideos);
-
-// Get showing short videos (for frontend)
+// Public storefront read
 router.get("/show", getShowingShortVideos);
 
-// Get a short video by id
-router.get("/:id", getShortVideoById);
-
-// Update a short video
-router.put("/:id", updateShortVideo);
-
-// Update status
-router.put("/status/:id", updateStatus);
-
-// Delete a short video
-router.delete("/active/:id", deleteShortVideo);
+// Admin-only short video management
+router.post("/add", adminOnly, addShortVideo);
+router.get("/all", adminOnly, getAllShortVideos);
+router.get("/:id", adminOnly, getShortVideoById);
+router.put("/:id", adminOnly, updateShortVideo);
+router.put("/status/:id", adminOnly, updateStatus);
+router.delete("/active/:id", adminOnly, deleteShortVideo);
 
 module.exports = router;

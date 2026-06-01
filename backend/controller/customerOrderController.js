@@ -3,7 +3,6 @@ const stripe = require("stripe");
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const MailChecker = require("mailchecker");
-// const stripe = require("stripe")(`${process.env.STRIPE_KEY}` || null); /// use hardcoded key if env not work
 
 const mongoose = require("mongoose");
 
@@ -11,69 +10,130 @@ const Order = require("../models/Order");
 const Setting = require("../models/Setting");
 const { sendEmail } = require("../lib/email-sender/sender");
 const { formatAmountForStripe } = require("../lib/stripe/stripe");
-const { handleCreateInvoice } = require("../lib/email-sender/create");
-const { handleProductQuantity } = require("../lib/stock-controller/others");
 const customerInvoiceEmailBody = require("../lib/email-sender/templates/order-to-customer");
+const { handleCreateInvoice } = require("../lib/email-sender/create");
+const {
+  queueOrderInvoiceEmail,
+} = require("../lib/email-sender/sendOrderInvoiceEmail");
+const { queueOrderNotificationEmail } = require("../lib/email-sender/adminNotificationEmail");
+const { handleProductQuantity } = require("../lib/stock-controller/others");
+const {
+  calculateOrderTotals,
+  roundMoney,
+} = require("../lib/order/calculateOrderTotals");
 
-const generateOrderId = () => "ORD-" + crypto.randomBytes(4).toString("hex").toUpperCase();
+const generateOrderId = () =>
+  "ORD-" + crypto.randomBytes(4).toString("hex").toUpperCase();
+
+const getRazorpayCredentials = async () => {
+  const razorpayKeyIdEnv = process.env.RAZORPAY_KEY_ID;
+  const razorpaySecretEnv = process.env.RAZORPAY_KEY_SECRET;
+
+  const storeSetting =
+    !razorpayKeyIdEnv || !razorpaySecretEnv
+      ? await Setting.findOne({ name: "storeSetting" })
+      : null;
+
+  const key_id = razorpayKeyIdEnv || storeSetting?.setting?.razorpay_id;
+  const key_secret =
+    razorpaySecretEnv || storeSetting?.setting?.razorpay_secret;
+
+  return { key_id, key_secret };
+};
+
+const buildOrderPayload = async (req, { paymentMethod, status }) => {
+  const {
+    cart,
+    user_info,
+    shippingOption,
+    couponCode,
+    discount,
+  } = req.body || {};
+
+  const totals = await calculateOrderTotals({
+    cart,
+    couponCode,
+    shippingOption,
+    discount,
+  });
+
+  return {
+    user_info,
+    cart: totals.cart,
+    subTotal: totals.subTotal,
+    shippingCost: totals.shippingCost,
+    discount: totals.discount,
+    total: totals.total,
+    shippingOption: totals.shippingOption,
+    paymentMethod,
+    status,
+    user: req.user._id,
+    orderId: req.body?.orderId || generateOrderId(),
+  };
+};
 
 const addOrder = async (req, res) => {
-  // console.log("addOrder", req.body);
   try {
-    const newOrder = new Order({
-      ...req.body,
-      user: req.user._id,
-      orderId: req.body.orderId || generateOrderId(),
+    const orderPayload = await buildOrderPayload(req, {
+      paymentMethod: "Cash",
+      status: "Pending",
     });
+
+    const newOrder = new Order(orderPayload);
     const order = await newOrder.save();
     res.status(201).send(order);
     handleProductQuantity(order.cart);
+    queueOrderInvoiceEmail(order);
+    queueOrderNotificationEmail(order);
   } catch (err) {
-    res.status(500).send({
+    res.status(err.message?.includes("cart") ? 400 : 500).send({
       message: err.message,
     });
   }
 };
 
-//create payment intent for stripe
 const createPaymentIntent = async (req, res) => {
-  const { total: amount, cardInfo: payment_intent, email } = req.body;
-  // console.log("req.body", req.body);
-  // Validate the amount that was passed from the client.
-  if (!(amount >= process.env.MIN_AMOUNT && amount <= process.env.MAX_AMOUNT)) {
-    return res.status(500).json({ message: "Invalid amount." });
-  }
-  const storeSetting = await Setting.findOne({ name: "storeSetting" });
-  const stripeSecret = storeSetting?.setting?.stripe_secret;
-  const stripeInstance = stripe(stripeSecret);
-  if (payment_intent.id) {
-    try {
-      const current_intent = await stripeInstance.paymentIntents.retrieve(
-        payment_intent.id
-      );
-      // If PaymentIntent has been created, just update the amount.
-      if (current_intent) {
-        const updated_intent = await stripeInstance.paymentIntents.update(
-          payment_intent.id,
-          {
-            amount: formatAmountForStripe(amount, "usd"),
-          }
-        );
-        // console.log("updated_intent", updated_intent);
-        return res.send(updated_intent);
-      }
-    } catch (err) {
-      // console.log("error", err);
+  try {
+    const totals = await calculateOrderTotals({
+      cart: req.body?.cart || [],
+      couponCode: req.body?.couponCode,
+      shippingOption: req.body?.shippingOption,
+      discount: req.body?.discount,
+    });
+    const amount = totals.total;
+    const { cardInfo: existingPaymentIntent } = req.body;
 
-      if (err.code !== "resource_missing") {
-        const errorMessage =
-          err instanceof Error ? err.message : "Internal server error";
-        return res.status(500).send({ message: errorMessage });
+    if (!(amount >= process.env.MIN_AMOUNT && amount <= process.env.MAX_AMOUNT)) {
+      return res.status(500).json({ message: "Invalid amount." });
+    }
+
+    const storeSetting = await Setting.findOne({ name: "storeSetting" });
+    const stripeSecret = storeSetting?.setting?.stripe_secret;
+    const stripeInstance = stripe(stripeSecret);
+
+    if (existingPaymentIntent?.id) {
+      try {
+        const current_intent = await stripeInstance.paymentIntents.retrieve(
+          existingPaymentIntent.id
+        );
+        if (current_intent) {
+          const updated_intent = await stripeInstance.paymentIntents.update(
+            existingPaymentIntent.id,
+            {
+              amount: formatAmountForStripe(amount, "usd"),
+            }
+          );
+          return res.send(updated_intent);
+        }
+      } catch (err) {
+        if (err.code !== "resource_missing") {
+          const errorMessage =
+            err instanceof Error ? err.message : "Internal server error";
+          return res.status(500).send({ message: errorMessage });
+        }
       }
     }
-  }
-  try {
-    // Create PaymentIntent from body params.
+
     const params = {
       amount: formatAmountForStripe(amount, "usd"),
       currency: "usd",
@@ -82,10 +142,8 @@ const createPaymentIntent = async (req, res) => {
         enabled: true,
       },
     };
-    const payment_intent = await stripeInstance.paymentIntents.create(params);
-    // console.log("payment_intent", payment_intent);
-
-    res.send(payment_intent);
+    const newPaymentIntent = await stripeInstance.paymentIntents.create(params);
+    res.send(newPaymentIntent);
   } catch (err) {
     const errorMessage =
       err instanceof Error ? err.message : "Internal server error";
@@ -95,18 +153,7 @@ const createPaymentIntent = async (req, res) => {
 
 const createOrderByRazorPay = async (req, res) => {
   try {
-    const razorpayKeyIdEnv = process.env.RAZORPAY_KEY_ID;
-    const razorpaySecretEnv = process.env.RAZORPAY_KEY_SECRET;
-
-    // Backward compatibility: fallback to DB store settings if env vars are missing.
-    const storeSetting =
-      !razorpayKeyIdEnv || !razorpaySecretEnv
-        ? await Setting.findOne({ name: "storeSetting" })
-        : null;
-
-    const key_id = razorpayKeyIdEnv || storeSetting?.setting?.razorpay_id;
-    const key_secret =
-      razorpaySecretEnv || storeSetting?.setting?.razorpay_secret;
+    const { key_id, key_secret } = await getRazorpayCredentials();
 
     if (!key_id || !key_secret) {
       return res.status(500).send({
@@ -115,55 +162,75 @@ const createOrderByRazorPay = async (req, res) => {
       });
     }
 
+    const totals = await calculateOrderTotals({
+      cart: req.body?.cart || [],
+      couponCode: req.body?.couponCode,
+      shippingOption: req.body?.shippingOption,
+      discount: req.body?.discount,
+    });
+
     const instance = new Razorpay({
       key_id,
       key_secret,
     });
 
     const options = {
-      amount: req.body.amount * 100,
+      amount: Math.round(totals.total * 100),
       currency: "INR",
     };
     const order = await instance.orders.create(options);
 
-    if (!order)
+    if (!order) {
       return res.status(500).send({
         message: "Error occurred when creating order!",
       });
-    res.send(order);
+    }
+
+    res.send({
+      ...order,
+      calculatedTotal: totals.total,
+    });
   } catch (err) {
-    res.status(500).send({
+    res.status(err.message?.includes("cart") ? 400 : 500).send({
       message: err.message,
     });
   }
 };
 
-const addRazorpayOrder = async (req, res) => {
-  try {
-    const newOrder = new Order({
-      ...req.body,
-      user: req.user._id,
-      orderId: req.body.orderId || generateOrderId(),
-    });
-    const order = await newOrder.save();
-    res.status(201).send(order);
-    handleProductQuantity(order.cart);
-  } catch (err) {
-    res.status(500).send({
-      message: err.message,
-    });
-  }
+const addRazorpayOrder = async (_req, res) => {
+  return res.status(410).send({
+    message:
+      "This endpoint is disabled. Complete payment and use /order/verify/razorpay instead.",
+  });
 };
 
-// Securely verify Razorpay signature and (if valid) create the Order record.
-// This prevents spoofing the payment success on the client.
+const verifyRazorpaySignature = (secret, orderId, paymentId, signature) => {
+  const generatedSignature = crypto
+    .createHmac("sha256", secret)
+    .update(`${orderId}|${paymentId}`)
+    .digest("hex");
+
+  const generatedBuffer = Buffer.from(generatedSignature, "hex");
+  const providedBuffer = Buffer.from(signature, "hex");
+
+  if (generatedBuffer.length !== providedBuffer.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(generatedBuffer, providedBuffer);
+};
+
 const verifyRazorpayPaymentAndAddOrder = async (req, res) => {
   try {
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
-      ...orderBody
+      cart,
+      user_info,
+      shippingOption,
+      couponCode,
+      discount,
     } = req.body || {};
 
     if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
@@ -173,7 +240,6 @@ const verifyRazorpayPaymentAndAddOrder = async (req, res) => {
       });
     }
 
-    // Idempotency: if we already created this order for the same payment id, return it.
     const existingOrder = await Order.findOne({
       razorpayPaymentId: razorpay_payment_id,
     });
@@ -181,37 +247,58 @@ const verifyRazorpayPaymentAndAddOrder = async (req, res) => {
       return res.status(200).send(existingOrder);
     }
 
-    const razorpaySecretEnv = process.env.RAZORPAY_KEY_SECRET;
-    const storeSetting =
-      !razorpaySecretEnv
-        ? await Setting.findOne({ name: "storeSetting" })
-        : null;
-    const razorpaySecret =
-      razorpaySecretEnv || storeSetting?.setting?.razorpay_secret;
-    if (!razorpaySecret) {
+    const { key_id, key_secret } = await getRazorpayCredentials();
+    if (!key_secret) {
       return res.status(500).send({
         message:
           "Razorpay secret not configured. Add RAZORPAY_KEY_SECRET to backend .env.",
       });
     }
 
-    const generatedSignature = crypto
-      .createHmac("sha256", razorpaySecret)
-      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
-      .digest("hex");
-
-    if (generatedSignature !== razorpay_signature) {
+    if (
+      !verifyRazorpaySignature(
+        key_secret,
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature
+      )
+    ) {
       return res.status(400).send({
         message: "Invalid Razorpay signature.",
       });
     }
 
+    const totals = await calculateOrderTotals({
+      cart,
+      couponCode,
+      shippingOption,
+      discount,
+    });
+
+    const instance = new Razorpay({
+      key_id,
+      key_secret,
+    });
+    const razorpayOrder = await instance.orders.fetch(razorpay_order_id);
+    const paidAmount = roundMoney(Number(razorpayOrder.amount) / 100);
+
+    if (paidAmount !== totals.total) {
+      return res.status(400).send({
+        message: "Payment amount does not match the calculated order total.",
+      });
+    }
+
     const newOrder = new Order({
-      ...orderBody,
-      // Always bind the order to the authenticated user
+      user_info,
+      cart: totals.cart,
+      subTotal: totals.subTotal,
+      shippingCost: totals.shippingCost,
+      discount: totals.discount,
+      total: totals.total,
+      shippingOption: totals.shippingOption,
       user: req.user._id,
-      orderId: orderBody.orderId || generateOrderId(),
-      paymentMethod: orderBody?.paymentMethod || "Razorpay",
+      orderId: req.body?.orderId || generateOrderId(),
+      paymentMethod: "Razorpay",
       status: "Processing",
       razorpayOrderId: razorpay_order_id,
       razorpayPaymentId: razorpay_payment_id,
@@ -220,19 +307,19 @@ const verifyRazorpayPaymentAndAddOrder = async (req, res) => {
 
     const order = await newOrder.save();
     handleProductQuantity(order.cart);
+    queueOrderInvoiceEmail(order);
+    queueOrderNotificationEmail(order);
 
     res.status(201).send(order);
   } catch (err) {
-    res.status(500).send({
+    res.status(err.message?.includes("cart") ? 400 : 500).send({
       message: err.message,
     });
   }
 };
 
-// get all orders user
 const getOrderCustomer = async (req, res) => {
   try {
-    // console.log("getOrderCustomer");
     const { page, limit } = req.query;
 
     const pages = Number(page) || 1;
@@ -241,7 +328,6 @@ const getOrderCustomer = async (req, res) => {
 
     const totalDoc = await Order.countDocuments({ user: req.user._id });
 
-    // total padding order count
     const totalPendingOrder = await Order.aggregate([
       {
         $match: {
@@ -260,7 +346,6 @@ const getOrderCustomer = async (req, res) => {
       },
     ]);
 
-    // total padding order count
     const totalProcessingOrder = await Order.aggregate([
       {
         $match: {
@@ -297,9 +382,6 @@ const getOrderCustomer = async (req, res) => {
       },
     ]);
 
-    // today order amount
-
-    // query for orders
     const orders = await Order.find({ user: req.user._id })
       .sort({ _id: -1 })
       .skip(skip)
@@ -323,10 +405,23 @@ const getOrderCustomer = async (req, res) => {
     });
   }
 };
+
 const getOrderById = async (req, res) => {
   try {
-    // console.log("getOrderById");
     const order = await Order.findById(req.params.id);
+
+    if (!order) {
+      return res.status(404).send({
+        message: "Order not found.",
+      });
+    }
+
+    if (String(order.user) !== String(req.user._id)) {
+      return res.status(403).send({
+        message: "You are not authorized to view this order.",
+      });
+    }
+
     res.send(order);
   } catch (err) {
     res.status(500).send({
@@ -338,16 +433,35 @@ const getOrderById = async (req, res) => {
 const sendEmailInvoiceToCustomer = async (req, res) => {
   try {
     const user = req.body.user_info;
-    // Validate email using MailChecker
-    // Validate email using MailChecker
+    const isAdmin = req.user?.type === "admin";
+
+    if (!isAdmin) {
+      if (
+        !user?.email ||
+        String(user.email).toLowerCase() !== String(req.user.email).toLowerCase()
+      ) {
+        return res.status(403).send({
+          message: "You can only send invoices to your own email address.",
+        });
+      }
+
+      if (req.body?._id) {
+        const order = await Order.findById(req.body._id);
+        if (!order || String(order.user) !== String(req.user._id)) {
+          return res.status(403).send({
+            message: "You are not authorized to send this invoice.",
+          });
+        }
+      }
+    }
+
     if (!MailChecker.isValid(user?.email)) {
-      // Return a response indicating invalid email instead of using process.exit
       return res.status(400).send({
         message:
           "Invalid or disposable email address. Please provide a valid email.",
       });
     }
-    // console.log("sendEmailInvoiceToCustomer");
+
     const pdf = await handleCreateInvoice(req.body, `${req.body.invoice}.pdf`);
 
     const option = {
@@ -374,7 +488,7 @@ const sendEmailInvoiceToCustomer = async (req, res) => {
     };
 
     const body = {
-      from: req.body.company_info?.from_email || "sales@PowerQ.com",
+      from: req.body.company_info?.from_email || "sales@Elecmoon.com",
       to: user.email,
       subject: `Your Order - ${req.body.invoice} at ${req.body.company_info.company}`,
       html: customerInvoiceEmailBody(option),

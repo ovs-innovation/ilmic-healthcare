@@ -7,16 +7,15 @@ const {
   updateCommentStatus,
   deleteComment,
 } = require("../controller/commentController");
-const { isAuth, isAdmin } = require("../config/auth");
+const { adminOnly } = require("../config/auth");
 
 // Public routes
 router.post("/add", addComment);
 router.get("/blog/:blogId", getCommentsByBlogId);
 
-// Admin routes
-router.get("/", isAuth, isAdmin, getAllComments);
-router.put("/status/:id", isAuth, isAdmin, updateCommentStatus);
-router.delete("/:id", isAuth, isAdmin, deleteComment);
+// Admin-only comment management
+router.get("/", adminOnly, getAllComments);
+router.put("/status/:id", adminOnly, updateCommentStatus);
+router.delete("/:id", adminOnly, deleteComment);
 
 module.exports = router;
-

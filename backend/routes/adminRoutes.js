@@ -13,35 +13,20 @@ const {
   updatedStatus,
 } = require("../controller/adminController");
 const { passwordVerificationLimit } = require("../lib/email-sender/sender");
+const { adminOnly } = require("../config/auth");
 
-//register a staff
-router.post("/register", registerAdmin);
-
-//login a admin
+// Public auth routes
 router.post("/login", loginAdmin);
-
-//forget-password
 router.put("/forget-password", passwordVerificationLimit, forgetPassword);
-
-//reset-password
 router.put("/reset-password", resetPassword);
 
-//add a staff
-router.post("/add", addStaff);
-
-//get all staff
-router.get("/", getAllStaff);
-
-//get a staff
-router.post("/:id", getStaffById);
-
-//update a staff
-router.put("/:id", updateStaff);
-
-//update staf status
-router.put("/update-status/:id", updatedStatus);
-
-//delete a staff
-router.delete("/:id", deleteStaff);
+// Admin-only staff management
+router.post("/register", adminOnly, registerAdmin);
+router.post("/add", adminOnly, addStaff);
+router.get("/", adminOnly, getAllStaff);
+router.post("/:id", adminOnly, getStaffById);
+router.put("/:id", adminOnly, updateStaff);
+router.put("/update-status/:id", adminOnly, updatedStatus);
+router.delete("/:id", adminOnly, deleteStaff);
 
 module.exports = router;

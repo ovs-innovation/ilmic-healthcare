@@ -19,10 +19,10 @@ router.post("/add", addOrder);
 // create stripe payment intent
 router.post("/create-payment-intent", createPaymentIntent);
 
-//add razorpay order
+// legacy endpoint disabled — use /verify/razorpay after payment
 router.post("/add/razorpay", addRazorpayOrder);
 
-//add a order by razorpay
+// create Razorpay payment order (not a store order)
 router.post("/create/razorpay", createOrderByRazorPay);
 
 // secure verify + create order (after payment success)

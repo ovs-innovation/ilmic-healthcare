@@ -1,23 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const ctrl = require('../controller/batteryServiceController');
+const { adminOnly } = require('../config/auth');
 
-// Public: Submit a battery service request
+// Public battery service request submission
 router.post('/', ctrl.createRequest);
 
-// Admin: Dashboard stats
-router.get('/dashboard/stats', ctrl.getDashboardStats);
-
-// Admin: Get all requests
-router.get('/', ctrl.getAllRequests);
-
-// Admin: Get single request
-router.get('/:id', ctrl.getRequestById);
-
-// Admin: Update request (status etc.)
-router.put('/:id', ctrl.updateRequest);
-
-// Admin: Delete request
-router.delete('/:id', ctrl.deleteRequest);
+// Admin-only battery service management
+router.get('/dashboard/stats', adminOnly, ctrl.getDashboardStats);
+router.get('/', adminOnly, ctrl.getAllRequests);
+router.get('/:id', adminOnly, ctrl.getRequestById);
+router.put('/:id', adminOnly, ctrl.updateRequest);
+router.delete('/:id', adminOnly, ctrl.deleteRequest);
 
 module.exports = router;

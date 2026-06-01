@@ -1,5 +1,8 @@
 const Comment = require("../models/Comment");
 const Blog = require("../models/Blog");
+const {
+  queueCommentNotificationEmail,
+} = require("../lib/email-sender/adminNotificationEmail");
 
 const addComment = async (req, res) => {
   try {
@@ -30,6 +33,7 @@ const addComment = async (req, res) => {
     });
 
     await newComment.save();
+    queueCommentNotificationEmail(newComment, blog?.title);
     res.send({ message: "Comment added successfully!", comment: newComment });
   } catch (err) {
     res.status(500).send({

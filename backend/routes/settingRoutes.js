@@ -12,37 +12,20 @@ const {
   getStoreCustomizationSetting,
   updateStoreCustomizationSetting,
 } = require("../controller/settingController");
+const { adminOnly } = require("../config/auth");
 
-//add a global setting
-router.post("/global/add", addGlobalSetting);
-
-//get global setting
+// Public storefront reads
 router.get("/global/all", getGlobalSetting);
-
-//update global setting
-router.put("/global/update", updateGlobalSetting);
-
-//add a store setting
-router.post("/store-setting/add", addStoreSetting);
-
-//get store setting
 router.get("/store-setting/all", getStoreSetting);
-
-//get store setting
 router.get("/store-setting/seo", getStoreSeoSetting);
-
-//update store setting
-router.put("/store-setting/update", updateStoreSetting);
-
-//store customization routes
-
-//add a online store customization setting
-router.post("/store/customization/add", addStoreCustomizationSetting);
-
-//get online store customization setting
 router.get("/store/customization/all", getStoreCustomizationSetting);
 
-//update online store customization setting
-router.put("/store/customization/update", updateStoreCustomizationSetting);
+// Admin-only settings management
+router.post("/global/add", adminOnly, addGlobalSetting);
+router.put("/global/update", adminOnly, updateGlobalSetting);
+router.post("/store-setting/add", adminOnly, addStoreSetting);
+router.put("/store-setting/update", adminOnly, updateStoreSetting);
+router.post("/store/customization/add", adminOnly, addStoreCustomizationSetting);
+router.put("/store/customization/update", adminOnly, updateStoreCustomizationSetting);
 
 module.exports = router;

@@ -1,10 +1,14 @@
 const BatteryServiceRequest = require('../models/BatteryServiceRequest');
+const {
+  queueBatteryServiceNotificationEmail,
+} = require('../lib/email-sender/adminNotificationEmail');
 
 // Create a new battery service request (public)
 exports.createRequest = async (req, res) => {
   try {
     const request = new BatteryServiceRequest(req.body);
     await request.save();
+    queueBatteryServiceNotificationEmail(request);
     res.status(201).json({ success: true, request });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });

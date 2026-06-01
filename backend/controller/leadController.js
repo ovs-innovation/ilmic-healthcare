@@ -1,10 +1,54 @@
 const Lead = require('../models/Lead');
+const {
+  queueLeadNotificationEmail,
+} = require('../lib/email-sender/adminNotificationEmail');
+
+const normalizeLeadInput = (body = {}) => {
+  const payload = { ...body };
+  const locationText = String(payload.location || payload.address || "").trim();
+
+  if (!payload.address) {
+    payload.address = locationText || "Not provided";
+  }
+
+  const pincodeMatch = locationText.match(/\b\d{6}\b/);
+  const parts = locationText
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (!payload.pincode) {
+    payload.pincode = pincodeMatch ? pincodeMatch[0] : "Not provided";
+  }
+
+  if (!payload.state) {
+    payload.state =
+      parts.length >= 2 ? parts[parts.length - 1] : "Not provided";
+  }
+
+  if (!payload.district) {
+    if (parts.length >= 3) {
+      payload.district = parts[parts.length - 2];
+    } else if (parts.length === 2) {
+      payload.district = parts[0];
+    } else {
+      payload.district = "Not provided";
+    }
+  }
+
+  if (!payload.location && locationText) {
+    payload.location = locationText;
+  }
+
+  return payload;
+};
 
 // Create a new lead
 exports.createLead = async (req, res) => {
   try {
-    const lead = new Lead(req.body);
+    const lead = new Lead(normalizeLeadInput(req.body));
     await lead.save();
+    queueLeadNotificationEmail(lead);
     res.status(201).json({ success: true, lead });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });

@@ -65,6 +65,13 @@ const productSchema = new mongoose.Schema(
       required: false,
     },
 
+    /** MRP / list price before discount (GST inclusive, same as `price`) */
+    originalPrice: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+
     basePrice: {
       type: Number,
       required: false,

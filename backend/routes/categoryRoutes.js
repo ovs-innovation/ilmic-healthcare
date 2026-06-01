@@ -12,39 +12,22 @@ const {
   deleteCategory,
   deleteManyCategory,
   updateManyCategory
-
 } = require('../controller/categoryController');
+const { adminOnly } = require('../config/auth');
 
-//add a category
-router.post('/add', addCategory);
-
-//add all category
-router.post('/add/all', addAllCategory);
-
-//get only showing category
+// Public storefront read
 router.get('/show', getShowingCategory);
 
-//get all category
-router.get('/', getAllCategory);
-//get all category
-router.get('/all', getAllCategories);
-
-//get a category
-router.get('/:id', getCategoryById);
-
-//update a category
-router.put('/:id', updateCategory);
-
-//show/hide a category
-router.put('/status/:id', updateStatus);
-
-//delete a category
-router.delete('/:id', deleteCategory);
-
-// delete many category
-router.patch('/delete/many', deleteManyCategory);
-
-// update many category
-router.patch('/update/many', updateManyCategory);
+// Admin-only category management
+router.post('/add', adminOnly, addCategory);
+router.post('/add/all', adminOnly, addAllCategory);
+router.get('/', adminOnly, getAllCategory);
+router.get('/all', adminOnly, getAllCategories);
+router.get('/:id', adminOnly, getCategoryById);
+router.put('/:id', adminOnly, updateCategory);
+router.put('/status/:id', adminOnly, updateStatus);
+router.delete('/:id', adminOnly, deleteCategory);
+router.patch('/delete/many', adminOnly, deleteManyCategory);
+router.patch('/update/many', adminOnly, updateManyCategory);
 
 module.exports = router;

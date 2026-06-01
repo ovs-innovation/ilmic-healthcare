@@ -1,26 +1,50 @@
 require("dotenv").config();
 const mongoose = require("mongoose");
 
+mongoose.set("strictQuery", false);
+
 let cachedDb = null;
+let isConnecting = false;
+
+const getMongoOptions = () => ({
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  tls: true,
+  serverSelectionTimeoutMS: 15000,
+});
 
 const connectDB = async () => {
   if (cachedDb && mongoose.connection.readyState === 1) {
     return cachedDb;
   }
 
-  console.log("🔄 Connecting to MongoDB...");
+  if (isConnecting) {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    if (mongoose.connection.readyState === 1) {
+      cachedDb = mongoose.connection;
+      return cachedDb;
+    }
+  }
+
+  const uri = process.env.MONGO_URI;
+  if (!uri) {
+    throw new Error("MONGO_URI is not set in backend/.env");
+  }
+
+  isConnecting = true;
+  console.log("Connecting to MongoDB...");
+
   try {
-    cachedDb = await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      ssl: true,
-      sslValidate: true,
-    });
-    console.log("✅ MongoDB Connected Successfully!");
+    cachedDb = await mongoose.connect(uri, getMongoOptions());
+    console.log(
+      `MongoDB connected | db: ${mongoose.connection.db.databaseName} | host: ${mongoose.connection.host}`
+    );
     return cachedDb;
   } catch (err) {
-    console.log("❌ MongoDB connection failed!", err.message);
+    console.error("MongoDB connection failed:", err.message);
     throw err;
+  } finally {
+    isConnecting = false;
   }
 };
 

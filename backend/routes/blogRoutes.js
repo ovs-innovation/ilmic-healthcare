@@ -10,18 +10,18 @@ const {
   updateStatus,
   deleteBlog,
 } = require("../controller/blogController");
+const { adminOnly } = require("../config/auth");
 
-// Public routes
+// Public storefront reads
 router.get("/show", getShowingBlogs);
 router.get("/slug/:slug", getBlogBySlug);
 
-// Admin routes
-router.post("/add", addBlog);
-router.get("/", getAllBlogs);
-router.post("/:id", getBlogById);
-router.patch("/:id", updateBlog);
-router.put("/status/:id", updateStatus);
-router.delete("/:id", deleteBlog);
+// Admin-only blog management
+router.post("/add", adminOnly, addBlog);
+router.get("/", adminOnly, getAllBlogs);
+router.post("/:id", adminOnly, getBlogById);
+router.patch("/:id", adminOnly, updateBlog);
+router.put("/status/:id", adminOnly, updateStatus);
+router.delete("/:id", adminOnly, deleteBlog);
 
 module.exports = router;
-

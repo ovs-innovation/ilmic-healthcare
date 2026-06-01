@@ -29,70 +29,49 @@ const {
   emailVerificationLimit,
   phoneVerificationLimit,
 } = require("../lib/email-sender/sender");
+const {
+  adminOnly,
+  isAuth,
+  ensureSelfOrAdmin,
+  ensureSelfEmail,
+} = require("../config/auth");
 
-//verify email
+// Public auth routes
 router.post("/verify-email", emailVerificationLimit, verifyEmailAddress);
-
-//verify phone number
 router.post("/verify-phone", phoneVerificationLimit, verifyPhoneNumber);
-
-// shipping address send to array
-router.post("/shipping/address/:id", addShippingAddress);
-
-// get all shipping address
-router.get("/shipping/address/:id", getShippingAddress);
-
-// shipping address update
-router.put("/shipping/address/:userId/:shippingId", updateShippingAddress);
-
-// shipping address delete
-router.delete("/shipping/address/:userId/:shippingId", deleteShippingAddress);
-
-//register a user
 router.post("/register/:token", registerCustomer);
-
-//login a user
 router.post("/login", loginCustomer);
-
-//register or login with google and fb
 router.post("/signup/oauth", signUpWithOauthProvider);
-
-//register or login with google and fb
 router.post("/signup/:token", signUpWithProvider);
-
-//forget-password
 router.put("/forget-password", passwordVerificationLimit, forgetPassword);
-
-//reset-password
 router.put("/reset-password", resetPassword);
 
-//change password
-router.post("/change-password", changePassword);
+// Customer self-service (authenticated + ownership)
+router.post("/change-password", isAuth, ensureSelfEmail, changePassword);
+router.post("/shipping/address/:id", isAuth, ensureSelfOrAdmin, addShippingAddress);
+router.get("/shipping/address/:id", isAuth, ensureSelfOrAdmin, getShippingAddress);
+router.put(
+  "/shipping/address/:userId/:shippingId",
+  isAuth,
+  ensureSelfOrAdmin,
+  updateShippingAddress
+);
+router.delete(
+  "/shipping/address/:userId/:shippingId",
+  isAuth,
+  ensureSelfOrAdmin,
+  deleteShippingAddress
+);
+router.get("/cart/:id", isAuth, ensureSelfOrAdmin, getCart);
+router.put("/cart/:id", isAuth, ensureSelfOrAdmin, saveCart);
+router.get("/wishlist/:id", isAuth, ensureSelfOrAdmin, getWishlist);
+router.put("/wishlist/:id", isAuth, ensureSelfOrAdmin, saveWishlist);
+router.put("/:id", isAuth, ensureSelfOrAdmin, updateCustomer);
 
-//add all users
-router.post("/add/all", addAllCustomers);
-
-//get all user
-router.get("/", getAllCustomers);
-
-// ⚠️ IMPORTANT: Specific routes MUST come BEFORE the wildcard /:id route
-// Otherwise Express matches /cart/:id as /:id (id="cart") and wrong handler is called
-
-//save and get cart
-router.get("/cart/:id", getCart);
-router.put("/cart/:id", saveCart);
-
-//save and get wishlist
-router.get("/wishlist/:id", getWishlist);
-router.put("/wishlist/:id", saveWishlist);
-
-//get a user  (wildcard - must be AFTER specific routes)
-router.get("/:id", getCustomerById);
-
-//update a user
-router.put("/:id", updateCustomer);
-
-//delete a user
-router.delete("/:id", deleteCustomer);
+// Admin-only customer management
+router.post("/add/all", adminOnly, addAllCustomers);
+router.get("/", adminOnly, getAllCustomers);
+router.get("/:id", adminOnly, getCustomerById);
+router.delete("/:id", adminOnly, deleteCustomer);
 
 module.exports = router;

@@ -75,15 +75,27 @@ const addStoreSetting = async (req, res) => {
   }
 };
 
+const sanitizePublicStoreSetting = (setting = {}) => {
+  const {
+    razorpay_secret,
+    stripe_secret,
+    google_secret,
+    github_secret,
+    facebook_secret,
+    nextauth_secret,
+    ...safeSetting
+  } = setting;
+
+  return safeSetting;
+};
+
 const getStoreSetting = async (req, res) => {
   try {
-    // console.log("getStoreSetting");
-
     const storeSetting = await Setting.findOne({ name: "storeSetting" });
     if (!storeSetting) {
       return res.status(200).send({});
     }
-    res.send(storeSetting.setting);
+    res.send(sanitizePublicStoreSetting(storeSetting.setting));
   } catch (err) {
     res.status(500).send({
       message: err.message,

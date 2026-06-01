@@ -24,6 +24,7 @@ const commentRoutes = require("../routes/commentRoutes");
 const reviewRoutes = require("../routes/reviewRoutes");
 const batteryServiceRoutes = require("../routes/batteryServiceRoutes");
 const shortVideoRoutes = require("../routes/shortVideoRoutes");
+const { handleShiprocketWebhook } = require("../controller/shiprocketController");
 const { isAuth, isAdmin } = require("../config/auth")
 
 const app = express();
@@ -67,9 +68,9 @@ app.use("/api/customer/", customerRoutes);
 app.use("/api/order/", isAuth, customerOrderRoutes);
 app.use("/api/attributes/", attributeRoutes);
 app.use("/api/setting/", settingRoutes);
-app.use("/api/currency/", isAuth, currencyRoutes);
+app.use("/api/currency/", currencyRoutes);
 app.use("/api/language/", languageRoutes);
-app.use("/api/notification/", isAuth, notificationRoutes);
+app.use("/api/notification/", notificationRoutes);
 app.use("/api/leads/", leadRoutes);
 app.use("/api/blogs/", blogRoutes);
 app.use("/api/services/", serviceRoutes);
@@ -80,7 +81,8 @@ app.use("/api/short-videos/", shortVideoRoutes);
 
 //if you not use admin dashboard then these two route will not needed.
 app.use("/api/admin/", adminRoutes);
-app.use("/api/orders/", orderRoutes);
+app.post("/api/orders/shiprocket/webhook", handleShiprocketWebhook);
+app.use("/api/orders/", isAuth, isAdmin, orderRoutes);
 
 // Use express's default error handling middleware
 app.use((err, req, res, next) => {
@@ -99,5 +101,11 @@ app.use("/static", express.static("public"));
 
 const PORT = process.env.PORT || 5058;
 
-
-app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+connectDB()
+  .then(() => {
+    app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+  })
+  .catch((err) => {
+    console.error("Failed to start server:", err.message);
+    process.exit(1);
+  });

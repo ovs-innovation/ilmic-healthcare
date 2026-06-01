@@ -4,7 +4,7 @@ const utc = require("dayjs/plugin/utc");
 dayjs.extend(utc);
 const jwt = require("jsonwebtoken");
 const {
-  signInToken,
+  signInAdminToken,
   tokenForVerify,
   handleEncryptData,
 } = require("../config/auth");
@@ -26,7 +26,7 @@ const registerAdmin = async (req, res) => {
         password: bcrypt.hashSync(req.body.password),
       });
       const staff = await newStaff.save();
-      const token = signInToken(staff);
+      const token = signInAdminToken(staff);
       res.send({
         token,
         _id: staff._id,
@@ -53,7 +53,7 @@ const loginAdmin = async (req, res) => {
             "Sorry, you don't have the access right now, please contact with Super Admin.",
         });
       }
-      const token = signInToken(admin);
+      const token = signInAdminToken(admin);
 
       const { data, iv } = handleEncryptData([
         ...admin?.access_list,
@@ -94,7 +94,7 @@ const forgetPassword = async (req, res) => {
       to: `${req.body.verifyEmail}`,
       subject: "Password Reset",
       html: `<h2>Hello ${req.body.verifyEmail}</h2>
-      <p>A request has been received to change the password for your <strong>PowerQ</strong> account </p>
+      <p>A request has been received to change the password for your <strong>Elecmoon</strong> account </p>
 
         <p>This link will expire in <strong> 15 minute</strong>.</p>
 
@@ -103,10 +103,10 @@ const forgetPassword = async (req, res) => {
         <a href=${process.env.ADMIN_URL}/auth/reset-password/${token}  style="background:#22c55e;color:white;border:1px solid #22c55e; padding: 10px 15px; border-radius: 4px; text-decoration:none;">Reset Password </a>
 
         
-        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at support@PowerQ.com</p>
+        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at support@Elecmoon.com</p>
 
         <p style="margin-bottom:0px;">Thank you</p>
-        <strong>PowerQ Team</strong>
+        <strong>Elecmoon Team</strong>
              `,
     };
     const message = "Please check your email to reset password!";
@@ -209,7 +209,7 @@ const updateStaff = async (req, res) => {
 
       admin.image = req.body.image;
       const updatedAdmin = await admin.save();
-      const token = signInToken(updatedAdmin);
+      const token = signInAdminToken(updatedAdmin);
 
       const { data, iv } = handleEncryptData([
         ...updatedAdmin?.access_list,

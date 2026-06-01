@@ -12,6 +12,26 @@ const signInToken = (user) => {
       address: user.address,
       phone: user.phone,
       image: user.image,
+      type: "customer",
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
+};
+
+const signInAdminToken = (admin) => {
+  return jwt.sign(
+    {
+      _id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      address: admin.address,
+      phone: admin.phone,
+      image: admin.image,
+      role: admin.role,
+      type: "admin",
     },
     process.env.JWT_SECRET,
     {
@@ -35,7 +55,13 @@ const tokenForVerify = (user) => {
 
 const isAuth = async (req, res, next) => {
   const { authorization } = req.headers;
-  // console.log("authorization", req.headers);
+
+  if (!authorization || !authorization.startsWith("Bearer ")) {
+    return res.status(401).send({
+      message: "Authorization token is required.",
+    });
+  }
+
   try {
     const token = authorization.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
@@ -49,12 +75,31 @@ const isAuth = async (req, res, next) => {
 };
 
 const isAdmin = async (req, res, next) => {
-  const admin = await Admin.findOne({ role: "Admin" });
-  if (admin) {
+  try {
+    if (!req.user?._id) {
+      return res.status(401).send({
+        message: "Authentication required.",
+      });
+    }
+
+    if (req.user.type !== "admin") {
+      return res.status(403).send({
+        message: "Admin access required.",
+      });
+    }
+
+    const admin = await Admin.findById(req.user._id);
+    if (!admin || admin.status === "Inactive") {
+      return res.status(403).send({
+        message: "Admin account is not authorized.",
+      });
+    }
+
+    req.admin = admin;
     next();
-  } else {
+  } catch (err) {
     res.status(401).send({
-      message: "User is not Admin",
+      message: err.message,
     });
   }
 };
@@ -82,10 +127,49 @@ const handleEncryptData = (data) => {
   };
 };
 
+const adminOnly = [isAuth, isAdmin];
+
+const ensureSelfOrAdmin = (req, res, next) => {
+  if (req.user?.type === "admin") {
+    return next();
+  }
+
+  const targetId = req.params.id || req.params.userId;
+  if (targetId && String(req.user?._id) === String(targetId)) {
+    return next();
+  }
+
+  return res.status(403).send({
+    message: "You are not authorized to access this resource.",
+  });
+};
+
+const ensureSelfEmail = (req, res, next) => {
+  if (req.user?.type === "admin") {
+    return next();
+  }
+
+  if (
+    req.body?.email &&
+    String(req.body.email).toLowerCase() ===
+      String(req.user?.email || "").toLowerCase()
+  ) {
+    return next();
+  }
+
+  return res.status(403).send({
+    message: "You are not authorized to change this account password.",
+  });
+};
+
 module.exports = {
   isAuth,
   isAdmin,
+  adminOnly,
+  ensureSelfOrAdmin,
+  ensureSelfEmail,
   signInToken,
+  signInAdminToken,
   tokenForVerify,
   handleEncryptData,
 };

@@ -11,6 +11,9 @@ const {
   forgetPasswordEmailBody,
 } = require("../lib/email-sender/templates/forget-password");
 const { sendVerificationCode } = require("../lib/phone-verification/sender");
+const {
+  queueCustomerSignupNotificationEmail,
+} = require("../lib/email-sender/adminNotificationEmail");
 
 const verifyEmailAddress = async (req, res) => {
   try {
@@ -26,6 +29,7 @@ const verifyEmailAddress = async (req, res) => {
         password: bcrypt.hashSync(req.body.password, 10),
       });
       await newUser.save();
+      queueCustomerSignupNotificationEmail(newUser, "Direct signup");
       res.send({
         message: "User created successfully!",
       });
@@ -137,6 +141,7 @@ const registerCustomer = async (req, res) => {
             });
 
             await newUser.save();
+            queueCustomerSignupNotificationEmail(newUser, "Email verification");
             const token = signInToken(newUser);
             res.send({
               token,
@@ -314,6 +319,7 @@ const signUpWithProvider = async (req, res) => {
       });
 
       const signUpCustomer = await newUser.save();
+      queueCustomerSignupNotificationEmail(signUpCustomer, "Social login");
       const token = signInToken(signUpCustomer);
       res.send({
         token,
@@ -358,6 +364,7 @@ const signUpWithOauthProvider = async (req, res) => {
       });
 
       const signUpCustomer = await newUser.save();
+      queueCustomerSignupNotificationEmail(signUpCustomer, "OAuth");
       const token = signInToken(signUpCustomer);
       res.send({
         token,

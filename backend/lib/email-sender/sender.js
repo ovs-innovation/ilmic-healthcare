@@ -1,22 +1,37 @@
 const nodemailer = require("nodemailer");
 const rateLimit = require("express-rate-limit");
 
-const sendEmail = (body, res, message) => {
-  const transporter = nodemailer.createTransport({
+const createTransporter = () =>
+  nodemailer.createTransport({
     host: process.env.HOST,
-    // service: process.env.SERVICE, //comment this line if you use custom server/domain
     port: process.env.EMAIL_PORT,
     secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-
-    //comment out this one if you usi custom server/domain
-    // tls: {
-    //   rejectUnauthorized: false,
-    // },
   });
+
+const sendMailPromise = (body) =>
+  new Promise((resolve, reject) => {
+    const transporter = createTransporter();
+    transporter.verify((err) => {
+      if (err) {
+        console.error("Email verification error:", err);
+        return reject(err);
+      }
+      transporter.sendMail(body, (sendErr, data) => {
+        if (sendErr) {
+          console.error("Error sending email:", sendErr);
+          return reject(sendErr);
+        }
+        resolve(data);
+      });
+    });
+  });
+
+const sendEmail = (body, res, message) => {
+  const transporter = createTransporter();
 
   transporter.verify((err, success) => {
     if (err) {
@@ -89,6 +104,7 @@ const phoneVerificationLimit = rateLimit({
 
 module.exports = {
   sendEmail,
+  sendMailPromise,
   emailVerificationLimit,
   passwordVerificationLimit,
   supportMessageLimit,

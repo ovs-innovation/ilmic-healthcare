@@ -13,35 +13,20 @@ const {
   updateManyLanguage,
   deleteManyLanguage,
 } = require('../controller/languageController');
+const { adminOnly } = require('../config/auth');
 
-// add a language
-router.post('/add', addLanguage);
-
-// add all language
-router.post('/add/all', addAllLanguage);
-
-// get only showing language
+// Public storefront read
 router.get('/show', getShowingLanguage);
 
-// get all language
-router.get('/all', getAllLanguages);
-
-// get a language
-router.get('/:id', getLanguageById);
-
-// update a language
-router.put('/:id', updateLanguage);
-
-// update many language
-router.patch('/update/many', updateManyLanguage);
-
-// show/hide a language
-router.put('/status/:id', updateStatus);
-
-// delete a language
-router.patch('/:id', deleteLanguage);
-
-//delete many language
-router.patch('/delete/many', deleteManyLanguage);
+// Admin-only language management
+router.post('/add', adminOnly, addLanguage);
+router.post('/add/all', adminOnly, addAllLanguage);
+router.get('/all', adminOnly, getAllLanguages);
+router.get('/:id', adminOnly, getLanguageById);
+router.put('/:id', adminOnly, updateLanguage);
+router.patch('/update/many', adminOnly, updateManyLanguage);
+router.put('/status/:id', adminOnly, updateStatus);
+router.patch('/:id', adminOnly, deleteLanguage);
+router.patch('/delete/many', adminOnly, deleteManyLanguage);
 
 module.exports = router;
