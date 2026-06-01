@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Battery Cell | PowerQ"
+      title="Battery Cell | Elecmoon"
       description="Explore our high-quality Battery Cell solutions for your business needs."
     >
       {/* Hero Section */}

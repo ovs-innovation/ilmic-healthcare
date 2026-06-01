@@ -25,12 +25,12 @@ const Layout = ({ title, description, children }) => {
     <>
       <ToastContainer />
 
-      <div className="font-sans">
+      <div className="font-sans overflow-x-hidden">
         <Head>
           <title>
             {title
-              ? `PowerQ | ${title}`
-              : "PowerQ – Professional Test and Tag Services in Melbourne"}
+              ? `Elecmoon | ${title}`
+              : "Elecmoon"}
           </title>
           {description && (
             <meta
@@ -47,21 +47,21 @@ const Layout = ({ title, description, children }) => {
         <CartDrawer />
         <div className="bg-gray-50">{children}</div>
         {/* Floating action buttons */}
-        <div className="fixed right-4 md:right-6 bottom-24 flex flex-col gap-3 z-40">
+        <div className="fixed right-3 sm:right-4 md:right-6 bottom-20 sm:bottom-24 flex flex-col gap-2 sm:gap-3 z-30 pointer-events-none">
           <a
             href="tel:+611300755096"
-            className="w-12 h-12 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition"
-            aria-label="Call PowerQ"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition pointer-events-auto"
+            aria-label="Call Elecmoon"
           >
-            <FiPhoneCall className="w-6 h-6" />
+            <FiPhoneCall className="w-5 h-5 sm:w-6 sm:h-6" />
           </a>
           <button
             onClick={handleScrollTop}
-            className="w-12 h-12 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition"
+            className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition pointer-events-auto"
             aria-label="Back to top"
             type="button"
           >
-            <FiChevronUp className="w-6 h-6" />
+            <FiChevronUp className="w-5 h-5 sm:w-6 sm:h-6" />
           </button>
         </div>
         <MobileFooter />

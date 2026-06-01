@@ -19,7 +19,7 @@ const WhyChooseUs = ({ onGetQuote }) => {
             <div className="absolute -bottom-10 -right-10 w-40 h-40 bg-[#0b1d3d]/10 rounded-full blur-3xl"></div>
             <Image
               src="https://images.unsplash.com/photo-1581092918056-0c4c3acd373c?auto=format&fit=crop&q=80&w=800"
-              alt="Why Choose PowerQ"
+              alt="Why Choose Elecmoon"
               width={600}
               height={600}
               className="rounded-3xl shadow-2xl relative z-10 object-cover border-8 border-white"
@@ -27,9 +27,9 @@ const WhyChooseUs = ({ onGetQuote }) => {
           </div>
           <div className="lg:w-1/2">
             <span className="text-[#ED1C24] font-bold tracking-widest uppercase text-sm mb-4 block">Our Commitment</span>
-            <h2 className="text-4xl font-extrabold text-[#051124] mb-6">Why Hundreds of Businesses Trust PowerQ</h2>
+            <h2 className="text-4xl font-extrabold text-[#051124] mb-6">Why Hundreds of Businesses Trust Elecmoon</h2>
             <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-              With years of experience in the industry, PowerQ is dedicated to providing affordable and high-quality safety testing services. We focus on reliability, professionalism, and customer satisfaction.
+              With years of experience in the industry, Elecmoon is dedicated to providing affordable and high-quality safety testing services. We focus on reliability, professionalism, and customer satisfaction.
             </p>
             <ul className="space-y-4 mb-10">
               {benefits.map((item, idx) => (

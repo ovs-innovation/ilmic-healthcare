@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Epoxy Sheet | PowerQ"
+      title="Epoxy Sheet | Elecmoon"
       description="Explore our high-quality Epoxy Sheet solutions for your business needs."
     >
       {/* Hero Section */}

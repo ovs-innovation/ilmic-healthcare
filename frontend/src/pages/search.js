@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import useTranslation from "next-translate/useTranslation";
@@ -10,18 +10,35 @@ import CardSlider from "@components/cta-card/CardSlider";
 import Loading from "@components/preloader/Loading";
 import ProductServices from "@services/ProductServices";
 import ProductCard from "@components/product/ProductCard";
+import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
+import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from "@utils/productGrid";
 import { SidebarContext } from "@context/SidebarContext";
 import AttributeServices from "@services/AttributeServices";
 import CategoryCarousel from "@components/carousel/CategoryCarousel";
+import useUtilsFunction from "@hooks/useUtilsFunction";
 import { sanitizeData } from "@utils/dataSanitizer";
 
 const Search = ({ products, attributes }) => {
   const { t } = useTranslation();
   const router = useRouter();
-  const { isLoading, setIsLoading } = useContext(SidebarContext);
+  const { isLoading, setIsLoading, categories } = useContext(SidebarContext);
+  const { showingTranslateValue } = useUtilsFunction();
   const [visibleProduct, setVisibleProduct] = useState(18);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
 
-  const { category } = router.query;
+  const { _id, category } = router.query;
+
+  const categoryTitle = useMemo(() => {
+    if (_id && categories?.length) {
+      const match = categories.find((cat) => cat._id === _id);
+      if (match) return showingTranslateValue(match.name);
+    }
+    if (category) {
+      return category.toString().replace(/-/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
+    }
+    return "All Products";
+  }, [_id, category, categories, showingTranslateValue]);
 
   useEffect(() => {
     setIsLoading(false);
@@ -29,8 +46,10 @@ const Search = ({ products, attributes }) => {
 
   const { setSortedField, productData } = useFilter(products);
 
-  // Capitalize name for cleaner display
-  const categoryTitle = category ? category.toString().replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()) : "All Products";
+  const handleEnquire = (product) => {
+    setSelectedProduct(product);
+    setModalOpen(true);
+  };
 
   return (
     <Layout title="Search" description="This is search page">
@@ -78,13 +97,16 @@ const Search = ({ products, attributes }) => {
                 <Loading loading={isLoading} />
               ) : (
                 <>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-5 gap-4 md:gap-5 lg:gap-6">
+                  <div className={PRODUCT_GRID_CLASS}>
                     {productData?.slice(0, visibleProduct).map((product, i) => (
+                      <div key={product._id || i + 1} className={PRODUCT_GRID_ITEM_CLASS}>
                       <ProductCard
                         key={product._id || i + 1}
                         product={product}
                         attributes={attributes}
+                        onEnquire={handleEnquire}
                       />
+                      </div>
                     ))}
                   </div>
 
@@ -104,6 +126,13 @@ const Search = ({ products, attributes }) => {
           )}
         </div>
       </div>
+
+      <ProductEnquiryModal
+        modalOpen={modalOpen}
+        setModalOpen={setModalOpen}
+        product={selectedProduct}
+        selectedVariant={selectedProduct?.variants?.[0]}
+      />
     </Layout>
   );
 };
@@ -111,13 +140,14 @@ const Search = ({ products, attributes }) => {
 export default Search;
 
 export const getServerSideProps = async (context) => {
-  const { query, _id, page, limit } = context.query;
+  const { query, _id, page, limit, title } = context.query;
+  const searchTitle = title || query;
 
   try {
     const [data, attributes] = await Promise.all([
       ProductServices.getShowingStoreProducts({
         category: _id ? _id : "",
-        title: query ? encodeURIComponent(query) : "",
+        title: searchTitle ? encodeURIComponent(searchTitle) : "",
         page: page ? String(page) : "1",
         limit: limit ? String(limit) : "60",
       }),

@@ -65,6 +65,14 @@ const ThankYouPage = () => {
                         {data?.orderId || data?.invoice || data?._id?.substring(20, 24) || orderId}
                       </span>
                     </p>
+                    {data?.user_info?.email && (
+                      <p className="text-sm text-gray-500 mt-2">
+                        Invoice has been sent to{" "}
+                        <span className="font-semibold text-gray-700">
+                          {data.user_info.email}
+                        </span>
+                      </p>
+                    )}
                   </div>
                 </div>
 

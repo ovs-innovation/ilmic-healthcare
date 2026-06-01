@@ -1,52 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { FiPhoneCall, FiMail, FiMapPin } from "react-icons/fi";
 
 import useGetSetting from "@hooks/useGetSetting";
-import CategoryServices from "@services/CategoryServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
+import { SidebarContext } from "@context/SidebarContext";
 
 const Footer = () => {
   const { storeCustomizationSetting } = useGetSetting();
   const { showingTranslateValue } = useUtilsFunction();
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await CategoryServices.getShowingCategory();
-        let catList = res || [];
-
-        // Recursive function to find the first level that has multiple categories or isn't "Home"
-        const findMainCategories = (list) => {
-          if (list.length === 1) {
-            const name = showingTranslateValue(list[0].name)?.toLowerCase()?.trim();
-            if (name === "home" || name === "all categories" || name === "all departments" || !list[0].parentId) {
-              if (list[0].children && list[0].children.length > 0) {
-                return findMainCategories(list[0].children);
-              }
-            }
-          }
-          return list;
-        };
-
-        const finalCategories = findMainCategories(catList);
-
-        // Filter out any specific "Home" label items strictly
-        const filtered = finalCategories.filter((cat) => {
-          const name = showingTranslateValue(cat.name)?.toLowerCase()?.trim();
-          return name !== "home" && name !== "all categories" && name !== "all departments" && name !== "";
-        });
-
-        setCategories(filtered);
-      } catch (err) {
-        console.error("Error fetching categories:", err);
-      }
-    };
-    fetchCategories();
-  }, []);
+  const { services } = useContext(SidebarContext);
   return (
     <div className="bg-gray-100 text-gray-900 pt-10 pb-16 relative">
       {/* Red vertical bar on the right */}
@@ -56,19 +20,18 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
           {/* About Section */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3">
-              <Image
-                src="/logo/elecmoon-transparent.png"
-                alt="PowerQ"
-                width={260}
-                height={90}
-                className="w-auto h-24 object-contain origin-left"
-                priority
-              />
-            </div>
+            <Link href="/" className="inline-block">
+              <div className="relative overflow-hidden flex items-center h-[48px] sm:h-[58px] lg:h-[68px] xl:h-[78px] w-[150px] sm:w-[190px] lg:w-[230px] xl:w-[260px]">
+                <img
+                  src="/logo/elecmoon-transparent.png"
+                  alt="ELECMOON"
+                  className="absolute left-0 top-1/2 -translate-y-1/2 w-auto object-contain object-left origin-left h-[160%] scale-[1.55] sm:scale-[1.6] lg:scale-[1.65]"
+                />
+              </div>
+            </Link>
             <p className="text-sm leading-7 text-gray-700">
               {showingTranslateValue(storeCustomizationSetting?.footer?.shipping_card) || 
-              "At PowerQ, we specialize in providing top-quality electrical testing, tagging, and fire safety services. Our mission is to ensure your workplace is safe and compliant."}
+              "At Elecmoon, we specialize in providing top-quality electrical testing, tagging, and fire safety services. Our mission is to ensure your workplace is safe and compliant."}
             </p>
 
             <div className="flex gap-3 pt-2">
@@ -108,7 +71,7 @@ const Footer = () => {
               </div>
               <div className="flex items-start gap-2">
                 <FiMail className="text-[#ED1C24] mt-1 flex-shrink-0" />
-                <p className="font-medium">{storeCustomizationSetting?.contact_us?.email_box_email?.en || "info@powerq.com.au"}</p>
+                <p className="font-medium">{storeCustomizationSetting?.contact_us?.email_box_email?.en || "info@Elecmoon.com.au"}</p>
               </div>
               <div className="flex items-start gap-2">
                 <FiMapPin className="text-[#ED1C24] mt-1 flex-shrink-0" />
@@ -119,17 +82,33 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Services */}
+          {/* Services — from database */}
           <div className="space-y-3">
             <h3 className="text-lg font-semibold text-black">Services</h3>
             <ul className="space-y-2 text-sm text-gray-700">
-              {categories.slice(0, 7).map((cat) => (
-                <li key={cat._id}>
-                  <Link href={`/search?category=${cat.slug}`} className="hover:text-[#ED1C24] transition">
-                    {showingTranslateValue(cat.name)}
+              {services?.length > 0 ? (
+                services.map((service) => {
+                  const name = showingTranslateValue(service.name);
+                  if (!name) return null;
+                  const href = service.slug ? `/service/${service.slug}` : "/services";
+                  return (
+                    <li key={service._id}>
+                      <Link href={href} className="hover:text-[#ED1C24] transition">
+                        {name}
+                      </Link>
+                    </li>
+                  );
+                })
+              ) : (
+                <li className="text-gray-400 text-xs">No services available.</li>
+              )}
+              {services?.length > 0 && (
+                <li>
+                  <Link href="/services" className="font-semibold text-[#ED1C24] hover:underline transition">
+                    View All Services →
                   </Link>
                 </li>
-              ))}
+              )}
             </ul>
           </div>
 
@@ -145,13 +124,25 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Useful Links */}
+          {/* Legal & Policies */}
           <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-black">Useful Links</h3>
+            <h3 className="text-lg font-semibold text-black">Legal &amp; Policies</h3>
             <ul className="space-y-2 text-sm text-gray-700">
               <li><Link href="/privacy-policy" className="hover:text-[#ED1C24] transition">Privacy Policy</Link></li>
               <li><Link href="/terms-and-conditions" className="hover:text-[#ED1C24] transition">Terms &amp; Conditions</Link></li>
+              <li><Link href="/shipping-policy" className="hover:text-[#ED1C24] transition">Shipping Policy</Link></li>
+              <li><Link href="/return-and-refund-policy" className="hover:text-[#ED1C24] transition">Return &amp; Refund Policy</Link></li>
             </ul>
+          </div>
+        </div>
+
+        <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-500">
+          <p>&copy; {new Date().getFullYear()} Elecmoon. All rights reserved.</p>
+          <div className="flex flex-wrap items-center justify-center gap-4">
+            <Link href="/privacy-policy" className="hover:text-[#ED1C24] transition">Privacy</Link>
+            <Link href="/terms-and-conditions" className="hover:text-[#ED1C24] transition">Terms</Link>
+            <Link href="/shipping-policy" className="hover:text-[#ED1C24] transition">Shipping</Link>
+            <Link href="/return-and-refund-policy" className="hover:text-[#ED1C24] transition">Returns</Link>
           </div>
         </div>
       </div>

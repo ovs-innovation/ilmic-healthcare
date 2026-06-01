@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Cell Holder | PowerQ"
+      title="Cell Holder | Elecmoon"
       description="Explore our high-quality Cell Holder solutions for your business needs."
     >
       {/* Hero Section */}

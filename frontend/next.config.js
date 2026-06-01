@@ -49,9 +49,15 @@ module.exports = withPWA({
     remotePatterns: [
       {
         protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
+        protocol: "https",
         hostname: "**",
       },
     ],
+    // Avoid 401 spam when old Cloudinary assets are private/deleted
+    unoptimized: process.env.NODE_ENV === "development",
   },
 
   ...nextTranslate(),

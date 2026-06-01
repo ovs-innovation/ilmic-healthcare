@@ -23,8 +23,8 @@ const Price = ({ product, price, card, currency, originalPrice }) => {
               <del
                 className={
                   card
-                    ? "sm:text-sm font-normal text-base text-gray-400 ml-1"
-                    : "text-lg font-normal text-gray-400 ml-1"
+                    ? "sm:text-sm font-semibold text-base text-gray-500 line-through ml-1"
+                    : "text-lg font-semibold text-gray-500 line-through ml-1"
                 }
               >
                 {currency}
@@ -50,8 +50,8 @@ const Price = ({ product, price, card, currency, originalPrice }) => {
               <del
                 className={
                   card
-                    ? "sm:text-sm font-normal text-base text-gray-400 ml-1"
-                    : "text-lg font-normal text-gray-400 ml-1"
+                    ? "sm:text-sm font-semibold text-base text-gray-500 line-through ml-1"
+                    : "text-lg font-semibold text-gray-500 line-through ml-1"
                 }
               >
                 {currency}

@@ -70,8 +70,8 @@ const HomeBlogSection = () => {
   if (!loading && blogs.length === 0) return null;
 
   return (
-    <section className="bg-[#f8fafc] py-16">
-      <div className="max-w-screen-2xl mx-auto px-4 lg:px-12">
+    <section className="bg-[#f8fafc] py-10 sm:py-16 overflow-hidden">
+      <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-4">
@@ -128,13 +128,12 @@ const HomeBlogSection = () => {
           <div
             ref={scrollRef}
             onScroll={checkScroll}
-            className="flex gap-4 overflow-x-auto pb-3"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            className="flex gap-3 sm:gap-4 overflow-x-auto pb-3 snap-x snap-mandatory scroll-smooth blog-scroll"
           >
             {blogs.map((blog) => (
               <div
                 key={blog._id}
-                className="flex-shrink-0 bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-gray-100/80 flex flex-col hover:-translate-y-1 blog-card-wrap"
+                className="flex-shrink-0 snap-start bg-white rounded-2xl overflow-hidden group transition-all duration-300 hover:shadow-[0_15px_40px_rgba(0,0,0,0.08)] border border-gray-100/80 flex flex-col w-[85vw] max-w-[320px] sm:w-[280px] lg:w-[290px]"
               >
                 <Link href={`/blog/${blog.slug}`}>
                   <div className="relative w-full h-[175px] overflow-hidden bg-gray-50">
@@ -180,11 +179,14 @@ const HomeBlogSection = () => {
           </div>
         )}
 
-        <style>{`
-          .blog-card-wrap { width: 240px; }
-          @media (min-width: 480px)  { .blog-card-wrap { width: 260px; } }
-          @media (min-width: 640px)  { .blog-card-wrap { width: 280px; } }
-          @media (min-width: 1024px) { .blog-card-wrap { width: 290px; } }
+        <style jsx>{`
+          .blog-scroll {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+          .blog-scroll::-webkit-scrollbar {
+            display: none;
+          }
         `}</style>
         
         <div className="mt-6 flex md:hidden justify-center">

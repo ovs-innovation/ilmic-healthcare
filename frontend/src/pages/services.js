@@ -460,7 +460,7 @@ const ServicesPage = () => {
                                 <span className="text-[#ff5c23]">Next Big Innovation?</span>
                             </h2>
                             <p className="text-gray-500 text-xl mb-12 font-medium">
-                                Partner with PowerQ for bespoke battery solutions that drive efficiency and growth for your enterprise.
+                                Partner with Elecmoon for bespoke battery solutions that drive efficiency and growth for your enterprise.
                             </p>
                             <div className="flex flex-wrap justify-center gap-6">
                                 <Link

@@ -20,7 +20,7 @@ const brands = [
 
 const BrandSlider = () => {
   return (
-    <div className="max-w-screen-2xl mx-auto px-4 lg:px-12 my-10 lg:my-16">
+    <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-12 my-8 sm:my-10 lg:my-16 overflow-hidden">
       {/* Title above the slider */}
       <div className="mb-6">
         <h2 className="text-2xl lg:text-3xl font-black text-[#0b1d3d] tracking-tight">

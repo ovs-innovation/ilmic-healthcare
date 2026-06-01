@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Lithium-ion Battery | PowerQ"
+      title="Lithium-ion Battery | Elecmoon"
       description="Explore our high-quality Lithium-ion Battery solutions for your business needs."
     >
       {/* Hero Section */}
@@ -34,8 +34,14 @@ const ProductPage = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <Link
-                href="/request-a-quote"
+                href="/search?category=lithium-ion-battery"
                 className="px-8 py-3 bg-[#ff5c23] hover:bg-[#e04d18] text-white font-bold rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg"
+              >
+                Shop Lithium Products
+              </Link>
+              <Link
+                href="/request-a-quote"
+                className="px-8 py-3 border-2 border-white/30 hover:bg-white hover:text-[#0b1d3d] text-white font-bold rounded-full transition-all duration-300"
               >
                 Request a Quote
               </Link>

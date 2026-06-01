@@ -9,10 +9,6 @@ const OrderServices = {
     return requests.post("/order/create-payment-intent", body);
   },
 
-  addRazorpayOrder: async (body) => {
-    return requests.post("/order/add/razorpay", body);
-  },
-
   createOrderByRazorPay: async (body) => {
     return requests.post("/order/create/razorpay", body);
   },

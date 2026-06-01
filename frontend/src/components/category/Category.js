@@ -34,7 +34,7 @@ const Category = () => {
                 width={100}
                 height={38}
                 src="/logo/full-logo.png"
-                alt="PowerQ"
+                alt="Elecmoon"
               />
             </Link>
           </h2>

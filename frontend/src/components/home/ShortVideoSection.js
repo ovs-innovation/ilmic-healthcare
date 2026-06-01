@@ -39,8 +39,8 @@ const ShortVideoSection = () => {
   if (videos.length === 0) return null;
 
   return (
-    <div className="bg-white py-12 border-t border-gray-50">
-      <div className="container mx-auto px-4">
+    <div className="bg-white py-10 sm:py-12 border-t border-gray-50 overflow-hidden">
+      <div className="max-w-screen-2xl mx-auto px-3 sm:px-4">
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl md:text-3xl font-black text-[#0b1d3d] uppercase tracking-tighter">
@@ -59,11 +59,11 @@ const ShortVideoSection = () => {
 
         <div className="relative group">
           {/* Draggable/Scrollable Container */}
-          <div className="flex overflow-x-auto gap-4 md:gap-6 pb-6 no-scrollbar snap-x scroll-smooth">
+          <div className="flex overflow-x-auto gap-3 sm:gap-4 md:gap-6 pb-4 snap-x snap-mandatory scroll-smooth video-scroll">
             {videos.map((video) => (
-              <div 
-                key={video._id} 
-                className="flex-shrink-0 w-[240px] md:w-[240px] snap-start"
+              <div
+                key={video._id}
+                className="flex-shrink-0 snap-start w-[72vw] max-w-[240px] sm:w-[220px] md:w-[240px]"
               >
                 {/* Video Card */}
                 <div className="relative aspect-[9/12] bg-black rounded-xl overflow-hidden shadow-xl border-4 border-slate-100 group/card transition-transform duration-500 hover:-translate-y-2">
@@ -115,13 +115,13 @@ const ShortVideoSection = () => {
         </div>
       </div>
 
-      <style>{`
-        .no-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .no-scrollbar {
+      <style jsx>{`
+        .video-scroll {
           -ms-overflow-style: none;
           scrollbar-width: none;
+        }
+        .video-scroll::-webkit-scrollbar {
+          display: none;
         }
       `}</style>
     </div>

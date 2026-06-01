@@ -4,7 +4,7 @@ import ProductCatalog from "@components/product/ProductCatalog";
 
 const Products = () => {
   return (
-    <Layout title="Products" description="PowerQ Test & Tag Melbourne Products">
+    <Layout title="Products" description="Elecmoon Test & Tag Melbourne Products">
       <div className="bg-[#f8f9fa] min-h-screen">
         <ProductCatalog />
       </div>

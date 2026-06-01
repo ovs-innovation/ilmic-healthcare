@@ -16,12 +16,15 @@ import useGetSetting from "@hooks/useGetSetting";
 import { UserContext } from "@context/UserContext";
 import { SidebarContext } from "@context/SidebarContext";
 import { WishlistContext } from "@context/WishlistContext";
+import { getCategorySearchUrl } from "@utils/categoryUrl";
 
 const Navbar = () => {
   const router = useRouter();
-  const [hoveredItem, setHoveredItem] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [pinnedDropdown, setPinnedDropdown] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const { state: { userInfo } } = useContext(UserContext);
   const { storeCustomizationSetting } = useGetSetting();
@@ -41,15 +44,47 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    setOpenDropdown(null);
+    setPinnedDropdown(null);
+    setMobileMenuOpen(false);
+    setMobileServicesOpen(false);
+    setMobileCategoriesOpen(false);
+  }, [router.asPath]);
+
+  // Close desktop dropdowns when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest("[data-nav-dropdown]")) {
+        setOpenDropdown(null);
+        setPinnedDropdown(null);
+      }
+    };
+    document.addEventListener("click", handleClickOutside);
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  useEffect(() => {
-    setHoveredItem(null);
-    setMobileMenuOpen(false);
-  }, [router.asPath]);
+  const isDropdownOpen = (key) => openDropdown === key;
+
+  const handleDropdownEnter = (key) => setOpenDropdown(key);
+
+  const handleDropdownLeave = (key) => {
+    if (pinnedDropdown !== key) setOpenDropdown(null);
+  };
+
+  const handleDropdownToggle = (key) => {
+    if (openDropdown === key && pinnedDropdown === key) {
+      setOpenDropdown(null);
+      setPinnedDropdown(null);
+      return;
+    }
+    setOpenDropdown(key);
+    setPinnedDropdown(key);
+  };
+
+  const closeDropdown = () => {
+    setOpenDropdown(null);
+    setPinnedDropdown(null);
+  };
 
   // Close mobile menu on resize to desktop
   useEffect(() => {
@@ -59,7 +94,7 @@ const Navbar = () => {
   }, []);
 
   const phone = storeCustomizationSetting?.navbar?.phone || "0433723389";
-  const email = storeCustomizationSetting?.contact_us?.email_box_email?.en || "info@powerq.com.au";
+  const email = storeCustomizationSetting?.contact_us?.email_box_email?.en || "info@Elecmoon.com.au";
   const address = showingTranslateValue(storeCustomizationSetting?.contact_us?.address_box_address_one) || "Melbourne, VIC";
 
   const navLinks = [
@@ -79,7 +114,7 @@ const Navbar = () => {
 
   return (
     <>
-      <div className={`sticky top-0 z-50 transition-shadow duration-300 ${isScrolled ? "shadow-[0_2px_16px_rgba(0,0,0,0.08)]" : ""}`}>
+      <div className="sticky top-0 z-50 shadow-[0_2px_16px_rgba(0,0,0,0.08)]">
 
         {/* ── Top bar ── */}
         <div className="bg-[#0b1d3d] border-b border-white/5">
@@ -105,21 +140,17 @@ const Navbar = () => {
         </div>
 
         {/* ── Main header ── */}
-        <div className={`bg-white transition-all duration-300 ${isScrolled ? "py-1" : "py-2"}`}>
+        <div className="bg-white py-2">
           <div className="max-w-screen-2xl mx-auto px-4 lg:px-8">
             <div className="flex items-center gap-2 lg:gap-4 min-w-0">
 
               {/* Logo */}
               <Link href="/" className="flex-shrink-0">
-                <div className={`relative transition-all duration-300 overflow-hidden
-                  ${isScrolled
-                    ? "w-[140px] h-12 sm:w-[170px] sm:h-14"
-                    : "w-[160px] h-14 sm:w-[200px] sm:h-16 lg:w-[240px] lg:h-20 xl:w-[270px] xl:h-[86px]"
-                  }`}>
+                <div className="relative overflow-hidden flex items-center h-[48px] sm:h-[58px] lg:h-[68px] xl:h-[78px] w-[150px] sm:w-[190px] lg:w-[230px] xl:w-[260px]">
                   <img
                     src="/logo/elecmoon-transparent.png"
                     alt="ELECMOON"
-                    className="h-full w-full object-contain object-left scale-[1.8] origin-left"
+                    className="absolute left-0 top-1/2 -translate-y-1/2 w-auto object-contain object-left origin-left h-[160%] scale-[1.55] sm:scale-[1.6] lg:scale-[1.65]"
                   />
                 </div>
               </Link>
@@ -136,22 +167,34 @@ const Navbar = () => {
                   </Link>
                 ))}
                 {/* Services Dropdown */}
-                <div className="relative" onMouseEnter={() => setHoveredItem('services')} onMouseLeave={() => setHoveredItem(null)}>
-                  <button className="flex items-center gap-1 text-[12px] xl:text-[13px] font-bold text-gray-500 hover:text-[#0b1d3d] uppercase tracking-wider transition-colors whitespace-nowrap">
-                    Services <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${hoveredItem === 'services' ? 'rotate-180' : ''}`} />
+                <div
+                  data-nav-dropdown
+                  className="relative"
+                  onMouseEnter={() => handleDropdownEnter("services")}
+                  onMouseLeave={() => handleDropdownLeave("services")}
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleDropdownToggle("services")}
+                    className={`flex items-center gap-1 text-[12px] xl:text-[13px] font-bold uppercase tracking-wider transition-colors whitespace-nowrap ${isDropdownOpen("services") ? "text-[#0b1d3d]" : "text-gray-500 hover:text-[#0b1d3d]"}`}
+                  >
+                    Services <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${isDropdownOpen("services") ? "rotate-180" : ""}`} />
                   </button>
-                  <div className={`absolute top-[calc(100%+10px)] left-0 w-56 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[70] overflow-hidden ${hoveredItem === 'services' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}>
+                  <div className={`absolute top-[calc(100%+10px)] left-0 w-56 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[70] overflow-hidden ${isDropdownOpen("services") ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"}`}>
                     <div className="py-2">
                       {services.length > 0 ? services.map((service) => {
                         const name = showingTranslateValue(service.name);
                         if (!name) return null;
                         const href = service.slug ? `/service/${service.slug}` : `/services`;
                         return (
-                          <Link key={service._id} href={href} className="block px-5 py-2.5 text-[12px] font-bold text-gray-600 hover:text-[#0b1d3d] hover:bg-gray-50 transition-colors">
+                          <Link key={service._id} href={href} onClick={closeDropdown} className="block px-5 py-2.5 text-[12px] font-bold text-gray-600 hover:text-[#0b1d3d] hover:bg-gray-50 transition-colors">
                             {name}
                           </Link>
                         );
                       }) : <div className="px-5 py-4 text-gray-400 text-xs">No services.</div>}
+                      <Link href="/services" onClick={closeDropdown} className="block px-5 py-2.5 text-[11px] font-black text-[#ED1C24] uppercase tracking-wider hover:bg-gray-50 transition-colors border-t border-gray-50 mt-1">
+                        View All Services →
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -161,31 +204,42 @@ const Navbar = () => {
               <div className="hidden lg:flex items-center gap-2 ml-auto flex-shrink-0">
 
                 {/* Categories dropdown */}
-                <div className="relative" onMouseEnter={() => setHoveredItem('categories')} onMouseLeave={() => setHoveredItem(null)}>
-                  <button className={`h-10 px-5 flex items-center gap-2.5 rounded-full text-[12px] font-black uppercase tracking-wider transition-all border ${hoveredItem === 'categories' ? 'bg-[#0b1d3d] text-white border-[#0b1d3d]' : 'bg-gray-50 text-gray-700 border-gray-200 hover:border-gray-300'}`}>
+                <div
+                  data-nav-dropdown
+                  className="relative"
+                  onMouseEnter={() => handleDropdownEnter("categories")}
+                  onMouseLeave={() => handleDropdownLeave("categories")}
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleDropdownToggle("categories")}
+                    className={`h-10 px-5 flex items-center gap-2.5 rounded-full text-[12px] font-black uppercase tracking-wider transition-all border ${isDropdownOpen("categories") ? "bg-[#0b1d3d] text-white border-[#0b1d3d]" : "bg-gray-50 text-gray-700 border-gray-200 hover:border-gray-300"}`}
+                  >
                     <FiGrid className="w-4 h-4" />
                     <span className="hidden xl:inline">Categories</span>
-                    <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${hoveredItem === 'categories' ? 'rotate-180' : ''}`} />
+                    <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${isDropdownOpen("categories") ? "rotate-180" : ""}`} />
                   </button>
-                  <div className={`absolute top-[calc(100%+8px)] right-0 w-60 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[60] overflow-hidden ${hoveredItem === 'categories' ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible -translate-y-2 pointer-events-none'}`}>
+                  <div className={`absolute top-[calc(100%+8px)] right-0 w-60 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[60] overflow-hidden ${isDropdownOpen("categories") ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"}`}>
                     <div className="py-2 max-h-[55vh] overflow-y-auto">
                       {isCategoriesLoading ? (
                         Array.from({ length: 5 }).map((_, i) => (
                           <div key={i} className="px-5 py-3 animate-pulse"><div className="h-3 bg-gray-100 rounded w-3/4" /></div>
                         ))
                       ) : categories.length > 0 ? (
-                        categories.map((cat) => (
-                          <Link key={cat._id} href={`/search?_id=${cat._id}`} onClick={() => setHoveredItem(null)} className="flex items-center justify-between px-5 py-2.5 text-[13px] font-bold text-gray-600 hover:text-[#0b1d3d] hover:bg-gray-50 transition-all group/ci">
-                            <span>{showingTranslateValue(cat.name)}</span>
+                        categories.map((cat) => {
+                          const catName = showingTranslateValue(cat.name);
+                          return (
+                          <Link key={cat._id} href={getCategorySearchUrl(cat._id, catName)} onClick={closeDropdown} className="flex items-center justify-between px-5 py-2.5 text-[13px] font-bold text-gray-600 hover:text-[#0b1d3d] hover:bg-gray-50 transition-all group/ci">
+                            <span>{catName}</span>
                             <FiChevronRight className="w-3.5 h-3.5 text-gray-300 group-hover/ci:text-[#ED1C24]" />
                           </Link>
-                        ))
+                        );})
                       ) : (
                         <div className="px-5 py-4 text-gray-400 text-xs">No categories found.</div>
                       )}
                     </div>
                     <div className="p-3 border-t border-gray-50">
-                      <Link href="/search" onClick={() => setHoveredItem(null)} className="block w-full py-2 text-center bg-[#0b1d3d] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#1a2e4d] transition-colors">
+                      <Link href="/search" onClick={closeDropdown} className="block w-full py-2 text-center bg-[#0b1d3d] text-white text-[10px] font-black uppercase tracking-widest rounded-xl hover:bg-[#1a2e4d] transition-colors">
                         Browse All →
                       </Link>
                     </div>
@@ -260,7 +314,7 @@ const Navbar = () => {
           <div className="px-5 py-4 bg-[#0b1d3d] flex items-center justify-between flex-shrink-0">
             <div>
               <p className="text-[9px] font-bold text-white/40 uppercase tracking-widest">Welcome to</p>
-              <p className="text-base font-black text-white tracking-wide">POWERQ</p>
+              <p className="text-base font-black text-white tracking-wide">Elecmoon</p>
             </div>
             <button onClick={() => setMobileMenuOpen(false)} className="w-9 h-9 rounded-xl bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors">
               <FiX className="w-5 h-5 text-white" />
@@ -285,7 +339,7 @@ const Navbar = () => {
           {/* Mobile links */}
           <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
             <p className="text-[9px] font-black text-[#ED1C24] uppercase tracking-[0.2em] mb-2">Navigation</p>
-            {[...navLinks, { name: "Services", href: "/services" }].map((item) => (
+            {[...navLinks].map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -297,20 +351,81 @@ const Navbar = () => {
               </Link>
             ))}
 
+            {/* Mobile Services — tap to expand */}
+            <button
+              type="button"
+              onClick={() => setMobileServicesOpen(!mobileServicesOpen)}
+              className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-[13px] font-bold text-gray-700 hover:bg-gray-50 hover:text-[#0b1d3d] transition-all"
+            >
+              Services
+              <FiChevronDown className={`w-4 h-4 transition-transform ${mobileServicesOpen ? "rotate-180" : ""}`} />
+            </button>
+            {mobileServicesOpen && (
+              <div className="ml-2 pl-2 border-l-2 border-gray-100 space-y-1">
+                {services.length > 0 ? services.map((service) => {
+                  const name = showingTranslateValue(service.name);
+                  if (!name) return null;
+                  const href = service.slug ? `/service/${service.slug}` : `/services`;
+                  return (
+                    <Link
+                      key={service._id}
+                      href={href}
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="flex items-center justify-between px-4 py-2.5 rounded-lg text-[12px] font-bold text-gray-600 hover:bg-gray-50 hover:text-[#0b1d3d] transition-all"
+                    >
+                      {name}
+                      <FiChevronRight className="w-3 h-3 text-gray-300" />
+                    </Link>
+                  );
+                }) : (
+                  <p className="px-4 py-2 text-xs text-gray-400">No services.</p>
+                )}
+                <Link
+                  href="/services"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="block px-4 py-2.5 text-[11px] font-black text-[#ED1C24] uppercase tracking-wider"
+                >
+                  View All Services →
+                </Link>
+              </div>
+            )}
+
+            {/* Mobile Categories — tap to expand */}
             {categories.length > 0 && (
               <>
-                <p className="text-[9px] font-black text-[#ED1C24] uppercase tracking-[0.2em] mt-5 mb-2 pt-2">Categories</p>
-                {categories.slice(0, 8).map((cat) => (
-                  <Link
-                    key={cat._id}
-                    href={`/search?_id=${cat._id}`}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between px-4 py-3 rounded-xl text-[12px] font-bold text-gray-600 hover:bg-gray-50 hover:text-[#0b1d3d] transition-all group"
-                  >
-                    {showingTranslateValue(cat.name)}
-                    <FiChevronRight className="w-3 h-3 text-gray-200 group-hover:text-[#ED1C24]" />
-                  </Link>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => setMobileCategoriesOpen(!mobileCategoriesOpen)}
+                  className="w-full flex items-center justify-between px-4 py-3.5 rounded-xl text-[13px] font-bold text-gray-700 hover:bg-gray-50 hover:text-[#0b1d3d] transition-all mt-2"
+                >
+                  Categories
+                  <FiChevronDown className={`w-4 h-4 transition-transform ${mobileCategoriesOpen ? "rotate-180" : ""}`} />
+                </button>
+                {mobileCategoriesOpen && (
+                  <div className="ml-2 pl-2 border-l-2 border-gray-100 space-y-1">
+                    {categories.map((cat) => {
+                      const catName = showingTranslateValue(cat.name);
+                      return (
+                        <Link
+                          key={cat._id}
+                          href={getCategorySearchUrl(cat._id, catName)}
+                          onClick={() => setMobileMenuOpen(false)}
+                          className="flex items-center justify-between px-4 py-2.5 rounded-lg text-[12px] font-bold text-gray-600 hover:bg-gray-50 hover:text-[#0b1d3d] transition-all group"
+                        >
+                          {catName}
+                          <FiChevronRight className="w-3 h-3 text-gray-200 group-hover:text-[#ED1C24]" />
+                        </Link>
+                      );
+                    })}
+                    <Link
+                      href="/search"
+                      onClick={() => setMobileMenuOpen(false)}
+                      className="block px-4 py-2.5 text-[11px] font-black text-[#0b1d3d] uppercase tracking-wider"
+                    >
+                      Browse All →
+                    </Link>
+                  </div>
+                )}
               </>
             )}
           </div>

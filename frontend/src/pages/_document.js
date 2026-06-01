@@ -7,10 +7,10 @@ class MyDocument extends Document {
     // Default SEO settings - API call removed to prevent blocking errors
     const setting = {
       favicon: "/favicon.png",
-      meta_title: "PowerQ – Creating Better Products For Life",
+      meta_title: "Elecmoon – Creating Better Products For Life",
       meta_description: "Precision in every Voltage",
       meta_keywords: "ecommerce online store",
-      meta_url: "https://thepowerq.com/",
+      meta_url: "https://elecmoon.com/",
       meta_img: "/favicon.png",
     };
 
@@ -27,7 +27,7 @@ class MyDocument extends Document {
             property="og:title"
             content={
               setting?.meta_title ||
-              "PowerQ – Creating Better Products For Life"
+              "Elecmoon – Creating Better Products For Life"
             }
           />
           <meta property="og:type" content="eCommerce Website" />
@@ -45,7 +45,7 @@ class MyDocument extends Document {
           <meta
             property="og:url"
             content={
-              setting?.meta_url || "https://thepowerq.com//"
+              setting?.meta_url || "https://elecmoon.com//"
             }
           />
           <meta

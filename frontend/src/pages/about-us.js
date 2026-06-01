@@ -9,7 +9,7 @@ const AboutUs = () => {
   const [activeTab, setActiveTab] = useState("story");
 
   return (
-    <Layout title="About Us" description="Learn more about PowerQ - Your trusted partner in power and safety solutions.">
+    <Layout title="About Us" description="Learn more about Elecmoon - Your trusted partner in power and safety solutions.">
       {/* 1. HERO / PAGE HEADER */}
       <section className="relative bg-[#0b1d3d] pt-16 pb-20 lg:pt-24 lg:pb-32 overflow-hidden border-b border-white/5">
         {/* Decorative elements */}
@@ -126,7 +126,7 @@ const AboutUs = () => {
                       </div>
                       <h3 className="text-2xl font-black text-[#0b1d3d] mb-5">A Decade of Power and Precision</h3>
                       <p className="text-gray-600 text-base leading-relaxed mb-6 font-medium">
-                        Founded with a vision to revolutionize industrial electrical solutions, PowerQ began as a specialized testing facility. Over the years, we recognized the critical gap in the market for high-quality, reliable, and compliant electrical infrastructure.
+                        Founded with a vision to revolutionize industrial electrical solutions, Elecmoon began as a specialized testing facility. Over the years, we recognized the critical gap in the market for high-quality, reliable, and compliant electrical infrastructure.
                       </p>
                       <p className="text-gray-600 text-base leading-relaxed font-medium">
                         Today, we stand as a premier provider, not just testing, but supplying the very components that drive industries forward. Our journey from a local service provider to a comprehensive national supplier is fueled by our unwavering commitment to safety and engineering excellence.
@@ -177,9 +177,9 @@ const AboutUs = () => {
                       <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center text-green-600 shadow-sm mb-8 border border-gray-100">
                         <FiShield className="w-7 h-7" />
                       </div>
-                      <h3 className="text-2xl font-black text-[#0b1d3d] mb-5">The PowerQ Promise</h3>
+                      <h3 className="text-2xl font-black text-[#0b1d3d] mb-5">The Elecmoon Promise</h3>
                       <p className="text-gray-600 text-base leading-relaxed mb-6 font-medium">
-                        Trust is the currency of the electrical industry. When dealing with high-voltage systems and critical infrastructure, there is absolutely zero room for error. That's why every product and service carries the PowerQ Guarantee.
+                        Trust is the currency of the electrical industry. When dealing with high-voltage systems and critical infrastructure, there is absolutely zero room for error. That's why every product and service carries the Elecmoon Guarantee.
                       </p>
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
                         <div className="bg-white p-5 rounded-2xl border border-gray-100 shadow-sm">
@@ -253,7 +253,7 @@ const AboutUs = () => {
               viewport={{ once: true }}
               className="inline-block px-4 py-1.5 mb-4 rounded-full bg-white text-gray-500 border border-gray-200 text-[10px] font-black uppercase tracking-[0.2em] shadow-sm"
             >
-              The PowerQ Advantage
+              The Elecmoon Advantage
             </motion.div>
             <motion.h2
               initial={{ opacity: 0, y: 16 }}

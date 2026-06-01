@@ -13,6 +13,9 @@ module.exports = {
       DejaVu: ["DejaVu Sans", "Arial", "sans-serif"],
     },
     extend: {
+      screens: {
+        xs: "400px",
+      },
       height: {
         header: "560px",
       },

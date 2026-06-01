@@ -3,9 +3,9 @@ import useTranslation from "next-translate/useTranslation";
 import useGetSetting from "@hooks/useGetSetting";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import PolicyPageLayout from "@components/policy/PolicyPageLayout";
-import { getPrivacyPolicySections } from "@utils/policyPages";
+import { getReturnRefundPolicySections } from "@utils/policyPages";
 
-const PrivacyPolicy = () => {
+const ReturnAndRefundPolicy = () => {
   const { t } = useTranslation("common");
   const { storeCustomizationSetting, loading, error } = useGetSetting();
   const { showingTranslateValue } = useUtilsFunction();
@@ -13,16 +13,17 @@ const PrivacyPolicy = () => {
   return (
     <PolicyPageLayout
       title={
-        showingTranslateValue(storeCustomizationSetting?.privacy_policy?.title) ||
-        t("privacy-policy-page")
+        showingTranslateValue(
+          storeCustomizationSetting?.return_and_refund_policy?.title
+        ) || t("return-refund-policy-page")
       }
       lastUpdated={t("policy-last-updated")}
-      cmsHtml={storeCustomizationSetting?.privacy_policy?.description}
-      sections={getPrivacyPolicySections(t)}
+      cmsHtml={storeCustomizationSetting?.return_and_refund_policy?.description}
+      sections={getReturnRefundPolicySections(t)}
       loading={loading}
       error={error}
     />
   );
 };
 
-export default PrivacyPolicy;
+export default ReturnAndRefundPolicy;

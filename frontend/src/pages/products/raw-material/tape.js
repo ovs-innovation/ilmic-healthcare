@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Battery Tape | PowerQ"
+      title="Battery Tape | Elecmoon"
       description="Explore our high-quality Battery Tape solutions for your business needs."
     >
       {/* Hero Section */}

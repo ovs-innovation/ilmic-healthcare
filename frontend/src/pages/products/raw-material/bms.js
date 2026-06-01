@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Battery Management System (BMS) | PowerQ"
+      title="Battery Management System (BMS) | Elecmoon"
       description="Explore our high-quality Battery Management System (BMS) solutions for your business needs."
     >
       {/* Hero Section */}

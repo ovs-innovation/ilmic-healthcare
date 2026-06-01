@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Spot Welding Needle | PowerQ"
+      title="Spot Welding Needle | Elecmoon"
       description="Explore our high-quality Spot Welding Needle solutions for your business needs."
     >
       {/* Hero Section */}

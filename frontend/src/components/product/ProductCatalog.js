@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import { useCart } from "react-use-cart";
 import ProductServices from "@services/ProductServices";
 import CategoryServices from "@services/CategoryServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
-import { FiShoppingBag, FiChevronLeft, FiChevronRight, FiFilter } from "react-icons/fi";
+import { FiShoppingBag, FiChevronLeft, FiChevronRight, FiFilter, FiZap } from "react-icons/fi";
 import { notifySuccess } from "@utils/toast";
+import { getCategorySearchUrl } from "@utils/categoryUrl";
 
 const ProductCatalog = () => {
+  const router = useRouter();
   const scrollRef = useRef(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
@@ -128,6 +131,50 @@ const ProductCatalog = () => {
         deliveryCharge: product.deliveryCharge || 0,
       }, minQty);
       notifySuccess(`${getTitle(product.title)} added to quote!`);
+    }
+  };
+
+  const handleBuyNow = (product) => {
+    const minQty = product.minOrderQuantity || 1;
+    router.push({
+      pathname: "/checkout",
+      query: {
+        buyNow: true,
+        id: product._id,
+        title: getTitle(product.title),
+        price: product.price || 0,
+        image: product.image?.[0],
+        quantity: minQty,
+        sku: product.sku || "",
+        barcode: product.barcode || "",
+        deliveryCharge: product.deliveryCharge || 0,
+        gstPercentage: product.gstPercentage || 0,
+        basePrice: product.basePrice || product.price || 0,
+      },
+    });
+  };
+
+  const handleAddToCart = (product) => {
+    const minQty = product.minOrderQuantity || 1;
+    const itemInCart = items.find((item) => item.id === product._id);
+
+    if (itemInCart) {
+      updateItemQuantity(product._id, itemInCart.quantity + 1);
+      notifySuccess(`${getTitle(product.title)} updated in cart!`);
+    } else {
+      addItem({
+        id: product._id,
+        name: getTitle(product.title),
+        price: product.price || 0,
+        image: product.image?.[0],
+        minQty,
+        sku: product.sku || "",
+        barcode: product.barcode || "",
+        deliveryCharge: product.deliveryCharge || 0,
+        gstPercentage: product.gstPercentage || 0,
+        basePrice: product.basePrice || product.price || 0,
+      }, minQty);
+      notifySuccess(`${getTitle(product.title)} added to cart!`);
     }
   };
 
@@ -272,6 +319,48 @@ const ProductCatalog = () => {
               Clear all
             </button>
           </div>
+
+          {/* Category chips */}
+          {categories.length > 0 && (
+            <div className="mb-6">
+              <div
+                ref={scrollRef}
+                onScroll={checkScroll}
+                className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory"
+              >
+                <button
+                  onClick={() => setSelectedCategory(null)}
+                  className={`flex-shrink-0 snap-start px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border ${
+                    !selectedCategory
+                      ? "bg-[#0b1d3d] text-white border-[#0b1d3d]"
+                      : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                  }`}
+                >
+                  All Products
+                </button>
+                {categories.map((cat) => {
+                  const catTitle = getTitle(cat.name);
+                  const isActive = selectedCategory === cat._id;
+                  return (
+                    <button
+                      key={cat._id}
+                      onClick={() => {
+                        setSelectedCategory(cat._id);
+                        router.push(getCategorySearchUrl(cat._id, catTitle));
+                      }}
+                      className={`flex-shrink-0 snap-start px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${
+                        isActive
+                          ? "bg-[#0b1d3d] text-white border-[#0b1d3d]"
+                          : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
+                      }`}
+                    >
+                      {catTitle}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -292,8 +381,8 @@ const ProductCatalog = () => {
                 filteredProducts.map((product) => {
                   const itemInCart = items.find(i => i.id === product._id);
                   return (
-                    <div key={product._id} className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col sm:flex-row gap-6 hover:shadow-lg transition-all duration-300 relative group">
-                      <div className="w-40 h-40 relative flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-50">
+                    <div key={product._id} className="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-6 hover:shadow-lg transition-all duration-300 relative group">
+                      <div className="w-full sm:w-40 h-40 relative flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-50 mx-auto sm:mx-0">
                         {product.image?.[0] ? (
                           <Image src={product.image[0]} alt={getTitle(product.title)} fill className="object-contain p-2 group-hover:scale-105 transition-transform" />
                         ) : (
@@ -316,9 +405,16 @@ const ProductCatalog = () => {
                             </p>
                           </div>
 
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                            <button
+                              onClick={() => handleBuyNow(product)}
+                              className="px-5 py-3 bg-[#ED1C24] text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-all no-green-button active:scale-95 flex items-center justify-center gap-2"
+                            >
+                              <FiZap className="w-4 h-4" />
+                              Buy Now
+                            </button>
                             {itemInCart ? (
-                              <div className="flex items-center border-2 border-[#0b1d3d]/20 rounded-xl bg-white p-1">
+                              <div className="flex items-center border-2 border-[#0b1d3d]/20 rounded-xl bg-white p-1 justify-center">
                                 <button
                                   onClick={() => updateItemQuantity(product._id, itemInCart.quantity - 1)}
                                   className="w-10 h-10 flex items-center justify-center text-[#0b1d3d] hover:bg-gray-50 rounded-lg no-green-button"
@@ -336,12 +432,20 @@ const ProductCatalog = () => {
                                 </button>
                               </div>
                             ) : (
-                              <button
-                                onClick={() => handleAddToQuote(product)}
-                                className="px-8 py-3 bg-[#0b1d3d] text-white rounded-xl font-bold text-sm shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all no-green-button active:scale-95"
-                              >
-                                Add to Quote +
-                              </button>
+                              <>
+                                <button
+                                  onClick={() => handleAddToCart(product)}
+                                  className="px-5 py-3 bg-[#0b1d3d] text-white rounded-xl font-bold text-sm shadow-md hover:bg-[#162542] transition-all no-green-button active:scale-95"
+                                >
+                                  Add to Cart
+                                </button>
+                                <button
+                                  onClick={() => handleAddToQuote(product)}
+                                  className="px-5 py-3 bg-white border-2 border-[#0b1d3d] text-[#0b1d3d] rounded-xl font-bold text-sm hover:bg-gray-50 transition-all no-green-button active:scale-95"
+                                >
+                                  Add to Quote +
+                                </button>
+                              </>
                             )}
                           </div>
                         </div>
@@ -356,15 +460,15 @@ const ProductCatalog = () => {
           <div className="w-full lg:w-80 flex-shrink-0">
             <div className="bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden lg:sticky lg:top-[190px] flex flex-col">
               <div className="px-6 py-5 border-b border-gray-50 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-gray-900">Quote</h2>
-                <button onClick={() => emptyCart()} className="text-[10px] font-bold text-gray-400 hover:text-red-500 uppercase tracking-widest no-green-button" style={{ background: "transparent" }}>Clear Quote</button>
+                <h2 className="text-lg font-bold text-gray-900">Cart</h2>
+                <button onClick={() => emptyCart()} className="text-[10px] font-bold text-gray-400 hover:text-red-500 uppercase tracking-widest no-green-button" style={{ background: "transparent" }}>Clear Cart</button>
               </div>
 
               <div className="flex-grow overflow-y-auto max-h-[calc(100vh-400px)] p-6 space-y-4 simple-scrollbar scroll-smooth">
                 {items.length === 0 ? (
                   <div className="text-center py-10 opacity-30">
                     <FiShoppingBag className="w-10 h-10 mx-auto mb-2" />
-                    <p className="text-sm font-medium tracking-tight">Your quote is empty</p>
+                    <p className="text-sm font-medium tracking-tight">Your cart is empty</p>
                   </div>
                 ) : (
                   items.map((item) => (
@@ -389,12 +493,20 @@ const ProductCatalog = () => {
                   </div>
                 </div>
 
+                <Link href="/checkout">
+                  <button
+                    disabled={items.length === 0}
+                    className="w-full py-4 bg-[#0b1d3d] text-white rounded-xl font-bold text-sm shadow-lg hover:bg-[#162542] transition-all active:scale-95 disabled:opacity-50 no-green-button mb-2"
+                  >
+                    Proceed to Checkout
+                  </button>
+                </Link>
                 <Link href="/request-a-quote">
                   <button
                     disabled={items.length === 0}
-                    className="w-full py-4 bg-[#1b2be4] text-white rounded-xl font-bold text-sm shadow-lg hover:shadow-2xl transition-all active:scale-95 disabled:opacity-50 no-green-button"
+                    className="w-full py-3 bg-white border-2 border-[#0b1d3d] text-[#0b1d3d] rounded-xl font-bold text-sm hover:bg-gray-50 transition-all active:scale-95 disabled:opacity-50 no-green-button"
                   >
-                    Proceed to checkout
+                    Request a Quote
                   </button>
                 </Link>
               </div>

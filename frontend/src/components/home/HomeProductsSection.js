@@ -4,6 +4,7 @@ import Link from "next/link";
 import ProductServices from "@services/ProductServices";
 import ProductCard from "@components/product/ProductCard";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
+import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from "@utils/productGrid";
 
 /* ══════════════════════════════════════════════════════════
    GRID SECTION  — fills full width, no side gaps
@@ -42,9 +43,9 @@ const GridSection = ({ title, icon, accent, products, onEnquire }) => {
       </div>
 
       {/* Product grid — fills full width with no gaps */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+      <div className={PRODUCT_GRID_CLASS}>
         {visible.map((product) => (
-          <div key={product._id} className="min-w-0">
+          <div key={product._id} className={PRODUCT_GRID_ITEM_CLASS}>
             <ProductCard product={product} onEnquire={onEnquire} />
           </div>
         ))}
@@ -110,8 +111,8 @@ const HomeProductsSection = () => {
   /* Loading skeleton */
   if (loading) {
     return (
-      <section className="bg-white py-10 lg:py-14">
-        <div className="max-w-screen-2xl mx-auto px-4 lg:px-12">
+      <section className="bg-white py-8 sm:py-10 lg:py-14 pb-24 sm:pb-14">
+        <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-12">
           {[0, 1].map((s) => (
             <div key={s} className="mb-12">
               {/* Header skeleton */}
@@ -120,9 +121,9 @@ const HomeProductsSection = () => {
                 <div className="h-5 bg-gray-100 rounded w-40 animate-pulse" />
               </div>
               {/* Grid skeleton */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4">
+              <div className={PRODUCT_GRID_CLASS}>
                 {Array.from({ length: 10 }).map((_, i) => (
-                  <div key={i} className="bg-gray-50 rounded-2xl animate-pulse" style={{ height: 320 }} />
+                  <div key={i} className="bg-gray-50 rounded-2xl animate-pulse min-h-[360px] sm:min-h-[320px]" />
                 ))}
               </div>
             </div>
@@ -134,8 +135,8 @@ const HomeProductsSection = () => {
 
   return (
     <>
-      <section className="bg-white py-10 lg:py-14">
-        <div className="max-w-screen-2xl mx-auto px-4 lg:px-12">
+      <section className="bg-white py-8 sm:py-10 lg:py-14 pb-24 sm:pb-14">
+        <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-12">
           <GridSection
             title="Popular Products"
             icon={<FiStar className="w-4 h-4" />}

@@ -170,7 +170,7 @@ const contactData = [
     title: "contact-page-box1-title",
     info: "contact-page-box1-info",
     icon: FiMail,
-    contact: "PowerQ@gmail.com",
+    contact: "Elecmoon@gmail.com",
     className: "bg-green-100",
   },
   {

@@ -49,6 +49,7 @@ import { toast } from "react-toastify";
 import LeadServices from "@services/LeadServices";
 import ReviewServices from "@services/ReviewServices";
 import { sanitizeProduct, sanitizeData } from "@utils/dataSanitizer";
+import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from "@utils/productGrid";
 import Uploader from "@components/image-uploader/Uploader";
 import { UserContext } from "@context/UserContext";
 
@@ -293,7 +294,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
     const shareData = {
       title: showingTranslateValue(selectVariant?.title) || showingTranslateValue(product?.title),
       text: showingTranslateValue(selectVariant?.description) || showingTranslateValue(product?.description),
-      url: `https://powerq-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug}`,
+      url: `https://Elecmoon-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug}`,
     };
 
     if (navigator.share) {
@@ -818,7 +819,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                             <ul className="flex mt-4">
                               <li className="flex items-center text-center border border-gray-100 rounded-full hover:bg-red-500  mr-2 transition ease-in-out duration-500">
                                 <FacebookShareButton
-                                  url={`https://powerq-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
+                                  url={`https://Elecmoon-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
                                     }`}
                                   quote=""
                                 >
@@ -827,7 +828,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                               </li>
                               <li className="flex items-center text-center border border-gray-100 rounded-full hover:bg-red-500  mr-2 transition ease-in-out duration-500">
                                 <TwitterShareButton
-                                  url={`https://powerq-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
+                                  url={`https://Elecmoon-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
                                     }`}
                                   quote=""
                                 >
@@ -836,7 +837,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                               </li>
                               <li className="flex items-center text-center border border-gray-100 rounded-full   mr-2 transition ease-in-out duration-500">
                                 <a
-                                  href={`https://www.instagram.com/?url=https://powerq-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
+                                  href={`https://www.instagram.com/?url=https://Elecmoon-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
                                     }`}
                                   target="_blank"
                                   rel="noopener noreferrer"
@@ -851,7 +852,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                               </li>
                               <li className="flex items-center text-center border border-gray-100 rounded-full hover:bg-red-500  mr-2 transition ease-in-out duration-500">
                                 <WhatsappShareButton
-                                  url={`https://powerq-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
+                                  url={`https://Elecmoon-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
                                     }`}
                                   quote=""
                                 >
@@ -860,7 +861,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                               </li>
                               <li className="flex items-center text-center border border-gray-100 rounded-full hover:bg-red-500  mr-2 transition ease-in-out duration-500">
                                 <LinkedinShareButton
-                                  url={`https://powerq-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
+                                  url={`https://Elecmoon-store-nine.vercel.app/product/${selectVariant?.slug || router.query.slug
                                     }`}
                                   quote=""
                                 >
@@ -1054,13 +1055,14 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                   </h3>
                   <div className="flex">
                     <div className="w-full">
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-3 md:gap-4 lg:gap-5">
+                      <div className={PRODUCT_GRID_CLASS}>
                         {relatedProducts?.slice(0, 13).map((product, i) => (
+                          <div key={product._id} className={PRODUCT_GRID_ITEM_CLASS}>
                           <ProductCard
-                            key={product._id}
                             product={product}
                             attributes={attributes}
                           />
+                          </div>
                         ))}
                       </div>
                     </div>

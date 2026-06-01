@@ -13,7 +13,7 @@ import useGetSetting from "@hooks/useGetSetting";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 
 const MainCarousel = () => {
-  const { storeCustomizationSetting } = useGetSetting();
+  const { storeCustomizationSetting, loading, isFetched } = useGetSetting();
   const { showingTranslateValue, showingUrl, showingImage } =
     useUtilsFunction();
 
@@ -66,10 +66,9 @@ const MainCarousel = () => {
     };
   }, []);
 
-  const sliderData = [
+  const rawSliderData = [
     {
       id: 1,
-
       title: showingTranslateValue(
         storeCustomizationSetting?.slider?.first_title
       ),
@@ -80,12 +79,7 @@ const MainCarousel = () => {
         storeCustomizationSetting?.slider?.first_button
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.first_link),
-      // image:
-      //   showingImage(storeCustomizationSetting?.slider?.first_img) ||
-      //   "https://rameshwarstabilizer.com/images/Img-26191743153185.webp",
-      image:
-        showingImage(storeCustomizationSetting?.slider?.first_img) ||
-        "/slider/slider-1.jpg",
+      image: showingImage(storeCustomizationSetting?.slider?.first_img),
     },
     {
       id: 2,
@@ -99,12 +93,7 @@ const MainCarousel = () => {
         storeCustomizationSetting?.slider?.second_button
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.second_link),
-      // image:
-      //   showingImage(storeCustomizationSetting?.slider?.second_img) ||
-      //   "https://servoshield.com/assets/img/slides/servo-banner2.jpg",
-      image:
-        showingImage(storeCustomizationSetting?.slider?.second_img) ||
-        "/slider/slider-2.jpg",
+      image: showingImage(storeCustomizationSetting?.slider?.second_img),
     },
     {
       id: 3,
@@ -118,9 +107,7 @@ const MainCarousel = () => {
         storeCustomizationSetting?.slider?.third_button
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.third_link),
-      image:
-        showingImage(storeCustomizationSetting?.slider?.third_img) ||
-        "/slider/slider-3.jpg",
+      image: showingImage(storeCustomizationSetting?.slider?.third_img),
     },
     {
       id: 4,
@@ -134,9 +121,7 @@ const MainCarousel = () => {
         storeCustomizationSetting?.slider?.four_button
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.four_link),
-      image:
-        showingImage(storeCustomizationSetting?.slider?.four_img) ||
-        "/slider/slider-1.jpg",
+      image: showingImage(storeCustomizationSetting?.slider?.four_img),
     },
     {
       id: 5,
@@ -150,11 +135,16 @@ const MainCarousel = () => {
         storeCustomizationSetting?.slider?.five_button
       ),
       url: showingUrl(storeCustomizationSetting?.slider?.five_link),
-      image:
-        showingImage(storeCustomizationSetting?.slider?.five_img) ||
-        "/slider/slider-2.jpg",
+      image: showingImage(storeCustomizationSetting?.slider?.five_img),
     },
   ];
+
+  // Filter out any slides that don't have an admin image or title
+  const sliderData = rawSliderData.filter((item) => item.image && item.title);
+
+  if (!isFetched || loading || sliderData.length === 0) {
+    return null;
+  }
 
   return (
     <>

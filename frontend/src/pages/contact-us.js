@@ -28,6 +28,7 @@ const ContactUs = () => {
     try {
       const leadData = {
         ...data,
+        address: data.location,
         product: {
           title: "Quote Request",
           type: "quote_request",
@@ -43,10 +44,10 @@ const ContactUs = () => {
   };
 
   return (
-    <Layout title="Contact Us" description="Get in touch with PowerQ">
+    <Layout title="Contact Us" description="Get in touch with Elecmoon">
       <div className="relative bg-[#111] text-white min-h-[380px] sm:min-h-[380px] lg:min-h-[420px]">
         <Image
-          src="https://www.powerq.com.au/wp-content/uploads/al_opt_content/IMAGE/www.powerq.com.au/wp-content/uploads/2025/02/Microwave-Testing.jpg.bv.webp"
+          src="https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/02/Microwave-Testing.jpg.bv.webp"
           alt="Hero background"
           fill
           className="object-cover opacity-40"
@@ -104,7 +105,7 @@ const ContactUs = () => {
               </div>
             </div>
             <h3 className="text-xl font-bold text-gray-900">Email</h3>
-            <p className="text-sm text-gray-600">info@powerq.com.au</p>
+            <p className="text-sm text-gray-600">info@Elecmoon.com.au</p>
           </div>
         </div>
       </div>
@@ -113,7 +114,7 @@ const ContactUs = () => {
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-10 py-12 lg:py-16 grid lg:grid-cols-2 gap-8">
           <div className="w-full h-[520px] rounded-lg overflow-hidden shadow border">
             <iframe
-              title="PowerQ Location"
+              title="Elecmoon Location"
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d31526.2553889358!2d144.577!3d-37.688!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x6ad6fbce4f4e0fbf%3A0x9c7c44a1e1e0e7e7!2s43%20Wonnangatta%20Cres%2C%20Melton%20South%20VIC%203338%2C%20Australia!5e0!3m2!1sen!2sau!4v1700000000000!5m2!1sen!2sau"
               width="100%"
               height="100%"

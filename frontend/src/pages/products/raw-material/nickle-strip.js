@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Nickle Strip | PowerQ"
+      title="Nickle Strip | Elecmoon"
       description="Explore our high-quality Nickle Strip solutions for your business needs."
     >
       {/* Hero Section */}

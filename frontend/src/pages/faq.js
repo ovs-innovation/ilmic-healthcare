@@ -15,7 +15,7 @@ const accordionData = [
   {
     question: "How much does a Test and Tag procedure cost?",
     answer:
-      "PowerQ Test & Tag Melbourne Service fees are based on the number of tests we complete for you. This test rate includes all labour, test equipment, test tags, and reporting.",
+      "Elecmoon Test & Tag Melbourne Service fees are based on the number of tests we complete for you. This test rate includes all labour, test equipment, test tags, and reporting.",
   },
   {
     question: "Does my equipment need to be switched off during inspection?",
@@ -116,7 +116,7 @@ const FAQ = () => {
     <Layout title="FAQ" description="Electrical Test and Tag FAQ">
       {/* Hero */}
       <div className="relative bg-[#181818] text-white">
-        <div className="absolute inset-0 bg-[url('https://www.powerq.com.au/wp-content/uploads/al_opt_content/IMAGE/www.powerq.com.au/wp-content/uploads/2025/04/3-Phase-to-240V-power-board-scaled.jpg.bv.webp?bv_host=www.powerq.com.au')] bg-cover bg-center opacity-40" />
+        <div className="absolute inset-0 bg-[url('https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/04/3-Phase-to-240V-power-board-scaled.jpg.bv.webp?bv_host=www.Elecmoon.com.au')] bg-cover bg-center opacity-40" />
         <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-10 py-16 lg:py-24 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
             Electrical Test and Tag Melbourne

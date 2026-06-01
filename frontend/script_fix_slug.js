@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-const path = 'c:/Users/Ashish/OneDrive/Desktop/Project/PowerQ/frontend/src/pages/product/[slug].js';
+const path = 'c:/Users/Ashish/OneDrive/Desktop/Project/Elecmoon/frontend/src/pages/product/[slug].js';
 let content = fs.readFileSync(path, 'utf8');
 
 // 1. Add imports

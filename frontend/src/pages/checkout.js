@@ -228,7 +228,6 @@ const Checkout = () => {
         const orderData = {
           ...orderPayloadBase,
           paymentMethod: "Cash",
-          status: "Pending",
         };
 
         const res = await OrderServices.addOrder(orderData);
@@ -247,7 +246,9 @@ const Checkout = () => {
         }
 
         const razorpayOrder = await OrderServices.createOrderByRazorPay({
-          amount: razorpayAmount,
+          cart: orderPayloadBase.cart,
+          shippingOption: orderPayloadBase.shippingOption,
+          discount: orderPayloadBase.discount,
         });
         await loadRazorpayScript();
 
@@ -258,8 +259,8 @@ const Checkout = () => {
           amount:
             razorpayOrder?.amount ?? Math.round(grandTotal * 100),
           currency: razorpayOrder?.currency ?? "INR",
-          name: "PowerQ",
-          description: "PowerQ Order Payment",
+          name: "Elecmoon",
+          description: "Elecmoon Order Payment",
           order_id: razorpayOrder?.id,
           prefill: {
             name: fullName,
@@ -324,7 +325,7 @@ const Checkout = () => {
     !isBuyNowFlow
   ) {
     return (
-      <Layout title="Checkout" description="Complete your order at PowerQ">
+      <Layout title="Checkout" description="Complete your order at Elecmoon">
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
           <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
             <FiShoppingBag className="w-12 h-12 text-gray-300" />
@@ -345,7 +346,7 @@ const Checkout = () => {
   }
 
   return (
-    <Layout title="Checkout" description="Complete your order at PowerQ">
+    <Layout title="Checkout" description="Complete your order at Elecmoon">
       <div className="bg-gray-50 min-h-screen py-10 lg:py-20">
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-10">
           {/* Go Back Button */}

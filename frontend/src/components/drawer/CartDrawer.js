@@ -62,7 +62,7 @@ const CartDrawer = () => {
               <div className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center">
                 <FiShoppingBag className="w-5 h-5 text-white" />
               </div>
-              <h2 className="font-bold text-lg">Shopping Quote ({items.length})</h2>
+              <h2 className="font-bold text-lg">Shopping Cart ({items.length})</h2>
             </div>
             <button
               onClick={closeCartDrawer}
@@ -170,33 +170,25 @@ const CartDrawer = () => {
                 <span className="text-gray-500 font-medium">Subtotal</span>
                 <span className="text-xl font-bold text-[#0b1d3d]">{currency}{getNumber(selectedTotal)}</span>
               </div>
-              <div className="grid grid-cols-2 gap-3">
-                <button
-                  onClick={closeCartDrawer}
-                  className="w-full bg-white border border-gray-200 text-gray-900 py-3.5 rounded-xl font-bold text-sm hover:bg-gray-50 transition-all no-green-button active:scale-95"
-                >
-                  Continue
-                </button>
-                <button
-                  onClick={handleGoToList}
-                  disabled={selectedItems.length === 0}
-                  className={`w-full py-3.5 rounded-xl font-bold text-sm transition-all shadow-md active:scale-95 text-center no-green-button ${selectedItems.length === 0
-                      ? "bg-gray-200 cursor-not-allowed text-gray-400"
-                      : "bg-[#0b1d3d]/10 text-[#0b1d3d] hover:bg-white hover:text-[#0b1d3d] border border-[#0b1d3d]/20"
-                    }`}
-                >
-                  Go to List
-                </button>
-              </div>
               <button
                 onClick={handleProceedToQuote}
                 disabled={selectedItems.length === 0}
                 className={`w-full py-4 rounded-xl font-bold text-sm transition-all shadow-xl active:scale-95 no-green-button ${selectedItems.length === 0
                     ? "bg-gray-300 cursor-not-allowed text-gray-500"
-                    : "bg-[#0b1d3d] hover:bg-[#162542] text-white"
+                    : "bg-[#ED1C24] hover:bg-red-700 text-white"
                   }`}
               >
-                Proceed to Quote Request
+                Proceed to Checkout
+              </button>
+              <button
+                onClick={handleGoToList}
+                disabled={selectedItems.length === 0}
+                className={`w-full py-3 rounded-xl font-bold text-sm transition-all active:scale-95 no-green-button border-2 ${selectedItems.length === 0
+                    ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                    : "border-[#0b1d3d] text-[#0b1d3d] hover:bg-gray-50"
+                  }`}
+              >
+                Request a Quote
               </button>
             </div>
           )}

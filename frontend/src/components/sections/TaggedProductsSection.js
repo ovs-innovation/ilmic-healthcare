@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ProductCard from "@components/product/ProductCard";
 import ProductServices from "@services/ProductServices";
 import CMSkeleton from "@components/preloader/CMSkeleton";
+import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from "@utils/productGrid";
 
 const TaggedProductsSection = ({
   tag,
@@ -78,13 +79,15 @@ const TaggedProductsSection = ({
       </div>
       <div className="flex">
         <div className="w-full">
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 2xl:grid-cols-6 gap-2 md:gap-3 lg:gap-3">
+          <div className={PRODUCT_GRID_CLASS}>
             {products.slice(0, limit).map((product) => (
+              <div key={product._id} className={PRODUCT_GRID_ITEM_CLASS}>
               <ProductCard
                 key={product._id}
                 product={product}
                 attributes={attributes}
               />
+              </div>
             ))}
           </div>
         </div>

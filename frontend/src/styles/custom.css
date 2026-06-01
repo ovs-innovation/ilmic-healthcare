@@ -2,6 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Readable MRP / strikethrough price on light backgrounds */
+@layer utilities {
+  .price-mrp {
+    color: #6b7280;
+    text-decoration: line-through;
+    font-weight: 600;
+  }
+}
+
+/* Prevent horizontal page scroll on mobile */
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
 /* ================================================
    Navbar button override — remove any global green bg
    ================================================ */

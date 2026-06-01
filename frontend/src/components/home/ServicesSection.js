@@ -9,6 +9,7 @@ import useUtilsFunction from '@hooks/useUtilsFunction';
 import MainModal from '@components/modal/MainModal';
 import ProductCard from '@components/product/ProductCard';
 import ProductEnquiryModal from '@components/modal/ProductEnquiryModal';
+import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from '@utils/productGrid';
 
 const ServicesSection = () => {
     const [services, setServices] = useState([]);
@@ -62,7 +63,7 @@ const ServicesSection = () => {
             <div className="absolute top-0 right-0 w-1/3 h-1/2 bg-blue-500/5 blur-[150px] rounded-full pointer-events-none" />
             <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-red-500/5 blur-[150px] rounded-full pointer-events-none" />
 
-            <div className="max-w-screen-2xl mx-auto px-4 lg:px-12 relative z-10">
+            <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-12 relative z-10">
                 
                 {/* Header */}
                 <div className="text-center mb-12">
@@ -101,11 +102,11 @@ const ServicesSection = () => {
                 </div>
 
                 {/* Products Grid — 1 col mobile, 2 sm, 3 md, 4 lg, 5 xl */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-5">
+                <div className={PRODUCT_GRID_CLASS}>
                     <AnimatePresence mode="sync">
                         {loading ? (
                             Array.from({ length: 5 }).map((_, i) => (
-                                <div key={`skeleton-${i}`} className="bg-white/5 rounded-2xl h-[320px] animate-pulse border border-white/5" />
+                                <div key={`skeleton-${i}`} className="bg-white/5 rounded-2xl h-[280px] sm:h-[320px] animate-pulse border border-white/5" />
                             ))
                         ) : (
                             products.map((product, index) => (
@@ -114,15 +115,12 @@ const ServicesSection = () => {
                                     initial={{ opacity: 0, y: 20 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     transition={{ duration: 0.4, delay: index * 0.05 }}
-                                    className="h-full"
+                                    className={`h-full ${PRODUCT_GRID_ITEM_CLASS}`}
                                 >
                                     <ProductCard 
                                         product={product} 
                                         onEnquire={(p) => handleViewDetails(p)} 
                                         overrideCategoryName={showingTranslateValue(activeService?.name)}
-                                        hideHoverActions={true}
-                                        hideAddToCart={true}
-                                        forceEnquiry={true}
                                     />
                                 </motion.div>
                             ))
@@ -135,6 +133,18 @@ const ServicesSection = () => {
                         <FiSettings className="w-12 h-12 mx-auto mb-4 text-white/20 animate-spin-slow" />
                         <h3 className="text-xl font-bold text-white/70 mb-2">No Products Found</h3>
                         <p className="text-white/40 text-sm">We're updating our products for {showingTranslateValue(activeService?.name)}. Check back soon!</p>
+                    </div>
+                )}
+
+                {activeService && products.length > 0 && !loading && (
+                    <div className="flex justify-center mt-8">
+                        <Link
+                            href={`/service/${activeService.slug}`}
+                            className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white text-white hover:text-[#0b1d3d] border border-white/20 rounded-full font-black text-xs uppercase tracking-widest transition-all"
+                        >
+                            View All {showingTranslateValue(activeService?.name)} Products
+                            <FiChevronRight className="w-4 h-4" />
+                        </Link>
                     </div>
                 )}
             </div>

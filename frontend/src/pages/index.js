@@ -33,6 +33,7 @@ import MelbourneBanner from "@components/home/MelbourneBanner";
 import PricingSection from "@components/home/PricingSection";
 import TestimonialSlider from "@components/home/TestimonialSlider";
 import HomeProductsSection from "@components/home/HomeProductsSection";
+import HomeCategoriesSection from "@components/home/HomeCategoriesSection";
 import HomeBlogSection from "@components/home/HomeBlogSection";
 import ProcessSection from "@components/home/ProcessSection";
 import BatteryServiceSection from "@components/home/BatteryServiceSection";
@@ -77,8 +78,6 @@ const Home = ({
   } = useForm();
 
   // console.log("storeCustomizationSetting", storeCustomizationSetting);
-
-  console.log("New Arrivals", newArrivalsProducts);
 
   useEffect(() => {
     if (router.asPath === "/") {
@@ -200,6 +199,9 @@ const Home = ({
 
           {/* Service Benefits Icons Section */}
           <ServiceBenefits />
+
+          {/* Shop by Category */}
+          <HomeCategoriesSection />
 
           {/* Battery Repair & Service Section */}
           <BatteryServiceSection />

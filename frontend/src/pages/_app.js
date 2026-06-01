@@ -33,7 +33,7 @@ const queryClient = new QueryClient({
 
 const AppCartProvider = ({ children }) => {
   return (
-    <CartProvider id="powerq_cart">
+    <CartProvider id="Elecmoon_cart">
       {children}
     </CartProvider>
   );
@@ -60,7 +60,7 @@ function MyApp({ Component, pageProps }) {
           handlePageView();
 
           const handleRouteChange = (url) => {
-            handlePageView(`/${router.pathname}`, "PowerQ");
+            handlePageView(`/${router.pathname}`, "Elecmoon");
           };
 
           router.events.on("routeChangeComplete", handleRouteChange);

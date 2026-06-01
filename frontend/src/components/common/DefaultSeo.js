@@ -11,15 +11,15 @@ const DefaultSeo = () => {
     <NextSeo
       title={
         globalSetting?.meta_title ||
-        "PowerQ – Creating Better Products For Life"
+        "Elecmoon – Creating Better Products For Life"
       }
       openGraph={{
         type: "website",
         locale: "en_IE",
-        url: globalSetting?.meta_url || "https://thepowerq.com/",
+        url: globalSetting?.meta_url || "https://elecmoon.com/",
         site_name:
           globalSetting?.meta_title ||
-          "PowerQ – Creating Better Products For Life",
+          "Elecmoon – Creating Better Products For Life",
       }}
       twitter={{
         handle: "@handle",

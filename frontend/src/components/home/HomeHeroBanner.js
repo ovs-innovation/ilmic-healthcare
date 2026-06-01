@@ -8,44 +8,51 @@ import useGetSetting from "@hooks/useGetSetting";
 import "swiper/css";
 
 const HomeHeroBanner = () => {
-  const { storeCustomizationSetting } = useGetSetting();
+  const { storeCustomizationSetting, loading, isFetched } = useGetSetting();
   const sd = storeCustomizationSetting?.slider;
   const swiperRef = useRef(null);
   const [active, setActive] = useState(0);
 
-  const slides = [
+  const rawSlides = [
     {
       id: 1,
-      image: sd?.first_img || "/slider/hero/battery.png",
+      image: sd?.first_img,
       badge: "Power Solutions",
-      title: sd?.first_title?.en || "High Performance Industrial Batteries",
-      body: sd?.first_description?.en || "Reliable energy storage solutions for your critical infrastructure and industrial needs.",
-      href: sd?.first_link || "/search?category=batteries",
-      cta: sd?.first_button?.en || "Discover Products",
+      title: sd?.first_title?.en,
+      body: sd?.first_description?.en,
+      href: sd?.first_link,
+      cta: sd?.first_button?.en,
     },
     {
       id: 2,
-      image: sd?.second_img || "/slider/hero/transformer.png",
+      image: sd?.second_img,
       badge: "Grid Infrastructure",
-      title: sd?.second_title?.en || "Precision Engineering Power Transformers",
-      body: sd?.second_description?.en || "Advanced transformer technology designed for maximum efficiency and long-term durability.",
-      href: sd?.second_link || "/search?category=transformers",
-      cta: sd?.second_button?.en || "Discover Products",
+      title: sd?.second_title?.en,
+      body: sd?.second_description?.en,
+      href: sd?.second_link,
+      cta: sd?.second_button?.en,
     },
     {
       id: 3,
-      image: sd?.third_img || "/slider/hero/electronics.png",
+      image: sd?.third_img,
       badge: "Advanced Electronics",
-      title: sd?.third_title?.en || "Cutting-edge Power Control Systems",
-      body: sd?.third_description?.en || "Integrated electronic solutions for seamless power management and system monitoring.",
-      href: sd?.third_link || "/search?category=electronics",
-      cta: sd?.third_button?.en || "Discover Products",
+      title: sd?.third_title?.en,
+      body: sd?.third_description?.en,
+      href: sd?.third_link,
+      cta: sd?.third_button?.en,
     },
   ];
+
+  // Filter out hardcoded slides by requiring admin data
+  const slides = rawSlides.filter((slide) => slide.title && slide.image);
 
   const onSwiper = useCallback((s) => { swiperRef.current = s; }, []);
   const onChange = useCallback((s) => { setActive(s.realIndex); }, []);
   const isActive = (idx) => active === idx % slides.length;
+
+  if (!isFetched || loading || slides.length === 0) {
+    return null;
+  }
 
   return (
     <section className="relative w-full bg-[#f8fafc] overflow-hidden border-b border-gray-100">

@@ -3,9 +3,9 @@ import useTranslation from "next-translate/useTranslation";
 import useGetSetting from "@hooks/useGetSetting";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import PolicyPageLayout from "@components/policy/PolicyPageLayout";
-import { getPrivacyPolicySections } from "@utils/policyPages";
+import { getShippingPolicySections } from "@utils/policyPages";
 
-const PrivacyPolicy = () => {
+const ShippingPolicy = () => {
   const { t } = useTranslation("common");
   const { storeCustomizationSetting, loading, error } = useGetSetting();
   const { showingTranslateValue } = useUtilsFunction();
@@ -13,16 +13,16 @@ const PrivacyPolicy = () => {
   return (
     <PolicyPageLayout
       title={
-        showingTranslateValue(storeCustomizationSetting?.privacy_policy?.title) ||
-        t("privacy-policy-page")
+        showingTranslateValue(storeCustomizationSetting?.shipping_policy?.title) ||
+        t("shipping-policy-page")
       }
       lastUpdated={t("policy-last-updated")}
-      cmsHtml={storeCustomizationSetting?.privacy_policy?.description}
-      sections={getPrivacyPolicySections(t)}
+      cmsHtml={storeCustomizationSetting?.shipping_policy?.description}
+      sections={getShippingPolicySections(t)}
       loading={loading}
       error={error}
     />
   );
 };
 
-export default PrivacyPolicy;
+export default ShippingPolicy;

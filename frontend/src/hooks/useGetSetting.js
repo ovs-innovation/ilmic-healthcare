@@ -56,6 +56,7 @@ const useGetSetting = () => {
     lang,
     error,
     loading,
+    isFetched,
     globalSetting,
     storeCustomizationSetting,
   };

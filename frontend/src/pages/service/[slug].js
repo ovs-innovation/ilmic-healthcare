@@ -12,6 +12,7 @@ import { notifySuccess, notifyError } from "@utils/toast";
 import { FiChevronRight, FiSend, FiX, FiMail, FiPhone, FiUser, FiMessageSquare } from "react-icons/fi";
 import ProductCard from "@components/product/ProductCard";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
+import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from "@utils/productGrid";
 
 const fallbackImage = "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png";
 
@@ -282,8 +283,8 @@ const ServiceDetails = () => {
 
   return (
     <Layout
-      title={`${serviceName} | PowerQ`}
-      description={serviceDesc ? serviceDesc.substring(0, 160) : `${serviceName} service by PowerQ`}
+      title={`${serviceName} | Elecmoon`}
+      description={serviceDesc ? serviceDesc.substring(0, 160) : `${serviceName} service by Elecmoon`}
     >
       <style dangerouslySetInnerHTML={{ __html: customStyles }} />
 
@@ -472,7 +473,7 @@ const ServiceDetails = () => {
 
           {/* Products Grid */}
           {productsLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className={PRODUCT_GRID_CLASS}>
               {[1, 2, 3, 4].map((i) => (
                 <div key={i} className="bg-white rounded-2xl overflow-hidden animate-pulse">
                   <div className="h-52 bg-gray-200" />
@@ -486,17 +487,15 @@ const ServiceDetails = () => {
               ))}
             </div>
           ) : products.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className={PRODUCT_GRID_CLASS}>
               {products.map((product) => (
+                <div key={product._id} className={PRODUCT_GRID_ITEM_CLASS}>
                 <ProductCard
-                  key={product._id}
                   product={product}
                   onEnquire={(p) => openEnquiry(p)}
-                  hideHoverActions={true}
-                  hideAddToCart={true}
                   overrideCategoryName={serviceName}
-                  forceEnquiry={true}
                 />
+                </div>
               ))}
             </div>
           ) : (
@@ -593,7 +592,7 @@ const ServiceDetails = () => {
                       </div>
                       <div>
                         <p className="text-[10px] font-black uppercase text-white/40 tracking-wider">Email Support</p>
-                        <p className="text-sm font-bold">support@powerq.in</p>
+                        <p className="text-sm font-bold">support@Elecmoon.in</p>
                       </div>
                     </div>
                   </div>
@@ -629,7 +628,7 @@ const ServiceDetails = () => {
         <div className="max-w-screen-xl mx-auto px-4 sm:px-10">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-black text-white mb-3">
-              Why Partner With <span className="text-[#ff5c23]">PowerQ</span>?
+              Why Partner With <span className="text-[#ff5c23]">Elecmoon</span>?
             </h3>
             <div className="w-20 h-1 bg-[#ff5c23] mx-auto rounded-full" />
           </div>

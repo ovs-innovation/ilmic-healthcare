@@ -302,7 +302,7 @@ const InvoiceForDownload = ({
               >
                 <Image
                   src="/logo/logo.png"
-                  alt="PowerQ"
+                  alt="Elecmoon"
                   style={{ width: 80, textAlign: "right" }}
                 />
               </Text>

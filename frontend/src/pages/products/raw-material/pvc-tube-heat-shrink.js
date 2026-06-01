@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="PVC Tube & Heat Shrink | PowerQ"
+      title="PVC Tube & Heat Shrink | Elecmoon"
       description="Explore our high-quality PVC Tube & Heat Shrink solutions for your business needs."
     >
       {/* Hero Section */}

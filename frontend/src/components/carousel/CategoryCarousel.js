@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useContext, useRef } from "react";
+import React, { useContext, useRef, useMemo, useState } from "react";
 import { IoChevronBackOutline, IoChevronForward } from "react-icons/io5";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -9,11 +9,12 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Controller, Navigation, Pagination } from "swiper/modules";
 import { useQuery } from "@tanstack/react-query";
 
-//internal import
+import { getCategorySearchUrl } from "@utils/categoryUrl";
 import { SidebarContext } from "@context/SidebarContext";
 import CategoryServices from "@services/CategoryServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import Loading from "@components/preloader/Loading";
+import { IMAGE_PLACEHOLDER, isCloudinaryUrl } from "@utils/cloudinaryImage";
 
 const CategoryCarousel = () => {
   const router = useRouter();
@@ -36,13 +37,43 @@ const CategoryCarousel = () => {
   // console.log("data", data, "error", error, "isFetched", isFetched);
 
   const handleCategoryClick = (id, category) => {
-    const category_name = showingTranslateValue(category)
-      ?.toLowerCase()
-      .replace(/[^A-Z0-9]+/gi, "-");
-
-    router.push(`/search?category=${category_name}&_id=${id}`);
+    const category_name = showingTranslateValue(category);
+    router.push(getCategorySearchUrl(id, category_name));
     setIsLoading(!isLoading);
   };
+
+  const categories = useMemo(() => {
+    if (!data?.length) return [];
+
+    const findMainCategories = (list) => {
+      if (list?.length === 1) {
+        const name = showingTranslateValue(list[0].name)?.toLowerCase()?.trim();
+        if (
+          name === "home" ||
+          name === "all categories" ||
+          name === "all departments" ||
+          !list[0].parentId
+        ) {
+          if (list[0].children?.length > 0) {
+            return findMainCategories(list[0].children);
+          }
+        }
+      }
+      return list || [];
+    };
+
+    return findMainCategories(data).filter((cat) => {
+      const name = showingTranslateValue(cat.name)?.toLowerCase()?.trim();
+      return (
+        name !== "home" &&
+        name !== "all categories" &&
+        name !== "all departments" &&
+        name !== ""
+      );
+    });
+  }, [data, showingTranslateValue]);
+
+  const enableLoop = categories.length > 6;
 
   return (
     <>
@@ -60,7 +91,7 @@ const CategoryCarousel = () => {
         spaceBetween={8}
         navigation={true}
         allowTouchMove={false}
-        loop={true}
+        loop={enableLoop}
         breakpoints={{
           // when window width is >= 640px
           375: {
@@ -114,56 +145,29 @@ const CategoryCarousel = () => {
             {error?.response?.data?.message || error?.message}
           </p>
         ) : (
-          <div>
-            {(() => {
-              const findMainCategories = (list) => {
-                if (list?.length === 1) {
-                  const name = showingTranslateValue(list[0].name)?.toLowerCase()?.trim();
-                  if (name === "home" || name === "all categories" || name === "all departments" || !list[0].parentId) {
-                    if (list[0].children && list[0].children.length > 0) {
-                      return findMainCategories(list[0].children);
-                    }
-                  }
-                }
-                return list || [];
-              };
-
-              const filtered = findMainCategories(data).filter((cat) => {
-                const name = showingTranslateValue(cat.name)?.toLowerCase()?.trim();
-                return name !== "home" && name !== "all categories" && name !== "all departments" && name !== "";
-              });
-
-              return filtered.map((category, i) => (
-                <SwiperSlide key={i + 1} className="group">
-                  <div
-                    onClick={() =>
-                      handleCategoryClick(category?._id, category.name)
-                    }
-                    className="text-center cursor-pointer p-3 bg-white rounded-lg"
-                  >
-                    <div className="bg-white p-2 mx-auto w-10 h-10 rounded-full shadow-md">
-                      <div className="relative w-6 h-8">
-                        <Image
-                          src={
-                            category?.icon ||
-                            "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
-                          }
-                          alt="category"
-                          width={40}
-                          height={40}
-                          className="object-fill"
-                        />
-                      </div>
+          <>
+            {categories.map((category) => (
+              <SwiperSlide key={category._id} className="group">
+                <div
+                  onClick={() => handleCategoryClick(category?._id, category.name)}
+                  className="text-center cursor-pointer p-3 bg-white rounded-lg"
+                >
+                  <div className="bg-white p-2 mx-auto w-10 h-10 rounded-full shadow-md">
+                    <div className="relative w-6 h-8">
+                      <CategoryIcon
+                        src={category?.icon || IMAGE_PLACEHOLDER}
+                        alt={showingTranslateValue(category?.name) || "category"}
+                      />
                     </div>
-
-                    <h3 className="text-xs text-gray-600 mt-2 font-serif group-hover:text-[#A821A8] transition-colors duration-200">
-                      {showingTranslateValue(category?.name)}
-                    </h3>
                   </div>
-                </SwiperSlide>
-              ));
-            })()}
-          </div>
+
+                  <h3 className="text-xs text-gray-600 mt-2 font-serif group-hover:text-[#A821A8] transition-colors duration-200">
+                    {showingTranslateValue(category?.name)}
+                  </h3>
+                </div>
+              </SwiperSlide>
+            ))}
+          </>
         )}
         <button ref={prevRef} className="prev">
           <IoChevronBackOutline />
@@ -175,5 +179,22 @@ const CategoryCarousel = () => {
     </>
   );
 };
+
+function CategoryIcon({ src, alt }) {
+  const [failed, setFailed] = useState(false);
+  const imageSrc = failed ? IMAGE_PLACEHOLDER : src;
+
+  return (
+    <Image
+      src={imageSrc}
+      alt={alt}
+      width={40}
+      height={40}
+      className="object-fill w-full h-auto"
+      unoptimized={isCloudinaryUrl(imageSrc)}
+      onError={() => setFailed(true)}
+    />
+  );
+}
 
 export default React.memo(CategoryCarousel);

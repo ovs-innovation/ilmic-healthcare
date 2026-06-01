@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="EV Battery Charger | PowerQ"
+      title="EV Battery Charger | Elecmoon"
       description="Explore our high-quality EV Battery Charger solutions for your business needs."
     >
       {/* Hero Section */}
