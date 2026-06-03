@@ -9,6 +9,14 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 import { FiShoppingBag, FiChevronLeft, FiChevronRight, FiFilter, FiZap } from "react-icons/fi";
 import { notifySuccess } from "@utils/toast";
 import { getCategorySearchUrl } from "@utils/categoryUrl";
+import {
+  buildCartItemFields,
+  getEffectiveMinOrder,
+  getUnitPriceForQuantity,
+  getBulkDiscountInfo,
+  syncCartQuantity,
+} from "@utils/quantityPricing";
+import BulkDiscountBadge from "@components/common/BulkDiscountBadge";
 
 const ProductCatalog = () => {
   const router = useRouter();
@@ -24,7 +32,7 @@ const ProductCatalog = () => {
   const [activeTags, setActiveTags] = useState([]);
 
   const { showingTranslateValue, currency, getNumber } = useUtilsFunction();
-  const { addItem, items, updateItemQuantity, removeItem, emptyCart, cartTotal } = useCart();
+  const { addItem, items, updateItem, removeItem, emptyCart, cartTotal } = useCart();
 
   const checkScroll = () => {
     if (scrollRef.current) {
@@ -111,40 +119,43 @@ const ProductCatalog = () => {
   });
 
   const handleAddToQuote = (product) => {
-    const minQty = product.minOrderQuantity || 1;
     const itemInCart = items.find((item) => item.id === product._id);
 
     if (itemInCart) {
-      updateItemQuantity(product._id, itemInCart.quantity + 1);
+      syncCartQuantity(updateItem, itemInCart, itemInCart.quantity + 1);
       notifySuccess(`${getTitle(product.title)} updated in quote!`);
     } else {
+      const pricing = buildCartItemFields(product);
       const catName = categories.find(c => c._id === (product.category?._id || product.category))?.name;
       addItem({
         id: product._id,
         name: getTitle(product.title),
-        price: product.price || 0,
+        price: pricing.price,
         image: product.image?.[0],
         category: showingTranslateValue(catName),
-        minQty: minQty,
+        minQty: pricing.minQty,
+        maxQty: pricing.maxQty,
+        quantityTiers: pricing.quantityTiers,
+        listPrice: pricing.listPrice,
         sku: product.sku || "",
         barcode: product.barcode || "",
         deliveryCharge: product.deliveryCharge || 0,
-      }, minQty);
+      }, pricing.quantity);
       notifySuccess(`${getTitle(product.title)} added to quote!`);
     }
   };
 
   const handleBuyNow = (product) => {
-    const minQty = product.minOrderQuantity || 1;
+    const pricing = buildCartItemFields(product);
     router.push({
       pathname: "/checkout",
       query: {
         buyNow: true,
         id: product._id,
         title: getTitle(product.title),
-        price: product.price || 0,
+        price: pricing.price,
         image: product.image?.[0],
-        quantity: minQty,
+        quantity: pricing.quantity,
         sku: product.sku || "",
         barcode: product.barcode || "",
         deliveryCharge: product.deliveryCharge || 0,
@@ -155,25 +166,28 @@ const ProductCatalog = () => {
   };
 
   const handleAddToCart = (product) => {
-    const minQty = product.minOrderQuantity || 1;
     const itemInCart = items.find((item) => item.id === product._id);
 
     if (itemInCart) {
-      updateItemQuantity(product._id, itemInCart.quantity + 1);
+      syncCartQuantity(updateItem, itemInCart, itemInCart.quantity + 1);
       notifySuccess(`${getTitle(product.title)} updated in cart!`);
     } else {
+      const pricing = buildCartItemFields(product);
       addItem({
         id: product._id,
         name: getTitle(product.title),
-        price: product.price || 0,
+        price: pricing.price,
         image: product.image?.[0],
-        minQty,
+        minQty: pricing.minQty,
+        maxQty: pricing.maxQty,
+        quantityTiers: pricing.quantityTiers,
+        listPrice: pricing.listPrice,
         sku: product.sku || "",
         barcode: product.barcode || "",
         deliveryCharge: product.deliveryCharge || 0,
         gstPercentage: product.gstPercentage || 0,
         basePrice: product.basePrice || product.price || 0,
-      }, minQty);
+      }, pricing.quantity);
       notifySuccess(`${getTitle(product.title)} added to cart!`);
     }
   };
@@ -193,7 +207,7 @@ const ProductCatalog = () => {
         <div className="sticky top-[72px] z-40 bg-[#fcfdfe] -mx-4 px-4 pt-2">
 
           {/* Filters Bar */}
-          <div className="bg-white rounded-xl border border-gray-100 p-3 mb-6 flex flex-wrap items-center gap-4 shadow-sm">
+          <div className="bg-white rounded-xl border border-gray-100 p-3 mb-6 flex flex-wrap items-center gap-2 sm:gap-4 shadow-sm">
             <div className="flex items-center gap-2 text-gray-400 font-bold text-xs uppercase tracking-wider mr-4">
               <FiFilter className="w-3.5 h-3.5" />
               Filters
@@ -214,7 +228,7 @@ const ProductCatalog = () => {
               </button>
 
               {showPriceFilter && (
-                <div className="absolute left-0 top-full mt-2 w-72 bg-white rounded-xl shadow-2xl border border-gray-100 p-6 z-[60] animate-fadeIn">
+                <div className="absolute left-0 right-0 sm:right-auto sm:left-0 top-full mt-2 w-full sm:w-72 max-w-[min(100vw-2rem,18rem)] bg-white rounded-xl shadow-2xl border border-gray-100 p-4 sm:p-6 z-[60] animate-fadeIn">
                   <p className="text-sm font-bold text-[#0b1d3d] mb-4">Price Range</p>
                   <div className="space-y-8 px-2">
                     <div className="relative h-2 bg-gray-100 rounded-lg">
@@ -284,24 +298,24 @@ const ProductCatalog = () => {
                       <div className="flex-grow">
                         <label className="text-[10px] uppercase text-gray-400 font-bold mb-1 block">Min Price</label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">{currency}</span>
                           <input
                             type="number"
                             value={priceRange.min}
                             onChange={(e) => setPriceRange({ ...priceRange, min: parseInt(e.target.value) })}
-                            className="w-full pl-7 pr-3 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm focus:outline-none focus:border-[#0b1d3d]"
+                            className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm focus:outline-none focus:border-[#0b1d3d]"
                           />
                         </div>
                       </div>
                       <div className="flex-grow">
                         <label className="text-[10px] uppercase text-gray-400 font-bold mb-1 block">Max Price</label>
                         <div className="relative">
-                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">{currency}</span>
                           <input
                             type="number"
                             value={priceRange.max}
                             onChange={(e) => setPriceRange({ ...priceRange, max: parseInt(e.target.value) })}
-                            className="w-full pl-7 pr-3 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm focus:outline-none focus:border-[#0b1d3d]"
+                            className="w-full pl-8 pr-3 py-2 bg-gray-50 border border-gray-100 rounded-lg text-sm focus:outline-none focus:border-[#0b1d3d]"
                           />
                         </div>
                       </div>
@@ -381,8 +395,8 @@ const ProductCatalog = () => {
                 filteredProducts.map((product) => {
                   const itemInCart = items.find(i => i.id === product._id);
                   return (
-                    <div key={product._id} className="bg-white rounded-xl border border-gray-100 p-4 sm:p-5 flex flex-col sm:flex-row gap-4 sm:gap-6 hover:shadow-lg transition-all duration-300 relative group">
-                      <div className="w-full sm:w-40 h-40 relative flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-50 mx-auto sm:mx-0">
+                    <div key={product._id} className="bg-white rounded-xl border border-gray-100 p-3 sm:p-5 flex flex-col sm:flex-row gap-3 sm:gap-6 hover:shadow-lg transition-all duration-300 relative group min-w-0">
+                      <div className="w-full sm:w-36 md:w-40 h-36 sm:h-40 relative flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden border border-gray-50 mx-auto sm:mx-0">
                         {product.image?.[0] ? (
                           <Image src={product.image[0]} alt={getTitle(product.title)} fill className="object-contain p-2 group-hover:scale-105 transition-transform" />
                         ) : (
@@ -390,22 +404,26 @@ const ProductCatalog = () => {
                         )}
                       </div>
 
-                      <div className="flex-grow">
-                        <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-[#0b1d3d] transition-colors leading-snug">
+                      <div className="flex-grow min-w-0">
+                        <h3 className="text-base sm:text-xl font-bold text-gray-900 mb-2 sm:mb-4 group-hover:text-[#0b1d3d] transition-colors leading-snug line-clamp-2 break-words">
                           {getTitle(product.title)}
                         </h3>
 
-                        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-                          <div className="space-y-3">
-                            <div className="text-sm font-medium text-gray-500">
-                              Minimum quantity: <span className="font-bold text-gray-700">{product.minOrderQuantity || 1}</span>
-                            </div>
-                            <p className="text-2xl font-black text-[#0b1d3d]">
-                              {currency}{product.price || 0} <span className="text-xs font-normal text-gray-400">/ PCS</span>
+                        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-3 sm:gap-4">
+                          <div className="space-y-2 min-w-0">
+                            <p className="text-xs sm:text-sm font-medium text-gray-500">
+                              Minimum quantity: <span className="font-bold text-gray-700">{getEffectiveMinOrder(product)}</span>
                             </p>
+                            <p className="text-xl sm:text-2xl font-black text-[#0b1d3d] break-words">
+                              {currency}{getNumberTwo(getUnitPriceForQuantity(product, getEffectiveMinOrder(product)))}{" "}
+                              <span className="text-xs font-normal text-gray-400">/ PCS</span>
+                            </p>
+                            {getBulkDiscountInfo(product).hasBulkTiers && (
+                              <BulkDiscountBadge product={product} variant="inline" />
+                            )}
                           </div>
 
-                          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                          <div className="flex flex-col sm:flex-row items-stretch gap-2 sm:gap-3 w-full lg:w-auto min-w-0">
                             <button
                               onClick={() => handleBuyNow(product)}
                               className="px-5 py-3 bg-[#ED1C24] text-white rounded-xl font-bold text-sm shadow-md hover:bg-red-700 transition-all no-green-button active:scale-95 flex items-center justify-center gap-2"
@@ -416,15 +434,17 @@ const ProductCatalog = () => {
                             {itemInCart ? (
                               <div className="flex items-center border-2 border-[#0b1d3d]/20 rounded-xl bg-white p-1 justify-center">
                                 <button
-                                  onClick={() => updateItemQuantity(product._id, itemInCart.quantity - 1)}
-                                  className="w-10 h-10 flex items-center justify-center text-[#0b1d3d] hover:bg-gray-50 rounded-lg no-green-button"
+                                  onClick={() => syncCartQuantity(updateItem, itemInCart, itemInCart.quantity - 1)}
+                                  disabled={itemInCart.quantity <= (itemInCart.minQty || 1)}
+                                  className="w-10 h-10 flex items-center justify-center text-[#0b1d3d] hover:bg-gray-50 rounded-lg no-green-button disabled:opacity-40"
                                   style={{ background: "transparent" }}
                                 >
                                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 12H4" /></svg>
                                 </button>
                                 <span className="w-12 text-center font-bold text-[#0b1d3d] text-lg">{itemInCart.quantity}</span>
                                 <button
-                                  onClick={() => updateItemQuantity(product._id, itemInCart.quantity + 1)}
+                                  onClick={() => syncCartQuantity(updateItem, itemInCart, itemInCart.quantity + 1)}
+                                  disabled={itemInCart.maxQty > 0 && itemInCart.quantity >= itemInCart.maxQty}
                                   className="w-10 h-10 flex items-center justify-center text-[#0b1d3d] hover:bg-gray-50 rounded-lg no-green-button"
                                   style={{ background: "transparent" }}
                                 >

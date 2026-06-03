@@ -99,6 +99,23 @@ const productSchema = new mongoose.Schema(
       default: 1,
     },
 
+    /** 0 = no maximum order cap */
+    maxOrderQuantity: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
+
+    /** Bulk pricing: min/max qty per tier, discount % or fixed unit price (GST inclusive) */
+    quantityTiers: [
+      {
+        minQuantity: { type: Number, default: 1 },
+        maxQuantity: { type: Number, default: 0 },
+        discountPercent: { type: Number, default: 0 },
+        unitPrice: { type: Number, default: 0 },
+      },
+    ],
+
     type: {
       type: String,
       default: "normal",

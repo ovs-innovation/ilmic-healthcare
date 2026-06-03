@@ -6,11 +6,12 @@ import { FiX, FiShoppingBag, FiPlus, FiMinus, FiTrash2, FiCheck } from "react-ic
 import { useCart } from "react-use-cart";
 import { SidebarContext } from "@context/SidebarContext";
 import useUtilsFunction from "@hooks/useUtilsFunction";
+import { syncCartQuantity } from "@utils/quantityPricing";
 
 const CartDrawer = () => {
   const router = useRouter();
   const { cartDrawerOpen, closeCartDrawer } = useContext(SidebarContext);
-  const { items, removeItem, updateItemQuantity, cartTotal, totalItems } = useCart();
+  const { items, removeItem, updateItem, cartTotal, totalItems } = useCart();
   const { currency, getNumber } = useUtilsFunction();
   const [selectedItems, setSelectedItems] = useState([]);
 
@@ -52,7 +53,7 @@ const CartDrawer = () => {
 
       {/* Drawer */}
       <div
-        className={`fixed right-0 top-0 h-full w-full sm:w-[400px] bg-white z-[1000] shadow-2xl transition-transform duration-300 ease-in-out transform ${cartDrawerOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed right-0 top-0 h-full w-full max-w-full sm:w-[min(100%,400px)] bg-white z-[1000] shadow-2xl transition-transform duration-300 ease-in-out transform overflow-hidden ${cartDrawerOpen ? "translate-x-0" : "translate-x-full"
           }`}
       >
         <div className="flex flex-col h-full">
@@ -73,7 +74,7 @@ const CartDrawer = () => {
           </div>
 
           {/* Items List */}
-          <div className="flex-grow overflow-y-auto p-6 space-y-6">
+          <div className="flex-grow overflow-y-auto overflow-x-hidden p-4 sm:p-6 space-y-4 sm:space-y-6 min-w-0">
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full text-center space-y-4">
                 <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center">
@@ -135,17 +136,20 @@ const CartDrawer = () => {
                     <div className="flex items-center gap-3 mt-3">
                       <div className={`flex items-center border border-gray-100 rounded-lg bg-gray-50/50 p-1 transition-opacity ${!selectedItems.includes(item.id) ? "opacity-50 grayscale-[0.5]" : "opacity-100"}`}>
                         <button
-                          onClick={() => updateItemQuantity(item.id, item.quantity - 1)}
+                          onClick={() => syncCartQuantity(updateItem, item, item.quantity - 1)}
                           className="p-1 rounded-md hover:bg-white hover:shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed no-green-button"
-                          disabled={item.quantity <= 1 || !selectedItems.includes(item.id)}
+                          disabled={item.quantity <= (item.minQty || 1) || !selectedItems.includes(item.id)}
                         >
                           <FiMinus className="w-3 h-3 text-gray-600" />
                         </button>
                         <span className="text-xs font-bold text-gray-900 w-8 text-center">{item.quantity}</span>
                         <button
-                          onClick={() => updateItemQuantity(item.id, item.quantity + 1)}
+                          onClick={() => syncCartQuantity(updateItem, item, item.quantity + 1)}
                           className="p-1 rounded-md hover:bg-white hover:shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed no-green-button"
-                          disabled={!selectedItems.includes(item.id)}
+                          disabled={
+                            !selectedItems.includes(item.id) ||
+                            (item.maxQty > 0 && item.quantity >= item.maxQty)
+                          }
                         >
                           <FiPlus className="w-3 h-3 text-gray-600" />
                         </button>

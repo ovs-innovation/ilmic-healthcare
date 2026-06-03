@@ -1,19 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import { IoClose } from "react-icons/io5";
-import { FiZap } from "react-icons/fi";
+import { FiZap, FiShoppingBag } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 
-// internal import
 import MainModal from "@components/modal/MainModal";
-import InputArea from "@components/form/InputArea";
 import LeadServices from "@services/LeadServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
+import ProductBulkPricing from "@components/product/ProductBulkPricing";
+import {
+  clampQuantity,
+  getEffectiveMinOrder,
+  getEffectiveMaxOrder,
+  getBulkEnquiryThreshold,
+  getPricingSummary,
+  getUnitPriceForQuantity,
+} from "@utils/quantityPricing";
 
-const ProductEnquiryModal = ({ modalOpen, setModalOpen, product, selectedVariant }) => {
-  const { showingTranslateValue, getNumberTwo } = useUtilsFunction();
-  
+const ProductEnquiryModal = ({
+  modalOpen,
+  setModalOpen,
+  product,
+  selectedVariant,
+  initialQuantity,
+}) => {
+  const { showingTranslateValue, getNumberTwo, currency } = useUtilsFunction();
+  const [enquiryQty, setEnquiryQty] = useState(1);
+
   const {
     register,
     handleSubmit,
@@ -21,22 +35,58 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product, selectedVariant
     formState: { errors },
   } = useForm();
 
+  const bulkThreshold = product ? getBulkEnquiryThreshold(product) : 10;
+
+  useEffect(() => {
+    if (!product || !modalOpen) return;
+    const start = initialQuantity
+      ? clampQuantity(product, initialQuantity)
+      : Math.max(getBulkEnquiryThreshold(product), getEffectiveMinOrder(product));
+    setEnquiryQty(start);
+  }, [product?._id, modalOpen, initialQuantity]);
+
   if (!product) return null;
+
+  const pricing = getPricingSummary(product, enquiryQty);
+  const productTitle =
+    showingTranslateValue(selectedVariant?.title) ||
+    showingTranslateValue(product?.title);
+  const productImage =
+    selectedVariant?.image?.length > 0
+      ? selectedVariant.image[0]
+      : product?.image?.[0];
+  const productSKU = selectedVariant?.sku || product.sku || "N/A";
+  const listPrice = product?.price || product?.prices?.price || 0;
+  const maxOrder = getEffectiveMaxOrder(product);
 
   const onSubmitEnquiry = async (data) => {
     try {
       const { phoneCountry, phone, ...rest } = data;
-      const fullPhone = `${phoneCountry} ${phone}`;
-      
+      const fullPhone = `${phoneCountry || "+91"} ${phone}`;
+      const summary = getPricingSummary(product, enquiryQty);
+
       const leadData = {
         ...rest,
         phone: fullPhone,
+        quantity: summary.quantity,
+        enquiryType: summary.isBulk ? "bulk" : "single",
+        currency,
+        listUnitPrice: summary.listUnitPrice,
+        unitPrice: summary.unitPrice,
+        estimatedTotal: summary.estimatedTotal,
+        discountPercent: summary.discountPercent,
+        tierLabel: summary.tierLabel,
+        pricingNote: `Estimated @ ${currency}${summary.unitPrice}/pc for ${summary.tierLabel}`,
         product: {
           _id: product._id,
           title: product.title,
-          sku: selectedVariant?.sku || product.sku,
+          sku: productSKU,
+          slug: product.slug,
           images: product.image,
-          prices: product.prices,
+          price: product.price,
+          quantityTiers: product.quantityTiers,
+          minOrderQuantity: product.minOrderQuantity,
+          maxOrderQuantity: product.maxOrderQuantity,
           category: product.category,
           description: product.description,
           variant: selectedVariant,
@@ -45,214 +95,289 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product, selectedVariant
 
       await LeadServices.addLead(leadData);
       setModalOpen(false);
-      toast.success("Thank you for your enquiry! We will contact you soon.");
+      toast.success("Quote request submitted! Our team will contact you shortly.");
       reset();
     } catch (error) {
-      console.log("error", error);
       toast.error(
         error?.response?.data?.message || "Failed to submit enquiry."
       );
     }
   };
 
-  const productTitle = showingTranslateValue(selectedVariant?.title) || showingTranslateValue(product?.title);
-  const productImage = (selectedVariant?.image && selectedVariant.image.length > 0) ? selectedVariant.image[0] : (product?.image?.[0]);
-  const productPrice = product?.prices?.price || product?.price || 0;
-  const productSKU = selectedVariant?.sku || product.sku || 'N/A';
-  const minOrder = product?.minOrderQuantity || 1;
-  const productDescription = showingTranslateValue(selectedVariant?.description || product?.description || "").slice(0, 180);
-
   return (
     <MainModal modalOpen={modalOpen} setModalOpen={setModalOpen}>
-      <div className="inline-block w-full max-w-5xl my-4 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl relative">
-        {/* Internal Close Button */}
-        <button 
+      <div className="block w-full max-w-5xl my-0 sm:my-4 text-left bg-white shadow-2xl rounded-t-2xl sm:rounded-2xl relative max-h-[92vh] sm:max-h-[90vh] overflow-y-auto overflow-x-hidden min-w-0">
+        <button
+          type="button"
           onClick={() => setModalOpen(false)}
-          className="absolute right-6 top-6 z-30 w-10 h-10 flex items-center justify-center rounded-full bg-white/80 hover:bg-white text-gray-500 transition-all active:scale-90 shadow-lg border border-gray-100"
+          className="sticky top-2 right-2 float-right z-30 w-9 h-9 flex items-center justify-center rounded-full bg-white text-gray-500 shadow-lg border border-gray-100 sm:absolute sm:right-4 sm:top-4"
+          aria-label="Close"
         >
-          <IoClose className="w-6 h-6" />
+          <IoClose className="w-5 h-5" />
         </button>
 
-        <div className="flex flex-col lg:flex-row min-h-fit lg:h-auto overflow-hidden">
-          {/* Left Column: Product Info - Ultra Compact */}
-          <div className="w-full lg:w-[35%] bg-gray-50/80 p-5 lg:p-7 flex flex-col items-center lg:items-start text-center lg:text-left border-b lg:border-r border-gray-100">
-            <div className="w-28 lg:w-36 h-28 lg:h-36 relative bg-white rounded-xl border border-gray-100 p-2 shadow-sm mb-3">
+        <div className="flex flex-col lg:flex-row min-w-0 clear-both">
+          <div className="w-full lg:w-[38%] bg-gray-50/90 p-4 sm:p-6 border-b lg:border-b-0 lg:border-r border-gray-100 min-w-0">
+            <span className="text-[9px] font-black text-[#0b1d3d] uppercase tracking-[0.2em]">
+              Bulk / wholesale quote
+            </span>
+            <h2 className="text-lg sm:text-xl font-black text-gray-900 mt-1 mb-3 leading-snug break-words">
+              {productTitle}
+            </h2>
+
+            <div className="w-full max-w-[140px] mx-auto lg:mx-0 aspect-square relative bg-white rounded-xl border border-gray-100 p-2 mb-4">
               {productImage ? (
                 <Image
                   src={productImage}
                   alt={productTitle}
                   fill
                   className="object-contain rounded-lg"
+                  sizes="140px"
                 />
               ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-300">⚡</div>
+                <div className="w-full h-full flex items-center justify-center text-gray-300 text-2xl">
+                  ⚡
+                </div>
               )}
             </div>
 
-            <div className="w-full h-full">
-              <span className="text-[9px] font-black text-[#0b1d3d] uppercase tracking-[0.2em] mb-1.5 block">Product Profile</span>
-              <h2 className="text-xl lg:text-2xl font-black text-gray-900 mb-4 leading-tight">
-                {productTitle}
-              </h2>
-              
-              <div className="space-y-2.5 mb-6">
-                <div className="flex justify-between items-center py-2 border-b border-gray-200/50">
-                  <span className="text-[9px] uppercase text-gray-400 font-black tracking-widest">SKU</span>
-                  <span className="text-xs font-bold text-gray-800">{productSKU}</span>
-                </div>
-                <div className="flex justify-between items-center py-2 border-b border-gray-200/50">
-                  <span className="text-[9px] uppercase text-gray-400 font-black tracking-widest">List Price</span>
-                  <span className="text-sm font-black text-[#0b1d3d]">₹{getNumberTwo(productPrice)}</span>
-                </div>
-                {minOrder > 1 && (
-                  <div className="flex justify-between items-center py-2">
-                    <span className="text-[9px] uppercase text-gray-400 font-black tracking-widest">Min. Order</span>
-                    <span className="text-xs font-bold text-gray-800">{minOrder} Units</span>
-                  </div>
-                )}
+            <div className="space-y-2 text-xs sm:text-sm mb-4">
+              <div className="flex justify-between gap-2 py-1.5 border-b border-gray-200/60">
+                <span className="text-gray-500 font-bold uppercase text-[9px]">SKU</span>
+                <span className="font-bold text-gray-800">{productSKU}</span>
               </div>
-
-              <p className="text-[11px] text-gray-500 leading-relaxed italic hidden lg:block opacity-70">
-                Premium wholesale engineering solution. Highly durable and certified for modern requirements.
-              </p>
+              <div className="flex justify-between gap-2 py-1.5 border-b border-gray-200/60">
+                <span className="text-gray-500 font-bold uppercase text-[9px]">List rate</span>
+                <span className="font-bold text-gray-800">
+                  {currency}
+                  {getNumberTwo(listPrice)}/pc
+                </span>
+              </div>
             </div>
+
+            <ProductBulkPricing
+              product={product}
+              currency={currency}
+              selectedQty={enquiryQty}
+              compact
+            />
           </div>
 
-          {/* Right Column: Ultra-Optimized Form Row-by-Row */}
-          <div className="w-full lg:w-[65%] p-5 lg:p-7 flex flex-col bg-white">
-
-            <div className="flex flex-col mb-4">
-                <div className="flex items-center gap-2 mb-1">
-                    <FiZap className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                    <h3 className="text-lg font-black text-gray-900 leading-none">Bulk Enquiry Form</h3>
-                </div>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Get Whalehose/Custom Pricing Quote</p>
+          <div className="w-full lg:w-[62%] p-4 sm:p-6 flex flex-col min-w-0">
+            <div className="mb-4">
+              <div className="flex items-center gap-2 mb-1">
+                <FiZap className="w-4 h-4 text-amber-500" />
+                <h3 className="text-base sm:text-lg font-black text-gray-900">
+                  Request quantity quote
+                </h3>
+              </div>
+              <p className="text-[11px] sm:text-xs text-gray-500 leading-relaxed">
+                For bulk orders ({bulkThreshold}+ units recommended), submit your details.
+                Pricing below updates automatically by quantity slab.
+              </p>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmitEnquiry)} className="space-y-2.5">
-              {/* Compact Enterprise Toggle - Back above Name */}
-              <div className="flex items-center gap-2.5 p-2 bg-gray-50/80 rounded-lg border border-gray-100 mb-1">
+            {/* Quantity + live estimate */}
+            <div className="rounded-xl border-2 border-[#0b1d3d]/10 bg-white p-3 sm:p-4 mb-4">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">
+                Required quantity
+              </label>
+              <div className="flex flex-wrap items-center gap-3">
+                <div className="flex items-center border-2 border-[#0b1d3d]/15 rounded-xl">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setEnquiryQty((q) => clampQuantity(product, q - 1))
+                    }
+                    disabled={enquiryQty <= getEffectiveMinOrder(product)}
+                    className="w-10 h-10 font-bold text-[#0b1d3d] disabled:opacity-30"
+                  >
+                    −
+                  </button>
+                  <span className="w-14 text-center font-black text-[#0b1d3d] text-lg">
+                    {enquiryQty}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setEnquiryQty((q) => clampQuantity(product, q + 1))
+                    }
+                    disabled={maxOrder > 0 && enquiryQty >= maxOrder}
+                    className="w-10 h-10 font-bold text-[#0b1d3d] disabled:opacity-30"
+                  >
+                    +
+                  </button>
+                </div>
+                <div className="flex-grow min-w-[160px]">
+                  <p className="text-[10px] text-gray-500 uppercase font-bold">Slab</p>
+                  <p className="text-sm font-bold text-[#0b1d3d]">{pricing.tierLabel}</p>
+                </div>
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+                <div>
+                  <p className="text-[9px] uppercase text-gray-400 font-bold">Unit price</p>
+                  <p className="text-lg font-black text-[#ED1C24]">
+                    {currency}
+                    {getNumberTwo(pricing.unitPrice)}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-[9px] uppercase text-gray-400 font-bold">You save</p>
+                  <p className="text-sm font-bold text-green-700">
+                    {pricing.discountPercent > 0
+                      ? `${pricing.discountPercent}%`
+                      : "—"}
+                  </p>
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <p className="text-[9px] uppercase text-gray-400 font-bold">Est. total</p>
+                  <p className="text-xl font-black text-[#0b1d3d]">
+                    {currency}
+                    {getNumberTwo(pricing.estimatedTotal)}
+                  </p>
+                  <p className="text-[9px] text-gray-400">+ GST / delivery as applicable</p>
+                </div>
+              </div>
+            </div>
+
+            <p className="text-[10px] text-amber-800 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-4 flex items-start gap-2">
+              <FiShoppingBag className="w-3.5 h-3.5 shrink-0 mt-0.5" />
+              <span>
+                Need fewer than {bulkThreshold} units? Use <strong>Buy Now</strong> or{" "}
+                <strong>Add to Cart</strong> on the product page for instant checkout.
+              </span>
+            </p>
+
+            <form onSubmit={handleSubmit(onSubmitEnquiry)} className="space-y-3">
+              <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-100">
                 <input
                   type="checkbox"
                   id="isEnterprise"
                   {...register("isEnterprise")}
-                  className="w-4 h-4 text-[#0b1d3d] border-gray-300 rounded focus:ring-[#0b1d3d] cursor-pointer transition-all"
+                  className="w-4 h-4 rounded border-gray-300"
                 />
-                <label htmlFor="isEnterprise" className="cursor-pointer flex items-baseline gap-2">
-                  <span className="text-[10px] font-black text-gray-700 uppercase tracking-widest">Are you an Enterprise?</span>
-                  <span className="text-[8px] text-gray-400 font-medium uppercase tracking-tighter">(Company/Organization lead)</span>
+                <label htmlFor="isEnterprise" className="text-[10px] font-bold text-gray-700 uppercase">
+                  Enterprise / company order
                 </label>
               </div>
 
-
-
-              {/* Row 1: Name & Email */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="space-y-0.5">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Full Name <span className="text-red-500">*</span></label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] font-black text-gray-400 uppercase">
+                    Full name *
+                  </label>
                   <input
-                    {...register("name", { required: "Required" })}
-                    type="text"
-                    placeholder="Enter your name"
-                    className={`w-full border ${errors.name ? 'border-red-500' : 'border-gray-200'} rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 transition-all`}
+                    {...register("name", { required: true })}
+                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
+                      errors.name ? "border-red-500" : "border-gray-200"
+                    }`}
                   />
                 </div>
-                <div className="space-y-0.5">
-                 <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Work Email <span className="text-red-500">*</span></label>
+                <div>
+                  <label className="text-[9px] font-black text-gray-400 uppercase">
+                    Email *
+                  </label>
                   <input
-                    {...register("email", { required: "Required" })}
+                    {...register("email", { required: true })}
                     type="email"
-                    placeholder="Email address"
-                    className={`w-full border ${errors.email ? 'border-red-500' : 'border-gray-200'} rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 transition-all`}
+                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
+                      errors.email ? "border-red-500" : "border-gray-200"
+                    }`}
                   />
                 </div>
               </div>
 
-              {/* Row 2: Phone & Pincode */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="space-y-0.5">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Phone Number <span className="text-red-500">*</span></label>
-                  <div className="flex gap-1.5">
-                    <select 
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] font-black text-gray-400 uppercase">
+                    Phone *
+                  </label>
+                  <div className="flex gap-1.5 mt-0.5">
+                    <select
                       {...register("phoneCountry")}
-                      className="w-16 border border-gray-200 rounded-lg text-xs bg-gray-50 font-bold px-1 focus:outline-none"
+                      className="w-[72px] border border-gray-200 rounded-lg text-xs font-bold px-1"
                     >
-                      <option value="+91">🇮🇳 +91</option>
-                      <option value="+1">🇺🇸 +1</option>
-                      <option value="+44">🇬🇧 +44</option>
+                      <option value="+91">+91</option>
                     </select>
                     <input
-                      {...register("phone", { required: "Required" })}
-                      type="text"
-                      placeholder="Enter number"
-                      className={`flex-grow border ${errors.phone ? 'border-red-500' : 'border-gray-200'} rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 transition-all`}
+                      {...register("phone", { required: true })}
+                      className={`flex-grow border rounded-lg py-2 px-3 text-sm ${
+                        errors.phone ? "border-red-500" : "border-gray-200"
+                      }`}
                     />
                   </div>
                 </div>
-                <div className="space-y-0.5">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Area Pincode <span className="text-red-500">*</span></label>
+                <div>
+                  <label className="text-[9px] font-black text-gray-400 uppercase">
+                    Pincode *
+                  </label>
                   <input
-                    {...register("pincode", { required: "Required" })}
-                    type="text"
-                    placeholder="Zip code"
-                    className={`w-full border ${errors.pincode ? 'border-red-500' : 'border-gray-200'} rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 transition-all`}
+                    {...register("pincode", { required: true })}
+                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
+                      errors.pincode ? "border-red-500" : "border-gray-200"
+                    }`}
                   />
                 </div>
               </div>
 
-              {/* Row 3: State & District */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                <div className="space-y-0.5">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">State <span className="text-red-500">*</span></label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="text-[9px] font-black text-gray-400 uppercase">
+                    State *
+                  </label>
                   <input
-                    {...register("state", { required: "Required" })}
-                    type="text"
-                    placeholder="Enter State"
-                    className={`w-full border ${errors.state ? 'border-red-500' : 'border-gray-200'} rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 transition-all`}
+                    {...register("state", { required: true })}
+                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
+                      errors.state ? "border-red-500" : "border-gray-200"
+                    }`}
                   />
                 </div>
-                <div className="space-y-0.5">
-                  <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">District <span className="text-red-500">*</span></label>
+                <div>
+                  <label className="text-[9px] font-black text-gray-400 uppercase">
+                    District *
+                  </label>
                   <input
-                    {...register("district", { required: "Required" })}
-                    type="text"
-                    placeholder="Enter District"
-                    className={`w-full border ${errors.district ? 'border-red-500' : 'border-gray-200'} rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 transition-all`}
+                    {...register("district", { required: true })}
+                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
+                      errors.district ? "border-red-500" : "border-gray-200"
+                    }`}
                   />
                 </div>
               </div>
 
-              {/* Row 4: Address */}
-              <div className="space-y-0.5">
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Full Address <span className="text-red-500">*</span></label>
+              <div>
+                <label className="text-[9px] font-black text-gray-400 uppercase">
+                  Address *
+                </label>
                 <input
-                  {...register("address", { required: "Required" })}
-                  type="text"
-                  placeholder="Street, Building, Landmark etc."
-                  className={`w-full border ${errors.address ? 'border-red-500' : 'border-gray-200'} rounded-lg py-1.5 px-3 text-sm focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 transition-all`}
+                  {...register("address", { required: true })}
+                  className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
+                    errors.address ? "border-red-500" : "border-gray-200"
+                  }`}
                 />
               </div>
 
-              {/* Requirement Textbox */}
-              <div className="space-y-0.5">
-                <label className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Bulk Requirements (Optional)</label>
+              <div>
+                <label className="text-[9px] font-black text-gray-400 uppercase">
+                  Additional notes
+                </label>
                 <textarea
                   {...register("message")}
-                  placeholder="Total quantity needed..."
                   rows={2}
-                  className="w-full border border-gray-200 rounded-lg py-1.5 px-3 text-[13px] focus:outline-none focus:border-[#0b1d3d] bg-gray-50/30 resize-none transition-all"
+                  placeholder="Delivery timeline, GST invoice, etc."
+                  className="w-full mt-0.5 border border-gray-200 rounded-lg py-2 px-3 text-sm resize-none"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-[#0b1d3d] text-white py-2.5 rounded-lg hover:bg-[#162542] transition-all duration-300 font-black text-xs uppercase tracking-[0.2em] shadow-xl active:scale-[0.98] mt-1"
+                className="w-full bg-[#0b1d3d] text-white py-3 rounded-xl hover:bg-[#162542] font-black text-xs uppercase tracking-widest shadow-lg active:scale-[0.98]"
               >
-                Submit Enquiry Now
+                Submit quote request — {currency}
+                {getNumberTwo(pricing.estimatedTotal)}
               </button>
             </form>
-
-
           </div>
         </div>
       </div>

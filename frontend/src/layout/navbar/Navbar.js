@@ -95,7 +95,7 @@ const Navbar = () => {
 
   const phone = storeCustomizationSetting?.navbar?.phone || "+91 9717372217";
   const email = storeCustomizationSetting?.contact_us?.email_box_email?.en || "elecmoonofficial@gmail.com";
-  const address = showingTranslateValue(storeCustomizationSetting?.contact_us?.address_box_address_one) || "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044";
+  const address = showingTranslateValue(storeCustomizationSetting?.contact_us?.address_box_address_one) || "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044";
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -118,18 +118,18 @@ const Navbar = () => {
 
         {/* ── Top bar ── */}
         <div className="bg-[#0b1d3d] border-b border-white/5">
-          <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 h-8 flex items-center justify-between">
-            <div className="flex items-center gap-4 text-[10px] font-semibold text-white/50 uppercase tracking-wider overflow-hidden">
-              <a href={`tel:${phone}`} className="flex items-center gap-1.5 hover:text-white transition-colors whitespace-nowrap">
+          <div className="max-w-screen-2xl mx-auto px-3 sm:px-4 lg:px-8 min-h-8 py-1 sm:py-0 sm:h-8 flex flex-wrap sm:flex-nowrap items-center justify-between gap-1 sm:gap-0">
+            <div className="flex items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-semibold text-white/50 uppercase tracking-wider overflow-hidden min-w-0 flex-1">
+              <a href={`tel:${phone}`} className="flex items-center gap-1.5 hover:text-white transition-colors whitespace-nowrap flex-shrink-0">
                 <FiPhoneCall className="w-3 h-3 text-[#ED1C24] flex-shrink-0" />
-                <span className="truncate">{phone}</span>
+                <span className="truncate max-w-[140px] sm:max-w-none">{phone}</span>
               </a>
-              <span className="hidden sm:flex items-center gap-1.5 whitespace-nowrap">
+              <span className="hidden md:flex items-center gap-1.5 min-w-0 max-w-[55vw] lg:max-w-[50%]">
                 <FiMapPin className="w-3 h-3 text-[#ED1C24] flex-shrink-0" />
                 <span className="truncate">{address}</span>
               </span>
             </div>
-            <div className="flex items-center gap-4 text-[10px] font-semibold text-white/50 uppercase tracking-wider flex-shrink-0">
+            <div className="flex items-center gap-2 sm:gap-4 text-[9px] sm:text-[10px] font-semibold text-white/50 uppercase tracking-wider flex-shrink-0">
               <a href="https://www.shiprocket.in/shipment-tracking/" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors whitespace-nowrap">Track Order</a>
               <span className="hidden md:flex items-center gap-1.5 whitespace-nowrap">
                 <FiCheckCircle className="w-3 h-3 text-[#ED1C24]" />

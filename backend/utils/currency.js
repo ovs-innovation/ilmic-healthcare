@@ -1,18 +1,24 @@
 const currency = [
   {
+    name: "Indian Rupee",
+    symbol: "₹",
+    iso_code: "INR",
+    status: "show",
+  },
+  {
     name: "Euro",
     symbol: "€",
-    status: "show",
+    status: "hide",
   },
   {
     name: "Dollar",
     symbol: "$",
-    status: "show",
+    status: "hide",
   },
   {
     name: "Pound",
     symbol: "£",
-    status: "show",
+    status: "hide",
   },
 ];
 

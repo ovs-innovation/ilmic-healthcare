@@ -43,11 +43,11 @@ const FeatureCard = () => {
   ];
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 mx-auto">
+    <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 mx-auto w-full">
       {featurePromo.map((promo) => (
         <div
           key={promo.id}
-          className=" border-r border-gray-200 py-1 flex items-center justify-center bg-white"
+          className="border-b xs:border-b-0 md:border-r border-gray-200 py-3 sm:py-2 px-3 flex items-center justify-center bg-white min-h-[52px]"
         >
           <div className="mr-3">
             <promo.icon

@@ -14,7 +14,7 @@ const MainModal = ({ modalOpen, setModalOpen, children }) => {
           onClose={() => setModalOpen(false)}
           initialFocus={cancelButtonRef}
         >
-          <div className="min-h-screen px-4">
+          <div className="min-h-screen px-2 sm:px-4 py-2 sm:py-4 flex items-end sm:items-center justify-center">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"

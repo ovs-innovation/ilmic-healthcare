@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const Product = require("../../models/Product");
 const Coupon = require("../../models/Coupon");
+const {
+  clampQuantity,
+  getUnitPriceForQuantity,
+  roundMoney: roundQtyMoney,
+} = require("../pricing/quantityPricing");
 
 const roundMoney = (value) => Math.round((Number(value) || 0) * 100) / 100;
 
@@ -137,13 +142,16 @@ const calculateOrderTotals = async ({
       throw new Error("One or more products in the cart are unavailable.");
     }
 
-    const quantity = Math.max(
-      parseInt(cartItem?.quantity, 10) || 0,
-      product.minOrderQuantity || 1
+    const quantity = clampQuantity(
+      product,
+      parseInt(cartItem?.quantity, 10) || 0
     );
 
     const pricing = resolveLinePricing(product, cartItem);
-    const itemTotal = roundMoney(pricing.price * quantity);
+    const unitPrice = roundQtyMoney(
+      getUnitPriceForQuantity(product, quantity) || pricing.price
+    );
+    const itemTotal = roundMoney(unitPrice * quantity);
     const lineDelivery = roundMoney(pricing.deliveryCharge * quantity);
 
     subTotal += itemTotal;
@@ -154,9 +162,11 @@ const calculateOrderTotals = async ({
       _id: product._id,
       title: cartItem?.title || product.title,
       image: cartItem?.image || product.image?.[0],
-      price: pricing.price,
+      price: unitPrice,
       quantity,
       itemTotal,
+      minQty: clampQuantity(product, 1),
+      maxQty: parseInt(product.maxOrderQuantity, 10) || 0,
       variant: pricing.variant,
       gstPercentage: pricing.gstPercentage,
       basePrice: pricing.basePrice,

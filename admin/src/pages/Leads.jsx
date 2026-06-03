@@ -209,6 +209,13 @@ const Leads = () => {
         quantity: lead.product?.items?.length > 0
             ? lead.product.items.reduce((acc, i) => acc + i.quantity, 0)
             : lead.quantity,
+        enquiryType: lead.enquiryType || "",
+        currency: lead.currency || "₹",
+        unitPrice: lead.unitPrice,
+        estimatedTotal: lead.estimatedTotal,
+        discountPercent: lead.discountPercent,
+        tierLabel: lead.tierLabel || "",
+        pricingNote: lead.pricingNote || "",
         // Variant information
         variantTitle:
           getLangValue(lead.product?.variant?.title) || "No variant",
@@ -355,8 +362,8 @@ const Leads = () => {
       ) : error ? (
         <span className="text-center mx-auto text-red-500">{error}</span>
       ) : leads.length > 0 ? (
-        <TableContainer className="mb-8 dark:bg-gray-900">
-          <Table>
+        <TableContainer className="mb-8 dark:bg-gray-900 overflow-x-auto">
+          <Table className="min-w-[720px]">
             <TableHeader>
               <tr>
                 <TableCell>Name</TableCell>
@@ -406,9 +413,29 @@ const Leads = () => {
                             {lead.product.items.length} Products
                           </span>
                         ) : (
-                          <span className="text-[11px] text-gray-600 italic truncate w-32">{getLangValue(lead.product?.title) || "No Product"}</span>
+                          <span className="text-[11px] text-gray-600 italic truncate max-w-[140px] sm:max-w-[200px]">{getLangValue(lead.product?.title) || "No Product"}</span>
                         )}
                       </div>
+                      {(lead.quantity || lead.estimatedTotal) && (
+                        <div className="mt-1.5 flex flex-wrap gap-1.5">
+                          {lead.quantity != null && (
+                            <span className="text-[10px] font-bold text-[#0b1d3d] bg-[#0b1d3d]/5 px-2 py-0.5 rounded">
+                              Qty: {lead.quantity}
+                            </span>
+                          )}
+                          {lead.estimatedTotal != null && (
+                            <span className="text-[10px] font-bold text-green-800 bg-green-50 px-2 py-0.5 rounded">
+                              Est: {lead.currency || "₹"}
+                              {lead.estimatedTotal}
+                            </span>
+                          )}
+                          {lead.enquiryType === "bulk" && (
+                            <span className="text-[9px] font-black uppercase text-amber-800 bg-amber-50 px-1.5 py-0.5 rounded">
+                              Bulk
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </TableCell>
                   <TableCell 
@@ -479,8 +506,8 @@ const Leads = () => {
       )}
       {/* Lead Details Modal */}
       {modalOpen && selectedLead && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black bg-opacity-40 p-2 sm:p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] p-4 sm:p-6 relative overflow-y-auto overflow-x-hidden min-w-0">
             <button
               className="absolute top-2 right-2 text-gray-500 hover:text-green-600 text-2xl"
               onClick={() => setModalOpen(false)}
@@ -873,6 +900,62 @@ const Leads = () => {
                       </p>
                    </div>
                 </div>
+              </div>
+            )}
+
+            {/* Quantity & pricing (bulk enquiries) */}
+            {(selectedLead.quantity || selectedLead.unitPrice || selectedLead.estimatedTotal) && (
+              <div className="mt-6 rounded-xl border-2 border-green-200 bg-green-50/50 dark:bg-gray-800/50 p-4 sm:p-6">
+                <h3 className="text-lg font-bold text-green-800 dark:text-green-400 mb-4 border-b border-green-200 pb-2">
+                  Quantity &amp; pricing estimate
+                </h3>
+                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-gray-500">Type</p>
+                    <p className="font-bold capitalize">{selectedLead.enquiryType || "bulk"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-gray-500">Quantity</p>
+                    <p className="font-bold">{selectedLead.quantity ?? "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-gray-500">Slab</p>
+                    <p className="font-bold">{selectedLead.tierLabel || "—"}</p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-gray-500">Unit price</p>
+                    <p className="font-bold">
+                      {selectedLead.listUnitPrice != null && (
+                        <span className="line-through text-gray-400 mr-2 text-xs">
+                          {selectedLead.currency || "₹"}
+                          {selectedLead.listUnitPrice}
+                        </span>
+                      )}
+                      {selectedLead.currency || "₹"}
+                      {selectedLead.unitPrice ?? "—"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-[10px] uppercase font-bold text-gray-500">Discount</p>
+                    <p className="font-bold text-green-700">
+                      {selectedLead.discountPercent > 0
+                        ? `${selectedLead.discountPercent}%`
+                        : "—"}
+                    </p>
+                  </div>
+                  <div className="col-span-2 sm:col-span-1">
+                    <p className="text-[10px] uppercase font-bold text-gray-500">Est. total</p>
+                    <p className="text-xl font-black text-[#0b1d3d] dark:text-white">
+                      {selectedLead.currency || "₹"}
+                      {selectedLead.estimatedTotal ?? "—"}
+                    </p>
+                  </div>
+                </div>
+                {selectedLead.pricingNote && (
+                  <p className="mt-3 text-xs text-gray-600 dark:text-gray-300 italic">
+                    {selectedLead.pricingNote}
+                  </p>
+                )}
               </div>
             )}
 

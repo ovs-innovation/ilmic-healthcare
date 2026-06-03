@@ -41,27 +41,43 @@ import ProductServices from "@services/ProductServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import Discount from "@components/common/Discount";
 import ImageCarousel from "@components/carousel/ImageCarousel";
-import MainModal from "@components/modal/MainModal";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
-import InputArea from "@components/form/InputArea";
-import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import LeadServices from "@services/LeadServices";
 import ReviewServices from "@services/ReviewServices";
 import { sanitizeProduct, sanitizeData } from "@utils/dataSanitizer";
 import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from "@utils/productGrid";
+import ProductBulkPricing from "@components/product/ProductBulkPricing";
+import {
+  buildCartItemFields,
+  clampQuantity,
+  getEffectiveMinOrder,
+  getEffectiveMaxOrder,
+  getUnitPriceForQuantity,
+  getBulkEnquiryThreshold,
+  getPricingSummary,
+  canUseRetailCheckout,
+  getRetailMaxQuantity,
+  getBulkDiscountInfo,
+  stashBuyNowPricing,
+} from "@utils/quantityPricing";
+import BulkDiscountBadge from "@components/common/BulkDiscountBadge";
 import Uploader from "@components/image-uploader/Uploader";
 import { UserContext } from "@context/UserContext";
 
 const ProductScreen = ({ product, attributes, relatedProducts }) => {
   const router = useRouter();
 
-  const { lang, showingTranslateValue, getNumberTwo } = useUtilsFunction();
+  const { lang, showingTranslateValue, getNumberTwo, currency } = useUtilsFunction();
   const { state: { userInfo } } = useContext(UserContext);
   const { isLoading, setIsLoading } = useContext(SidebarContext);
   const { addItem } = useCart();
 
-  // react hook
+  const [orderQuantity, setOrderQuantity] = useState(1);
+
+  useEffect(() => {
+    setOrderQuantity(getEffectiveMinOrder(product));
+  }, [product?._id, product?.minOrderQuantity, product?.quantityTiers]);
+
   const [value, setValue] = useState("");
   const [img, setImg] = useState("");
   const [discount, setDiscount] = useState(0);
@@ -70,8 +86,11 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
   const [selectVa, setSelectVa] = useState({});
   const [variantTitle, setVariantTitle] = useState([]);
   const [variants, setVariants] = useState([]);
-  const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
   const [welcomeModalOpen, setWelcomeModalOpen] = useState(false);
+  const bulkThreshold = product ? getBulkEnquiryThreshold(product) : 10;
+  const bulkInfo = product ? getBulkDiscountInfo(product) : null;
+  const isBulkQty = !canUseRetailCheckout(product, orderQuantity);
+  const orderPricing = product ? getPricingSummary(product, orderQuantity) : null;
   const [reviews, setReviews] = useState([]);
   const [reviewText, setReviewText] = useState("");
   const [reviewerName, setReviewerName] = useState("");
@@ -164,41 +183,6 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
       setReviews(reviews.filter(r => r._id !== id));
     } catch (err) {
       toast.error("Failed to delete review");
-    }
-  };
-
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors },
-  } = useForm();
-
-  const onSubmitEnquiry = async (data) => {
-    try {
-      const leadData = {
-        ...data,
-        product: {
-          _id: product._id,
-          title: product.title,
-          sku: selectVariant?.sku || product.sku,
-          images: product.image,
-          prices: product.prices,
-          category: product.category,
-          description: product.description,
-          variant: selectVariant,
-        },
-      };
-      await LeadServices.addLead(leadData);
-      setEnquiryModalOpen(false);
-      setWelcomeModalOpen(false);
-      toast.success("Thank you for your enquiry! We will contact you soon.");
-      reset();
-    } catch (error) {
-      console.log("error", error);
-      toast.error(
-        error?.response?.data?.message || "Failed to submit enquiry."
-      );
     }
   };
 
@@ -381,113 +365,10 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
             setModalOpen={setWelcomeModalOpen}
             product={product}
             selectedVariant={selectVariant}
+            initialQuantity={orderQuantity}
           />
-
-
-          {/* Enquiry Modal - Manual trigger */}
-          <MainModal
-            modalOpen={enquiryModalOpen}
-            setModalOpen={setEnquiryModalOpen}
-          >
-            <div className="inline-block w-full max-w-5xl my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-2xl rounded-2xl">
-              <div className="flex flex-col lg:flex-row">
-                <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-[#EF4036] to-[#C53030] p-8 items-center justify-center">
-                  <div className="relative w-full h-full">
-                    <div className="relative w-full h-full min-h-[500px] rounded-lg overflow-hidden">
-                      {product?.image?.[0] ? (
-                        <Image
-                          src={product.image[0]}
-                          alt={showingTranslateValue(product?.title)}
-                          width={600}
-                          height={600}
-                          className="rounded-lg object-cover w-full h-full"
-                          style={{ objectFit: 'cover' }}
-                        />
-                      ) : null}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-0"></div>
-                      <div className="absolute bottom-8 left-8 right-8 text-white z-10">
-                        <h2 className="text-2xl font-bold mb-2">
-                          {showingTranslateValue(selectVariant?.title) || showingTranslateValue(product?.title)}
-                        </h2>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="lg:w-1/2 p-6">
-                  <h3 className="text-lg font-medium leading-6 text-gray-900 mb-4">
-                    Enquire about this product
-                  </h3>
-                  <form onSubmit={handleSubmit(onSubmitEnquiry)}>
-                    <InputArea
-                      label="Name"
-                      name="name"
-                      type="text"
-                      register={register}
-                      required={true}
-                      placeholder="Your Name"
-                    />
-                    {errors.name && (
-                      <span className="text-red-500 text-xs">
-                        {errors.name.message}
-                      </span>
-                    )}
-                    <InputArea
-                      label="Email"
-                      name="email"
-                      type="email"
-                      register={register}
-                      required={true}
-                      placeholder="Your Email"
-                    />
-                    {errors.email && (
-                      <span className="text-red-500 text-xs">
-                        {errors.email.message}
-                      </span>
-                    )}
-                    <InputArea
-                      label="Phone"
-                      name="phone"
-                      type="text"
-                      register={register}
-                      required={true}
-                      placeholder="Your Phone Number"
-                    />
-                    {errors.phone && (
-                      <span className="text-red-500 text-xs">
-                        {errors.phone.message}
-                      </span>
-                    )}
-                    <label className="block text-gray-500 font-medium text-sm leading-none mb-2 mt-2">
-                      Message
-                    </label>
-                    <textarea
-                      {...register("message", { required: "Message is required!" })}
-                      placeholder="Your message"
-                      className="w-full border text-sm rounded-md p-2 min-h-[80px] border-gray-200 focus:outline-none focus:border-[#EF4036]"
-                    />
-                    {errors.message && (
-                      <span className="text-red-500 text-xs">
-                        {errors.message.message}
-                      </span>
-                    )}
-                    <input
-                      type="hidden"
-                      value={product?.title}
-                      {...register("productTitle")}
-                    />
-                    <button
-                      type="submit"
-                      className="mt-4 w-full bg-[#EF4036] text-white py-2 rounded-md hover:bg-[#C53030] transition"
-                    >
-                      Submit Enquiry
-                    </button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </MainModal>
-          <div className="px-0 py-10 lg:py-10">
-            <div className="mx-auto px-3 lg:px-10 max-w-screen-2xl">
+          <div className="px-0 py-6 sm:py-10 lg:py-10">
+            <div className="mx-auto px-3 sm:px-6 lg:px-10 max-w-screen-2xl min-w-0">
               <div className="flex items-center pb-4">
                 <ol className="flex items-center w-full overflow-hidden font-serif">
                   <li className="text-sm pr-1 transition duration-200 ease-in cursor-pointer hover:text-[#EF4036] font-semibold">
@@ -513,15 +394,15 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
 
                     <FiChevronRight />
                   </li>
-                  <li className="text-sm px-1 transition duration-200 ease-in ">
+                  <li className="text-sm px-1 transition duration-200 ease-in truncate max-w-[40vw] sm:max-w-none">
                     {showingTranslateValue(selectVariant?.title) ||
                       showingTranslateValue(product?.title)}
                   </li>
                 </ol>
               </div>
-              <div className="w-full rounded-lg p-3 lg:p-12 bg-white">
-                <div className="flex flex-col xl:flex-row gap-12">
-                  <div className="flex-shrink-0 xl:pr-10 lg:block w-full mx-auto md:w-6/12 lg:w-[45%] xl:w-[45%]">
+              <div className="w-full rounded-lg p-3 sm:p-6 lg:p-10 bg-white min-w-0">
+                <div className="flex flex-col xl:flex-row gap-6 lg:gap-10 min-w-0">
+                  <div className="flex-shrink-0 xl:pr-10 w-full min-w-0 mx-auto md:w-6/12 lg:w-[45%] xl:w-[45%]">
                     <Discount slug product={product} discount={discount} />
 
                     {showVideo && product.videoUrl ? (
@@ -542,6 +423,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                         width={650}
                         height={650}
                         priority
+                        className="w-full h-auto max-w-full"
                       />
                     ) : (
                       <Image
@@ -611,45 +493,90 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
 
                   </div>
 
-                  <div className="w-full">
-                    <div className="flex flex-col md:flex-row lg:flex-row xl:flex-row">
-                      <div className="xl:pr-6 md:pr-6 md:w-full w-full">
-                        <div className="mb-6">
-                          <h1 className="leading-7 text-lg md:text-xl lg:text-xl mb-1 font-semibold font-serif text-slate-700">
+                  <div className="w-full min-w-0 flex-1">
+                    <div className="flex flex-col w-full min-w-0">
+                      <div className="w-full min-w-0">
+                        <div className="mb-4 sm:mb-6">
+                          <h1 className="leading-snug text-base sm:text-lg md:text-xl mb-2 font-semibold font-serif text-slate-700 break-words">
                             {showingTranslateValue(selectVariant?.title) ||
                               showingTranslateValue(product?.title)}
                           </h1>
+                          {bulkInfo?.hasBulkTiers && (
+                            <div className="mb-3 flex flex-wrap gap-2 items-center">
+                              <BulkDiscountBadge product={product} variant="banner" className="!w-auto flex-1 min-w-0" />
+                            </div>
+                          )}
 
-                          <div className="flex flex-col mb-8 w-full max-w-sm">
+                          <div className="flex flex-col mb-4 sm:mb-6 w-full min-w-0">
                             {/* Contextual Info - Total for MOQ and Tax status */}
                             <div className="flex items-center gap-2 mb-1.5 font-bold uppercase tracking-[0.1em] text-[10px]">
-                              <span className="text-gray-500">Total for {product?.minOrderQuantity || 1} Units</span>
+                              <span className="text-gray-500">Total for {orderQuantity} Units</span>
                               <span className="w-1 h-1 rounded-full bg-gray-300 mx-1"></span> 
                               <span className="text-green-700 font-black">Incl. {product?.gstPercentage || 0}% Tax</span>
                             </div>
 
-                            {/* Main Total Price - Highlight of the page */}
                             <div className="flex items-baseline mb-3">
-                              <span className="text-3xl font-black text-pink-800 leading-none tracking-tighter">
-                                ₹{getNumberTwo((product?.price || 0) * (product?.minOrderQuantity || 1))}
+                              <span className="text-2xl sm:text-3xl font-black text-pink-800 leading-none tracking-tighter break-words">
+                                {currency}{getNumberTwo(getUnitPriceForQuantity(product, orderQuantity) * orderQuantity)}
                               </span>
                             </div>
 
-                            {/* Simple, single-line technical breakdown */}
-                            <div className="flex items-center gap-x-4 text-[10px] font-bold uppercase text-gray-400 border-t border-gray-100 pt-3 tracking-tight w-full">
-                              <div className="flex items-center gap-1.5 border-r border-gray-100 pr-4">
-                                <span className="text-gray-600 font-size-60 text-[11px]">Rate:</span>
-                                <span className="text-[#0b1d3d] font-semibold text-[11px]">₹{getNumberTwo(product?.basePrice || 0)}/pc</span>
+                            <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-x-3 gap-y-2 text-[10px] font-bold uppercase text-gray-400 border-t border-gray-100 pt-3 tracking-tight w-full">
+                              <div className="flex items-center gap-1.5 sm:border-r sm:border-gray-100 sm:pr-4 min-w-0">
+                                <span className="text-gray-600 text-[10px] sm:text-[11px] shrink-0">Rate:</span>
+                                <span className="text-[#0b1d3d] font-semibold text-[10px] sm:text-[11px] truncate">
+                                  {currency}{getNumberTwo(getUnitPriceForQuantity(product, orderQuantity))}/pc
+                                </span>
                               </div>
-                              <div className="flex items-center gap-1.5 border-r border-gray-100 pr-4">
-                                <span className="text-gray-600 font-size-60 text-[11px]">SKU:</span>
-                                <span className="text-gray-700 font-semibold text-[11px]">{selectVariant?.sku || product.sku || 'N/A'}</span>
+                              <div className="flex items-center gap-1.5 sm:border-r sm:border-gray-100 sm:pr-4 min-w-0">
+                                <span className="text-gray-600 text-[10px] sm:text-[11px] shrink-0">SKU:</span>
+                                <span className="text-gray-700 font-semibold text-[10px] sm:text-[11px] truncate">{selectVariant?.sku || product.sku || 'N/A'}</span>
                               </div>
-                              <div className="flex items-center gap-1.5">
-                                <span className="text-gray-600 font-size-60 text-[11px]">MOQ:</span>
-                                <span className="text-[#0b1d3d] font-semibold text-[11px]">{product?.minOrderQuantity || 1} Unit</span>
+                              <div className="flex items-center gap-1.5 col-span-2 sm:col-span-1">
+                                <span className="text-gray-600 text-[10px] sm:text-[11px]">MOQ:</span>
+                                <span className="text-[#0b1d3d] font-semibold text-[10px] sm:text-[11px]">{getEffectiveMinOrder(product)}</span>
                               </div>
                             </div>
+
+                            <div className="flex items-center gap-3 mt-4">
+                              <span className="text-[10px] font-bold uppercase text-gray-500">Quantity</span>
+                              <div className="flex items-center border-2 border-[#0b1d3d]/15 rounded-xl bg-white">
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setOrderQuantity((q) =>
+                                      clampQuantity(product, q - 1)
+                                    )
+                                  }
+                                  disabled={orderQuantity <= getEffectiveMinOrder(product)}
+                                  className="w-10 h-10 font-bold text-[#0b1d3d] disabled:opacity-30"
+                                >
+                                  −
+                                </button>
+                                <span className="w-12 text-center font-black text-[#0b1d3d]">{orderQuantity}</span>
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    setOrderQuantity((q) =>
+                                      clampQuantity(product, q + 1)
+                                    )
+                                  }
+                                  disabled={
+                                    getEffectiveMaxOrder(product) > 0 &&
+                                    orderQuantity >= getEffectiveMaxOrder(product)
+                                  }
+                                  className="w-10 h-10 font-bold text-[#0b1d3d] disabled:opacity-30"
+                                >
+                                  +
+                                </button>
+                              </div>
+                            </div>
+
+                            <ProductBulkPricing
+                              product={product}
+                              currency={currency}
+                              selectedQty={orderQuantity}
+                            />
                           </div>
 
                           {selectVariant?.barcode && (
@@ -708,63 +635,129 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                             </ul>
                           </div>
 
-                          <div className="flex flex-col items-center mt-4 w-full">
-                            <div className="flex items-center justify-between gap-4 w-full mb-4">
-                              <button
-                                onClick={() => {
-                                  const minQty = product.minOrderQuantity || 1;
-                                  // Direct to checkout with just this product, bypassing the global cart
-                                  router.push({
-                                    pathname: "/checkout",
-                                    query: {
-                                      buyNow: true,
-                                      id: product._id,
-                                      title: showingTranslateValue(product.title),
-                                      price: product?.prices?.price || product?.price || 0,
-                                      image: product.image?.[0],
-                                      quantity: minQty,
-                                      sku: selectVariant?.sku || product.sku || "",
-                                      barcode: selectVariant?.barcode || product.barcode || "",
-                                      deliveryCharge: product.deliveryCharge || 0,
-                                      gstPercentage: product.gstPercentage || 0,
-                                      basePrice: product.basePrice || product.price || 0,
+                          <div className="flex flex-col gap-3 mt-6 w-full min-w-0">
+                            {/* Retail / instant checkout */}
+                            <div
+                              className={`rounded-xl border-2 p-4 w-full min-w-0 transition-all ${
+                                !isBulkQty
+                                  ? "border-[#0b1d3d] bg-[#0b1d3d]/5 shadow-sm"
+                                  : "border-gray-200 bg-gray-50/50 opacity-90"
+                              }`}
+                            >
+                              <p className="text-[10px] font-black uppercase tracking-widest text-[#0b1d3d] mb-1">
+                                Buy online (retail)
+                              </p>
+                              <p className="text-[11px] text-gray-500 mb-3">
+                                {getRetailMaxQuantity(product) > 0
+                                  ? `Instant checkout for ${getEffectiveMinOrder(product)}–${getRetailMaxQuantity(product)} units.`
+                                  : `Pay online for ${getEffectiveMinOrder(product)}+ units (same slab pricing applies).`}
+                              </p>
+                              <div className="flex flex-col sm:flex-row gap-2 w-full">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (!canUseRetailCheckout(product, orderQuantity)) {
+                                      toast.info(`For ${orderQuantity} units, please use Request bulk quote.`);
+                                      setWelcomeModalOpen(true);
+                                      return;
                                     }
-                                  });
-                                }}
-                                className="bg-[#0b1d3d] hover:bg-[#162542] text-white text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border-0 border-transparent rounded-md px-4 md:px-6 lg:px-8 py-4 w-1/2 h-12"
-                              >
-                                Buy Now
-                              </button>
+                                    const pricing = buildCartItemFields(product, orderQuantity);
+                                    stashBuyNowPricing(product);
+                                    router.push({
+                                      pathname: "/checkout",
+                                      query: {
+                                        buyNow: true,
+                                        id: product._id,
+                                        title: showingTranslateValue(product.title),
+                                        price: pricing.price,
+                                        image: product.image?.[0],
+                                        quantity: pricing.quantity,
+                                        sku: selectVariant?.sku || product.sku || "",
+                                        barcode: selectVariant?.barcode || product.barcode || "",
+                                        deliveryCharge: product.deliveryCharge || 0,
+                                        gstPercentage: product.gstPercentage || 0,
+                                        basePrice: product.basePrice || product.price || 0,
+                                      },
+                                    });
+                                  }}
+                                  className={`flex-1 min-w-0 bg-[#ED1C24] hover:bg-red-700 text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl ${
+                                    isBulkQty ? "opacity-60" : ""
+                                  }`}
+                                >
+                                  Buy Now
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    if (!canUseRetailCheckout(product, orderQuantity)) {
+                                      toast.info(`For ${orderQuantity} units, please use Request bulk quote.`);
+                                      setWelcomeModalOpen(true);
+                                      return;
+                                    }
+                                    const pricing = buildCartItemFields(product, orderQuantity);
+                                    addItem(
+                                      {
+                                        id: product._id,
+                                        name: showingTranslateValue(product.title),
+                                        price: pricing.price,
+                                        image: product.image?.[0],
+                                        variant: selectVariant || {},
+                                        minQty: pricing.minQty,
+                                        maxQty: pricing.maxQty,
+                                        quantityTiers: pricing.quantityTiers,
+                                        listPrice: pricing.listPrice,
+                                        sku: selectVariant?.sku || product.sku || "",
+                                        barcode: selectVariant?.barcode || product.barcode || "",
+                                        deliveryCharge: product.deliveryCharge || 0,
+                                        gstPercentage: product.gstPercentage || 0,
+                                        basePrice: product.basePrice || product.price || 0,
+                                      },
+                                      pricing.quantity
+                                    );
+                                    toast.success("Added to cart!");
+                                  }}
+                                  className={`flex-1 min-w-0 bg-[#0b1d3d] hover:bg-[#162542] text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl ${
+                                    isBulkQty ? "opacity-60" : ""
+                                  }`}
+                                >
+                                  Add to Cart
+                                </button>
+                              </div>
+                            </div>
 
+                            {/* Bulk enquiry */}
+                            <div
+                              className={`rounded-xl border-2 p-4 w-full min-w-0 transition-all ${
+                                isBulkQty
+                                  ? "border-[#ED1C24] bg-red-50/80 shadow-sm"
+                                  : "border-gray-200 bg-white"
+                              }`}
+                            >
+                              <p className="text-[10px] font-black uppercase tracking-widest text-[#ED1C24] mb-1">
+                                Bulk / wholesale quote
+                              </p>
+                              <p className="text-[11px] text-gray-600 mb-2">
+                                {bulkThreshold}+ units — custom slab pricing, GST invoice &amp; delivery terms.
+                              </p>
+                              {orderPricing && (
+                                <p className="text-sm font-bold text-[#0b1d3d] mb-3 break-words">
+                                  Est. {currency}
+                                  {getNumberTwo(orderPricing.estimatedTotal)} for {orderQuantity} pcs
+                                  {orderPricing.discountPercent > 0 && (
+                                    <span className="text-green-700 text-xs ml-1">
+                                      ({orderPricing.discountPercent}% off list)
+                                    </span>
+                                  )}
+                                </p>
+                              )}
                               <button
-                                onClick={() => {
-                                  const minQty = product.minOrderQuantity || 1;
-                                  addItem({
-                                    id: product._id,
-                                    name: showingTranslateValue(product.title),
-                                    price: product?.prices?.price || product?.price || 0,
-                                    image: product.image?.[0],
-                                    variant: selectVariant || {},
-                                    minQty: minQty,
-                                    sku: selectVariant?.sku || product.sku || "",
-                                    barcode: selectVariant?.barcode || product.barcode || "",
-                                    deliveryCharge: product.deliveryCharge || 0,
-                                    gstPercentage: product.gstPercentage || 0,
-                                    basePrice: product.basePrice || product.price || 0,
-                                  }, minQty);
-                                  toast.success("Added to cart!");
-                                }}
-                                className="bg-[#0b1d3d] hover:bg-[#162542] text-white text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border-0 border-transparent rounded-md px-4 md:px-6 lg:px-8 py-4 w-1/2 h-12 gap-2"
+                                type="button"
+                                onClick={() => setWelcomeModalOpen(true)}
+                                className="w-full bg-gradient-to-r from-[#051124] to-[#0b1d3d] hover:from-[#0b1d3d] hover:to-[#162542] text-white text-xs sm:text-sm font-black py-3.5 px-4 rounded-xl uppercase tracking-wide"
                               >
-                                Add To Cart
+                                Request bulk quote
                               </button>
                             </div>
-                            <button
-                              onClick={() => setWelcomeModalOpen(true)}
-                              className="bg-[#0b1d3d] hover:bg-[#162542] text-white text-sm leading-4 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-semibold text-center justify-center border-0 border-transparent rounded-md px-4 md:px-6 lg:px-8 py-4 w-full h-12"
-                            >
-                              Enquire Now For Bulk purchase
-                            </button>
                           </div>
 
                           <div className="flex flex-col mt-4">
@@ -790,7 +783,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
 
                           {/* NEW: Replacement for Highlights on the Right - Value Prop */}
                           <div className="mt-8 pt-8 border-t border-gray-100">
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               <div className="p-4 bg-blue-50/50 rounded-2xl border border-blue-100/50">
                                 <FiZap className="w-6 h-6 text-[#0b1d3d] mb-3" />
                                 <h4 className="text-xs font-black text-gray-900 uppercase tracking-widest mb-1">Industrial Grade</h4>

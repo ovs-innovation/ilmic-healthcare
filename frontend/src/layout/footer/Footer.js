@@ -13,7 +13,7 @@ const Footer = () => {
   const { services } = useContext(SidebarContext);
   const footerPhone = "+91 9717372217";
   const footerAddress =
-    "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN";
+    "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN";
   return (
     <div className="bg-gray-100 text-gray-900 pt-10 pb-16 relative">
       {/* Red vertical bar on the right */}
