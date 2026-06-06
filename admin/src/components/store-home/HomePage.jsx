@@ -20,6 +20,7 @@ import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 import SelectProductLimit from "@/components/form/selectOption/SelectProductLimit";
+import { useFormSubmitBusy } from "@/context/ImageUploadContext";
 
 const HomePage = ({
   register,
@@ -112,13 +113,14 @@ const HomePage = ({
 }) => {
   const { mode } = useContext(WindmillContext);
   const { t } = useTranslation();
+  const submitBusy = useFormSubmitBusy(isSubmitting);
 
   // console.log("mode", mode);
 
   return (
     <>
       <div className="sticky top-0 z-20 flex justify-end">
-        {isSubmitting ? (
+        {submitBusy ? (
           <Button disabled={true} type="button" className="h-10 px-6">
             <img
               src={spinnerLoadingImage}

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { SidebarContext } from "@/context/SidebarContext";
 import BlogServices from "@/services/BlogServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 import useTranslationValue from "./useTranslationValue";
 
 const useBlogSubmit = (id) => {
@@ -27,6 +28,7 @@ const useBlogSubmit = (id) => {
   ]);
 
   const { handlerTextTranslateHandler } = useTranslationValue();
+  const { isUploading } = useImageUploadContext();
 
   const {
     register,
@@ -52,6 +54,11 @@ const useBlogSubmit = (id) => {
 
   const onSubmit = async (data) => {
     try {
+      if (isUploading) {
+        notifyError("Please wait for image uploads to finish.");
+        return;
+      }
+
       setIsSubmitting(true);
       
       const title = data?.title;

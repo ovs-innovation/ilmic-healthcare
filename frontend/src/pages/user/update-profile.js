@@ -18,6 +18,7 @@ import { useContext } from "react";
 const UpdateProfile = () => {
   const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isImageUploading, setIsImageUploading] = useState(false);
   const { data: session, update } = useSession();
   const { dispatch } = useContext(UserContext);
 
@@ -32,6 +33,11 @@ const UpdateProfile = () => {
   } = useForm();
 
   const onSubmit = async (data) => {
+    if (isImageUploading) {
+      notifyError("Please wait for image uploads to finish.");
+      return;
+    }
+
     setLoading(true);
 
     const userData = {
@@ -106,7 +112,11 @@ const UpdateProfile = () => {
               <div>
                 <Label label="Photo" />
                 <div className="mt-1 flex items-center">
-                  <Uploader imageUrl={imageUrl} setImageUrl={setImageUrl} />
+                  <Uploader
+                    imageUrl={imageUrl}
+                    setImageUrl={setImageUrl}
+                    onUploadingChange={setIsImageUploading}
+                  />
                 </div>
               </div>
             </div>
@@ -181,7 +191,7 @@ const UpdateProfile = () => {
                     <div className="col-span-6 sm:col-span-3 mt-5 text-right">
                       {loading ? (
                         <button
-                          disabled={loading}
+                          disabled={loading || isImageUploading}
                           type="submit"
                           className="md:text-sm leading-5 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-medium text-center justify-center border-0 border-transparent rounded-md placeholder-white focus-visible:outline-none focus:outline-none bg-red-500 text-white px-5 md:px-6 lg:px-8 py-2 md:py-3 lg:py-3 hover:text-white hover:bg-red-600 h-12 mt-1 text-sm lg:text-sm w-full sm:w-auto"
                         >
@@ -197,7 +207,7 @@ const UpdateProfile = () => {
                         </button>
                       ) : (
                         <button
-                          disabled={loading}
+                          disabled={loading || isImageUploading}
                           type="submit"
                           className="md:text-sm leading-5 inline-flex items-center cursor-pointer transition ease-in-out duration-300 font-medium text-center justify-center border-0 border-transparent rounded-md placeholder-white focus-visible:outline-none focus:outline-none bg-red-500 text-white px-5 md:px-6 lg:px-8 py-2 md:py-3 lg:py-3 hover:text-white hover:bg-red-600 h-12 mt-1 text-sm lg:text-sm w-full sm:w-auto"
                         >

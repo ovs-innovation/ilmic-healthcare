@@ -7,6 +7,7 @@ import useUtilsFunction from "./useUtilsFunction";
 import { SidebarContext } from "@/context/SidebarContext";
 import CouponServices from "@/services/CouponServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 import useTranslationValue from "./useTranslationValue";
 
 const useCouponSubmit = (id) => {
@@ -22,6 +23,7 @@ const useCouponSubmit = (id) => {
   const { currency } = useUtilsFunction();
 
   const { handlerTextTranslateHandler } = useTranslationValue();
+  const { isUploading } = useImageUploadContext();
 
   const {
     register,
@@ -33,6 +35,11 @@ const useCouponSubmit = (id) => {
 
   const onSubmit = async (data) => {
     try {
+      if (isUploading) {
+        notifyError("Please wait for image uploads to finish.");
+        return;
+      }
+
       setIsSubmitting(true);
       const title = data?.title; // Extract title from data
       const titleTranslates = await handlerTextTranslateHandler(

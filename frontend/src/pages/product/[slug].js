@@ -98,6 +98,7 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null);
   const [reviewImg, setReviewImg] = useState([]);
+  const [isReviewImageUploading, setIsReviewImageUploading] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
 
   // Helper to convert YT URL to embed URL
@@ -126,6 +127,9 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
   const submitReview = async (e) => {
     e.preventDefault();
     if (!reviewerName || !reviewText) return toast.error("Please fill Name and Review");
+    if (isReviewImageUploading) {
+      return toast.error("Please wait for image uploads to finish.");
+    }
     try {
       if (isEditing) {
         const res = await ReviewServices.updateReview(editId, {
@@ -1008,12 +1012,19 @@ const ProductScreen = ({ product, attributes, relatedProducts }) => {
                           </select>
                         </div>
                         <div className="shrink-0">
-                          <Uploader setImageUrl={setReviewImg} imageUrl={reviewImg} isCompact={true} multiple={true} />
+                          <Uploader
+                            setImageUrl={setReviewImg}
+                            imageUrl={reviewImg}
+                            isCompact={true}
+                            multiple={true}
+                            onUploadingChange={setIsReviewImageUploading}
+                          />
                         </div>
                         <div className="shrink-0 flex gap-2">
                           <button
                             type="submit"
-                            className="h-[38px] px-6 bg-white text-[#0b1d3d] rounded-lg hover:bg-gray-100 transition-all font-black text-xs uppercase tracking-widest shadow-md flex items-center gap-2"
+                            disabled={isReviewImageUploading}
+                            className="h-[38px] px-6 bg-white text-[#0b1d3d] rounded-lg hover:bg-gray-100 transition-all font-black text-xs uppercase tracking-widest shadow-md flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             <FiCheck className="w-4 h-4" />
                             {isEditing ? "Update" : "Post"}

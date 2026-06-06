@@ -12,6 +12,7 @@ import InputArea from "@/components/form/input/InputArea";
 import Error from "@/components/form/others/Error";
 import SelectRole from "@/components/form/selectOption/SelectRole";
 import AnimatedContent from "@/components/common/AnimatedContent";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 
 const EditProfile = () => {
   const { t } = useTranslation();
@@ -21,6 +22,7 @@ const EditProfile = () => {
 
   const { register, handleSubmit, onSubmit, errors, imageUrl, setImageUrl } =
     useStaffSubmit(adminInfo._id);
+  const { isUploading } = useImageUploadContext();
 
   return (
     <>
@@ -95,7 +97,7 @@ const EditProfile = () => {
             </div>
 
             <div className="flex flex-row-reverse pr-6 pb-6">
-              <Button type="submit" className="h-12 px-6">
+              <Button type="submit" disabled={isUploading} className="h-12 px-6">
                 {t("updateProfile")}
               </Button>
             </div>

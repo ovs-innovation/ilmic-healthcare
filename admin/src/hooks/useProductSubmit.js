@@ -11,6 +11,7 @@ import { SidebarContext } from "@/context/SidebarContext";
 import AttributeServices from "@/services/AttributeServices";
 import ProductServices from "@/services/ProductServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 import useTranslationValue from "./useTranslationValue";
 
 const useProductSubmit = (id, selectedServices = []) => {
@@ -74,6 +75,7 @@ const useProductSubmit = (id, selectedServices = []) => {
 
   const { handlerTextTranslateHandler } = useTranslationValue();
   const { showingTranslateValue, getNumber, getNumberTwo } = useUtilsFunction();
+  const { isUploading } = useImageUploadContext();
 
   const handleRemoveEmptyKey = (obj) => {
     if (!obj || typeof obj !== "object") return obj;
@@ -106,8 +108,16 @@ const useProductSubmit = (id, selectedServices = []) => {
   const onSubmit = async (data) => {
     // console.log('data is data',data)
     try {
+      if (isUploading) {
+        notifyError("Please wait for image uploads to finish.");
+        return;
+      }
+
       setIsSubmitting(true);
-      if (!imageUrl) return notifyError("Image is required!");
+      if (!Array.isArray(imageUrl) || imageUrl.length === 0) {
+        setIsSubmitting(false);
+        return notifyError("Image is required!");
+      }
 
       // if (data.originalPrice < data.price) {
       //   setIsSubmitting(false);

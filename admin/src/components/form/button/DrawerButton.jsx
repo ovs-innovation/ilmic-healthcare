@@ -4,11 +4,13 @@ import { useTranslation } from "react-i18next";
 
 //internal import
 import { SidebarContext } from "@/context/SidebarContext";
+import { useFormSubmitBusy } from "@/context/ImageUploadContext";
 import spinnerLoadingImage from "@/assets/img/spinner.gif";
 
 const DrawerButton = ({ id, title, isSubmitting, zIndex = "z-10" }) => {
   const { t } = useTranslation();
   const { toggleDrawer, isDrawerOpen } = useContext(SidebarContext);
+  const submitBusy = useFormSubmitBusy(isSubmitting);
   return (
     <>
       <div
@@ -26,7 +28,7 @@ const DrawerButton = ({ id, title, isSubmitting, zIndex = "z-10" }) => {
         </div>
 
         <div className="flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
-          {isSubmitting ? (
+          {submitBusy ? (
             <Button disabled={true} type="button" className="w-full h-12">
               <img
                 src={spinnerLoadingImage}

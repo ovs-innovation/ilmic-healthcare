@@ -9,6 +9,7 @@ import AdminServices from "@/services/AdminServices";
 import { AdminContext } from "@/context/AdminContext";
 import { SidebarContext } from "@/context/SidebarContext";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 import useTranslationValue from "./useTranslationValue";
 
 const useStaffSubmit = (id) => {
@@ -30,6 +31,7 @@ const useStaffSubmit = (id) => {
   // console.log("adminInfo", adminInfo);
 
   const { handlerTextTranslateHandler } = useTranslationValue();
+  const { isUploading } = useImageUploadContext();
 
   const {
     register,
@@ -51,6 +53,11 @@ const useStaffSubmit = (id) => {
 
   const onSubmit = async (data) => {
     try {
+      if (isUploading) {
+        notifyError("Please wait for image uploads to finish.");
+        return;
+      }
+
       setIsSubmitting(true);
 
       const nameTranslates = await handlerTextTranslateHandler(

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { SidebarContext } from "@/context/SidebarContext";
 import ServiceServices from "@/services/ServiceServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 import useTranslationValue from "./useTranslationValue";
 
 const useServiceSubmit = (id) => {
@@ -16,6 +17,7 @@ const useServiceSubmit = (id) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { handlerTextTranslateHandler } = useTranslationValue();
+  const { isUploading } = useImageUploadContext();
 
   const {
     register,
@@ -28,6 +30,11 @@ const useServiceSubmit = (id) => {
 
   const onSubmit = async ({ name, description, group }) => {
     try {
+      if (isUploading) {
+        notifyError("Please wait for image uploads to finish.");
+        return;
+      }
+
       setIsSubmitting(true);
       const nameTranslates = await handlerTextTranslateHandler(
         name,

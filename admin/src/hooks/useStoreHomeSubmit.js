@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import useUtilsFunction from "./useUtilsFunction";
 import useDisableForDemo from "./useDisableForDemo";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 import { SidebarContext } from "@/context/SidebarContext";
 import SettingServices from "@/services/SettingServices";
 import CouponServices from "@/services/CouponServices";
@@ -20,6 +21,7 @@ const createEditorState = (text) => {
 const useStoreHomeSubmit = () => {
   const { setIsUpdate, lang } = useContext(SidebarContext);
   const { showingTranslateValue } = useUtilsFunction();
+  const { isUploading } = useImageUploadContext();
 
   const [resData, setResData] = useState([]);
   const [coupons, setCoupons] = useState([]);
@@ -158,6 +160,10 @@ const useStoreHomeSubmit = () => {
   const onSubmit = async (data) => {
     if (handleDisableForDemo()) {
       return; // Exit the function if the feature is disabled
+    }
+    if (isUploading) {
+      notifyError("Please wait for image uploads to finish.");
+      return;
     }
     try {
       setIsSubmitting(true);

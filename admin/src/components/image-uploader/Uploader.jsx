@@ -1,205 +1,272 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { t } from "i18next";
-import axios from "axios";
 import { useDropzone } from "react-dropzone";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { FiUploadCloud, FiXCircle } from "react-icons/fi";
 import Pica from "pica";
 
-// Internal imports
 import useUtilsFunction from "@/hooks/useUtilsFunction";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import Container from "@/components/image-uploader/Container";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
+import {
+  getAdminCloudinaryConfig,
+  getCloudinaryErrorMessage,
+  uploadToCloudinary,
+  validateImageFile,
+} from "@/utils/cloudinaryUpload";
 
 const Uploader = ({
   setImageUrl,
   imageUrl,
   product,
   folder,
-  targetWidth = 800, // Set default fixed width
-  targetHeight = 800, // Set default fixed height
+  targetWidth = 800,
+  targetHeight = 800,
 }) => {
-  const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [err, setError] = useState("");
-  const pica = Pica(); // Initialize Pica instance
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [statusMessage, setStatusMessage] = useState("");
+  const pica = useMemo(() => Pica(), []);
   const { globalSetting } = useUtilsFunction();
+  const { tryBeginUpload, endUpload, isUploading: isGlobalUploading } =
+    useImageUploadContext();
+  const uploadSessionRef = useRef(0);
+  const abortControllerRef = useRef(null);
 
-  const { getRootProps, getInputProps, fileRejections } = useDropzone({
-    accept: {
-      "image/*": [".jpeg", ".jpg", ".png", ".webp"],
-    },
-    multiple: product ? true : false,
-    maxSize: 5242880, // 5 MB in bytes
-    maxFiles: globalSetting?.number_of_image_per_product || 10,
-    onDrop: async (acceptedFiles) => {
-      const resizedFiles = await Promise.all(
-        acceptedFiles.map((file) =>
-          resizeImageToFixedDimensions(file, targetWidth, targetHeight)
-        )
-      );
-      setFiles(
-        resizedFiles.map((file) =>
-          Object.assign(file, {
-            preview: URL.createObjectURL(file),
-          })
-        )
-      );
-    },
-  });
+  const cloudinaryConfig = useMemo(() => getAdminCloudinaryConfig(), []);
+  const maxFiles = globalSetting?.number_of_image_per_product || 10;
 
-  const resizeImageToFixedDimensions = async (file, width, height) => {
-    const img = new Image();
-    img.src = URL.createObjectURL(file);
+  const resizeImageToFixedDimensions = useCallback(
+    async (file, width, height) => {
+      const objectUrl = URL.createObjectURL(file);
+      const img = new Image();
 
-    await img.decode();
+      try {
+        img.src = objectUrl;
+        await img.decode();
 
-    // Preserve aspect ratio while scaling down (if needed)
-    // If the image is already smaller, we should still use the correct aspect ratio
-    // rather than forcefully squishing it to target width x height.
-    let ratio = Math.min(width / img.width, height / img.height);
-    
-    // If we only want to downscale and never upscale, we can enforce ratio <= 1
-    if (ratio > 1) ratio = 1;
+        let ratio = Math.min(width / img.width, height / img.height);
+        if (ratio > 1) ratio = 1;
 
-    const canvasWidth = Math.round(img.width * ratio);
-    const canvasHeight = Math.round(img.height * ratio);
+        const canvasWidth = Math.round(img.width * ratio);
+        const canvasHeight = Math.round(img.height * ratio);
+        const canvas = document.createElement("canvas");
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
 
-    const canvas = document.createElement("canvas");
-    canvas.width = canvasWidth;
-    canvas.height = canvasHeight;
-
-    return new Promise((resolve) => {
-      pica
-        .resize(img, canvas, {
+        const result = await pica.resize(img, canvas, {
           unsharpAmount: 80,
           unsharpRadius: 0.6,
           unsharpThreshold: 2,
-        })
-        .then((result) => pica.toBlob(result, file.type, 0.9))
-        .then((blob) => {
-          const resizedFile = new File([blob], file.name, { type: file.type });
-          resolve(resizedFile);
         });
+        const blob = await pica.toBlob(result, file.type || "image/jpeg", 0.9);
+        return new File([blob], file.name, {
+          type: file.type || "image/jpeg",
+        });
+      } catch (error) {
+        throw new Error(
+          `Could not process "${file.name}". Please try a different image.`
+        );
+      } finally {
+        URL.revokeObjectURL(objectUrl);
+      }
+    },
+    [pica]
+  );
+
+  const uploadFiles = useCallback(
+    async (rawFiles) => {
+      if (!cloudinaryConfig.valid) {
+        notifyError(cloudinaryConfig.error);
+        return;
+      }
+
+      if (!tryBeginUpload()) {
+        notifyError("Please wait for the current upload to finish.");
+        return;
+      }
+
+      const existingCount = Array.isArray(imageUrl) ? imageUrl.length : imageUrl ? 1 : 0;
+
+      if (product && existingCount + rawFiles.length > maxFiles) {
+        endUpload();
+        notifyError(`Maximum ${maxFiles} images can be uploaded.`);
+        return;
+      }
+
+      for (const file of rawFiles) {
+        const validationError = validateImageFile(file);
+        if (validationError) {
+          endUpload();
+          notifyError(`${file.name}: ${validationError}`);
+          return;
+        }
+      }
+
+      uploadSessionRef.current += 1;
+      const sessionId = uploadSessionRef.current;
+
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const abortController = new AbortController();
+      abortControllerRef.current = abortController;
+
+      setLoading(true);
+      setUploadProgress(0);
+      setStatusMessage("Uploading...");
+
+      try {
+        const preparedFiles = [];
+        for (const file of rawFiles) {
+          try {
+            const resizedFile = await resizeImageToFixedDimensions(
+              file,
+              targetWidth,
+              targetHeight
+            );
+            preparedFiles.push(resizedFile);
+          } catch (error) {
+            throw new Error(error.message || `Failed to prepare ${file.name}.`);
+          }
+        }
+
+        const uploadedUrls = [];
+
+        for (let index = 0; index < preparedFiles.length; index += 1) {
+          if (sessionId !== uploadSessionRef.current) {
+            return;
+          }
+
+          const file = preparedFiles[index];
+          const secureUrl = await uploadToCloudinary({
+            file,
+            folder,
+            config: cloudinaryConfig,
+            signal: abortController.signal,
+            onProgress: (fileProgress) => {
+              const overallProgress = Math.round(
+                ((index + fileProgress / 100) / preparedFiles.length) * 100
+              );
+              setUploadProgress(overallProgress);
+            },
+          });
+
+          uploadedUrls.push(secureUrl);
+        }
+
+        if (sessionId !== uploadSessionRef.current) {
+          return;
+        }
+
+        if (product) {
+          setImageUrl((currentUrls) => [...(currentUrls || []), ...uploadedUrls]);
+        } else if (uploadedUrls.length > 0) {
+          setImageUrl(uploadedUrls[uploadedUrls.length - 1]);
+        }
+
+        setUploadProgress(100);
+        setStatusMessage("Upload complete");
+        notifySuccess(
+          uploadedUrls.length > 1
+            ? `${uploadedUrls.length} images uploaded successfully!`
+            : "Image uploaded successfully!"
+        );
+      } catch (error) {
+        if (
+          error?.name === "CanceledError" ||
+          error?.code === "ERR_CANCELED" ||
+          sessionId !== uploadSessionRef.current
+        ) {
+          return;
+        }
+
+        notifyError(getCloudinaryErrorMessage(error));
+        setStatusMessage("Upload failed");
+      } finally {
+        if (sessionId === uploadSessionRef.current) {
+          endUpload();
+          setLoading(false);
+          abortControllerRef.current = null;
+        }
+      }
+    },
+    [
+      cloudinaryConfig,
+      endUpload,
+      folder,
+      imageUrl,
+      maxFiles,
+      product,
+      resizeImageToFixedDimensions,
+      setImageUrl,
+      targetHeight,
+      targetWidth,
+      tryBeginUpload,
+    ]
+  );
+
+  const { getRootProps, getInputProps, fileRejections, isDragActive } =
+    useDropzone({
+      accept: {
+        "image/jpeg": [".jpeg", ".jpg"],
+        "image/png": [".png"],
+        "image/webp": [".webp"],
+      },
+      multiple: Boolean(product),
+      maxSize: 5242880,
+      maxFiles: product ? maxFiles : 1,
+      disabled: loading || isGlobalUploading,
+      onDrop: async (acceptedFiles) => {
+        if (!acceptedFiles.length) return;
+        await uploadFiles(acceptedFiles);
+      },
     });
-  };
 
   useEffect(() => {
-    if (fileRejections) {
-      fileRejections.map(({ file, errors }) => (
-        <li key={file.path}>
-          {file.path} - {file.size} bytes
-          <ul>
-            {errors.map((e) => (
-              <li key={e.code}>
-                {e.code === "too-many-files"
-                  ? notifyError(
-                      `Maximum ${globalSetting?.number_of_image_per_product} Image Can be Upload!`
-                    )
-                  : notifyError(e.message)}
-              </li>
-            ))}
-          </ul>
-        </li>
-      ));
-    }
+    if (!fileRejections.length) return;
 
-    if (files) {
-      files.forEach((file) => {
-        if (
-          product &&
-          imageUrl?.length + files?.length >
-            globalSetting?.number_of_image_per_product
-        ) {
-          return notifyError(
-            `Maximum ${globalSetting?.number_of_image_per_product} Image Can be Upload!`
-          );
+    fileRejections.forEach(({ file, errors }) => {
+      errors.forEach((error) => {
+        if (error.code === "too-many-files") {
+          notifyError(`Maximum ${maxFiles} images can be uploaded.`);
+          return;
         }
-
-        setLoading(true);
-        setError("Uploading....");
-
-        const name = file.name.replaceAll(/\s/g, "");
-        const public_id = name?.substring(0, name.lastIndexOf("."));
-
-        const formData = new FormData();
-        formData.append("file", file);
-        formData.append(
-          "upload_preset",
-          import.meta.env.VITE_APP_CLOUDINARY_UPLOAD_PRESET
-        );
-        formData.append("cloud_name", import.meta.env.VITE_APP_CLOUD_NAME);
-        if (folder) {
-          formData.append("folder", folder);
-        }
-        if (public_id) {
-          formData.append("public_id", public_id);
-        }
-
-        axios({
-          url: import.meta.env.VITE_APP_CLOUDINARY_URL,
-          method: "POST",
-          data: formData,
-        })
-          .then((res) => {
-            notifySuccess("Image Uploaded successfully!");
-            setLoading(false);
-            if (product) {
-              setImageUrl((imgUrl) => [...imgUrl, res.data.secure_url]);
-            } else {
-              setImageUrl(res.data.secure_url);
-            }
-          })
-          .catch((err) => {
-            console.error("err", err);
-            notifyError(err.message);
-            setLoading(false);
-          });
+        notifyError(`${file.name}: ${error.message}`);
       });
-    }
-  }, [files]);
-
-  const thumbs = files.map((file) => (
-    <div key={file.name}>
-      <div>
-        <img
-          className="inline-flex border-2 border-gray-100 w-24 max-h-24"
-          src={file.preview}
-          alt={file.name}
-        />
-      </div>
-    </div>
-  ));
+    });
+  }, [fileRejections, maxFiles]);
 
   useEffect(
     () => () => {
-      files.forEach((file) => URL.revokeObjectURL(file.preview));
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
     },
-    [files]
+    []
   );
 
-  const handleRemoveImage = async (img) => {
+  const handleRemoveImage = (img) => {
     try {
-      setLoading(false);
-      notifyError("Image delete successfully!");
       if (product) {
-        const result = imageUrl?.filter((i) => i !== img);
-        setImageUrl(result);
+        setImageUrl((currentUrls) => currentUrls?.filter((item) => item !== img));
       } else {
         setImageUrl("");
       }
-    } catch (err) {
-      console.error("err", err);
-      notifyError(err.message);
-      setLoading(false);
+    } catch (error) {
+      notifyError(getCloudinaryErrorMessage(error));
     }
   };
 
   return (
     <div className="w-full text-center">
       <div
-        className="border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md cursor-pointer px-6 pt-5 pb-6"
+        className={`border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md px-6 pt-5 pb-6 ${
+          loading ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
+        }`}
         {...getRootProps()}
       >
         <input {...getInputProps()} />
@@ -211,9 +278,17 @@ const Uploader = ({
           {t("imageFormat")}
           {` (${targetWidth}x${targetHeight})`}
         </em>
+        {isDragActive && (
+          <p className="text-xs text-green-500 mt-2">Drop images here...</p>
+        )}
       </div>
 
-      <div className="text-green-500">{loading && err}</div>
+      {loading && (
+        <div className="text-green-500 text-sm mt-2">
+          {statusMessage} {uploadProgress > 0 ? `(${uploadProgress}%)` : ""}
+        </div>
+      )}
+
       <aside className="flex flex-row flex-wrap mt-4">
         {product ? (
           <DndProvider backend={HTML5Backend}>
@@ -238,9 +313,7 @@ const Uploader = ({
               <FiXCircle />
             </button>
           </div>
-        ) : (
-          thumbs
-        )}
+        ) : null}
       </aside>
     </div>
   );

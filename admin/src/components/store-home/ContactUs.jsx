@@ -10,6 +10,7 @@ import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 import SwitchToggle from "@/components/form/switch/SwitchToggle";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
 import Uploader from "@/components/image-uploader/Uploader";
+import { useFormSubmitBusy } from "@/context/ImageUploadContext";
 
 const ContactUs = ({
   isSave,
@@ -34,12 +35,13 @@ const ContactUs = ({
   isSubmitting,
 }) => {
   const { t } = useTranslation();
+  const submitBusy = useFormSubmitBusy(isSubmitting);
 
   return (
     <>
       <div className="col-span-12 md:col-span-12 lg:col-span-12 pr-3">
         <div className="sticky top-0 z-20 flex justify-end">
-          {isSubmitting ? (
+          {submitBusy ? (
             <Button disabled={true} type="button" className="h-10 px-6">
               <img
                 src={spinnerLoadingImage}

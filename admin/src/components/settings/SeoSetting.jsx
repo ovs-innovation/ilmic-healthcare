@@ -8,6 +8,7 @@ import spinnerLoadingImage from "@/assets/img/spinner.gif";
 import InputAreaTwo from "@/components/form/input/InputAreaTwo";
 import Uploader from "@/components/image-uploader/Uploader";
 import TextAreaCom from "@/components/form/others/TextAreaCom";
+import { useFormSubmitBusy } from "@/context/ImageUploadContext";
 
 const SeoSetting = ({
   errors,
@@ -20,11 +21,12 @@ const SeoSetting = ({
   isSubmitting,
 }) => {
   const { t } = useTranslation();
+  const submitBusy = useFormSubmitBusy(isSubmitting);
 
   return (
     <>
       <div className="sticky top-0 z-20 flex justify-end">
-        {isSubmitting ? (
+        {submitBusy ? (
           <Button disabled={true} type="button" className="h-10 px-6">
             <img
               src={spinnerLoadingImage}

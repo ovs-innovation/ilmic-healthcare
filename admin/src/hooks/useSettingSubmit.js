@@ -6,9 +6,11 @@ import useDisableForDemo from "./useDisableForDemo";
 import { SidebarContext } from "@/context/SidebarContext";
 import SettingServices from "@/services/SettingServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
+import { useImageUploadContext } from "@/context/ImageUploadContext";
 
 const useSettingSubmit = (id) => {
   const { setIsUpdate } = useContext(SidebarContext);
+  const { isUploading } = useImageUploadContext();
   const [isSave, setIsSave] = useState(true);
   const [enableInvoice, setEnableInvoice] = useState(false);
   const [isAllowAutoTranslation, setIsAllowAutoTranslation] = useState(false);
@@ -31,6 +33,10 @@ const useSettingSubmit = (id) => {
     // console.log("data", data);
     if (handleDisableForDemo()) {
       return; // Exit the function if the feature is disabled
+    }
+    if (isUploading) {
+      notifyError("Please wait for image uploads to finish.");
+      return;
     }
     try {
       setIsSubmitting(true);
