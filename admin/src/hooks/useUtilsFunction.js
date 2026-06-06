@@ -7,6 +7,16 @@ import LanguageServices from "@/services/LanguageServices";
 import SettingServices from "@/services/SettingServices";
 import { useQuery } from "@tanstack/react-query";
 
+const DEFAULT_CURRENCY = "₹";
+const normalizeCurrency = (symbol) => {
+  if (!symbol) return DEFAULT_CURRENCY;
+  const legacy = ["$", "€", "£", "USD", "EUR", "GBP", "Dollar", "Euro", "Pound"];
+  if (legacy.includes(symbol) || legacy.includes(String(symbol).trim())) {
+    return DEFAULT_CURRENCY;
+  }
+  return symbol;
+};
+
 const useUtilsFunction = () => {
   const { lang } = useContext(SidebarContext);
 
@@ -78,7 +88,7 @@ const useUtilsFunction = () => {
     return data !== undefined ? data : "!#";
   };
 
-  const currency = globalSetting?.default_currency || "$";
+  const currency = normalizeCurrency(globalSetting?.default_currency);
 
   return {
     error,

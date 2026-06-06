@@ -55,7 +55,22 @@ const useProductSubmit = (id, selectedServices = []) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [slug, setSlug] = useState("");
   const [highlights, setHighlights] = useState("");
+  const [quantityTiers, setQuantityTiers] = useState([]);
 
+  const sanitizeQuantityTiers = (tiers = []) => {
+    if (!Array.isArray(tiers)) return [];
+    return tiers
+      .map((t) => ({
+        minQuantity: Math.max(1, parseInt(t.minQuantity, 10) || 1),
+        maxQuantity: Math.max(0, parseInt(t.maxQuantity, 10) || 0),
+        discountPercent: Math.min(
+          100,
+          Math.max(0, Number(t.discountPercent) || 0)
+        ),
+        unitPrice: Math.max(0, Number(t.unitPrice) || 0),
+      }))
+      .sort((a, b) => a.minQuantity - b.minQuantity);
+  };
 
   const { handlerTextTranslateHandler } = useTranslationValue();
   const { showingTranslateValue, getNumber, getNumberTwo } = useUtilsFunction();
@@ -195,6 +210,8 @@ const useProductSubmit = (id, selectedServices = []) => {
         price: getNumber(data.basePrice) + (getNumber(data.basePrice) * Number(data.gstPercentage || 0)) / 100,
         originalPrice: Number(data.originalPrice) > 0 ? getNumber(data.originalPrice) : 0,
         minOrderQuantity: Number(data.minOrderQuantity || 1),
+        maxOrderQuantity: Math.max(0, Number(data.maxOrderQuantity || 0)),
+        quantityTiers: sanitizeQuantityTiers(quantityTiers),
         deliveryCharge: Number(data.deliveryCharge || 0),
         type: data.type || "normal",
         services: selectedServices || [],
@@ -315,6 +332,8 @@ const useProductSubmit = (id, selectedServices = []) => {
       setValue("price");
       setValue("gstPercentage", 0);
       setValue("minOrderQuantity");
+      setValue("maxOrderQuantity", 0);
+      setQuantityTiers([]);
       setValue("deliveryCharge", 0);
       setValue("videoUrl", "");
 
@@ -402,6 +421,10 @@ const useProductSubmit = (id, selectedServices = []) => {
               res.originalPrice || res?.prices?.originalPrice || 0
             );
             setValue("minOrderQuantity", res.minOrderQuantity || 1);
+            setValue("maxOrderQuantity", res.maxOrderQuantity || 0);
+            setQuantityTiers(
+              Array.isArray(res.quantityTiers) ? res.quantityTiers : []
+            );
             setValue("deliveryCharge", res.deliveryCharge || 0);
             setValue("type", res.type || "normal");
             setValue("videoUrl", res.videoUrl || "");
@@ -940,8 +963,8 @@ const useProductSubmit = (id, selectedServices = []) => {
     handleUpdateVariant,
     highlights,
     setHighlights,
-
-
+    quantityTiers,
+    setQuantityTiers,
   };
 };
 

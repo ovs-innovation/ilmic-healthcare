@@ -9,10 +9,17 @@ import { useContext } from "react";
 import { WishlistContext } from "@context/WishlistContext";
 
 // internal import
-import useGetSetting from "@hooks/useGetSetting";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import { handleLogEvent } from "src/lib/analytics";
 import { notifySuccess } from "@utils/toast";
+import {
+  buildCartItemFields,
+  getEffectiveMinOrder,
+  getUnitPriceForQuantity,
+  getBulkDiscountInfo,
+  stashBuyNowPricing,
+} from "@utils/quantityPricing";
+import BulkDiscountBadge from "@components/common/BulkDiscountBadge";
 import MainModal from "@components/modal/MainModal";
 
 const ProductCard = ({ 
@@ -27,18 +34,16 @@ const ProductCard = ({
   const router = useRouter();
   const { addItem } = useCart();
   const { addToWishlist } = useContext(WishlistContext);
-  const { globalSetting } = useGetSetting();
-  const { showingTranslateValue, getNumberTwo } = useUtilsFunction();
+  const { showingTranslateValue, getNumberTwo, currency } = useUtilsFunction();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imgError, setImgError] = useState(false);
-
-  const currency = globalSetting?.default_currency || "₹";
 
   const price = product?.price || product?.prices?.price || 0;
   const originalPrice = Number(
     product?.originalPrice ?? product?.prices?.originalPrice ?? 0
   );
   const showOriginalPrice = originalPrice > price;
+  const bulkInfo = getBulkDiscountInfo(product);
 
   useEffect(() => {
     setImgError(false);
@@ -47,35 +52,39 @@ const ProductCard = ({
   const categoryId = product?.category?._id || product?.category;
 
   const handleAddToCart = () => {
-    const minQty = product.minOrderQuantity || 1;
+    const pricing = buildCartItemFields(product);
     addItem({
       id: product._id,
       name: showingTranslateValue(product.title),
-      price: price,
+      price: pricing.price,
       image: product.image?.[0],
       variant: product?.variants?.[0] || {},
-      minQty: minQty,
+      minQty: pricing.minQty,
+      maxQty: pricing.maxQty,
+      quantityTiers: pricing.quantityTiers,
+      listPrice: pricing.listPrice,
       sku: product.sku || "",
       barcode: product.barcode || "",
       deliveryCharge: product.deliveryCharge || 0,
       gstPercentage: product.gstPercentage || 0,
       basePrice: product.basePrice || product.price || 0,
-    }, minQty);
+    }, pricing.quantity);
     notifySuccess(`${showingTranslateValue(product.title)} added to cart!`);
     handleLogEvent("cart", `added ${showingTranslateValue(product?.title)} to cart`);
   };
 
   const handleBuyNow = () => {
-    const minQty = product.minOrderQuantity || 1;
+    const pricing = buildCartItemFields(product);
+    stashBuyNowPricing(product);
     router.push({
       pathname: "/checkout",
       query: {
         buyNow: true,
         id: product._id,
         title: showingTranslateValue(product.title),
-        price,
+        price: pricing.price,
         image: product.image?.[0],
-        quantity: minQty,
+        quantity: pricing.quantity,
         sku: product.sku || "",
         barcode: product.barcode || "",
         deliveryCharge: product.deliveryCharge || 0,
@@ -108,11 +117,13 @@ const ProductCard = ({
           className="relative w-full flex-shrink-0 cursor-pointer bg-gray-50 overflow-hidden"
         >
           <div className="relative w-full pb-[100%] sm:pb-[75%]">
-            {/* Sale Badge — inside image area only */}
-            <div className="absolute top-2 left-2 z-10 pointer-events-none">
-              <span className="bg-[#ED1C24] text-white text-[9px] font-black px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider">
-                Sale
-              </span>
+            <div className="absolute top-2 left-2 right-2 z-10 flex flex-wrap gap-1 pointer-events-none max-w-full">
+              {showOriginalPrice && (
+                <span className="bg-[#ED1C24] text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider shrink-0">
+                  Sale
+                </span>
+              )}
+              <BulkDiscountBadge product={product} variant="pill" />
             </div>
 
             {/* Hover Action Buttons */}
@@ -199,9 +210,9 @@ const ProductCard = ({
           </h2>
 
           {/* Min Order Quantity */}
-          {product.minOrderQuantity && product.minOrderQuantity > 1 && (
+          {getEffectiveMinOrder(product) > 1 && (
             <div className="text-[10px] text-gray-500 font-medium mb-2 bg-gray-50 rounded-md px-2 py-0.5 inline-block w-fit">
-              Min. Order: <span className="font-bold text-gray-700">{product.minOrderQuantity} Units</span>
+              Min. Order: <span className="font-bold text-gray-700">{getEffectiveMinOrder(product)} Units</span>
             </div>
           )}
 
@@ -213,8 +224,11 @@ const ProductCard = ({
               </span>
             )}
             <span className="text-[#0b1d3d] font-black text-sm sm:text-base">
-              {currency}{getNumberTwo(price)}
+              {currency}{getNumberTwo(getUnitPriceForQuantity(product, getEffectiveMinOrder(product)))}
             </span>
+            {bulkInfo.hasBulkTiers && (
+              <BulkDiscountBadge product={product} variant="inline" />
+            )}
             <span className="text-[9px] sm:text-[10px] text-gray-500 font-bold uppercase tracking-tight">
               Incl. GST
             </span>
@@ -226,7 +240,7 @@ const ProductCard = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col xs:flex-row gap-2 w-full min-w-0">
+          <div className="flex flex-col sm:flex-row gap-2 w-full min-w-0">
             {!hideBuyNow && (
               <button
                 onClick={(e) => {

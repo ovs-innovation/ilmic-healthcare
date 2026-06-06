@@ -17,6 +17,8 @@ const addGlobalSetting = async (req, res) => {
   }
 };
 
+const LEGACY_CURRENCIES = new Set(["$", "€", "£", "USD", "EUR", "GBP", "Dollar", "Euro", "Pound"]);
+
 const getGlobalSetting = async (req, res) => {
   try {
     // console.log("getGlobalSetting");
@@ -25,7 +27,11 @@ const getGlobalSetting = async (req, res) => {
     if (!globalSetting) {
       return res.status(200).send({});
     }
-    res.send(globalSetting.setting);
+    const setting = { ...globalSetting.setting };
+    if (!setting.default_currency || LEGACY_CURRENCIES.has(setting.default_currency)) {
+      setting.default_currency = "₹";
+    }
+    res.send(setting);
   } catch (err) {
     res.status(500).send({
       message: err.message,

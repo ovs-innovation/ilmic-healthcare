@@ -1,13 +1,14 @@
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
 import useGetSetting from "./useGetSetting";
+import { normalizeCurrency } from "@utils/currencyConfig";
 
 const useUtilsFunction = () => {
   const lang = Cookies.get("_lang");
 
   const { globalSetting } = useGetSetting();
 
-  const currency = globalSetting?.default_currency || "$";
+  const currency = normalizeCurrency(globalSetting?.default_currency);
 
   //for date and time format
   const showTimeFormat = (data, timeFormat) => {

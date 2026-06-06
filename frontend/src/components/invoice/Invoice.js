@@ -52,7 +52,7 @@ const Invoice = ({ data, printRef, globalSetting, currency }) => {
             </h2>
             <p className="text-sm text-gray-500">
               {globalSetting?.address ||
-                "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN"}
+                "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN"}
             </p>
           </div>
         </div>

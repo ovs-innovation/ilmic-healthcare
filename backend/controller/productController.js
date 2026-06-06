@@ -315,7 +315,7 @@ const getShowingStoreProducts = async (req, res) => {
 
     const baseQuery = Product.find(queryObject)
       .select(
-        "_id title slug image price minOrderQuantity deliveryCharge category categories variants videoUrl createdAt"
+        "_id title slug image price originalPrice basePrice gstPercentage minOrderQuantity maxOrderQuantity quantityTiers deliveryCharge category categories variants videoUrl createdAt"
       )
       .populate({ path: "categories", select: "_id name slug" })
       .populate({ path: "category", select: "_id name slug" })

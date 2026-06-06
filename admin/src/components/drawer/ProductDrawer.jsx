@@ -38,6 +38,7 @@ import UploaderThree from "@/components/image-uploader/UploaderThree";
 import AttributeOptionTwo from "@/components/attribute/AttributeOptionTwo";
 import AttributeListTable from "@/components/attribute/AttributeListTable";
 import SwitchToggleForCombination from "@/components/form/switch/SwitchToggleForCombination";
+import QuantityTiersEditor from "@/components/product/QuantityTiersEditor";
 
 const ProductDrawer = ({ id }) => {
   const { t } = useTranslation();
@@ -92,6 +93,8 @@ const ProductDrawer = ({ id }) => {
     handleSelectInlineImage,
     handleGenerateCombination,
     handleUpdateVariant,
+    quantityTiers,
+    setQuantityTiers,
   } = useProductSubmit(id, selectedServices);
 
   const { showingTranslateValue } = useUtilsFunction();
@@ -360,16 +363,49 @@ const ProductDrawer = ({ id }) => {
 
 
               <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
-                <LabelArea label="Min Order Quantity" />
+                <LabelArea label="Min Order Quantity (MOQ)" />
                 <div className="col-span-8 sm:col-span-4">
                   <InputArea
                     register={register}
                     label="Min Order Quantity"
                     name="minOrderQuantity"
                     type="number"
-                    placeholder="Minimum Order Quantity"
+                    min="1"
+                    placeholder="Minimum units per order"
                   />
                   <Error errorName={errors.minOrderQuantity} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <LabelArea label="Max Order Quantity" />
+                <div className="col-span-8 sm:col-span-4">
+                  <InputArea
+                    register={register}
+                    label="Max Order Quantity"
+                    name="maxOrderQuantity"
+                    type="number"
+                    min="0"
+                    placeholder="0 = no limit"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Optional cap per order. Leave 0 for unlimited quantity.
+                  </p>
+                  <Error errorName={errors.maxOrderQuantity} />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
+                <LabelArea label="Quantity discount slabs" />
+                <div className="col-span-8 sm:col-span-4">
+                  <QuantityTiersEditor
+                    tiers={quantityTiers}
+                    onChange={setQuantityTiers}
+                    basePrice={
+                      Number(watch("basePrice") || 0) *
+                      (1 + Number(watch("gstPercentage") || 0) / 100)
+                    }
+                  />
                 </div>
               </div>
 

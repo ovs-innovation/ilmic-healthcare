@@ -84,7 +84,7 @@ const ContactUs = () => {
             <p className="text-sm text-gray-600 leading-relaxed">
               B-1/D GROUND FLOOR SAURAV VIHAR
               <br />
-              JAITPUR NEAR CHOKAN MANDIR B, ADARPUR
+              JAITPUR NEAR CHOKAN MANDIR, BADARPUR
               <br />
               DELHI 110044, NEW DELHI, DELHI, 110044, IN
             </p>
@@ -117,7 +117,7 @@ const ContactUs = () => {
           <div className="w-full h-[520px] rounded-lg overflow-hidden shadow border">
             <iframe
               title="Elecmoon Location"
-              src="https://www.google.com/maps?q=B-1%2FD%20GROUND%20FLOOR%20SAURAV%20VIHAR%2C%20JAITPUR%20NEAR%20CHOKAN%20MANDIR%20B%2C%20ADARPUR%2C%20DELHI%20110044&output=embed"
+              src="https://www.google.com/maps?q=B-1%2FD%20GROUND%20FLOOR%20SAURAV%20VIHAR%2C%20JAITPUR%20NEAR%20CHOKAN%20MANDIR%2C%20BADARPUR%2C%20DELHI%20110044&output=embed"
               width="100%"
               height="100%"
               style={{ border: 0 }}

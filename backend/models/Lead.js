@@ -16,6 +16,18 @@ const leadSchema = new mongoose.Schema({
   serviceDate: { type: String, required: false },
   product: { type: mongoose.Schema.Types.Mixed },
   quantity: { type: Number },
+  enquiryType: {
+    type: String,
+    enum: ['single', 'bulk', 'cart_quote', 'service'],
+    default: 'bulk',
+  },
+  currency: { type: String, default: '₹' },
+  listUnitPrice: { type: Number },
+  unitPrice: { type: Number },
+  estimatedTotal: { type: Number },
+  discountPercent: { type: Number, default: 0 },
+  tierLabel: { type: String },
+  pricingNote: { type: String },
   status: { 
     type: String, 
     enum: ['pending', 'contacted', 'in_progress', 'completed', 'cancelled'],

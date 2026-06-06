@@ -10,7 +10,7 @@ const setting = [
       "contact": "019579034",
       "email": "Elecmoon@gmail.com",
       "website": "Elecmoon-admin.vercel.app",
-      "default_currency": "€",
+      "default_currency": "₹",
       "default_time_zone": "Europe/London",
       "default_date_format": "MMM D, YYYY",
       "receipt_size": "57-mm",
@@ -456,8 +456,8 @@ const setting = [
         "bottom_contact_status": true,
         "social_links_status": true,
         "shipping_card": {
-          "en": "Free Shipping From €500.00",
-          "de": "Kostenloser Versand ab 500,00 €"
+          "en": "Free Shipping From ₹500.00",
+          "de": "Kostenloser Versand ab ₹500,00"
         },
         "support_card": {
           "en": "Support 24/7  At Anytime",
@@ -545,8 +545,8 @@ const setting = [
         "block3_sub_link4": "/user/update-profile",
         "block4_logo": "https://res.cloudinary.com/ahossain/image/upload/v1697688576/settings/logo-color_el4zmy.svg",
         "block4_address": {
-          "en": "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN",
-          "de": "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN"
+          "en": "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN",
+          "de": "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN"
         },
         "block4_phone": "+91 9717372217",
         "block4_email": "ccruidk@test.com",
@@ -561,8 +561,8 @@ const setting = [
       "slug": {
         "right_box_status": true,
         "card_description_one": {
-          "en": "Free shipping applies to all orders over shipping €100",
-          "de": "Kostenloser Versand gilt für alle Bestellungen über 100 € Versandkosten"
+          "en": "Free shipping applies to all orders over ₹100",
+          "de": "Kostenloser Versand gilt für alle Bestellungen über ₹100"
         },
         "card_description_two": {
           "en": "Home Delivery within 1 Hour",
@@ -585,8 +585,8 @@ const setting = [
           "de": "Garantiert 100 % biologisch aus Naturprodukten."
         },
         "card_description_seven": {
-          "en": "Delivery from our pick point B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN.",
-          "de": "Delivery from our pick point B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN."
+          "en": "Delivery from our pick point B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN.",
+          "de": "Delivery from our pick point B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN."
         }
       },
       "seo": {

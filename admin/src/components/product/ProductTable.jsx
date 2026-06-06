@@ -105,6 +105,11 @@ const ProductTable = ({ products, isCheck, setIsCheck }) => {
             <TableCell>
               <span className="text-sm font-semibold">
                 {product?.minOrderQuantity || 1}
+                {(product?.quantityTiers || []).length > 0 && (
+                  <span className="block text-[10px] text-green-600 font-bold">
+                    {(product.quantityTiers || []).length} bulk tier(s)
+                  </span>
+                )}
               </span>
             </TableCell>
             <TableCell>

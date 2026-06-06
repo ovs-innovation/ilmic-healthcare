@@ -308,7 +308,7 @@ const InvoiceForDownload = ({
               </Text>
               <Text style={styles.topAddress}>
                 {globalSetting?.address ||
-                  "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN"}
+                  "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN"}
               </Text>
               {/* <Text style={styles.info}> DELHI 110044, NEW DELHI, DELHI, 110044, IN</Text> */}
             </View>

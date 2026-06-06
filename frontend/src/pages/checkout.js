@@ -20,10 +20,15 @@ import Layout from "@layout/Layout";
 import OrderServices from "@services/OrderServices";
 import { UserContext } from "@context/UserContext";
 import useUtilsFunction from "@hooks/useUtilsFunction";
+import {
+  resolveCartLinePrice,
+  syncCartQuantity,
+  loadBuyNowPricing,
+} from "@utils/quantityPricing";
 
 const Checkout = () => {
   const router = useRouter();
-  const { items, emptyCart, updateItemQuantity } = useCart();
+  const { items, emptyCart, updateItem } = useCart();
   const { state: { userInfo } } = useContext(UserContext);
   const { currency, getNumber } = useUtilsFunction();
 
@@ -58,20 +63,31 @@ const Checkout = () => {
       const qQty = getQueryString(router.query.quantity);
       const qDeliveryCharge = getQueryString(router.query.deliveryCharge);
 
-      setBuyNowItem({
+      const qty = parseInt(qQty, 10) || 1;
+      const stored = loadBuyNowPricing(qId) || {};
+      const line = {
         id: qId,
         name: qTitle,
         price: parseFloat(qPrice),
         image: qImage,
-        quantity: parseInt(qQty) || 1,
-        minQty: parseInt(qQty) || 1,
-        itemTotal: parseFloat(qPrice) * (parseInt(qQty) || 1),
+        quantity: qty,
+        minQty: stored.minQty || qty,
+        maxQty: stored.maxQty || 0,
+        quantityTiers: stored.quantityTiers || [],
+        listPrice: stored.listPrice || parseFloat(qPrice),
         deliveryCharge: parseFloat(qDeliveryCharge) || 0,
         gstPercentage: parseFloat(getQueryString(router.query.gstPercentage)) || 0,
         basePrice: parseFloat(getQueryString(router.query.basePrice)) || parseFloat(qPrice),
         sku: getQueryString(router.query.sku) || "",
         barcode: getQueryString(router.query.barcode) || "",
-        variant: {} // Optional: could pass variant in query if needed
+        variant: {},
+      };
+      const resolved = resolveCartLinePrice(line, qty);
+      setBuyNowItem({
+        ...line,
+        quantity: resolved.quantity,
+        price: resolved.price,
+        itemTotal: resolved.price * resolved.quantity,
       });
 
     }
@@ -93,11 +109,12 @@ const Checkout = () => {
   const incrementBuyNow = () => {
     setBuyNowItem((prev) => {
       if (!prev) return prev;
-      const nextQty = prev.quantity + 1;
+      const resolved = resolveCartLinePrice(prev, prev.quantity + 1);
       return {
         ...prev,
-        quantity: nextQty,
-        itemTotal: prev.price * nextQty,
+        quantity: resolved.quantity,
+        price: resolved.price,
+        itemTotal: resolved.price * resolved.quantity,
       };
     });
   };
@@ -105,12 +122,12 @@ const Checkout = () => {
   const decrementBuyNow = () => {
     setBuyNowItem((prev) => {
       if (!prev) return prev;
-      const minQty = prev.minQty || 1;
-      const nextQty = Math.max(minQty, prev.quantity - 1);
+      const resolved = resolveCartLinePrice(prev, prev.quantity - 1);
       return {
         ...prev,
-        quantity: nextQty,
-        itemTotal: prev.price * nextQty,
+        quantity: resolved.quantity,
+        price: resolved.price,
+        itemTotal: resolved.price * resolved.quantity,
       };
     });
   };
@@ -348,7 +365,7 @@ const Checkout = () => {
   return (
     <Layout title="Checkout" description="Complete your order at Elecmoon">
       <div className="bg-gray-50 min-h-screen py-10 lg:py-20">
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-10">
+        <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-10 min-w-0">
           {/* Go Back Button */}
           <div className="mb-8">
             <button
@@ -888,9 +905,10 @@ const Checkout = () => {
                                     if (isBuyNowItem) {
                                       decrementBuyNow();
                                     } else {
-                                      updateItemQuantity(
-                                        item.id,
-                                        Math.max(minQty, item.quantity - 1)
+                                      syncCartQuantity(
+                                        updateItem,
+                                        item,
+                                        item.quantity - 1
                                       );
                                     }
                                   }}
@@ -912,10 +930,17 @@ const Checkout = () => {
                                     if (isBuyNowItem) {
                                       incrementBuyNow();
                                     } else {
-                                      updateItemQuantity(item.id, item.quantity + 1);
+                                      syncCartQuantity(
+                                        updateItem,
+                                        item,
+                                        item.quantity + 1
+                                      );
                                     }
                                   }}
-                                  disabled={checkoutStep === 2}
+                                  disabled={
+                                    checkoutStep === 2 ||
+                                    (item.maxQty > 0 && item.quantity >= item.maxQty)
+                                  }
                                   className="p-1 rounded-md hover:bg-white hover:shadow-sm transition-all disabled:opacity-30 disabled:cursor-not-allowed no-green-button"
                                 >
                                   <FiPlus className="w-3 h-3 text-gray-600" />
