@@ -5,6 +5,7 @@ import { FiPhoneCall, FiChevronUp } from "react-icons/fi";
 
 //internal import
 
+import useGetSetting from "@hooks/useGetSetting";
 import Navbar from "@layout/navbar/Navbar";
 import Footer from "@layout/footer/Footer";
 import MobileFooter from "@layout/footer/MobileFooter";
@@ -14,6 +15,8 @@ import StatsBar from "@components/common/StatsBar";
 
 const Layout = ({ title, description, children }) => {
   const router = useRouter();
+  const { storeCustomizationSetting } = useGetSetting();
+  const phone = storeCustomizationSetting?.navbar?.phone;
 
   const handleScrollTop = () => {
     if (typeof window !== "undefined") {
@@ -49,7 +52,7 @@ const Layout = ({ title, description, children }) => {
         {/* Floating action buttons */}
         <div className="fixed right-3 sm:right-4 md:right-6 bottom-20 sm:bottom-24 flex flex-col gap-2 sm:gap-3 z-30 pointer-events-none">
           <a
-            href="tel:+919717372217"
+            href={phone ? `tel:${phone}` : undefined}
             className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition pointer-events-auto"
             aria-label="Call Elecmoon"
           >

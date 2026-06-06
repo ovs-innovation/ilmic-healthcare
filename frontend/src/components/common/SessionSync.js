@@ -17,6 +17,7 @@ const SessionSync = () => {
   const prevUserId = useRef(null);
   const [isRestoring, setIsRestoring] = useState(false);
   const [isRestored, setIsRestored] = useState(false);
+  const [authSyncFailed, setAuthSyncFailed] = useState(false);
 
   const itemsRef = useRef(items);
   useEffect(() => {
@@ -30,7 +31,16 @@ const SessionSync = () => {
   const apiToken = session?.user?.token;
   const userId = session?.user?.id;
   const canSyncWithApi =
-    status === "authenticated" && Boolean(userId) && Boolean(apiToken);
+    status === "authenticated" &&
+    Boolean(userId) &&
+    Boolean(apiToken) &&
+    !authSyncFailed;
+
+  useEffect(() => {
+    if (status === "authenticated" && apiToken) {
+      setAuthSyncFailed(false);
+    }
+  }, [status, apiToken, userId]);
 
   useEffect(() => {
     if (canSyncWithApi && apiToken) {
@@ -87,7 +97,9 @@ const SessionSync = () => {
             dbCart = cartRes?.cart || [];
             dbWishlist = wishRes?.wishlist || [];
           } catch (err) {
-            if (err?.response?.status !== 401) {
+            if (err?.response?.status === 401) {
+              setAuthSyncFailed(true);
+            } else {
               console.error("Error fetching cart/wishlist from API:", err);
             }
             dbCart = session.user.cart || [];
@@ -151,7 +163,9 @@ const SessionSync = () => {
           CustomerServices.saveWishlist(userId, { wishlist: wishlistItems }),
         ]);
       } catch (error) {
-        if (error?.response?.status !== 401) {
+        if (error?.response?.status === 401) {
+          setAuthSyncFailed(true);
+        } else {
           console.error("Failed to sync cart/wishlist to DB:", error);
         }
       }

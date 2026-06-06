@@ -1,7 +1,7 @@
 import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect, useContext, useRef } from "react";
 import Cookies from "js-cookie";
 import { signOut } from "next-auth/react";
 import {
@@ -63,13 +63,31 @@ const Navbar = () => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  const dropdownLeaveTimer = useRef(null);
+
   const isDropdownOpen = (key) => openDropdown === key;
 
-  const handleDropdownEnter = (key) => setOpenDropdown(key);
+  const handleDropdownEnter = (key) => {
+    if (dropdownLeaveTimer.current) {
+      clearTimeout(dropdownLeaveTimer.current);
+      dropdownLeaveTimer.current = null;
+    }
+    setOpenDropdown(key);
+  };
 
   const handleDropdownLeave = (key) => {
-    if (pinnedDropdown !== key) setOpenDropdown(null);
+    dropdownLeaveTimer.current = setTimeout(() => {
+      if (pinnedDropdown !== key) setOpenDropdown(null);
+    }, 150);
   };
+
+  useEffect(() => {
+    return () => {
+      if (dropdownLeaveTimer.current) {
+        clearTimeout(dropdownLeaveTimer.current);
+      }
+    };
+  }, []);
 
   const handleDropdownToggle = (key) => {
     if (openDropdown === key && pinnedDropdown === key) {
@@ -93,9 +111,9 @@ const Navbar = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const phone = storeCustomizationSetting?.navbar?.phone || "+91 9717372217";
+  const phone = storeCustomizationSetting?.navbar?.phone;
   const email = storeCustomizationSetting?.contact_us?.email_box_email?.en || "elecmoonofficial@gmail.com";
-  const address = showingTranslateValue(storeCustomizationSetting?.contact_us?.address_box_address_one) || "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044";
+  const address = showingTranslateValue(storeCustomizationSetting?.contact_us?.address_box_address_one);
 
   const navLinks = [
     { name: "Home", href: "/" },
@@ -120,7 +138,7 @@ const Navbar = () => {
         <div className="bg-[#0b1d3d] border-b border-white/5">
           <div className="max-w-screen-2xl mx-auto px-4 lg:px-8 h-8 flex items-center justify-between">
             <div className="flex items-center gap-4 text-[10px] font-semibold text-white/50 uppercase tracking-wider overflow-hidden">
-              <a href={`tel:${phone}`} className="flex items-center gap-1.5 hover:text-white transition-colors whitespace-nowrap">
+              <a href={phone ? `tel:${phone}` : undefined} className="flex items-center gap-1.5 hover:text-white transition-colors whitespace-nowrap">
                 <FiPhoneCall className="w-3 h-3 text-[#ED1C24] flex-shrink-0" />
                 <span className="truncate">{phone}</span>
               </a>
@@ -180,7 +198,7 @@ const Navbar = () => {
                   >
                     Services <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${isDropdownOpen("services") ? "rotate-180" : ""}`} />
                   </button>
-                  <div className={`absolute top-[calc(100%+10px)] left-0 w-56 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[70] overflow-hidden ${isDropdownOpen("services") ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"}`}>
+                  <div className={`absolute top-full pt-2 left-0 w-56 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[70] overflow-hidden ${isDropdownOpen("services") ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"}`}>
                     <div className="py-2">
                       {services.length > 0 ? services.map((service) => {
                         const name = showingTranslateValue(service.name);
@@ -219,7 +237,7 @@ const Navbar = () => {
                     <span className="hidden xl:inline">Categories</span>
                     <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${isDropdownOpen("categories") ? "rotate-180" : ""}`} />
                   </button>
-                  <div className={`absolute top-[calc(100%+8px)] right-0 w-60 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[60] overflow-hidden ${isDropdownOpen("categories") ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"}`}>
+                  <div className={`absolute top-full pt-2 right-0 w-60 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12)] border border-gray-100 transition-all duration-200 origin-top z-[60] overflow-hidden ${isDropdownOpen("categories") ? "opacity-100 visible translate-y-0" : "opacity-0 invisible -translate-y-2 pointer-events-none"}`}>
                     <div className="py-2 max-h-[55vh] overflow-y-auto">
                       {isCategoriesLoading ? (
                         Array.from({ length: 5 }).map((_, i) => (

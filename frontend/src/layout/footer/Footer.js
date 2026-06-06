@@ -11,9 +11,8 @@ const Footer = () => {
   const { storeCustomizationSetting } = useGetSetting();
   const { showingTranslateValue } = useUtilsFunction();
   const { services } = useContext(SidebarContext);
-  const footerPhone = "+91 9717372217";
-  const footerAddress =
-    "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR B, ADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN";
+  const footerPhone = storeCustomizationSetting?.footer?.block4_phone;
+  const footerAddress = showingTranslateValue(storeCustomizationSetting?.footer?.block4_address);
   return (
     <div className="bg-gray-100 text-gray-900 pt-10 pb-16 relative">
       {/* Red vertical bar on the right */}
@@ -68,7 +67,7 @@ const Footer = () => {
             <div className="text-sm space-y-3 text-gray-700">
               <div className="flex items-start gap-2">
                 <FiPhoneCall className="text-[#ED1C24] mt-1 flex-shrink-0" />
-                <a href={`tel:${footerPhone}`} className="font-medium hover:text-[#ED1C24] transition">
+                <a href={footerPhone ? `tel:${footerPhone}` : undefined} className="font-medium hover:text-[#ED1C24] transition">
                   {footerPhone}
                 </a>
               </div>

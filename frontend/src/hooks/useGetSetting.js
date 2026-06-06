@@ -4,12 +4,11 @@ import { useQuery } from "@tanstack/react-query";
 
 //internal import
 import SettingServices from "@services/SettingServices";
-import { storeCustomization } from "@utils/storeCustomizationSetting";
 
 const useGetSetting = () => {
   const lang = Cookies.get("_lang");
   const [storeCustomizationSetting, setStoreCustomizationSetting] =
-    useState(storeCustomization);
+    useState(null);
 
   const { data: globalSetting } = useQuery({
     queryKey: ["globalSetting"],
@@ -40,8 +39,6 @@ const useGetSetting = () => {
     if (isFetched && data) {
       // console.log("Data is available:", data);
       setStoreCustomizationSetting(data);
-    } else {
-      setStoreCustomizationSetting(storeCustomization);
     }
 
     if (!lang) {

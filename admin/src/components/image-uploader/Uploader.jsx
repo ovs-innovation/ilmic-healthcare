@@ -130,15 +130,16 @@ const Uploader = ({
           import.meta.env.VITE_APP_CLOUDINARY_UPLOAD_PRESET
         );
         formData.append("cloud_name", import.meta.env.VITE_APP_CLOUD_NAME);
-        formData.append("folder", folder);
-        formData.append("public_id", public_id);
+        if (folder) {
+          formData.append("folder", folder);
+        }
+        if (public_id) {
+          formData.append("public_id", public_id);
+        }
 
         axios({
           url: import.meta.env.VITE_APP_CLOUDINARY_URL,
           method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
           data: formData,
         })
           .then((res) => {
@@ -152,7 +153,7 @@ const Uploader = ({
           })
           .catch((err) => {
             console.error("err", err);
-            notifyError(err.Message);
+            notifyError(err.message);
             setLoading(false);
           });
       });
@@ -190,7 +191,7 @@ const Uploader = ({
       }
     } catch (err) {
       console.error("err", err);
-      notifyError(err.Message);
+      notifyError(err.message);
       setLoading(false);
     }
   };
