@@ -11,6 +11,7 @@ const CategoryImage = ({
   sizes = "(max-width: 640px) 45vw, (max-width: 1024px) 22vw, 180px",
   priority = false,
   aspectClass = "aspect-[4/3]",
+  optimizeWidth = 320,
 }) => {
   const [imgError, setImgError] = useState(false);
 
@@ -19,7 +20,9 @@ const CategoryImage = ({
   }, [src]);
 
   const showPlaceholder = !src || imgError;
-  const imageSrc = optimizeImageUrl(src, { width: 320 });
+  // Use exact database/admin URL — only apply Cloudinary resize when URL is valid
+  const imageSrc =
+    !src || imgError ? IMAGE_PLACEHOLDER : optimizeImageUrl(src, { width: optimizeWidth });
 
   return (
     <div

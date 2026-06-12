@@ -13,7 +13,6 @@ import ProductServices from "@services/ProductServices";
 import FeatureCategory from "@components/category/FeatureCategory";
 import ProductCatalog from "@components/product/ProductCatalog";
 import HomeHeroBanner from "@components/home/HomeHeroBanner";
-import ServiceBenefits from "@components/sections/ServiceBenefits";
 import PromotionalBanners from "@components/sections/PromotionalBanners";
 import CategoryServices from "@services/CategoryServices";
 import useUtilsFunction from "@hooks/useUtilsFunction";
@@ -161,9 +160,6 @@ const Home = ({
       <Layout>
           {/* Hero Section: All Departments + Hero Slider */}
           <HomeHeroBanner />
-
-          {/* Service Benefits Icons Section */}
-          <ServiceBenefits />
 
           {/* Shop by Category */}
           <HomeCategoriesSection />

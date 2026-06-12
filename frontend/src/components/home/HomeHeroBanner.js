@@ -1,259 +1,515 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, EffectFade } from "swiper/modules";
-import { motion, AnimatePresence } from "framer-motion";
-import { FiChevronLeft, FiChevronRight, FiArrowRight, FiMessageCircle } from "react-icons/fi";
+import {
+  FiChevronLeft,
+  FiChevronRight,
+  FiArrowRight,
+  FiZap,
+  FiShield,
+  FiAward,
+  FiTruck,
+  FiHeadphones,
+  FiFileText,
+  FiPackage,
+} from "react-icons/fi";
 import useGetSetting from "@hooks/useGetSetting";
+import useUtilsFunction from "@hooks/useUtilsFunction";
 import { resolveBannerHref, isExternalHref } from "@utils/bannerLink";
-import { optimizeImageUrl } from "@utils/cloudinaryImage";
+import { isCloudinaryUrl, optimizeImageUrl } from "@utils/cloudinaryImage";
 import "swiper/css";
 import "swiper/css/effect-fade";
 
-const BannerImagePanel = ({ slide, idx, className = "" }) => {
-  const href = resolveBannerHref(slide.href);
-  const imageSrc = optimizeImageUrl(slide.image, { width: 1600 });
+const SLIDE_KEYS = ["first", "second", "third", "four", "five"];
+const HERO_DEFAULT_IMAGE = "/hero/elecmoon-hero-products.png";
 
-  const imageContent = (
-    <div className={`relative w-full h-full overflow-hidden bg-white ${className}`}>
-      {slide.image ? (
-        <>
-          <Image
-            src={imageSrc}
-            alt={slide.title || "Hero banner"}
-            fill
-            priority={idx === 0}
-            loading={idx === 0 ? "eager" : "lazy"}
-            sizes="(max-width: 1024px) 100vw, 62vw"
-            className="object-cover object-center"
-          />
-          <div
-            className="absolute inset-y-0 left-0 w-12 sm:w-16 lg:w-24 pointer-events-none bg-gradient-to-r from-white via-white/40 to-transparent"
-            aria-hidden
-          />
-          <div
-            className="absolute inset-0 pointer-events-none shadow-[inset_0_0_48px_rgba(11,29,61,0.04)]"
-            aria-hidden
-          />
-        </>
-      ) : null}
+const DEFAULT_HEADLINE = "POWERING\nA SMARTER\nTOMORROW";
+const DEFAULT_BODY =
+  "High performance battery components for EV, Solar, Energy Storage & Industrial applications.";
+
+const LEFT_FEATURES = [
+  { icon: FiShield, lines: ["100% Genuine", "Products"] },
+  { icon: FiAward, lines: ["Quality", "Tested"] },
+  { icon: FiTruck, lines: ["Pan India", "Delivery"] },
+  { icon: FiHeadphones, lines: ["Expert", "Support"] },
+];
+
+const BOTTOM_TRUST = [
+  {
+    icon: FiShield,
+    title: "Genuine & Reliable",
+    sub: "100% Authentic Products",
+  },
+  { icon: FiFileText, title: "GST Billing", sub: "All India GST Invoices" },
+  { icon: FiPackage, title: "Bulk Orders", sub: "Best Prices for Bulk" },
+  { icon: FiHeadphones, title: "Technical Support", sub: "Expert Guidance" },
+];
+
+const HARDCODED_SLIDES = [1, 2, 3, 4].map((id) => ({
+  id,
+  image: HERO_DEFAULT_IMAGE,
+  title: DEFAULT_HEADLINE,
+  body: DEFAULT_BODY,
+  href: "",
+  cta: "Shop Now",
+}));
+
+const getAdminImageSrc = (raw) => {
+  if (!raw || typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  if (!trimmed || trimmed === "!#") return null;
+  return optimizeImageUrl(trimmed, { width: 2000, quality: "auto" });
+};
+
+const parseHeadlineLines = (title) => {
+  const raw = (title || DEFAULT_HEADLINE).trim();
+  const lines = raw
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (lines.length >= 3) return lines.slice(0, 3);
+  if (lines.length === 2) return [lines[0], lines[1], ""];
+  if (lines.length === 1) {
+    const parts = lines[0].split(/\s+/);
+    if (parts.length >= 4) {
+      return [parts[0], parts.slice(1, -1).join(" "), parts[parts.length - 1]];
+    }
+    return [lines[0], "", ""];
+  }
+  return DEFAULT_HEADLINE.split("\n");
+};
+
+const ElecmoonHeroLogo = () => (
+  <div className="text-right select-none">
+    <div className="inline-flex items-center gap-2.5">
+      <span
+        className="relative flex-shrink-0 w-9 h-9 rounded-full bg-[#0088FF] flex items-center justify-center shadow-[0_2px_8px_rgba(0,136,255,0.35)]"
+        aria-hidden
+      >
+        <svg
+          viewBox="0 0 24 24"
+          className="w-5 h-5 text-white"
+          fill="currentColor"
+        >
+          <path d="M12 2a1 1 0 0 1 .894.553l1.618 3.236 3.236.471a1 1 0 0 1 .554 1.706l-2.341 2.283.553 3.223a1 1 0 0 1-1.451 1.054L12 13.347l-2.894 1.52a1 1 0 0 1-1.451-1.054l.553-3.223L5.867 8.966a1 1 0 0 1 .554-1.706l3.236-.471L11.106 2.553A1 1 0 0 1 12 2zm0 4.118L11.382 7.5 9.5 7.764l1.5 1.463-.354 2.06L12 10.618l1.354 1.669-.354-2.06 1.5-1.463-1.882-.264L12 6.118z" />
+        </svg>
+      </span>
+      <span className="text-[1.65rem] sm:text-[1.85rem] font-black tracking-[-0.02em] text-[#111] leading-none">
+        ELECMOON
+      </span>
     </div>
+    <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.32em] text-[#222] mt-1.5 pr-0.5">
+      Powering Innovation
+    </p>
+  </div>
+);
+
+const HeroSCurve = () => (
+  <svg
+    className="hero-s-curve hidden lg:block"
+    viewBox="0 0 100 100"
+    preserveAspectRatio="none"
+    aria-hidden
+  >
+    <path
+      className="hero-s-curve-shadow"
+      d="M 38.5 0 C 45.5 24, 32.5 76, 38.5 100 L 43 100 C 36 76, 49 24, 43 0 Z"
+    />
+    <path
+      className="hero-s-curve-white"
+      d="M 38 0 C 44.5 24, 33 76, 38 100 L 42 100 C 35.5 76, 47 24, 42 0 Z"
+    />
+  </svg>
+);
+
+const HeroImagePanel = ({ slide, priority }) => (
+  <div className="relative w-full h-full flex items-end justify-center px-4 sm:px-6 lg:px-8 xl:px-10 pb-14 lg:pb-16 pt-24 lg:pt-28">
+    <div className="relative w-full h-full max-h-[88%] hero-animate-in">
+      {slide.image ? (
+        <Image
+          src={slide.image}
+          alt={slide.title || "Elecmoon battery and BMS products"}
+          fill
+          priority={priority}
+          loading={priority ? "eager" : "lazy"}
+          sizes="(max-width: 1024px) 100vw, 60vw"
+          unoptimized={isCloudinaryUrl(slide.image)}
+          className="object-contain object-bottom"
+        />
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-[#0b1d3d]/25">
+          <div className="w-20 h-20 rounded-xl border border-dashed border-[#0b1d3d]/15 flex items-center justify-center mb-3">
+            <FiPackage className="w-9 h-9" aria-hidden />
+          </div>
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-[#0b1d3d]/35">
+            Upload hero image from Admin
+          </p>
+        </div>
+      )}
+    </div>
+  </div>
+);
+
+const ShopNowButton = ({ href, external, label }) => {
+  const content = (
+    <span className="inline-flex items-center justify-center gap-2 px-7 py-3 rounded-lg font-bold uppercase tracking-wide text-[12px] sm:text-[13px] text-white bg-[#ED1C24] hover:bg-[#d41820] shadow-[0_4px_14px_rgba(237,28,36,0.35)] transition-colors duration-200">
+      {label || "Shop Now"}
+      <FiArrowRight className="w-4 h-4" />
+    </span>
   );
 
-  if (!href) return imageContent;
-
-  if (isExternalHref(href)) {
+  if (!href) return content;
+  if (external) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`block w-full h-full cursor-pointer ${className}`}
-        aria-label={`View ${slide.title}`}
-      >
-        {imageContent}
+      <a href={href} target="_blank" rel="noopener noreferrer">
+        {content}
       </a>
     );
   }
-
-  return (
-    <Link
-      href={href}
-      className={`block w-full h-full cursor-pointer ${className}`}
-      aria-label={`View ${slide.title}`}
-    >
-      {imageContent}
-    </Link>
-  );
+  return <Link href={href}>{content}</Link>;
 };
 
 const HomeHeroBanner = () => {
-  const { storeCustomizationSetting, loading, isFetched } = useGetSetting();
-  const sd = storeCustomizationSetting?.slider;
+  const { storeCustomizationSetting } = useGetSetting();
+  const { showingTranslateValue, showingUrl, showingImage } =
+    useUtilsFunction();
   const swiperRef = useRef(null);
   const [active, setActive] = useState(0);
 
-  const rawSlides = [
-    {
-      id: 1,
-      image: sd?.first_img,
-      badge: "Power Solutions",
-      title: sd?.first_title?.en,
-      body: sd?.first_description?.en,
-      href: sd?.first_link,
-      cta: sd?.first_button?.en,
-    },
-    {
-      id: 2,
-      image: sd?.second_img,
-      badge: "Grid Infrastructure",
-      title: sd?.second_title?.en,
-      body: sd?.second_description?.en,
-      href: sd?.second_link,
-      cta: sd?.second_button?.en,
-    },
-    {
-      id: 3,
-      image: sd?.third_img,
-      badge: "Advanced Electronics",
-      title: sd?.third_title?.en,
-      body: sd?.third_description?.en,
-      href: sd?.third_link,
-      cta: sd?.third_button?.en,
-    },
-  ];
+  const sd = storeCustomizationSetting?.slider;
 
-  const slides = rawSlides.filter((slide) => slide.title && slide.image);
+  const slides = useMemo(() => {
+    if (!sd) return HARDCODED_SLIDES;
 
-  const onSwiper = useCallback((s) => { swiperRef.current = s; }, []);
-  const onChange = useCallback((s) => { setActive(s.realIndex); }, []);
-  const isActive = (idx) => active === idx % slides.length;
+    const withContent = SLIDE_KEYS.map((key, index) => {
+      const rawImage = showingImage(sd[`${key}_img`]);
+      const image = getAdminImageSrc(rawImage);
+      const title = showingTranslateValue(sd[`${key}_title`]);
+      const body = showingTranslateValue(sd[`${key}_description`]);
 
-  if (!isFetched || loading || slides.length === 0) {
-    return null;
-  }
+      if (!title && !image && !body) return null;
+
+      return {
+        id: index + 1,
+        image: image || HERO_DEFAULT_IMAGE,
+        title: title || DEFAULT_HEADLINE,
+        body: body || DEFAULT_BODY,
+        href: showingUrl(sd[`${key}_link`]),
+        cta: showingTranslateValue(sd[`${key}_button`]) || "Shop Now",
+      };
+    }).filter(Boolean);
+
+    return withContent.length > 0 ? withContent : HARDCODED_SLIDES;
+  }, [sd, showingTranslateValue, showingUrl, showingImage]);
+
+  const onSwiper = useCallback((s) => {
+    swiperRef.current = s;
+  }, []);
+
+  const onChange = useCallback((s) => {
+    setActive(s.realIndex);
+  }, []);
+
+  const multiSlide = slides.length > 1;
 
   return (
-    <section className="relative w-full bg-white overflow-hidden border-b border-gray-100">
-      <Swiper
-        modules={[Autoplay, EffectFade]}
-        effect="fade"
-        fadeEffect={{ crossFade: true }}
-        slidesPerView={1}
-        loop
-        speed={900}
-        autoplay={{ delay: 5500, disableOnInteraction: false }}
-        onSwiper={onSwiper}
-        onSlideChange={onChange}
-        className="w-full hero-swiper"
-      >
-        {slides.map((slide, idx) => {
-          const bannerHref = resolveBannerHref(slide.href);
+    <section className="relative w-full overflow-hidden font-sans">
+      <div className="relative w-full">
+        <div className="relative h-[580px] sm:h-[640px] lg:h-[700px] max-w-[1920px] mx-auto">
+          <Swiper
+            modules={[Autoplay, EffectFade]}
+            effect="fade"
+            fadeEffect={{ crossFade: true }}
+            slidesPerView={1}
+            loop={multiSlide}
+            speed={800}
+            autoplay={
+              multiSlide
+                ? {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true,
+                  }
+                : false
+            }
+            onSwiper={onSwiper}
+            onSlideChange={onChange}
+            className="hero-enterprise-swiper h-full w-full"
+            allowTouchMove
+          >
+            {slides.map((slide, idx) => {
+              const shopHref = resolveBannerHref(slide.href);
+              const shopExternal = shopHref && isExternalHref(shopHref);
+              const headlineLines = parseHeadlineLines(slide.title);
 
-          return (
-            <SwiperSlide key={slide.id}>
-              <div className="w-full flex flex-col lg:flex-row bg-white hero-slide-inner">
-                <div className="w-full lg:hidden order-1 h-[42vh] min-h-[240px] max-h-[380px]">
-                  <BannerImagePanel slide={slide} idx={idx} className="h-full" />
-                </div>
+              return (
+                <SwiperSlide key={slide.id} className="h-full">
+                  <div className="relative flex flex-col lg:flex-row h-full">
+                    {/* Left panel — ~40% */}
+                    <div className="relative order-2 lg:order-1 w-full lg:w-[40%] flex-shrink-0 lg:h-full bg-[#021533] hero-left-panel z-10">
+                      <div
+                        className="absolute inset-0 hero-left-gradient pointer-events-none"
+                        aria-hidden
+                      />
+                      <div
+                        className="absolute inset-0 hero-left-dots pointer-events-none"
+                        aria-hidden
+                      />
 
-                <div className="w-full lg:w-[38%] xl:w-[36%] flex items-center justify-center lg:justify-start px-5 sm:px-8 lg:px-10 xl:px-12 pt-8 pb-20 lg:py-8 order-2 lg:order-1 relative flex-shrink-0">
-                  <div className="absolute top-0 left-0 w-0.5 h-full bg-gradient-to-b from-[#ED1C24] to-transparent hidden lg:block opacity-40" />
+                      <div className="relative z-10 flex flex-col h-full px-7 sm:px-9 lg:px-10 xl:px-12 py-10 lg:py-11">
+                        <div className="flex-1 flex flex-col justify-center">
+                          <div className="hero-animate-up hero-delay-1 flex items-center gap-2 mb-5 lg:mb-6">
+                            <FiZap
+                              className="w-4 h-4 text-[#ED1C24]"
+                              strokeWidth={2.5}
+                            />
+                            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.2em] text-white/90">
+                              Battery &amp; BMS Solutions
+                            </span>
+                          </div>
 
-                  <AnimatePresence mode="wait">
-                    {isActive(idx) && (
-                      <motion.div
-                        key={`text-${slide.id}`}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -10 }}
-                        transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
-                        className="w-full max-w-lg text-center lg:text-left"
-                      >
-                        <div className="inline-flex items-center gap-2 mb-4 justify-center lg:justify-start">
-                          <span className="w-4 h-px bg-[#ED1C24]" />
-                          <span className="text-[10px] font-black text-[#ED1C24] uppercase tracking-[0.28em]">{slide.badge}</span>
+                          <h1 className="hero-animate-up hero-delay-2 font-black uppercase leading-[1.02] tracking-tight mb-5 lg:mb-6">
+                            {headlineLines.map((line, i) =>
+                              line ? (
+                                <span
+                                  key={i}
+                                  className={`block text-[2rem] sm:text-[2.4rem] lg:text-[2.55rem] xl:text-[2.9rem] ${
+                                    i === 1 ? "text-[#0088FF]" : "text-white"
+                                  }`}
+                                >
+                                  {line}
+                                </span>
+                              ) : null,
+                            )}
+                          </h1>
+
+                          <p className="hero-animate-up hero-delay-3 text-white/80 text-sm sm:text-[15px] leading-[1.65] mb-8 max-w-[400px] font-medium">
+                            {slide.body}
+                          </p>
+
+                          <div className="hero-animate-up hero-delay-4 flex flex-wrap items-center gap-3">
+                            <ShopNowButton
+                              href={shopHref}
+                              external={shopExternal}
+                              label={slide.cta}
+                            />
+                            <Link
+                              href="/request-a-quote"
+                              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg font-bold uppercase tracking-wide text-[12px] sm:text-[13px] border border-white/70 text-white hover:bg-white/10 transition-colors duration-200"
+                            >
+                              Get Quote
+                              <FiArrowRight className="w-4 h-4" />
+                            </Link>
+                          </div>
                         </div>
 
-                        <h1 className="font-black text-[#0b1d3d] leading-[1.08] tracking-tight mb-4 text-3xl sm:text-4xl lg:text-[2.65rem] xl:text-5xl">
-                          {slide.title}
-                        </h1>
-
-                        <div className="flex items-center gap-2 mb-4 justify-center lg:justify-start">
-                          <div className="w-8 h-0.5 bg-[#ED1C24] rounded-full" />
-                          <div className="w-3 h-0.5 bg-gray-200 rounded-full" />
-                        </div>
-
-                        <p className="text-gray-500 leading-relaxed mb-7 font-medium text-[15px] xl:text-[17px] max-w-sm mx-auto lg:mx-0">
-                          {slide.body}
-                        </p>
-
-                        <div className="flex flex-wrap gap-3 justify-center lg:justify-start">
-                          {bannerHref ? (
-                            isExternalHref(bannerHref) ? (
-                              <a
-                                href={bannerHref}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="group inline-flex items-center gap-2 px-6 py-3.5 bg-[#0b1d3d] hover:bg-[#ED1C24] text-white rounded-full font-black uppercase tracking-widest transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] text-[12px]"
-                              >
-                                {slide.cta}
-                                <FiArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                              </a>
-                            ) : (
-                              <Link
-                                href={bannerHref}
-                                className="group inline-flex items-center gap-2 px-6 py-3.5 bg-[#0b1d3d] hover:bg-[#ED1C24] text-white rounded-full font-black uppercase tracking-widest transition-all duration-200 shadow-md hover:shadow-lg hover:-translate-y-0.5 active:scale-[0.98] text-[12px]"
-                              >
-                                {slide.cta}
-                                <FiArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-                              </Link>
-                            )
-                          ) : null}
-                          <Link href="/contact-us" className="inline-flex items-center gap-2 px-6 py-3.5 rounded-full font-black uppercase tracking-widest border-2 border-gray-200 text-gray-500 hover:border-[#0b1d3d] hover:text-[#0b1d3d] hover:bg-gray-50 hover:-translate-y-0.5 transition-all duration-200 text-[12px]">
-                            <FiMessageCircle className="w-3.5 h-3.5" />
-                            Get A Quote
-                          </Link>
-                        </div>
-
-                        <div className="flex items-center gap-5 sm:gap-8 mt-8 pt-6 border-t border-gray-100 justify-center lg:justify-start">
-                          {[
-                            { value: "2,500+", label: "Clients" },
-                            { value: "15 Yrs", label: "Experience" },
-                            { value: "100%", label: "Genuine" },
-                          ].map((stat) => (
-                            <div key={stat.label} className="flex flex-col items-center lg:items-start">
-                              <span className="text-[#0b1d3d] font-black text-lg leading-none">{stat.value}</span>
-                              <span className="text-gray-400 text-[9px] font-bold uppercase tracking-widest mt-1">{stat.label}</span>
-                            </div>
+                        <ul className="hero-animate-up hero-delay-5 grid grid-cols-4 gap-2 sm:gap-3 pt-7 lg:pt-8 mt-6 lg:mt-auto">
+                          {LEFT_FEATURES.map(({ icon: Icon, lines }) => (
+                            <li
+                              key={lines.join("-")}
+                              className="flex flex-col items-center text-center"
+                            >
+                              <span className="flex items-center justify-center w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#0088FF]/40 text-[#5eb8ff] mb-1.5 sm:mb-2">
+                                <Icon
+                                  className="w-[16px] h-[16px] sm:w-[17px] sm:h-[17px]"
+                                  strokeWidth={1.6}
+                                  aria-hidden
+                                />
+                              </span>
+                              <span className="text-[6.5px] sm:text-[7.5px] font-bold uppercase tracking-[0.06em] text-white/80 leading-snug">
+                                {lines.map((line) => (
+                                  <span key={line} className="block">
+                                    {line}
+                                  </span>
+                                ))}
+                              </span>
+                            </li>
                           ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                        </ul>
+                      </div>
+                    </div>
 
-                <div className="hidden lg:block lg:w-[62%] xl:w-[64%] order-2 relative self-stretch min-h-0 overflow-hidden bg-white">
-                  <BannerImagePanel slide={slide} idx={idx} className="absolute inset-0" />
-                </div>
+                    {/* Right panel — ~60% */}
+                    <div className="relative order-1 lg:order-2 w-full lg:w-[60%] flex-shrink-0 h-[46%] min-h-[250px] lg:h-full hero-right-panel z-0">
+                      <div
+                        className="absolute inset-0 hero-circuit-bg pointer-events-none"
+                        aria-hidden
+                      />
+
+                      <div className="absolute top-6 sm:top-8 lg:top-10 right-6 sm:right-8 lg:right-10 xl:right-12 z-20">
+                        <ElecmoonHeroLogo />
+                      </div>
+
+                      <HeroImagePanel slide={slide} priority={idx === 0} />
+                    </div>
+
+                    <HeroSCurve />
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
+
+          {multiSlide ? (
+            <>
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slidePrev()}
+                className="hero-nav-btn absolute left-3 sm:left-4 lg:left-5 top-1/2 -translate-y-1/2 z-40"
+                aria-label="Previous slide"
+              >
+                <FiChevronLeft className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => swiperRef.current?.slideNext()}
+                className="hero-nav-btn absolute right-3 sm:right-4 lg:right-5 top-1/2 -translate-y-1/2 z-40"
+                aria-label="Next slide"
+              >
+                <FiChevronRight className="w-5 h-5" />
+              </button>
+
+              <div className="absolute bottom-5 lg:bottom-7 left-1/2 lg:left-[70%] -translate-x-1/2 z-40 flex items-center gap-2">
+                {slides.map((_, i) => (
+                  <button
+                    key={i}
+                    type="button"
+                    onClick={() => swiperRef.current?.slideToLoop(i)}
+                    className={`rounded-full transition-all duration-300 ${
+                      active === i
+                        ? "w-7 h-1.5 bg-[#ED1C24]"
+                        : "w-1.5 h-1.5 bg-[#cbd5e1]"
+                    }`}
+                    aria-label={`Go to slide ${i + 1}`}
+                  />
+                ))}
               </div>
-            </SwiperSlide>
-          );
-        })}
-      </Swiper>
-
-      <div className="absolute bottom-0 left-0 right-0 z-40 flex items-center justify-between px-5 sm:px-8 lg:px-12 xl:px-16 py-3 bg-white/90 backdrop-blur-sm border-t border-gray-100">
-        <div className="flex items-center gap-3">
-          <button type="button" onClick={() => swiperRef.current?.slidePrev()} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-[#0b1d3d] hover:border-[#0b1d3d] hover:bg-gray-50 transition-all" aria-label="Previous slide">
-            <FiChevronLeft className="w-4 h-4" />
-          </button>
-          <div className="flex items-center gap-1.5">
-            {slides.map((_, i) => (
-              <button key={i} type="button" onClick={() => swiperRef.current?.slideToLoop(i)} className={`rounded-full transition-all duration-400 ${active === i ? "w-6 h-1.5 bg-[#ED1C24]" : "w-1.5 h-1.5 bg-gray-300 hover:bg-gray-400"}`} aria-label={`Go to slide ${i + 1}`} />
-            ))}
-          </div>
-          <button type="button" onClick={() => swiperRef.current?.slideNext()} className="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-400 hover:text-[#0b1d3d] hover:border-[#0b1d3d] hover:bg-gray-50 transition-all" aria-label="Next slide">
-            <FiChevronRight className="w-4 h-4" />
-          </button>
+            </>
+          ) : null}
         </div>
-        <div className="flex items-center gap-2 font-black tracking-[0.15em] text-[11px]">
-          <span className="text-[#ED1C24]">{String(active + 1).padStart(2, "0")}</span>
-          <span className="w-5 h-px bg-gray-200" />
-          <span className="text-gray-300">{String(slides.length).padStart(2, "0")}</span>
+
+        {/* Bottom trust bar */}
+        <div className="bg-white border-t border-gray-100">
+          <div className="max-w-[1920px] mx-auto">
+            <ul className="grid grid-cols-2 lg:grid-cols-4">
+              {BOTTOM_TRUST.map(({ icon: Icon, title, sub }) => (
+                <li
+                  key={title}
+                  className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 lg:px-8 py-4 sm:py-5 border-r border-gray-100 last:border-r-0"
+                >
+                  <span className="flex-shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-[#0b1d3d]/5 text-[#0b1d3d]">
+                    <Icon className="w-[18px] h-[18px]" aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-[11px] sm:text-xs font-bold text-[#0b1d3d] leading-tight">
+                      {title}
+                    </span>
+                    <span className="block text-[10px] sm:text-[11px] text-gray-500 mt-0.5 leading-tight">
+                      {sub}
+                    </span>
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
 
       <style>{`
-        .hero-swiper { width: 100%; }
-        .hero-swiper .swiper-wrapper { align-items: stretch; }
-        .hero-swiper .swiper-slide { height: auto !important; }
+        .hero-enterprise-swiper,
+        .hero-enterprise-swiper .swiper-wrapper,
+        .hero-enterprise-swiper .swiper-slide {
+          height: 100%;
+        }
 
-        @media (min-width: 1024px) {
-          .hero-slide-inner {
-            height: calc(100vh - 160px);
-            min-height: 480px;
-            max-height: 720px;
+        .hero-left-gradient {
+          background: linear-gradient(165deg, #0b2a66 0%, #06204a 45%, #021533 100%);
+        }
+
+        .hero-left-dots {
+          background-image: radial-gradient(rgba(0, 136, 255, 0.35) 1.2px, transparent 1.2px);
+          background-size: 18px 18px;
+          mask-image: radial-gradient(ellipse 55% 45% at 8% 8%, black 0%, transparent 100%);
+          opacity: 0.55;
+        }
+
+        .hero-right-panel {
+          background: #eef1f5;
+        }
+
+        .hero-circuit-bg {
+          background-color: #eef1f5;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%23ffffff' stroke-width='1.2' opacity='0.85'%3E%3Cpath d='M10 20h30v20H10z'/%3E%3Cpath d='M50 10h25v15H50z'/%3E%3Cpath d='M80 30h30v10H80z'/%3E%3Cpath d='M20 50h40v8H20z'/%3E%3Cpath d='M70 55h35v12H70z'/%3E%3Cpath d='M15 75h20v20H15z'/%3E%3Cpath d='M45 85h50v6H45z'/%3E%3Cpath d='M100 70v35'/%3E%3Cpath d='M30 40v25'/%3E%3Cpath d='M60 25v30'/%3E%3Cpath d='M90 40v15'/%3E%3Ccircle cx='60' cy='60' r='3' fill='%23ffffff'/%3E%3C/g%3E%3C/svg%3E");
+          background-size: 120px 120px;
+        }
+
+        .hero-s-curve {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          pointer-events: none;
+          z-index: 25;
+        }
+
+        .hero-s-curve-shadow {
+          fill: rgba(0, 136, 255, 0.14);
+        }
+
+        .hero-s-curve-white {
+          fill: #ffffff;
+          filter: drop-shadow(2px 0 6px rgba(0, 136, 255, 0.08));
+        }
+
+        .hero-enterprise-swiper .swiper-slide-active .hero-animate-up {
+          animation: heroFadeUp 0.55s ease forwards;
+          opacity: 0;
+        }
+
+        .hero-enterprise-swiper .swiper-slide-active .hero-animate-in {
+          animation: heroFadeIn 0.65s ease forwards;
+          opacity: 0;
+        }
+
+        .hero-delay-1 { animation-delay: 0.04s; }
+        .hero-delay-2 { animation-delay: 0.1s; }
+        .hero-delay-3 { animation-delay: 0.16s; }
+        .hero-delay-4 { animation-delay: 0.22s; }
+        .hero-delay-5 { animation-delay: 0.28s; }
+
+        @keyframes heroFadeUp {
+          from { opacity: 0; transform: translateY(12px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes heroFadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+
+        .hero-nav-btn {
+          width: 2.75rem;
+          height: 2.75rem;
+          border-radius: 9999px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(55, 65, 81, 0.82);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          color: #fff;
+          backdrop-filter: blur(4px);
+          transition: background 0.2s ease;
+        }
+
+        .hero-nav-btn:hover {
+          background: rgba(31, 41, 55, 0.95);
+        }
+
+        @media (max-width: 1023px) {
+          .hero-left-panel {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
           }
         }
       `}</style>

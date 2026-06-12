@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
-import { FiArrowRight, FiInfo, FiTag, FiShoppingCart, FiSettings, FiChevronRight } from 'react-icons/fi';
+import { motion } from 'framer-motion';
+import { FiSettings, FiChevronRight } from 'react-icons/fi';
 import ServiceServices from '@services/ServiceServices';
 import ProductServices from '@services/ProductServices';
 import useUtilsFunction from '@hooks/useUtilsFunction';
-import MainModal from '@components/modal/MainModal';
 import ProductCard from '@components/product/ProductCard';
 import ProductEnquiryModal from '@components/modal/ProductEnquiryModal';
-import { PRODUCT_GRID_CLASS, PRODUCT_GRID_ITEM_CLASS } from '@utils/productGrid';
+
+const SERVICE_ROW_LIMIT = 5;
 
 const ServicesSection = () => {
     const [services, setServices] = useState([]);
@@ -18,7 +17,7 @@ const ServicesSection = () => {
     const [loading, setLoading] = useState(false);
     const [selectedProduct, setSelectedProduct] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const { showingTranslateValue, currency, getNumber } = useUtilsFunction();
+    const { showingTranslateValue } = useUtilsFunction();
 
     useEffect(() => {
         const fetchServices = async () => {
@@ -101,31 +100,29 @@ const ServicesSection = () => {
                     </div>
                 </div>
 
-                {/* Products Grid — 1 col mobile, 2 sm, 3 md, 4 lg, 5 xl */}
-                <div className={PRODUCT_GRID_CLASS}>
-                    <AnimatePresence mode="sync">
-                        {loading ? (
-                            Array.from({ length: 5 }).map((_, i) => (
-                                <div key={`skeleton-${i}`} className="bg-white/5 rounded-2xl h-[280px] sm:h-[320px] animate-pulse border border-white/5" />
-                            ))
-                        ) : (
-                            products.map((product, index) => (
-                                <motion.div
+                {/* Products — max 5 in one row */}
+                <div>
+                    {loading ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+                            {Array.from({ length: SERVICE_ROW_LIMIT }).map((_, i) => (
+                                <div
+                                    key={`skeleton-${i}`}
+                                    className="bg-white/5 rounded-2xl h-[320px] animate-pulse border border-white/5"
+                                />
+                            ))}
+                        </div>
+                    ) : products.length > 0 ? (
+                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+                            {products.slice(0, SERVICE_ROW_LIMIT).map((product) => (
+                                <ProductCard
                                     key={product._id}
-                                    initial={{ opacity: 0, y: 20 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.4, delay: index * 0.05 }}
-                                    className={`h-full ${PRODUCT_GRID_ITEM_CLASS}`}
-                                >
-                                    <ProductCard 
-                                        product={product} 
-                                        onEnquire={(p) => handleViewDetails(p)} 
-                                        overrideCategoryName={showingTranslateValue(activeService?.name)}
-                                    />
-                                </motion.div>
-                            ))
-                        )}
-                    </AnimatePresence>
+                                    product={product}
+                                    onEnquire={(p) => handleViewDetails(p)}
+                                    overrideCategoryName={showingTranslateValue(activeService?.name)}
+                                />
+                            ))}
+                        </div>
+                    ) : null}
                 </div>
 
                 {products.length === 0 && !loading && (
@@ -136,7 +133,7 @@ const ServicesSection = () => {
                     </div>
                 )}
 
-                {activeService && products.length > 0 && !loading && (
+                {activeService && products.length > SERVICE_ROW_LIMIT && !loading && (
                     <div className="flex justify-center mt-8">
                         <Link
                             href={`/service/${activeService.slug}`}

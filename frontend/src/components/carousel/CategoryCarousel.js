@@ -1,6 +1,5 @@
-import Image from "next/image";
 import { useRouter } from "next/router";
-import React, { useContext, useRef, useMemo, useState } from "react";
+import React, { useContext, useRef } from "react";
 import { IoChevronBackOutline, IoChevronForward } from "react-icons/io5";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -12,7 +11,7 @@ import { getCategorySearchUrl } from "@utils/categoryUrl";
 import { SidebarContext } from "@context/SidebarContext";
 import useUtilsFunction from "@hooks/useUtilsFunction";
 import CategoryCarouselSkeleton from "@components/skeleton/CategoryCarouselSkeleton";
-import { IMAGE_PLACEHOLDER, isCloudinaryUrl } from "@utils/cloudinaryImage";
+import CategoryImage from "@components/common/CategoryImage";
 
 const CategoryCarousel = ({ activeSlug }) => {
   const router = useRouter();
@@ -58,38 +57,38 @@ const CategoryCarousel = ({ activeSlug }) => {
           delay: 5000,
           disableOnInteraction: false,
         }}
-        spaceBetween={28}
+        spaceBetween={20}
         navigation={true}
         allowTouchMove={true}
         loop={enableLoop}
         breakpoints={{
           320: {
-            slidesPerView: 1.3,
-            spaceBetween: 16,
+            slidesPerView: 1.2,
+            spaceBetween: 14,
           },
           480: {
-            slidesPerView: 2,
-            spaceBetween: 18,
+            slidesPerView: 1.6,
+            spaceBetween: 16,
           },
           640: {
+            slidesPerView: 2.2,
+            spaceBetween: 18,
+          },
+          860: {
             slidesPerView: 2.8,
             spaceBetween: 20,
           },
-          860: {
+          1024: {
             slidesPerView: 3.5,
             spaceBetween: 22,
           },
-          1024: {
-            slidesPerView: 4.5,
+          1280: {
+            slidesPerView: 4.2,
             spaceBetween: 24,
           },
-          1280: {
-            slidesPerView: 5.5,
-            spaceBetween: 26,
-          },
           1536: {
-            slidesPerView: 6.5,
-            spaceBetween: 28,
+            slidesPerView: 5,
+            spaceBetween: 26,
           },
         }}
         modules={[Autoplay, Navigation, Pagination, Controller]}
@@ -109,33 +108,36 @@ const CategoryCarousel = ({ activeSlug }) => {
                 ?.toLowerCase()
                 .replace(/[^A-Z0-9]+/gi, "-") === router.query.category);
           return (
-            <SwiperSlide key={category._id} className="group px-3 py-3">
+            <SwiperSlide key={category._id} className="group px-2 py-3">
               <div
                 onClick={() => handleCategoryClick(category)}
                 onMouseEnter={() => handleCategoryHover(category)}
                 onTouchStart={() => handleCategoryHover(category)}
-                className={`flex flex-col items-center justify-between text-center cursor-pointer p-4 bg-white rounded-2xl border transition-all duration-300 h-52 w-52 sm:h-56 sm:w-56 mx-auto hover:shadow-lg ${
+                className={`flex flex-col cursor-pointer bg-white rounded-2xl border overflow-hidden transition-all duration-300 w-full min-h-[240px] sm:min-h-[260px] md:min-h-[280px] mx-auto hover:shadow-[0_16px_48px_rgba(11,29,61,0.12)] sm:hover:-translate-y-1 ${
                   isActive
                     ? "border-[#A821A8] shadow-md ring-1 ring-[#A821A8]/20"
-                    : "border-gray-100 hover:border-[#A821A8]/20 shadow-sm"
+                    : "border-gray-100 hover:border-[#A821A8]/25 shadow-sm"
                 }`}
               >
-                <div className="bg-white p-3 mx-auto w-24 h-24 sm:w-28 sm:h-28 rounded-full shadow-md flex items-center justify-center transition-transform duration-300 group-hover:scale-105 mb-2 border border-gray-50">
-                  <div className="relative w-16 h-16 sm:w-[4.5rem] sm:h-[4.5rem] flex items-center justify-center">
-                    <CategoryIcon
-                      src={category?.icon || IMAGE_PLACEHOLDER}
-                      alt={showingTranslateValue(category?.name) || "category"}
-                    />
-                  </div>
-                </div>
+                <CategoryImage
+                  src={category?.icon}
+                  alt={showingTranslateValue(category?.name) || "category"}
+                  className="w-full flex-[4] min-h-0 rounded-none"
+                  aspectClass="aspect-[4/3]"
+                  imageClassName="object-contain p-2 sm:p-3 group-hover:scale-[1.02] transition-transform duration-300"
+                  sizes="(max-width: 640px) 70vw, (max-width: 1024px) 35vw, 280px"
+                  optimizeWidth={480}
+                />
 
-                <h3
-                  className={`text-xs md:text-sm font-bold uppercase tracking-wider text-center flex-grow flex items-center justify-center transition-colors duration-200 px-1 leading-snug ${
-                    isActive ? "text-[#A821A8]" : "text-gray-500 group-hover:text-[#A821A8]"
-                  }`}
-                >
-                  {showingTranslateValue(category?.name)}
-                </h3>
+                <div className="flex-[1] flex items-center justify-center px-3 py-3 sm:px-4 sm:py-4 border-t border-gray-50 bg-white">
+                  <h3
+                    className={`text-[11px] sm:text-xs md:text-sm font-black uppercase tracking-wide text-center line-clamp-2 leading-snug transition-colors duration-200 ${
+                      isActive ? "text-[#A821A8]" : "text-gray-700 group-hover:text-[#A821A8]"
+                    }`}
+                  >
+                    {showingTranslateValue(category?.name)}
+                  </h3>
+                </div>
               </div>
             </SwiperSlide>
           );
@@ -150,22 +152,5 @@ const CategoryCarousel = ({ activeSlug }) => {
     </>
   );
 };
-
-function CategoryIcon({ src, alt }) {
-  const [failed, setFailed] = useState(false);
-  const imageSrc = failed ? IMAGE_PLACEHOLDER : src;
-
-  return (
-    <Image
-      src={imageSrc}
-      alt={alt}
-      width={56}
-      height={56}
-      className="object-contain w-full h-full"
-      unoptimized={isCloudinaryUrl(imageSrc)}
-      onError={() => setFailed(true)}
-    />
-  );
-}
 
 export default React.memo(CategoryCarousel);
