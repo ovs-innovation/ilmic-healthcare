@@ -10,6 +10,7 @@ const Attributes = lazy(() => import("@/pages/Attributes"));
 const ChildAttributes = lazy(() => import("@/pages/ChildAttributes"));
 const Category = lazy(() => import("@/pages/Category"));
 const Services = lazy(() => import("@/pages/Services"));
+const SubCategories = lazy(() => import("@/pages/SubCategories"));
 const ChildCategory = lazy(() => import("@/pages/ChildCategory"));
 const Staff = lazy(() => import("@/pages/Staff"));
 const Customers = lazy(() => import("@/pages/Customers"));
@@ -29,6 +30,8 @@ const StoreSetting = lazy(() => import("@/pages/StoreSetting"));
 const Notifications = lazy(() => import("@/pages/Notifications"));
 const Blogs = lazy(() => import("@/pages/Blogs"));
 const Products = lazy(() => import("@/pages/Products"));
+const Brands = lazy(() => import("@/pages/Brands"));
+const Homepage = lazy(() => import("@/pages/Homepage"));
 /*
 //  * ⚠ These are internal routes!
 //  * They will be rendered inside the app, using the default `containers/Layout`.
@@ -56,6 +59,10 @@ const routes = [
   {
     path: "/categories",
     component: Category,
+  },
+  {
+    path: "/sub-categories",
+    component: SubCategories,
   },
   {
     path: "/services",
@@ -136,6 +143,14 @@ const routes = [
     component: Products,
   },
   {
+    path: "/homepage",
+    component: Homepage,
+  },
+  {
+    path: "/brands",
+    component: Brands,
+  },
+  {
     path: "/reviews",
     component: Reviews,
   },
@@ -156,6 +171,7 @@ const routeAccessList = [
   // },
   { label: "Dashboard", value: "dashboard" },
   { label: "Categories", value: "categories" },
+  { label: "Sub Categories", value: "sub-categories" },
   { label: "Services", value: "services" },
   { label: "Attributes", value: "attributes" },
   { label: "Coupons", value: "coupons" },
@@ -178,6 +194,8 @@ const routeAccessList = [
   { label: "Coming Soon", value: "coming-soon" },
   { label: "Blogs", value: "blogs" },
   { label: "Products", value: "products" },
+  { label: "Homepage", value: "homepage" },
+  { label: "Brands", value: "brands" },
   { label: "Reviews", value: "reviews" },
   { label: "BatteryServices", value: "battery-services" },
   { label: "ShortVideos", value: "short-videos" },

@@ -1,2 +1,2 @@
 
-This is updated version of Elecmoon-admin
+This is updated version of Kure Pharma-admin

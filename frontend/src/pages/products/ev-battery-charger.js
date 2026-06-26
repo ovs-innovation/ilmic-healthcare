@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="EV Battery Charger | Elecmoon"
+      title="EV Battery Charger | Kure Pharma"
       description="Explore our high-quality EV Battery Charger solutions for your business needs."
     >
       {/* Hero Section */}

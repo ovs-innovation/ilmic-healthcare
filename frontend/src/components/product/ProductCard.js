@@ -33,9 +33,9 @@ const ProductCard = ({
   onEnquire, 
   overrideCategoryName, 
   hideHoverActions = false, 
-  hideAddToCart = false,
-  hideBuyNow = false,
-  forceEnquiry = false
+  hideAddToCart = true,
+  hideBuyNow = true,
+  forceEnquiry = true
 }) => {
   const router = useRouter();
   const { addItem } = useCart();
@@ -231,112 +231,55 @@ const ProductCard = ({
         </div>
 
         {/* Product Info */}
-        <div className="px-3 pt-3 pb-3 sm:px-4 sm:pt-3 sm:pb-4 flex flex-col flex-grow min-w-0">
+        <div className="px-3 pt-3 pb-3 sm:px-4 sm:pt-3 sm:pb-4 flex flex-col flex-grow min-w-0 text-left">
           {/* Category */}
-          {categoryId ? (
-            <button
-              type="button"
-              onClick={handleCategoryClick}
-              onMouseEnter={prefetchCategory}
-              onTouchStart={prefetchCategory}
-              className="text-[9px] sm:text-[9px] text-[#ED1C24] font-black mb-1.5 uppercase tracking-[0.12em] sm:tracking-[0.15em] text-left hover:underline truncate w-full"
-            >
-              {categoryName}
-            </button>
-          ) : (
-            <div className="text-[9px] text-[#ED1C24] font-black mb-1.5 uppercase tracking-[0.12em] sm:tracking-[0.15em] truncate w-full">
-              {categoryName}
-            </div>
-          )}
+          <div className="text-[9px] text-[#ED1C24] font-black mb-1.5 uppercase tracking-[0.12em] sm:tracking-[0.15em] truncate w-full">
+            {categoryName}
+          </div>
 
-          {/* Title */}
+          {/* Brand Name */}
           <h2
-            className="text-xs sm:text-sm font-bold text-gray-800 mb-2 line-clamp-2 leading-snug cursor-pointer hover:text-[#0b1d3d] transition-colors"
+            className="text-sm sm:text-base font-extrabold text-gray-900 mb-1 leading-snug cursor-pointer hover:text-[#0b1d3d] transition-colors truncate"
             onClick={navigateToProduct}
           >
             {showingTranslateValue(product.title)}
           </h2>
 
-          <div className="flex flex-col gap-1.5 mb-2 mt-auto min-w-0">
-            <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
-              {showOriginalPrice && (
-                <span className="text-gray-500 line-through text-xs sm:text-sm font-semibold shrink-0">
-                  {currency}{getNumberTwo(originalPrice)}
-                </span>
-              )}
-              <span className="text-[#0b1d3d] font-black text-base sm:text-lg">
-                {currency}{getNumberTwo(getUnitPriceForQuantity(product, getEffectiveMinOrder(product)))}
-              </span>
-              {bulkInfo.hasBulkTiers && (
-                <BulkDiscountBadge product={product} variant="inline" />
-              )}
-            </div>
-            <Stock product={product} inline />
+          {/* Generic Name */}
+          <div className="text-xs text-gray-500 font-bold mb-3 truncate" title={product.composition}>
+            <span className="text-[10px] text-gray-400 font-medium block uppercase tracking-wider">Composition</span>
+            {product.composition || "Specialty Formulation"}
           </div>
 
-          {getEffectiveMinOrder(product) > 1 && (
-            <div className="text-[10px] text-gray-600 font-semibold mb-3">
-              Minimum Order: <span className="font-black text-gray-800">{getEffectiveMinOrder(product)} Units</span>
+          {/* Specs grid */}
+          <div className="grid grid-cols-2 gap-2 border-t border-b border-gray-100 py-2.5 mb-3.5 text-[11px] font-medium text-gray-600">
+            <div>
+              <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block">Strength</span>
+              <span className="font-extrabold text-gray-800">{product.strength || "N/A"}</span>
             </div>
-          )}
-
-          {product?.datasheetUrl ? (
-            <a
-              href={product.datasheetUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              className="mb-3 w-full flex items-center justify-center gap-1.5 border border-gray-200 hover:border-[#0b1d3d] text-[#0b1d3d] py-2 px-3 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-wide transition-colors"
-            >
-              <FiDownload className="w-3.5 h-3.5 shrink-0" />
-              Download Datasheet
-            </a>
-          ) : null}
+            <div>
+              <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block">Dosage Form</span>
+              <span className="font-extrabold text-gray-800">{product.dosageForm || "N/A"}</span>
+            </div>
+            <div className="col-span-2">
+              <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider block">Manufacturer</span>
+              <span className="font-extrabold text-gray-800 truncate block">{product.manufacturer || "N/A"}</span>
+            </div>
+          </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 w-full min-w-0">
-            {!hideBuyNow && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleBuyNow();
-                }}
-                onMouseEnter={prefetchCheckoutRoutes}
-                onTouchStart={prefetchCheckoutRoutes}
-                disabled={outOfStock}
-                className="flex-1 flex items-center justify-center gap-1.5 bg-[#ED1C24] hover:bg-red-700 text-white py-2.5 px-3 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-wide transition-all duration-200 active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <FiZap className="w-3.5 h-3.5 shrink-0" />
-                Buy Now
-              </button>
-            )}
-            <div className="flex gap-2 w-full min-w-0">
-              {!hideAddToCart && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart();
-                  }}
-                  disabled={outOfStock}
-                  className="flex-1 flex items-center justify-center gap-1.5 bg-[#0b1d3d] hover:bg-[#162542] text-white py-2.5 px-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-wide transition-all duration-200 active:scale-95 min-w-0 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  <FiShoppingBag className="w-3.5 h-3.5 shrink-0" />
-                  Add To Cart
-                </button>
-              )}
-              {onEnquire && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onEnquire(product);
-                  }}
-                  className={`${hideAddToCart && hideBuyNow ? "w-full" : "flex-1"} flex items-center justify-center gap-1.5 bg-white border-2 border-gray-200 hover:border-[#0b1d3d] text-[#0b1d3d] py-2.5 px-2 rounded-xl text-[11px] sm:text-xs font-black uppercase tracking-wide transition-all duration-200 active:scale-95 min-w-0`}
-                >
-                  <FiMessageSquare className="w-3.5 h-3.5 shrink-0" />
-                  Enquire
-                </button>
-              )}
-            </div>
+          <div className="flex flex-col gap-2 w-full mt-auto">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                if (productPath) {
+                  router.push(productPath);
+                }
+              }}
+              className="w-full flex items-center justify-center gap-1.5 bg-[#0b1d3d] hover:bg-[#162542] text-white py-2 px-3 rounded-lg text-[11px] font-black uppercase tracking-wide transition-all duration-200"
+            >
+              View Details
+            </button>
           </div>
         </div>
       </div>

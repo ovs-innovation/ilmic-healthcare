@@ -235,6 +235,38 @@ const updateStoreCustomizationSetting = async (req, res) => {
   }
 };
 
+const kureHomepageDefaults = require("../utils/kureHomepageDefaults");
+
+const getKureHomepageSetting = async (req, res) => {
+  try {
+    const doc = await Setting.findOne({ name: "kureHomepageSetting" });
+    if (!doc?.setting) {
+      return res.send(kureHomepageDefaults);
+    }
+    res.send({ ...kureHomepageDefaults, ...doc.setting });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+const updateKureHomepageSetting = async (req, res) => {
+  try {
+    const { setting } = req.body;
+    const updated = await Setting.findOneAndUpdate(
+      { name: "kureHomepageSetting" },
+      { $set: { setting, name: "kureHomepageSetting" } },
+      { new: true, upsert: true }
+    );
+
+    res.send({
+      data: updated,
+      message: "Homepage settings updated successfully!",
+    });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
 module.exports = {
   addGlobalSetting,
   getGlobalSetting,
@@ -246,4 +278,6 @@ module.exports = {
   addStoreCustomizationSetting,
   getStoreCustomizationSetting,
   updateStoreCustomizationSetting,
+  getKureHomepageSetting,
+  updateKureHomepageSetting,
 };

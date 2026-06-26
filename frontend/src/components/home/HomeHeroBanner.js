@@ -23,7 +23,7 @@ import "swiper/css";
 import "swiper/css/effect-fade";
 
 const SLIDE_KEYS = ["first", "second", "third", "four", "five"];
-const HERO_DEFAULT_IMAGE = "/hero/elecmoon-hero-products.png";
+const HERO_DEFAULT_IMAGE = "/hero-medicines.png";
 
 const DEFAULT_HEADLINE = "POWERING\nA SMARTER\nTOMORROW";
 const DEFAULT_BODY =
@@ -81,7 +81,7 @@ const parseHeadlineLines = (title) => {
   return DEFAULT_HEADLINE.split("\n");
 };
 
-const ElecmoonHeroLogo = () => (
+const KurePharmaHeroLogo = () => (
   <div className="text-right select-none">
     <div className="inline-flex items-center gap-2.5">
       <span
@@ -97,7 +97,7 @@ const ElecmoonHeroLogo = () => (
         </svg>
       </span>
       <span className="text-[1.65rem] sm:text-[1.85rem] font-black tracking-[-0.02em] text-[#111] leading-none">
-        ELECMOON
+        KURE PHARMA
       </span>
     </div>
     <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.32em] text-[#222] mt-1.5 pr-0.5">
@@ -130,7 +130,7 @@ const HeroImagePanel = ({ slide, priority }) => (
       {slide.image ? (
         <Image
           src={slide.image}
-          alt={slide.title || "Elecmoon battery and BMS products"}
+          alt={slide.title || "Kure Pharma battery and BMS products"}
           fill
           priority={priority}
           loading={priority ? "eager" : "lazy"}
@@ -339,7 +339,7 @@ const HomeHeroBanner = () => {
                       />
 
                       <div className="absolute top-6 sm:top-8 lg:top-10 right-6 sm:right-8 lg:right-10 xl:right-12 z-20">
-                        <ElecmoonHeroLogo />
+                        <KurePharmaHeroLogo />
                       </div>
 
                       <HeroImagePanel slide={slide} priority={idx === 0} />

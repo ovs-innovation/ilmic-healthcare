@@ -39,6 +39,14 @@ const SettingServices = {
   updateStoreCustomizationSetting: async (body) => {
     return requests.put(`/setting/store/customization/update`, body);
   },
+
+  getKureHomepageSetting: async () => {
+    return requests.get("/setting/kure-homepage/all");
+  },
+
+  updateKureHomepageSetting: async (body) => {
+    return requests.put("/setting/kure-homepage/update", body);
+  },
 };
 
 export default SettingServices;

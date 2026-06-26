@@ -45,8 +45,8 @@ const Invoice = ({ data, printRef, globalSetting, currency }) => {
                 <Image
                   width={110}
                   height={40}
-                  src="/logo/elecmoon-transparent.png"
-                  alt="Elecmoon"
+                  src="/kure-logo.png"
+                  alt="Kure Pharma"
                 />
               </Link>
             </h2>

@@ -1,4 +1,4 @@
-/** Default display currency for Elecmoon (India). */
+/** Default display currency for Kure Pharma (India). */
 export const DEFAULT_CURRENCY = "₹";
 
 /** Map legacy stored symbols to INR. */

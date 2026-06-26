@@ -42,7 +42,7 @@ const ModernCategoryBanner = () => {
                transition={{ duration: 0.6 }}
              >
                <div className="inline-block px-3 py-1 mb-4 rounded-full bg-white/5 border border-white/10 text-[9px] font-black text-white/50 uppercase tracking-[0.2em]">
-                 Why Elecmoon
+                 Why Kure Pharma
                </div>
                <h3 className="text-white text-2xl sm:text-3xl md:text-4xl font-black mb-4 leading-tight tracking-tight">
                  The Future of <span className="text-[#ED1C24]">Power</span>

@@ -535,7 +535,7 @@ const Leads = () => {
                           alt={item.name}
                           className="w-24 h-24 object-cover rounded-lg border border-gray-200"
                           onError={(e) => {
-                            e.target.src = "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png";
+                            e.target.src = "/no-result.svg";
                           }}
                         />
                         <div className="text-center">
@@ -557,7 +557,7 @@ const Leads = () => {
                           src={img}
                           alt={`Variant ${index + 1}`}
                           className="w-24 h-24 object-cover rounded-lg border border-gray-200"
-                          onError={(e) => { e.target.src = "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"; }}
+                          onError={(e) => { e.target.src = "/no-result.svg"; }}
                         />
                       </div>
                     ));
@@ -568,7 +568,7 @@ const Leads = () => {
                           src={img}
                           alt={`Product ${index + 1}`}
                           className="w-24 h-24 object-cover rounded-lg border border-gray-200"
-                          onError={(e) => { e.target.src = "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"; }}
+                          onError={(e) => { e.target.src = "/no-result.svg"; }}
                         />
                       </div>
                     ));
@@ -973,7 +973,7 @@ const Leads = () => {
                       <img 
                         src={item.image} 
                         className="w-20 h-20 object-cover rounded-lg shadow-sm border" 
-                        onError={(e) => e.target.src = "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"}
+                        onError={(e) => e.target.src = "/no-result.svg"}
                       />
                       <div className="flex-grow">
                         <h4 className="font-bold text-gray-900 dark:text-gray-100">{item.name}</h4>
@@ -990,7 +990,7 @@ const Leads = () => {
                   <div className="flex flex-col md:flex-row gap-6 p-4 border rounded-xl bg-gray-50 dark:bg-gray-800/50">
                     <div className="flex gap-2">
                        {getSafeImages(selectedLead.product?.variant?.image).concat(getSafeImages(selectedLead.product?.images)).slice(0,1).map((img, i) => (
-                         <img key={i} src={img} className="w-32 h-32 object-cover rounded-xl border shadow-sm" onError={(e) => e.target.src = "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"} />
+                         <img key={i} src={img} className="w-32 h-32 object-cover rounded-xl border shadow-sm" onError={(e) => e.target.src = "/no-result.svg"} />
                        ))}
                        {(!selectedLead.product?.images || selectedLead.product.images.length === 0) && !selectedLead.product?.variant?.image && (
                          <div className="w-32 h-32 bg-gray-200 rounded-xl flex items-center justify-center text-gray-400 text-xs text-center p-2">No Image Found</div>

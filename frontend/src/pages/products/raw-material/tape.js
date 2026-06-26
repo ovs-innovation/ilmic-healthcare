@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Battery Tape | Elecmoon"
+      title="Battery Tape | Kure Pharma"
       description="Explore our high-quality Battery Tape solutions for your business needs."
     >
       {/* Hero Section */}

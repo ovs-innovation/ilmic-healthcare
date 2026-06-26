@@ -146,7 +146,7 @@ export const getServerSideProps = async (context) => {
     const [data, attributes] = await Promise.all([
       ProductServices.getShowingStoreProducts({
         category: _id ? _id : "",
-        title: searchTitle ? encodeURIComponent(searchTitle) : "",
+        title: searchTitle || "",
         page: page ? String(page) : "1",
         limit: limit ? String(limit) : "60",
       }),

@@ -27,7 +27,7 @@ const CustomerProductModal = ({ isOpen, onClose, products, title }) => {
                       <div className="relative group cursor-pointer">
                         <img
                           className="w-12 h-12 object-cover rounded shadow-sm border border-gray-100 transition-all duration-300 ease-in-out transform group-hover:scale-[2.5] group-hover:z-50 group-hover:-translate-y-2 group-hover:translate-x-4 relative bg-gray-50"
-                          src={Array.isArray(item.image) ? item.image[0] : (item.image || "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_igmacm.svg")}
+                          src={Array.isArray(item.image) ? item.image[0] : (item.image || "/no-result.svg")}
                           alt={typeof item.title === 'string' ? item.title : (item.title?.en || item.name?.en || "Product")}
                         />
                       </div>

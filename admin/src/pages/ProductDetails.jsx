@@ -25,6 +25,23 @@ import Loading from "@/components/preloader/Loading";
 import PageTitle from "@/components/Typography/PageTitle";
 import { SidebarContext } from "@/context/SidebarContext";
 
+const parseProductTags = (value) => {
+  if (Array.isArray(value)) return value.filter(Boolean);
+  if (typeof value !== "string") return [];
+
+  const trimmed = value.trim();
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+  } catch (_error) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+};
 const getAdminStockStatus = (stock, threshold = 5) => {
   const qty = Math.max(0, parseInt(stock, 10) || 0);
   const limit = Math.max(0, parseInt(threshold, 10) ?? 5);
@@ -81,7 +98,7 @@ const ProductDetails = () => {
                 <img src={data?.image[0]} alt="product" className="h-64 w-64" />
               ) : (
                 <img
-                  src="https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
+                  src="/no-result.svg"
                   alt="product"
                 />
               )}
@@ -178,7 +195,7 @@ const ProductDetails = () => {
                   {showingTranslateValue(data?.category?.name)}
                 </p>
                 <div className="flex flex-row">
-                  {JSON.parse(data?.tag).map((t, i) => (
+                  {parseProductTags(data?.tag).map((t, i) => (
                     <span
                       key={i + 1}
                       className="bg-gray-200 mr-2 border-0 text-gray-500 rounded-full inline-flex items-center justify-center px-2 py-1 text-xs font-semibold font-serif mt-2 dark:bg-gray-700 dark:text-gray-300"
@@ -240,3 +257,4 @@ const ProductDetails = () => {
 };
 
 export default ProductDetails;
+

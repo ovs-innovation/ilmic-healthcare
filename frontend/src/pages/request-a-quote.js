@@ -109,7 +109,7 @@ const RequestAQuote = () => {
       {/* Hero */}
       <div className="relative bg-[#111] text-white min-h-[380px] flex items-center">
         <Image
-          src="https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/02/male-electrician-works-switchboard-with-electrical-connecting-cable_169016-15086-768x512.jpg.bv.webp"
+          src="https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/2025/02/male-electrician-works-switchboard-with-electrical-connecting-cable_169016-15086-768x512.jpg.bv.webp"
           alt="Request a Quote"
           fill
           className="object-cover opacity-40"

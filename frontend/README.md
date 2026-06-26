@@ -1,1 +1,1 @@
-Elecmoon Frontend Documentation
+Kure Pharma Frontend Documentation

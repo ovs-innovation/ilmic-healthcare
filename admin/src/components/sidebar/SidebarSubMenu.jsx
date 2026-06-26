@@ -15,7 +15,7 @@ const SidebarSubMenu = ({ route }) => {
     <>
       <li className="relative px-6 py-3" key={route.name}>
         <button
-          className="inline-flex items-center justify-between focus:outline-none w-full text-sm font-semibold transition-colors duration-150 hover:text-green-600 dark:hover:text-gray-200"
+          className="inline-flex items-center justify-between focus:outline-none w-full text-sm font-semibold transition-colors duration-150 hover:text-blue-600 dark:hover:text-gray-200"
           onClick={() => setOpen(!open)}
           aria-haspopup="true"
         >
@@ -39,28 +39,28 @@ const SidebarSubMenu = ({ route }) => {
                     href={child.path}
                     target="_blank"
                     rel="noreferrer"
-                    className="flex items-center font-serif py-1 text-sm text-gray-600 hover:text-green-600 cursor-pointer"
+                    className="flex items-center font-serif py-1 text-sm text-gray-600 hover:text-blue-600 cursor-pointer"
                   >
                     <span className="text-xs text-gray-500 pr-1">
                       <IoRemoveSharp />
                     </span>
-                    <span className="text-gray-500 hover:text-green-600 dark:hover:text-gray-200">
+                    <span className="text-gray-500 hover:text-blue-600 dark:hover:text-gray-200">
                       {t(`${child.name}`)}
                     </span>
                   </a>
                 ) : (
                   <NavLink
                     to={child.path}
-                    className="flex items-center font-serif py-1 text-sm text-gray-600 hover:text-green-600 cursor-pointer"
+                    className="flex items-center font-serif py-1 text-sm text-gray-600 hover:text-blue-600 cursor-pointer"
                     activeStyle={{
-                      color: "#0d9e6d",
+                      color: "#0F4C81",
                     }}
                     rel="noreferrer"
                   >
                     <span className="text-xs text-gray-500 pr-1">
                       <IoRemoveSharp />
                     </span>
-                    <span className="text-gray-500 hover:text-green-600 dark:hover:text-gray-200">
+                    <span className="text-gray-500 hover:text-blue-600 dark:hover:text-gray-200">
                       {t(`${child.name}`)}
                     </span>
                   </NavLink>

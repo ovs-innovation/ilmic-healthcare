@@ -4,6 +4,24 @@ const Category = require("../models/Category");
 const { languageCodes } = require("../utils/data");
 const { validateHsnCode } = require("../lib/stock/inventory");
 
+const normalizeProductTags = (value) => {
+  if (Array.isArray(value)) return value.filter(Boolean).map(String);
+  if (typeof value !== "string") return [];
+
+  const trimmed = value.trim();
+  if (!trimmed) return [];
+
+  try {
+    const parsed = JSON.parse(trimmed);
+    return Array.isArray(parsed) ? parsed.filter(Boolean).map(String) : [];
+  } catch (_error) {
+    return trimmed
+      .split(",")
+      .map((item) => item.trim())
+      .filter(Boolean);
+  }
+};
+
 const addProduct = async (req, res) => {
   try {
     const hsnCheck = validateHsnCode(req.body.hsnCode);
@@ -19,6 +37,7 @@ const addProduct = async (req, res) => {
     const newProduct = new Product({
       ...req.body,
       hsnCode: hsnCheck.value,
+      tag: normalizeProductTags(req.body.tag),
       status: status,
       basePrice: basePrice,
       productId: req.body.productId
@@ -194,7 +213,7 @@ const updateProduct = async (req, res) => {
       product.isCombination = req.body.isCombination;
       product.variants = req.body.variants;
       product.image = req.body.image;
-      product.tag = req.body.tag;
+      product.tag = normalizeProductTags(req.body.tag);
       product.videoUrl = req.body.videoUrl;
       product.gstPercentage = Number(req.body.gstPercentage || 0);
       product.hsnCode = hsnCheck.value;
@@ -220,6 +239,25 @@ const updateProduct = async (req, res) => {
         : product.quantityTiers;
       product.deliveryCharge = Number(req.body.deliveryCharge || 0);
       product.originalPrice = Number(req.body.originalPrice) || 0;
+
+      // Copy B2B Pharma fields
+      product.composition = req.body.composition;
+      product.strength = req.body.strength;
+      product.dosageForm = req.body.dosageForm;
+      product.manufacturer = req.body.manufacturer;
+      product.subCategory = req.body.subCategory;
+      product.form = req.body.form;
+      product.route = req.body.route;
+      product.availability = req.body.availability;
+      product.coldChain = req.body.coldChain !== undefined ? Boolean(req.body.coldChain) : product.coldChain;
+      product.keyFeatures = req.body.keyFeatures;
+      product.uses = req.body.uses || req.body.indications;
+      product.indications = req.body.indications;
+      product.dosage = req.body.dosage;
+      product.packaging = req.body.packaging;
+      product.storageConditions = req.body.storageConditions || req.body.storage;
+      product.storage = req.body.storage;
+      product.availableStrengths = req.body.availableStrengths;
 
       // Recalculate basePrice if price and gstPercentage are present
       const currentPrice = Number(req.body.price || product.price || 0);
@@ -250,7 +288,9 @@ const updateProduct = async (req, res) => {
       });
     }
   } catch (err) {
-    res.status(404).send(err.message);
+    res.status(500).send({
+      message: err.message,
+    });
   }
 };
 
@@ -352,7 +392,7 @@ const getShowingStoreProducts = async (req, res) => {
 
     const baseQuery = Product.find(queryObject)
       .select(
-        "_id title slug image price originalPrice basePrice gstPercentage minOrderQuantity maxOrderQuantity quantityTiers deliveryCharge trackInventory stock lowStockThreshold hsnCode datasheetUrl category categories variants videoUrl createdAt"
+        "_id title slug image price originalPrice basePrice gstPercentage minOrderQuantity maxOrderQuantity quantityTiers deliveryCharge trackInventory stock lowStockThreshold hsnCode datasheetUrl category categories variants videoUrl createdAt sku tag description type manufacturer strength composition dosageForm packaging uses storageConditions keyFeatures availableStrengths"
       )
       .populate({ path: "categories", select: "_id name slug" })
       .populate({ path: "category", select: "_id name slug" })
@@ -562,3 +602,4 @@ module.exports = {
   getProductsByType,
   getProductsByService,
 };
+

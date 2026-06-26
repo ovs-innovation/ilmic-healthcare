@@ -36,7 +36,7 @@ const Category = () => {
                 width={100}
                 height={38}
                 src="/logo/full-logo.png"
-                alt="Elecmoon"
+                alt="Kure Pharma"
               />
             </Link>
           </h2>

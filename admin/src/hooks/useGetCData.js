@@ -21,17 +21,17 @@ const useGetCData = () => {
     // Ensure the secret key is exactly 32 bytes
     const keyBuffer = await crypto.subtle.digest(
       "SHA-256",
-      new TextEncoder().encode(secretKey)
+      new TextEncoder().encode(secretKey),
     );
 
     // Convert the encrypted data from hex to a Uint8Array
     const encryptedArray = new Uint8Array(
-      encryptedData.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
+      encryptedData.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)),
     );
 
     // Decode IV from hex to ArrayBuffer (must be 16 bytes)
     const ivBuffer = new Uint8Array(
-      iv.match(/.{1,2}/g).map((byte) => parseInt(byte, 16))
+      iv.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)),
     );
 
     // Decrypt using Web Crypto API
@@ -46,9 +46,9 @@ const useGetCData = () => {
           keyBuffer,
           { name: "AES-CBC" },
           false,
-          ["decrypt"]
+          ["decrypt"],
         ),
-        encryptedArray // The encrypted data as Uint8Array
+        encryptedArray, // The encrypted data as Uint8Array
       );
 
       // Convert the decrypted bytes back to a string
@@ -66,22 +66,30 @@ const useGetCData = () => {
         try {
           const decryptedString = await decryptData(
             adminInfo.data,
-            adminInfo.iv
+            adminInfo.iv,
           );
-          const decryptedArray = JSON.parse(decryptedString); // Assuming the decrypted data is a JSON string
 
-          // Set state: accessList is all except last element, role is last element
-          const lastElement = decryptedArray.pop(); // Remove and get the last element
+          if (!decryptedString) {
+            setRole(undefined);
+            setAccessList([]);
+            return;
+          }
+
+          const parsed = JSON.parse(decryptedString);
+          const decryptedArray = Array.isArray(parsed) ? [...parsed] : [];
+          const lastElement =
+            decryptedArray.length > 0 ? decryptedArray.pop() : undefined;
+
           setRole(lastElement);
           setAccessList(decryptedArray);
-
-          //   console.log("Decrypted Data:", decryptedArray, "Role:", lastElement);
-          //   const isAuthorized =
-          //     decryptedArray && decryptedArray.includes("customers"); // Remove the leading "/"
-          //   console.log("isAuthorized", isAuthorized, path);
         } catch (error) {
           console.error("Failed to decrypt and parse data:", error);
+          setRole(undefined);
+          setAccessList([]);
         }
+      } else {
+        setRole(undefined);
+        setAccessList([]);
       }
     };
 

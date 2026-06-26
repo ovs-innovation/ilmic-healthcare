@@ -11,15 +11,15 @@ const DefaultSeo = () => {
     <NextSeo
       title={
         globalSetting?.meta_title ||
-        "Elecmoon – Creating Better Products For Life"
+        "Kure Pharma – Trusted Pharmaceutical Distributor"
       }
       openGraph={{
         type: "website",
         locale: "en_IE",
-        url: globalSetting?.meta_url || "https://elecmoon.com/",
+        url: globalSetting?.meta_url || "https://kurepharma.com/",
         site_name:
           globalSetting?.meta_title ||
-          "Elecmoon – Creating Better Products For Life",
+          "Kure Pharma – Trusted Pharmaceutical Distributor",
       }}
       twitter={{
         handle: "@handle",

@@ -1,7 +1,7 @@
 {
-  "name": "elecmoon-admin",
+  "name": "kure-pharma-admin",
   "version": "0.1.0",
-  "description": "Elecmoon admin panel built with React and Tailwind CSS",
+  "description": "Kure Pharma admin panel built with React and Tailwind CSS",
   "private": true,
   "type": "module",
   "dependencies": {

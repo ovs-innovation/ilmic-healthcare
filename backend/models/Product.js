@@ -169,6 +169,64 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    // B2B Pharma specific attributes
+    composition: {
+      type: String,
+      required: false,
+    },
+    strength: {
+      type: String,
+      required: false,
+    },
+    dosageForm: {
+      type: String,
+      required: false,
+    },
+    manufacturer: {
+      type: String,
+      required: false,
+    },
+    subCategory: {
+      type: String,
+      required: false,
+    },
+    form: {
+      type: String,
+      required: false,
+    },
+    route: {
+      type: String,
+      required: false,
+    },
+    availability: {
+      type: String,
+      required: false,
+    },
+    coldChain: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
+    keyFeatures: {
+      type: Array,
+      required: false,
+    },
+    uses: {
+      type: String,
+      required: false,
+    },
+    packaging: {
+      type: String,
+      required: false,
+    },
+    storageConditions: {
+      type: String,
+      required: false,
+    },
+    availableStrengths: {
+      type: Array,
+      required: false,
+    },
   },
   {
     timestamps: true,

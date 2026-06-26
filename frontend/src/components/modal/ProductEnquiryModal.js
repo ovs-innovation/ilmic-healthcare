@@ -1,33 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Image from "next/image";
+import React from "react";
 import { IoClose } from "react-icons/io5";
-import { FiZap, FiShoppingBag } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-
 import MainModal from "@components/modal/MainModal";
-import LeadServices from "@services/LeadServices";
-import useUtilsFunction from "@hooks/useUtilsFunction";
-import ProductBulkPricing from "@components/product/ProductBulkPricing";
-import {
-  clampQuantity,
-  getEffectiveMinOrder,
-  getEffectiveMaxOrder,
-  getBulkEnquiryThreshold,
-  getPricingSummary,
-  getUnitPriceForQuantity,
-} from "@utils/quantityPricing";
+import EnquiryServices from "@services/EnquiryServices";
 
-const ProductEnquiryModal = ({
-  modalOpen,
-  setModalOpen,
-  product,
-  selectedVariant,
-  initialQuantity,
-}) => {
-  const { showingTranslateValue, getNumberTwo, currency } = useUtilsFunction();
-  const [enquiryQty, setEnquiryQty] = useState(1);
-
+const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
   const {
     register,
     handleSubmit,
@@ -35,351 +13,146 @@ const ProductEnquiryModal = ({
     formState: { errors },
   } = useForm();
 
-  const bulkThreshold = product ? getBulkEnquiryThreshold(product) : 10;
-
-  useEffect(() => {
-    if (!product || !modalOpen) return;
-    const start = initialQuantity
-      ? clampQuantity(product, initialQuantity)
-      : Math.max(getBulkEnquiryThreshold(product), getEffectiveMinOrder(product));
-    setEnquiryQty(start);
-  }, [product?._id, modalOpen, initialQuantity]);
-
   if (!product) return null;
-
-  const pricing = getPricingSummary(product, enquiryQty);
-  const productTitle =
-    showingTranslateValue(selectedVariant?.title) ||
-    showingTranslateValue(product?.title);
-  const productImage =
-    selectedVariant?.image?.length > 0
-      ? selectedVariant.image[0]
-      : product?.image?.[0];
-  const productSKU = selectedVariant?.sku || product.sku || "N/A";
-  const listPrice = product?.price || product?.prices?.price || 0;
-  const maxOrder = getEffectiveMaxOrder(product);
 
   const onSubmitEnquiry = async (data) => {
     try {
-      const { phoneCountry, phone, ...rest } = data;
-      const fullPhone = `${phoneCountry || "+91"} ${phone}`;
-      const summary = getPricingSummary(product, enquiryQty);
+      // Check if productId is a valid MongoDB ObjectId (24-char hex string)
+      const isValidObjectId = product._id && /^[a-f\d]{24}$/i.test(product._id);
 
-      const leadData = {
-        ...rest,
-        phone: fullPhone,
-        quantity: summary.quantity,
-        enquiryType: summary.isBulk ? "bulk" : "single",
-        currency,
-        listUnitPrice: summary.listUnitPrice,
-        unitPrice: summary.unitPrice,
-        estimatedTotal: summary.estimatedTotal,
-        discountPercent: summary.discountPercent,
-        tierLabel: summary.tierLabel,
-        pricingNote: `Estimated @ ${currency}${summary.unitPrice}/pc for ${summary.tierLabel}`,
-        product: {
-          _id: product._id,
-          title: product.title,
-          sku: productSKU,
-          slug: product.slug,
-          images: product.image,
-          price: product.price,
-          quantityTiers: product.quantityTiers,
-          minOrderQuantity: product.minOrderQuantity,
-          maxOrderQuantity: product.maxOrderQuantity,
-          category: product.category,
-          description: product.description,
-          variant: selectedVariant,
-        },
+      const enquiryData = {
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        companyName: data.companyName,
+        productId: isValidObjectId ? product._id : null,
+        productName: product.name || "General Sourcing Enquiry",
+        message: data.message,
       };
 
-      await LeadServices.addLead(leadData);
+      await EnquiryServices.createEnquiry(enquiryData);
       setModalOpen(false);
-      toast.success("Quote request submitted! Our team will contact you shortly.");
+      toast.success("Your enquiry has been submitted successfully!");
       reset();
     } catch (error) {
       toast.error(
-        error?.response?.data?.message || "Failed to submit enquiry."
+        error?.response?.data?.message || "Failed to submit enquiry. Please try again."
       );
     }
   };
 
   return (
     <MainModal modalOpen={modalOpen} setModalOpen={setModalOpen}>
-      <div className="block w-full max-w-5xl my-0 sm:my-4 text-left bg-white shadow-2xl rounded-t-2xl sm:rounded-2xl relative max-h-[92vh] sm:max-h-[90vh] overflow-y-auto overflow-x-hidden min-w-0">
+      <div className="block w-full max-w-xl my-4 text-left bg-white shadow-2xl rounded-2xl relative p-6 overflow-y-auto max-h-[90vh]">
+        
+        {/* Close Button */}
         <button
           type="button"
           onClick={() => setModalOpen(false)}
-          className="sticky top-2 right-2 float-right z-30 w-9 h-9 flex items-center justify-center rounded-full bg-white text-gray-500 shadow-lg border border-gray-100 sm:absolute sm:right-4 sm:top-4"
+          className="absolute right-4 top-4 w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-gray-500 transition-colors"
           aria-label="Close"
         >
           <IoClose className="w-5 h-5" />
         </button>
 
-        <div className="flex flex-col lg:flex-row min-w-0 clear-both">
-          <div className="w-full lg:w-[38%] bg-gray-50/90 p-4 sm:p-6 border-b lg:border-b-0 lg:border-r border-gray-100 min-w-0">
-            <span className="text-[9px] font-black text-[#0b1d3d] uppercase tracking-[0.2em]">
-              Bulk / wholesale quote
-            </span>
-            <h2 className="text-lg sm:text-xl font-black text-gray-900 mt-1 mb-3 leading-snug break-words">
-              {productTitle}
-            </h2>
+        <div className="mb-6 border-b pb-4">
+          <span className="text-[10px] font-bold text-[#2A7DE1] uppercase tracking-wider block">
+            Send Enquiry
+          </span>
+          <h2 className="text-xl font-extrabold text-[#0F4C81] mt-1">
+            {product.name}
+          </h2>
+          <p className="text-xs text-gray-500 mt-1">
+            Fill out the form below, and our medical sales team will reach out with details shortly.
+          </p>
+        </div>
 
-            <div className="w-full max-w-[140px] mx-auto lg:mx-0 aspect-square relative bg-white rounded-xl border border-gray-100 p-2 mb-4">
-              {productImage ? (
-                <Image
-                  src={productImage}
-                  alt={productTitle}
-                  fill
-                  className="object-contain rounded-lg"
-                  sizes="140px"
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-gray-300 text-2xl">
-                  ⚡
-                </div>
-              )}
+        <form onSubmit={handleSubmit(onSubmitEnquiry)} className="space-y-4">
+          
+          <div>
+            <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+              Your Name <span className="text-red-500">*</span>
+            </label>
+            <input
+              {...register("name", { required: "Name is required" })}
+              type="text"
+              placeholder="John Doe"
+              className={`w-full border rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2A7DE1]/30 focus:border-[#2A7DE1] ${
+                errors.name ? "border-red-500" : "border-gray-200"
+              }`}
+            />
+            {errors.name && <span className="text-[10px] text-red-500 mt-0.5 block">{errors.name.message}</span>}
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+                Email Address <span className="text-red-500">*</span>
+              </label>
+              <input
+                {...register("email", { 
+                  required: "Email is required", 
+                  pattern: { value: /^\S+@\S+$/i, message: "Invalid email address" } 
+                })}
+                type="email"
+                placeholder="john@example.com"
+                className={`w-full border rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2A7DE1]/30 focus:border-[#2A7DE1] ${
+                  errors.email ? "border-red-500" : "border-gray-200"
+                }`}
+              />
+              {errors.email && <span className="text-[10px] text-red-500 mt-0.5 block">{errors.email.message}</span>}
             </div>
 
-            <div className="space-y-2 text-xs sm:text-sm mb-4">
-              <div className="flex justify-between gap-2 py-1.5 border-b border-gray-200/60">
-                <span className="text-gray-500 font-bold uppercase text-[9px]">SKU</span>
-                <span className="font-bold text-gray-800">{productSKU}</span>
-              </div>
-              <div className="flex justify-between gap-2 py-1.5 border-b border-gray-200/60">
-                <span className="text-gray-500 font-bold uppercase text-[9px]">List rate</span>
-                <span className="font-bold text-gray-800">
-                  {currency}
-                  {getNumberTwo(listPrice)}/pc
-                </span>
-              </div>
+            <div>
+              <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <input
+                {...register("phone", { required: "Phone number is required" })}
+                type="tel"
+                placeholder="+1 (234) 567-890"
+                className={`w-full border rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2A7DE1]/30 focus:border-[#2A7DE1] ${
+                  errors.phone ? "border-red-500" : "border-gray-200"
+                }`}
+              />
+              {errors.phone && <span className="text-[10px] text-red-500 mt-0.5 block">{errors.phone.message}</span>}
             </div>
+          </div>
 
-            <ProductBulkPricing
-              product={product}
-              currency={currency}
-              selectedQty={enquiryQty}
-              compact
+          <div>
+            <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+              Company Name
+            </label>
+            <input
+              {...register("companyName")}
+              type="text"
+              placeholder="e.g. Acme Pharmacy Ltd"
+              className="w-full border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2A7DE1]/30 focus:border-[#2A7DE1]"
             />
           </div>
 
-          <div className="w-full lg:w-[62%] p-4 sm:p-6 flex flex-col min-w-0">
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1">
-                <FiZap className="w-4 h-4 text-amber-500" />
-                <h3 className="text-base sm:text-lg font-black text-gray-900">
-                  Request quantity quote
-                </h3>
-              </div>
-              <p className="text-[11px] sm:text-xs text-gray-500 leading-relaxed">
-                For bulk orders ({bulkThreshold}+ units recommended), submit your details.
-                Pricing below updates automatically by quantity slab.
-              </p>
-            </div>
-
-            {/* Quantity + live estimate */}
-            <div className="rounded-xl border-2 border-[#0b1d3d]/10 bg-white p-3 sm:p-4 mb-4">
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-2">
-                Required quantity
-              </label>
-              <div className="flex flex-wrap items-center gap-3">
-                <div className="flex items-center border-2 border-[#0b1d3d]/15 rounded-xl">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setEnquiryQty((q) => clampQuantity(product, q - 1))
-                    }
-                    disabled={enquiryQty <= getEffectiveMinOrder(product)}
-                    className="w-10 h-10 font-bold text-[#0b1d3d] disabled:opacity-30"
-                  >
-                    −
-                  </button>
-                  <span className="w-14 text-center font-black text-[#0b1d3d] text-lg">
-                    {enquiryQty}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() =>
-                      setEnquiryQty((q) => clampQuantity(product, q + 1))
-                    }
-                    disabled={maxOrder > 0 && enquiryQty >= maxOrder}
-                    className="w-10 h-10 font-bold text-[#0b1d3d] disabled:opacity-30"
-                  >
-                    +
-                  </button>
-                </div>
-                <div className="flex-grow min-w-[160px]">
-                  <p className="text-[10px] text-gray-500 uppercase font-bold">Slab</p>
-                  <p className="text-sm font-bold text-[#0b1d3d]">{pricing.tierLabel}</p>
-                </div>
-              </div>
-
-              <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
-                <div>
-                  <p className="text-[9px] uppercase text-gray-400 font-bold">Unit price</p>
-                  <p className="text-lg font-black text-[#ED1C24]">
-                    {currency}
-                    {getNumberTwo(pricing.unitPrice)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-[9px] uppercase text-gray-400 font-bold">You save</p>
-                  <p className="text-sm font-bold text-green-700">
-                    {pricing.discountPercent > 0
-                      ? `${pricing.discountPercent}%`
-                      : "—"}
-                  </p>
-                </div>
-                <div className="col-span-2 sm:col-span-1">
-                  <p className="text-[9px] uppercase text-gray-400 font-bold">Est. total</p>
-                  <p className="text-xl font-black text-[#0b1d3d]">
-                    {currency}
-                    {getNumberTwo(pricing.estimatedTotal)}
-                  </p>
-                  <p className="text-[9px] text-gray-400">+ GST / delivery as applicable</p>
-                </div>
-              </div>
-            </div>
-
-            <p className="text-[10px] text-amber-800 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mb-4 flex items-start gap-2">
-              <FiShoppingBag className="w-3.5 h-3.5 shrink-0 mt-0.5" />
-              <span>
-                Need fewer than {bulkThreshold} units? Use <strong>Buy Now</strong> or{" "}
-                <strong>Add to Cart</strong> on the product page for instant checkout.
-              </span>
-            </p>
-
-            <form onSubmit={handleSubmit(onSubmitEnquiry)} className="space-y-3">
-              <div className="flex items-center gap-2 p-2 bg-gray-50 rounded-lg border border-gray-100">
-                <input
-                  type="checkbox"
-                  id="isEnterprise"
-                  {...register("isEnterprise")}
-                  className="w-4 h-4 rounded border-gray-300"
-                />
-                <label htmlFor="isEnterprise" className="text-[10px] font-bold text-gray-700 uppercase">
-                  Enterprise / company order
-                </label>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase">
-                    Full name *
-                  </label>
-                  <input
-                    {...register("name", { required: true })}
-                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
-                      errors.name ? "border-red-500" : "border-gray-200"
-                    }`}
-                  />
-                </div>
-                <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase">
-                    Email *
-                  </label>
-                  <input
-                    {...register("email", { required: true })}
-                    type="email"
-                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
-                      errors.email ? "border-red-500" : "border-gray-200"
-                    }`}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase">
-                    Phone *
-                  </label>
-                  <div className="flex gap-1.5 mt-0.5">
-                    <select
-                      {...register("phoneCountry")}
-                      className="w-[72px] border border-gray-200 rounded-lg text-xs font-bold px-1"
-                    >
-                      <option value="+91">+91</option>
-                    </select>
-                    <input
-                      {...register("phone", { required: true })}
-                      className={`flex-grow border rounded-lg py-2 px-3 text-sm ${
-                        errors.phone ? "border-red-500" : "border-gray-200"
-                      }`}
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase">
-                    Pincode *
-                  </label>
-                  <input
-                    {...register("pincode", { required: true })}
-                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
-                      errors.pincode ? "border-red-500" : "border-gray-200"
-                    }`}
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase">
-                    State *
-                  </label>
-                  <input
-                    {...register("state", { required: true })}
-                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
-                      errors.state ? "border-red-500" : "border-gray-200"
-                    }`}
-                  />
-                </div>
-                <div>
-                  <label className="text-[9px] font-black text-gray-400 uppercase">
-                    District *
-                  </label>
-                  <input
-                    {...register("district", { required: true })}
-                    className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
-                      errors.district ? "border-red-500" : "border-gray-200"
-                    }`}
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase">
-                  Address *
-                </label>
-                <input
-                  {...register("address", { required: true })}
-                  className={`w-full mt-0.5 border rounded-lg py-2 px-3 text-sm ${
-                    errors.address ? "border-red-500" : "border-gray-200"
-                  }`}
-                />
-              </div>
-
-              <div>
-                <label className="text-[9px] font-black text-gray-400 uppercase">
-                  Additional notes
-                </label>
-                <textarea
-                  {...register("message")}
-                  rows={2}
-                  placeholder="Delivery timeline, GST invoice, etc."
-                  className="w-full mt-0.5 border border-gray-200 rounded-lg py-2 px-3 text-sm resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                className="w-full bg-[#0b1d3d] text-white py-3 rounded-xl hover:bg-[#162542] font-black text-xs uppercase tracking-widest shadow-lg active:scale-[0.98]"
-              >
-                Submit quote request — {currency}
-                {getNumberTwo(pricing.estimatedTotal)}
-              </button>
-            </form>
+          <div>
+            <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+              Message / Specific Requirements <span className="text-red-500">*</span>
+            </label>
+            <textarea
+              {...register("message", { required: "Message is required" })}
+              rows={3}
+              placeholder="Describe your inquiry quantity, delivery requirements, etc..."
+              className={`w-full border rounded-lg py-2 px-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[#2A7DE1]/30 focus:border-[#2A7DE1] ${
+                errors.message ? "border-red-500" : "border-gray-200"
+              }`}
+            />
+            {errors.message && <span className="text-[10px] text-red-500 mt-0.5 block">{errors.message.message}</span>}
           </div>
-        </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#0F4C81] text-white py-3 rounded-lg font-bold text-sm hover:bg-[#2A7DE1] shadow-lg shadow-[#0F4C81]/15 hover:shadow-xl hover:shadow-[#2A7DE1]/15 transition-all duration-300 uppercase tracking-wider cursor-pointer"
+          >
+            Submit Enquiry
+          </button>
+        </form>
       </div>
     </MainModal>
   );

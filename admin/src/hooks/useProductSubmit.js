@@ -58,8 +58,27 @@ const useProductSubmit = (id, selectedServices = []) => {
   const [highlights, setHighlights] = useState("");
   const [quantityTiers, setQuantityTiers] = useState([]);
   const [datasheetUrl, setDatasheetUrl] = useState("");
+  const [customSections, setCustomSections] = useState([]);
 
   const HSN_PATTERN = /^[0-9A-Za-z]{2,8}$/;
+
+  const parseProductTags = (value) => {
+    if (Array.isArray(value)) return value.filter(Boolean);
+    if (typeof value !== "string") return [];
+
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+
+    try {
+      const parsed = JSON.parse(trimmed);
+      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+    } catch (_error) {
+      return trimmed
+        .split(",")
+        .map((item) => item.trim())
+        .filter(Boolean);
+    }
+  };
 
   const sanitizeQuantityTiers = (tiers = []) => {
     if (!Array.isArray(tiers)) return [];
@@ -69,7 +88,7 @@ const useProductSubmit = (id, selectedServices = []) => {
         maxQuantity: Math.max(0, parseInt(t.maxQuantity, 10) || 0),
         discountPercent: Math.min(
           100,
-          Math.max(0, Number(t.discountPercent) || 0)
+          Math.max(0, Number(t.discountPercent) || 0),
         ),
         unitPrice: Math.max(0, Number(t.unitPrice) || 0),
       }))
@@ -140,7 +159,7 @@ const useProductSubmit = (id, selectedServices = []) => {
       if (mrp > 0 && mrp <= finalPrice) {
         setIsSubmitting(false);
         return notifyError(
-          "Price Before Discount (MRP) must be higher than Final Sale Price."
+          "Price Before Discount (MRP) must be higher than Final Sale Price.",
         );
       }
 
@@ -148,7 +167,7 @@ const useProductSubmit = (id, selectedServices = []) => {
       if (hsnRaw && !HSN_PATTERN.test(hsnRaw)) {
         setIsSubmitting(false);
         return notifyError(
-          "HSN code must be 2–8 alphanumeric characters (GST format)."
+          "HSN code must be 2–8 alphanumeric characters (GST format).",
         );
       }
 
@@ -173,17 +192,17 @@ const useProductSubmit = (id, selectedServices = []) => {
       const titleTranslates = await handlerTextTranslateHandler(
         data.title,
         language,
-        resData?.title
+        resData?.title,
       );
       const descriptionTranslates = await handlerTextTranslateHandler(
         data.description,
         language,
-        resData?.description
+        resData?.description,
       );
       const highlightsTranslates = await handlerTextTranslateHandler(
         data.highlights,
         language,
-        resData?.highlights
+        resData?.highlights,
       );
 
       const productData = {
@@ -217,7 +236,7 @@ const useProductSubmit = (id, selectedServices = []) => {
         status: data.status || "show",
         productId: data.productId || productId || "",
         // stock: variants?.length < 1 ? data.stock : Number(totalStock),
-        tag: JSON.stringify(tag || []),
+        tag: Array.isArray(tag) ? tag.filter(Boolean) : [],
 
         // prices: {
         //   price: getNumber(data.price),
@@ -228,8 +247,11 @@ const useProductSubmit = (id, selectedServices = []) => {
         variants: isCombination && variants ? variants : [],
         basePrice: getNumber(data.basePrice),
         gstPercentage: Number(data.gstPercentage || 0),
-        price: getNumber(data.basePrice) + (getNumber(data.basePrice) * Number(data.gstPercentage || 0)) / 100,
-        originalPrice: Number(data.originalPrice) > 0 ? getNumber(data.originalPrice) : 0,
+        price:
+          getNumber(data.basePrice) +
+          (getNumber(data.basePrice) * Number(data.gstPercentage || 0)) / 100,
+        originalPrice:
+          Number(data.originalPrice) > 0 ? getNumber(data.originalPrice) : 0,
         minOrderQuantity: Number(data.minOrderQuantity || 1),
         maxOrderQuantity: Math.max(0, Number(data.maxOrderQuantity || 0)),
         quantityTiers: sanitizeQuantityTiers(quantityTiers),
@@ -242,9 +264,29 @@ const useProductSubmit = (id, selectedServices = []) => {
         trackInventory: Boolean(data.trackInventory),
         lowStockThreshold: Math.max(
           0,
-          parseInt(data.lowStockThreshold, 10) ?? 5
+          parseInt(data.lowStockThreshold, 10) ?? 5,
         ),
         datasheetUrl: datasheetUrl || "",
+        manufacturer: data.manufacturer || "",
+        strength: data.strength || "",
+        storage: data.storage || "",
+        storageConditions: data.storage || "",
+        composition: data.composition || "",
+        indications: data.indications || "",
+        uses: data.indications || "",
+        dosage: data.dosage || "",
+        packaging: data.packaging || "",
+        dosageForm: data.dosageForm || "",
+        route: data.route || "",
+        availability: data.availability || "",
+        coldChain: Boolean(data.coldChain),
+        subCategory: data.subCategory || "",
+        medicineType: data.medicineType || "",
+        importedOrIndian: data.importedOrIndian || "",
+        seoTitle: data.seoTitle || "",
+        seoDescription: data.seoDescription || "",
+        seoKeywords: data.seoKeywords || "",
+        customSections: customSections || [],
       };
 
       // console.log("productData ===========>", productData, "data", data);
@@ -283,7 +325,7 @@ const useProductSubmit = (id, selectedServices = []) => {
           setValue("status", res.status);
           setValue("barcode", res.barcode);
           setValue("stock", res.stock);
-          setTag(JSON.parse(res.tag || "[]"));
+          setTag(parseProductTags(res.tag));
           setImageUrl(res.image || []);
           setVariants(res.variants || []);
           setValue("productId", res.productId);
@@ -292,28 +334,28 @@ const useProductSubmit = (id, selectedServices = []) => {
           // setPrice(res?.prices?.price);
           setBarcode(res.barcode);
           setSku(res.sku);
-                      if (res.variants && Array.isArray(res.variants)) {
-              const result = res.variants.map(
-                ({
-                  originalPrice,
-                  price,
-                  discount,
-                  quantity,
-                  barcode,
-                  sku,
-                  productId,
-                  image,
-                  images,
-                  title,
-                  description,
-                  highlights,
-                  slug,
-                  ...rest
-                }) => rest
-              );
+          if (res.variants && Array.isArray(res.variants)) {
+            const result = res.variants.map(
+              ({
+                originalPrice,
+                price,
+                discount,
+                quantity,
+                barcode,
+                sku,
+                productId,
+                image,
+                images,
+                title,
+                description,
+                highlights,
+                slug,
+                ...rest
+              }) => rest,
+            );
 
-              setVariant(result);
-            }
+            setVariant(result);
+          }
 
           setIsUpdate(true);
           setIsBasicComplete(true);
@@ -369,6 +411,21 @@ const useProductSubmit = (id, selectedServices = []) => {
       setValue("stock", 0);
       setValue("lowStockThreshold", 5);
       setDatasheetUrl("");
+      setValue("manufacturer", "");
+      setValue("strength", "");
+      setValue("storage", "");
+      setValue("composition", "");
+      setValue("indications", "");
+      setValue("dosage", "");
+      setValue("packaging", "");
+      setValue("dosageForm", "");
+      setValue("route", "");
+      setValue("availability", "");
+      setValue("coldChain", false);
+      setValue("seoTitle", "");
+      setValue("seoDescription", "");
+      setValue("seoKeywords", "");
+      setCustomSections([]);
 
       setProductId("");
       // setValue('status');
@@ -382,7 +439,13 @@ const useProductSubmit = (id, selectedServices = []) => {
       setDefaultCategory([]);
       setHighlights("");
       if (location.pathname === "/products") {
-        resetRefTwo?.current?.resetSelectedValues();
+        const resetTarget = resetRefTwo?.current;
+        if (
+          resetTarget &&
+          typeof resetTarget.resetSelectedValues === "function"
+        ) {
+          resetTarget.resetSelectedValues();
+        }
       }
 
       clearErrors("sku");
@@ -426,19 +489,19 @@ const useProductSubmit = (id, selectedServices = []) => {
               "title",
               res.title && res.title[language ? language : "en"]
                 ? res.title[language ? language : "en"]
-                : ""
+                : "",
             );
             setValue(
               "description",
               res.description && res.description[language ? language : "en"]
                 ? res.description[language ? language : "en"]
-                : ""
+                : "",
             );
             setValue(
               "highlights",
               res.highlights && res.highlights[language ? language : "en"]
                 ? res.highlights[language ? language : "en"]
-                : ""
+                : "",
             );
             setValue("slug", res.slug || "");
             setValue("status", res.status || "show");
@@ -451,12 +514,12 @@ const useProductSubmit = (id, selectedServices = []) => {
             setValue("price", res.price);
             setValue(
               "originalPrice",
-              res.originalPrice || res?.prices?.originalPrice || 0
+              res.originalPrice || res?.prices?.originalPrice || 0,
             );
             setValue("minOrderQuantity", res.minOrderQuantity || 1);
             setValue("maxOrderQuantity", res.maxOrderQuantity || 0);
             setQuantityTiers(
-              Array.isArray(res.quantityTiers) ? res.quantityTiers : []
+              Array.isArray(res.quantityTiers) ? res.quantityTiers : [],
             );
             setValue("deliveryCharge", res.deliveryCharge || 0);
             setValue("type", res.type || "normal");
@@ -470,10 +533,27 @@ const useProductSubmit = (id, selectedServices = []) => {
             setProductId(res.productId ? res.productId : res._id);
             setBarcode(res.barcode || "");
             setSku(res.sku || "");
+            setValue("manufacturer", res.manufacturer || "");
+            setValue("strength", res.strength || "");
+            setValue("storage", res.storageConditions || res.storage || "");
+            setValue("composition", res.composition || "");
+            setValue("indications", res.indications || res.uses || "");
+            setValue("dosage", res.dosage || "");
+            setValue("packaging", res.packaging || "");
+            setValue("dosageForm", res.dosageForm || "");
+            setValue("route", res.route || "");
+            setValue("availability", res.availability || "");
+            setValue("coldChain", Boolean(res.coldChain));
+            setValue("seoTitle", res.seoTitle || "");
+            setValue("seoDescription", res.seoDescription || "");
+            setValue("seoKeywords", res.seoKeywords || "");
+            setCustomSections(
+              Array.isArray(res.customSections) ? res.customSections : [],
+            );
             setHighlights(
               res.highlights && res.highlights[language ? language : "en"]
                 ? res.highlights[language ? language : "en"]
-                : ""
+                : "",
             );
 
             if (res.categories && Array.isArray(res.categories)) {
@@ -488,17 +568,17 @@ const useProductSubmit = (id, selectedServices = []) => {
             if (res.category && res.category.name) {
               res.category.name = showingTranslateValue(
                 res?.category?.name,
-                lang
+                lang,
               );
             }
 
             setSelectedCategory(res.categories || []);
             setDefaultCategory(res?.category ? [res.category] : []);
-            setTag(JSON.parse(res.tag || "[]"));
+            setTag(parseProductTags(res.tag));
             setImageUrl(res.image || []);
             setVariants(res.variants || []);
             setIsCombination(res.isCombination || false);
-            
+
             // Set variant state for existing product variants
             if (res.variants && Array.isArray(res.variants)) {
               const result = res.variants.map(
@@ -517,7 +597,7 @@ const useProductSubmit = (id, selectedServices = []) => {
                   highlights,
                   slug,
                   ...rest
-                }) => rest
+                }) => rest,
               );
               setVariant(result);
             }
@@ -560,21 +640,37 @@ const useProductSubmit = (id, selectedServices = []) => {
     if (variants && variants.length > 0) {
       // Get all unique keys from variants, excluding the new fields we added
       const allKeys = new Set();
-      variants.forEach(variant => {
-        Object.keys(variant).forEach(key => {
+      variants.forEach((variant) => {
+        Object.keys(variant).forEach((key) => {
           // Exclude the new fields we added for variant details
-          if (!['title', 'description', 'highlights', 'slug', 'images', 'image', 'sku', 'barcode', 'productId', 'originalPrice', 'discount', 'price', 'quantity'].includes(key)) {
+          if (
+            ![
+              "title",
+              "description",
+              "highlights",
+              "slug",
+              "images",
+              "image",
+              "sku",
+              "barcode",
+              "productId",
+              "originalPrice",
+              "discount",
+              "price",
+              "quantity",
+            ].includes(key)
+          ) {
             allKeys.add(key);
           }
         });
       });
-      
+
       const res = Array.from(allKeys);
       const varTitle = attribue.filter((att) => att && res.includes(att._id));
-      console.log('Debug - variants:', variants);
-      console.log('Debug - allKeys:', res);
-      console.log('Debug - attribue:', attribue);
-      console.log('Debug - varTitle:', varTitle);
+      console.log("Debug - variants:", variants);
+      console.log("Debug - allKeys:", res);
+      console.log("Debug - attribue:", attribue);
+      console.log("Debug - varTitle:", varTitle);
       setVariantTitle(varTitle);
     } else {
       setVariantTitle([]);
@@ -610,41 +706,53 @@ const useProductSubmit = (id, selectedServices = []) => {
   // Helper function to generate unique slug
   const generateUniqueSlug = (baseSlug, existingSlugs = []) => {
     if (!baseSlug) return "";
-    
+
     let slug = baseSlug;
     let counter = 1;
-    
+
     while (existingSlugs.includes(slug)) {
       slug = `${baseSlug}-${counter}`;
       counter++;
     }
-    
+
     return slug;
   };
 
   // Helper function to generate title from combination attributes
   const generateVariantTitle = (com, productTitle) => {
     if (!com || Object.keys(com).length === 0) return "";
-    
+
     // Get the main product title
     const mainTitle = productTitle || watch("title") || "";
-    
+
     // Get actual attribute names from variantTitle data
     const attributeNames = attribue
-      ?.filter(att => com[att._id]) // Only include attributes that are in the combination
-      ?.map(att => {
-        const attributeData = att?.variants?.filter(val => val?.name !== "All");
-        const attributeName = attributeData?.find(v => v._id === com[att._id])?.name;
-        return attributeName ? showingTranslateValue(attributeName, language) : com[att._id];
+      ?.filter((att) => com[att._id]) // Only include attributes that are in the combination
+      ?.map((att) => {
+        const attributeData = att?.variants?.filter(
+          (val) => val?.name !== "All",
+        );
+        const attributeName = attributeData?.find(
+          (v) => v._id === com[att._id],
+        )?.name;
+        return attributeName
+          ? showingTranslateValue(attributeName, language)
+          : com[att._id];
       })
       ?.filter(Boolean);
-    
+
     // Create title from combination attributes
-    const combinationText = attributeNames?.join(" ") || Object.values(com).filter(value => value && value.trim()).join(" ");
-    
+    const combinationText =
+      attributeNames?.join(" ") ||
+      Object.values(com)
+        .filter((value) => value && value.trim())
+        .join(" ");
+
     // Combine main title with combination attributes
-    const fullTitle = mainTitle ? `${mainTitle} ${combinationText}`.trim() : combinationText;
-    
+    const fullTitle = mainTitle
+      ? `${mainTitle} ${combinationText}`.trim()
+      : combinationText;
+
     return fullTitle;
   };
 
@@ -654,10 +762,10 @@ const useProductSubmit = (id, selectedServices = []) => {
     return title
       .toLowerCase()
       .trim()
-      .replace(/[^a-z0-9\s-]/g, '') // Remove special characters except spaces and hyphens
-      .replace(/\s+/g, '-') // Replace spaces with hyphens
-      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
-      .replace(/^-|-$/g, ''); // Remove leading and trailing hyphens
+      .replace(/[^a-z0-9\s-]/g, "") // Remove special characters except spaces and hyphens
+      .replace(/\s+/g, "-") // Replace spaces with hyphens
+      .replace(/-+/g, "-") // Replace multiple hyphens with single hyphen
+      .replace(/^-|-$/g, ""); // Remove leading and trailing hyphens
   };
 
   //generate all combination combination
@@ -686,7 +794,7 @@ const useProductSubmit = (id, selectedServices = []) => {
         highlights,
         slug,
         ...rest
-      }) => JSON.stringify({ ...rest }) !== "{}"
+      }) => JSON.stringify({ ...rest }) !== "{}",
     );
 
     // console.log("result", result);
@@ -702,7 +810,7 @@ const useProductSubmit = (id, selectedServices = []) => {
         // Auto-generate title and slug from combination attributes
         const autoGeneratedTitle = generateVariantTitle(com, watch("title"));
         const autoGeneratedSlug = generateSlug(autoGeneratedTitle);
-        
+
         const newCom = {
           ...com,
           title: { [language]: autoGeneratedTitle },
@@ -734,7 +842,7 @@ const useProductSubmit = (id, selectedServices = []) => {
     setValues({});
     if (resetRef?.current) {
       resetRef.current.map(
-        async (v, i) => await resetRef.current[i]?.resetSelectedValues()
+        async (v, i) => await resetRef.current[i]?.resetSelectedValues(),
       );
     }
 
@@ -742,13 +850,6 @@ const useProductSubmit = (id, selectedServices = []) => {
   };
 
   //for edit combination values
-
-
-
-
-
-
-
 
   //for remove combination values
   const handleRemoveVariant = (vari, ext) => {
@@ -785,7 +886,7 @@ const useProductSubmit = (id, selectedServices = []) => {
           ...rest
         } = vari;
         const res = variant.filter(
-          (obj) => JSON.stringify(obj) !== JSON.stringify(rest)
+          (obj) => JSON.stringify(obj) !== JSON.stringify(rest),
         );
         setVariant(res);
         setIsBulkUpdate(true);
@@ -860,12 +961,12 @@ const useProductSubmit = (id, selectedServices = []) => {
     if (value) {
       if (!value)
         return notifyError(
-          `${"Please save product before adding combinations!"}`
+          `${"Please save product before adding combinations!"}`,
         );
     } else {
       if (!isBasicComplete)
         return notifyError(
-          `${"Please save product before adding combinations!"}`
+          `${"Please save product before adding combinations!"}`,
         );
     }
     setTapValue(e);
@@ -920,7 +1021,7 @@ const useProductSubmit = (id, selectedServices = []) => {
           return updatedCom;
         }
         return com;
-      })
+      }),
     );
 
     // const totalStock = variants.reduce(
@@ -940,7 +1041,7 @@ const useProductSubmit = (id, selectedServices = []) => {
       setValue("description", resData.description[lang ? lang : "en"]);
       setValue(
         "highlights",
-        resData.highlights ? resData.highlights[lang ? lang : "en"] : ""
+        resData.highlights ? resData.highlights[lang ? lang : "en"] : "",
       );
     }
   };
@@ -1005,7 +1106,10 @@ const useProductSubmit = (id, selectedServices = []) => {
     setQuantityTiers,
     datasheetUrl,
     setDatasheetUrl,
+    customSections,
+    setCustomSections,
   };
 };
 
 export default useProductSubmit;
+

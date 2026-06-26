@@ -35,7 +35,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="${title} | Elecmoon"
+      title="${title} | Kure Pharma"
       description="Explore our high-quality ${title} solutions for your business needs."
     >
       {/* Hero Section */}

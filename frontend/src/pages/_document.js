@@ -7,10 +7,10 @@ class MyDocument extends Document {
     // Default SEO settings - API call removed to prevent blocking errors
     const setting = {
       favicon: "/favicon.png",
-      meta_title: "Elecmoon – Creating Better Products For Life",
-      meta_description: "Precision in every Voltage",
-      meta_keywords: "ecommerce online store",
-      meta_url: "https://elecmoon.com/",
+      meta_title: "Kure Pharma – Trusted Pharmaceutical Distributor",
+      meta_description: "Quality medicines and pharmaceutical sourcing across India",
+      meta_keywords: "pharma medicines oncology critical care kure pharma",
+      meta_url: "https://kurepharma.com/",
       meta_img: "/favicon.png",
     };
 
@@ -23,11 +23,14 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <link rel="icon" href={setting?.favicon || "/favicon.png"} />
+          <link rel="preconnect" href="https://fonts.googleapis.com" />
+          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+          <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap" rel="stylesheet" />
           <meta
             property="og:title"
             content={
               setting?.meta_title ||
-              "Elecmoon – Creating Better Products For Life"
+              "Kure Pharma – Trusted Pharmaceutical Distributor"
             }
           />
           <meta property="og:type" content="eCommerce Website" />
@@ -45,7 +48,7 @@ class MyDocument extends Document {
           <meta
             property="og:url"
             content={
-              setting?.meta_url || "https://elecmoon.com//"
+              setting?.meta_url || "https://kurepharma.com/"
             }
           />
           <meta

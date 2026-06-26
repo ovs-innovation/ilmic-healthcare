@@ -34,7 +34,7 @@ const queryClient = new QueryClient({
 
 const AppCartProvider = ({ children }) => {
   return (
-    <CartProvider id="Elecmoon_cart">
+    <CartProvider id="kure_pharma_cart">
       {children}
     </CartProvider>
   );
@@ -61,7 +61,7 @@ function MyApp({ Component, pageProps }) {
           handlePageView();
 
           const handleRouteChange = (url) => {
-            handlePageView(`/${router.pathname}`, "Elecmoon");
+            handlePageView(`/${router.pathname}`, "Kure Pharma");
           };
 
           router.events.on("routeChangeComplete", handleRouteChange);

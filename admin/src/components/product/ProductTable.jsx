@@ -61,22 +61,22 @@ const ProductTable = ({ products, isCheck, setIsCheck }) => {
 
             <TableCell>
               <div className="flex items-center">
-                {product?.image[0] ? (
+                {product?.image?.[0] ? (
                   <Avatar
                     className="hidden p-1 mr-2 md:block bg-gray-50 shadow-none"
-                    src={product?.image[0]}
+                    src={product?.image?.[0]}
                     alt="product"
                   />
                 ) : (
                   <Avatar
-                    src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
+                    src={`https://res.cloudinary.com/dkuwefj17/image/upload/v1655097002/placeholder_kvepfp.png`}
                     alt="product"
                   />
                 )}
                 <div>
                   <h2
                     className={`text-sm font-medium ${
-                      product?.title.length > 30 ? "wrap-long-title" : ""
+                      product?.title?.length > 30 ? "wrap-long-title" : ""
                     }`}
                   >
                     {showingTranslateValue(product?.title)?.substring(0, 28)}

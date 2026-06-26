@@ -2,22 +2,13 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { ToastContainer } from "react-toastify";
 import { FiPhoneCall, FiChevronUp } from "react-icons/fi";
+import { FaWhatsapp } from "react-icons/fa";
 
-//internal import
-
-import useGetSetting from "@hooks/useGetSetting";
 import Navbar from "@layout/navbar/Navbar";
 import Footer from "@layout/footer/Footer";
-import MobileFooter from "@layout/footer/MobileFooter";
-import FeatureCard from "@components/feature-card/FeatureCard";
-import CartDrawer from "@components/drawer/CartDrawer";
-import StatsBar from "@components/common/StatsBar";
-import RouteProgressBar from "@components/common/RouteProgressBar";
 
 const Layout = ({ title, description, children }) => {
   const router = useRouter();
-  const { storeCustomizationSetting } = useGetSetting();
-  const phone = storeCustomizationSetting?.navbar?.phone;
 
   const handleScrollTop = () => {
     if (typeof window !== "undefined") {
@@ -28,54 +19,42 @@ const Layout = ({ title, description, children }) => {
   return (
     <>
       <ToastContainer />
-      <RouteProgressBar />
 
-      <div className="font-sans overflow-x-hidden">
+      <div className="font-sans overflow-x-hidden min-h-screen flex flex-col justify-between bg-white text-gray-800">
         <Head>
           <title>
-            {title
-              ? `Elecmoon | ${title}`
-              : "Elecmoon"}
+            {title ? `Kure Pharma | ${title}` : "Kure Pharma | Trusted Pharmaceutical Solutions"}
           </title>
-          {description && (
-            <meta
-              name="description"
-              content={
-                description ||
-                "Discover personalized merchandise, branded giveaways, and advertising essentials. Ideal for businesses, events, and promotions"
-              }
-            />
-          )}
+          <meta
+            name="description"
+            content={
+              description ||
+              "Providing trusted and high-quality pharmaceutical products and healthcare solutions globally."
+            }
+          />
           <link rel="icon" href="/favicon.png" />
         </Head>
-        <Navbar />
-        <CartDrawer />
-        <div className="bg-gray-50">{children}</div>
+
+        <div>
+          <Navbar />
+          <main className="bg-white">{children}</main>
+        </div>
+
         {/* Floating action buttons */}
-        <div className="fixed right-3 sm:right-4 md:right-6 bottom-20 sm:bottom-24 flex flex-col gap-2 sm:gap-3 z-30 pointer-events-none">
+        <div className="fixed right-4 bottom-6 flex flex-col gap-3 z-30">
+          {/* WhatsApp floating button */}
           <a
-            href={phone ? `tel:${phone}` : undefined}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition pointer-events-auto"
-            aria-label="Call Elecmoon"
+            href="https://wa.me/919910768201"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:bg-[#20BD5A] transition-all hover:scale-105"
+            aria-label="Chat on WhatsApp"
           >
-            <FiPhoneCall className="w-5 h-5 sm:w-6 sm:h-6" />
+            <FaWhatsapp className="w-6 h-6" />
           </a>
-          <button
-            onClick={handleScrollTop}
-            className="w-11 h-11 sm:w-12 sm:h-12 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-lg hover:bg-red-700 transition pointer-events-auto"
-            aria-label="Back to top"
-            type="button"
-          >
-            <FiChevronUp className="w-5 h-5 sm:w-6 sm:h-6" />
-          </button>
         </div>
-        <MobileFooter />
-        {router.pathname === "/" && <StatsBar />}
-        <div className="w-full">
-          <div className="border-t border-gray-100 w-full">
-            <Footer />
-          </div>
-        </div>
+
+        <Footer />
       </div>
     </>
   );

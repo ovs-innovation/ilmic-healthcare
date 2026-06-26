@@ -8,11 +8,20 @@ module.exports = {
 
   theme: {
     fontFamily: {
-      sans: ["Open Sans", "sans-serif"],
-      serif: ["Inter", "sans-serif"],
+      sans: ["'DM Sans'", "Inter", "sans-serif"],
+      serif: ["'DM Sans'", "Inter", "sans-serif"],
       DejaVu: ["DejaVu Sans", "Arial", "sans-serif"],
     },
     extend: {
+      colors: {
+        pharma: {
+          primary: "#0F4C81",
+          secondary: "#2A7DE1",
+          accent: "#00B4D8",
+          bg: "#F8FBFF",
+          text: "#1E293B",
+        }
+      },
       screens: {
         xs: "400px",
       },

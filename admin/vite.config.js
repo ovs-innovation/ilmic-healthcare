@@ -59,10 +59,10 @@ export default defineConfig({
         scope: ".",
         start_url: ".",
         id: ".",
-        short_name: "Elecmoon - E-Commerce Website",
-        name: "Elecmoon | React eCommerce Admin Dashboard",
+        short_name: "Kure Pharma - E-Commerce Website",
+        name: "Kure Pharma | React eCommerce Admin Dashboard",
         description:
-          "Elecmoon : React Grocery & Organic Food Store e-commerce Admin Dashboard",
+          "Kure Pharma : React Grocery & Organic Food Store e-commerce Admin Dashboard",
         icons: [
           {
             src: "favicon.ico",

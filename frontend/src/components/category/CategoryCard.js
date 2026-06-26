@@ -92,7 +92,7 @@ const CategoryCard = ({ title, icon, nested, id, slug }) => {
             />
           ) : (
             <Image
-              src="https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
+              src="/no-result.svg"
               width={20}
               height={20}
               alt="category"

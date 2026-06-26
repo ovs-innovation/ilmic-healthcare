@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Battery Case | Elecmoon"
+      title="Battery Case | Kure Pharma"
       description="Explore our high-quality Battery Case solutions for your business needs."
     >
       {/* Hero Section */}

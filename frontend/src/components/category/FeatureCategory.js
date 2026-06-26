@@ -7,23 +7,23 @@ const FeatureCategory = () => {
   const services = [
     {
       name: "Electrical Test & Tag",
-      icon: "https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/03/1-2.png.bv.webp?bv_host=www.Elecmoon.com.au",
+      icon: "https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/2025/03/1-2.png.bv.webp?bv_host=kurepharma.com",
       slug: "/service/electrical-testing-tagging",
     },
     {
       name: "Exit & Emergency Light Testing",
-      icon: "https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/elementor/thumbs/3-2-r3psejnq4zym5gmsmwwxl7iar2gcvkqvjma5is6drg.png.bv.webp?bv_host=www.Elecmoon.com.au",
+      icon: "https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/elementor/thumbs/3-2-r3psejnq4zym5gmsmwwxl7iar2gcvkqvjma5is6drg.png.bv.webp?bv_host=kurepharma.com",
       slug: "/service/fire-extinguishers",
     },
     {
       name: "Extinguisher Testing",
-      icon: "https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/03/2-2.png.bv.webp?bv_host=www.Elecmoon.com.au",
+      icon: "https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/2025/03/2-2.png.bv.webp?bv_host=kurepharma.com",
 
       slug: "/service/emergency-exit-light-testing",
     },
     {
       name: "RCD Testing",
-      icon: "https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/03/download-4.png.bv.webp?bv_host=www.Elecmoon.com.au",
+      icon: "https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/2025/03/download-4.png.bv.webp?bv_host=kurepharma.com",
       slug: "/service/rcd-safety-switches",
     },
   ];

@@ -10,11 +10,9 @@ import {
   TableFooter,
   TableHeader,
 } from "@windmill/react-ui";
-import { useContext, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FiEdit, FiPlus, FiTrash2 } from "react-icons/fi";
-
-//internal import
 
 import useAsync from "@/hooks/useAsync";
 import { SidebarContext } from "@/context/SidebarContext";
@@ -27,7 +25,6 @@ import PageTitle from "@/components/Typography/PageTitle";
 import MainDrawer from "@/components/drawer/MainDrawer";
 import CategoryDrawer from "@/components/drawer/CategoryDrawer";
 import UploadMany from "@/components/common/UploadMany";
-import SwitchToggleChildCat from "@/components/form/switch/SwitchToggleChildCat";
 import TableLoading from "@/components/preloader/TableLoading";
 import CheckBox from "@/components/form/others/CheckBox";
 import CategoryTable from "@/components/category/CategoryTable";
@@ -42,10 +39,26 @@ const Category = () => {
     CategoryServices.getAllCategories
   );
 
-  const { handleDeleteMany, allId, handleUpdateMany, serviceId } =
-    useToggleDrawer();
+  const {
+    handleDeleteMany,
+    allId,
+    handleUpdateMany,
+    serviceId,
+    setServiceId,
+    handleUpdate,
+  } = useToggleDrawer();
 
   const { t } = useTranslation();
+
+  const parentCategories = useMemo(() => {
+    if (!Array.isArray(data)) return [];
+    return data.filter((cat) => !cat.parentId);
+  }, [data]);
+
+  const openParentDrawer = () => {
+    setServiceId("");
+    toggleDrawer();
+  };
 
   const {
     handleSubmitCategory,
@@ -61,55 +74,53 @@ const Category = () => {
     handleSelectFile,
     handleUploadMultiple,
     handleRemoveSelectFile,
-  } = useFilter(data[0]?.children ? data[0]?.children : data);
+  } = useFilter(parentCategories);
 
-  // react hooks
   const [isCheckAll, setIsCheckAll] = useState(false);
   const [isCheck, setIsCheck] = useState([]);
-  const [showChild, setShowChild] = useState(false);
 
   const handleSelectAll = () => {
     setIsCheckAll(!isCheckAll);
-    setIsCheck(data[0]?.children.map((li) => li._id));
+    setIsCheck(parentCategories.map((li) => li._id));
     if (isCheckAll) {
       setIsCheck([]);
     }
   };
 
-  // handle reset field function
   const handleResetField = () => {
     setCategoryType("");
     categoryRef.current.value = "";
   };
 
-  // console.log("serviceData", serviceData, "tableData", dataTable);
-
   return (
     <>
-      <PageTitle>{t("Category")}</PageTitle>
+      <PageTitle>Parent Categories</PageTitle>
       <DeleteModal ids={allId} setIsCheck={setIsCheck} />
 
       <BulkActionDrawer
         ids={allId}
-        title="Categories"
+        title="Parent Categories"
         lang={lang}
         data={data}
         isCheck={isCheck}
       />
 
       <MainDrawer>
-        <CategoryDrawer id={serviceId} data={data} lang={lang} />
+        <CategoryDrawer
+          id={serviceId}
+          data={data}
+          lang={lang}
+          mode="parent"
+        />
       </MainDrawer>
 
       <AnimatedContent>
         <Card className="min-w-0 shadow-xs overflow-hidden bg-white dark:bg-gray-800 mb-5">
           <CardBody className="">
-            {/* <div className="flex md:flex-row flex-col gap-3 justify-end items-end"> */}
             <form
               onSubmit={handleSubmitCategory}
               className="py-3  grid gap-4 lg:gap-6 xl:gap-6  xl:flex"
             >
-              {/* </div> */}
               <div className="flex justify-start w-1/2 xl:w-1/2 md:w-full">
                 <UploadMany
                   title="Categories"
@@ -132,7 +143,6 @@ const Category = () => {
                     <span className="mr-2">
                       <FiEdit />
                     </span>
-
                     {t("BulkAction")}
                   </Button>
                 </div>
@@ -145,20 +155,18 @@ const Category = () => {
                     <span className="mr-2">
                       <FiTrash2 />
                     </span>
-
                     {t("Delete")}
                   </Button>
                 </div>
-                <div className="w-full md:w-48 lg:w-48 xl:w-48">
+                <div className="w-full md:w-56 lg:w-56 xl:w-56">
                   <Button
-                    onClick={toggleDrawer}
+                    onClick={openParentDrawer}
                     className="rounded-md h-12 w-full"
                   >
                     <span className="mr-2">
                       <FiPlus />
                     </span>
-
-                    {t("AddCategory")}
+                    Add Parent Category
                   </Button>
                 </div>
               </div>
@@ -176,7 +184,7 @@ const Category = () => {
                 <Input
                   ref={categoryRef}
                   type="search"
-                  placeholder={t("SearchCategory")}
+                  placeholder="Search by parent category name"
                 />
               </div>
               <div className="flex items-center gap-2 flex-grow-0 md:flex-grow lg:flex-grow xl:flex-grow">
@@ -202,12 +210,6 @@ const Category = () => {
         </Card>
       </AnimatedContent>
 
-      <SwitchToggleChildCat
-        title=" "
-        handleProcess={setShowChild}
-        processOption={showChild}
-        name={showChild}
-      />
       {loading ? (
         <TableLoading row={12} col={6} width={190} height={20} />
       ) : error ? (
@@ -246,7 +248,8 @@ const Category = () => {
               isCheck={isCheck}
               categories={dataTable}
               setIsCheck={setIsCheck}
-              showChild={showChild}
+              variant="parent"
+              handleUpdate={handleUpdate}
             />
           </Table>
 
@@ -260,7 +263,7 @@ const Category = () => {
           </TableFooter>
         </TableContainer>
       ) : (
-        <NotFound title="Sorry, There are no categories right now." />
+        <NotFound title="No parent categories found." />
       )}
     </>
   );

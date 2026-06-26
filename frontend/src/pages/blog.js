@@ -43,11 +43,11 @@ const Blog = () => {
   };
 
   return (
-    <Layout title="Blog" description="Elecmoon Test & Tag Melbourne Blog">
+    <Layout title="Blog" description="Kure Pharma Test & Tag Melbourne Blog">
       {/* Hero Section */}
       <div className="relative bg-[#111] text-white min-h-[380px] sm:min-h-[380px] lg:min-h-[420px]">
         <Image
-          src="https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/03/Fire-Safety-Training-for-Oil-Gas-960x640-1.jpg.bv.webp"
+          src="https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/2025/03/Fire-Safety-Training-for-Oil-Gas-960x640-1.jpg.bv.webp"
           alt="Blog"
           fill
           className="object-cover opacity-40"

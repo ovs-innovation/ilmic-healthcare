@@ -355,7 +355,7 @@ const HomeProductsSection = () => {
           <PremiumGridSection
             eyebrow="Handpicked"
             title="Featured Products"
-            subtitle="Top picks curated by the Elecmoon team"
+            subtitle="Top picks curated by the Kure Pharma team"
             icon={<FiAward className="w-5 h-5" strokeWidth={2.5} />}
             products={featuredProducts}
             onEnquire={handleEnquire}

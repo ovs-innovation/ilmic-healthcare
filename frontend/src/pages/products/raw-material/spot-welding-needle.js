@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Spot Welding Needle | Elecmoon"
+      title="Spot Welding Needle | Kure Pharma"
       description="Explore our high-quality Spot Welding Needle solutions for your business needs."
     >
       {/* Hero Section */}

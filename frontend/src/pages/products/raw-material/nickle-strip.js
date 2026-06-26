@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Nickle Strip | Elecmoon"
+      title="Nickle Strip | Kure Pharma"
       description="Explore our high-quality Nickle Strip solutions for your business needs."
     >
       {/* Hero Section */}

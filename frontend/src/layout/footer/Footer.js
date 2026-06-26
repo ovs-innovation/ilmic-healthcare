@@ -1,154 +1,126 @@
-import React, { useContext } from "react";
+import React from "react";
 import Link from "next/link";
-import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
-import { FiPhoneCall, FiMail, FiMapPin } from "react-icons/fi";
-
-import useGetSetting from "@hooks/useGetSetting";
-import useUtilsFunction from "@hooks/useUtilsFunction";
-import { SidebarContext } from "@context/SidebarContext";
+import { FaFacebookF, FaWhatsapp } from "react-icons/fa";
+import { FiPhoneCall, FiMail, FiMapPin, FiClock } from "react-icons/fi";
 
 const Footer = () => {
-  const { storeCustomizationSetting } = useGetSetting();
-  const { showingTranslateValue } = useUtilsFunction();
-  const { services } = useContext(SidebarContext);
-  const footerPhone = storeCustomizationSetting?.footer?.block4_phone;
-  const footerAddress = showingTranslateValue(storeCustomizationSetting?.footer?.block4_address);
   return (
-    <div className="bg-gray-100 text-gray-900 pt-10 pb-16 relative">
-      {/* Red vertical bar on the right */}
-      <div className="absolute right-0 top-0 bottom-0 w-1 bg-[#ED1C24]"></div>
+    <footer className="bg-white text-gray-700 border-t border-gray-200 pt-12 pb-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-10 border-b border-gray-100">
 
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-12">
-          {/* About Section */}
+          {/* ── Brand Column ── */}
           <div className="space-y-4">
             <Link href="/" className="inline-block">
-              <div className="relative overflow-hidden flex items-center h-[48px] sm:h-[58px] lg:h-[68px] xl:h-[78px] w-[150px] sm:w-[190px] lg:w-[230px] xl:w-[260px]">
-                <img
-                  src="/logo/elecmoon-transparent.png"
-                  alt="ELECMOON"
-                  className="absolute left-0 top-1/2 -translate-y-1/2 w-auto object-contain object-left origin-left h-[160%] scale-[1.55] sm:scale-[1.6] lg:scale-[1.65]"
-                />
-              </div>
+              <img
+                src="/kure-logo.png"
+                alt="Kure Pharma Logo"
+                className="h-12 w-auto object-contain"
+              />
             </Link>
-            <p className="text-sm leading-7 text-gray-700">
-              {showingTranslateValue(storeCustomizationSetting?.footer?.shipping_card) || 
-              "At Elecmoon, we specialize in providing top-quality electrical testing, tagging, and fire safety services. Our mission is to ensure your workplace is safe and compliant."}
+            <p className="text-[12px] leading-relaxed text-gray-500 font-medium max-w-[220px]">
+              Kure Pharma is a trusted pharmaceutical distributor of oncology, critical care, HIV, Nephrology and specialty medicines across India.
             </p>
-
-            <div className="flex gap-3 pt-2">
+            {/* Social Icons */}
+            <div className="flex items-center gap-2.5 pt-1">
               <Link
                 href="https://facebook.com"
                 aria-label="Facebook"
-                className="w-10 h-10 rounded-full bg-[#000435] text-white flex items-center justify-center hover:bg-[#C53030] transition"
+                className="w-8 h-8 rounded-full bg-[#0F4C81] text-white flex items-center justify-center hover:bg-[#2A7DE1] transition-colors"
               >
-                <FaFacebookF />
+                <FaFacebookF className="w-3.5 h-3.5" />
               </Link>
               <Link
-                href="https://instagram.com"
-                aria-label="Instagram"
-                className="w-10 h-10 rounded-full bg-[#000435] text-white flex items-center justify-center hover:bg-[#C53030] transition"
+                href="https://wa.me/919910768201"
+                aria-label="WhatsApp"
+                className="w-8 h-8 rounded-full bg-[#0F4C81] text-white flex items-center justify-center hover:bg-[#25D366] transition-colors"
               >
-                <FaInstagram />
+                <FaWhatsapp className="w-3.5 h-3.5" />
               </Link>
-              <Link
-                href="https://linkedin.com"
-                aria-label="LinkedIn"
-                className="w-10 h-10 rounded-full bg-[#000435] text-white flex items-center justify-center hover:bg-[#C53030] transition"
+              <a
+                href="mailto:info@kurepharma.com"
+                aria-label="Email"
+                className="w-8 h-8 rounded-full bg-[#0F4C81] text-white flex items-center justify-center hover:bg-[#2A7DE1] transition-colors"
               >
-                <FaLinkedinIn />
-              </Link>
+                <FiMail className="w-3.5 h-3.5" />
+              </a>
+              <a
+                href="tel:+919910768201"
+                aria-label="Phone"
+                className="w-8 h-8 rounded-full bg-[#0F4C81] text-white flex items-center justify-center hover:bg-[#2A7DE1] transition-colors"
+              >
+                <FiPhoneCall className="w-3.5 h-3.5" />
+              </a>
             </div>
           </div>
 
-          {/* Contact Info */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-black">Contact Info</h3>
-            <div className="text-sm space-y-3 text-gray-700">
-              <div className="flex items-start gap-2">
-                <FiPhoneCall className="text-[#ED1C24] mt-1 flex-shrink-0" />
-                <a href={footerPhone ? `tel:${footerPhone}` : undefined} className="font-medium hover:text-[#ED1C24] transition">
-                  {footerPhone}
-                </a>
-              </div>
-              <div className="flex items-start gap-2">
-                <FiMail className="text-[#ED1C24] mt-1 flex-shrink-0" />
-                <p className="font-medium">{storeCustomizationSetting?.contact_us?.email_box_email?.en || "elecmoonofficial@gmail.com"}</p>
-              </div>
-              <div className="flex items-start gap-2">
-                <FiMapPin className="text-[#ED1C24] mt-1 flex-shrink-0" />
-                <p>{footerAddress}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Services — from database */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-black">Services</h3>
-            <ul className="space-y-2 text-sm text-gray-700">
-              {services?.length > 0 ? (
-                services.map((service) => {
-                  const name = showingTranslateValue(service.name);
-                  if (!name) return null;
-                  const href = service.slug ? `/service/${service.slug}` : "/services";
-                  return (
-                    <li key={service._id}>
-                      <Link href={href} className="hover:text-[#ED1C24] transition">
-                        {name}
-                      </Link>
-                    </li>
-                  );
-                })
-              ) : (
-                <li className="text-gray-400 text-xs">No services available.</li>
-              )}
-              {services?.length > 0 && (
-                <li>
-                  <Link href="/services" className="font-semibold text-[#ED1C24] hover:underline transition">
-                    View All Services →
+          {/* ── Quick Links ── */}
+          <div className="space-y-4">
+            <h4 className="text-[13px] font-extrabold text-gray-900 uppercase tracking-wider">Quick Links</h4>
+            <ul className="space-y-2.5">
+              {[
+                { label: "Home", href: "/" },
+                { label: "About Us", href: "/about-us" },
+                { label: "Products", href: "/products" },
+                { label: "Contact Us", href: "/contact-us" },
+              ].map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-[12px] font-medium text-gray-500 hover:text-[#0F4C81] transition-colors"
+                  >
+                    {link.label}
                   </Link>
                 </li>
-              )}
+              ))}
             </ul>
           </div>
 
-          {/* General Links */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-black">General Links</h3>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><Link href="/" className="hover:text-[#ED1C24] transition">Home</Link></li>
-              <li><Link href="/about-us" className="hover:text-[#ED1C24] transition">About Us</Link></li>
-              <li><Link href="/pricing" className="hover:text-[#ED1C24] transition">Pricing</Link></li>
-              <li><Link href="/blog" className="hover:text-[#ED1C24] transition">Blog</Link></li>
-            
-            </ul>
-          </div>
-
-          {/* Legal & Policies */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-black">Legal &amp; Policies</h3>
-            <ul className="space-y-2 text-sm text-gray-700">
-              <li><Link href="/privacy-policy" className="hover:text-[#ED1C24] transition">Privacy Policy</Link></li>
-              <li><Link href="/terms-and-conditions" className="hover:text-[#ED1C24] transition">Terms &amp; Conditions</Link></li>
-              <li><Link href="/shipping-policy" className="hover:text-[#ED1C24] transition">Shipping Policy</Link></li>
-              <li><Link href="/return-and-refund-policy" className="hover:text-[#ED1C24] transition">Return &amp; Refund Policy</Link></li>
-            </ul>
+          {/* ── Contact Us ── */}
+          <div className="space-y-4">
+            <h4 className="text-[13px] font-extrabold text-gray-900 uppercase tracking-wider">Contact Us</h4>
+            <div className="space-y-3">
+              <a
+                href="tel:+919910768201"
+                className="flex items-start gap-2.5 text-[12px] font-medium text-gray-500 hover:text-[#0F4C81] transition-colors"
+              >
+                <FiPhoneCall className="w-4 h-4 text-[#0F4C81] flex-shrink-0 mt-0.5" />
+                +91 99107 68201
+              </a>
+              <a
+                href="mailto:info@kurepharma.com"
+                className="flex items-start gap-2.5 text-[12px] font-medium text-gray-500 hover:text-[#0F4C81] transition-colors"
+              >
+                <FiMail className="w-4 h-4 text-[#0F4C81] flex-shrink-0 mt-0.5" />
+                info@kurepharma.com
+              </a>
+              <div className="flex items-start gap-2.5 text-[12px] font-medium text-gray-500">
+                <FiMapPin className="w-4 h-4 text-[#0F4C81] flex-shrink-0 mt-0.5" />
+                <span className="leading-relaxed">
+                  123, Pharma House, Sector 63,<br />
+                  Noida, Uttar Pradesh - 201301
+                </span>
+              </div>
+              <div className="flex items-start gap-2.5 text-[12px] font-medium text-gray-500">
+                <FiClock className="w-4 h-4 text-[#0F4C81] flex-shrink-0 mt-0.5" />
+                Mon - Sat: 9:00 AM – 6:00 PM
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="mt-10 pt-6 border-t border-gray-200 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-gray-500">
-          <p>&copy; {new Date().getFullYear()} Elecmoon. All rights reserved.</p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
-            <Link href="/privacy-policy" className="hover:text-[#ED1C24] transition">Privacy</Link>
-            <Link href="/terms-and-conditions" className="hover:text-[#ED1C24] transition">Terms</Link>
-            <Link href="/shipping-policy" className="hover:text-[#ED1C24] transition">Shipping</Link>
-            <Link href="/return-and-refund-policy" className="hover:text-[#ED1C24] transition">Returns</Link>
+        {/* ── Bottom bar ── */}
+        <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] font-medium text-gray-400">
+          <p>© 2024 Kure Pharma. All Rights Reserved.</p>
+          <div className="flex items-center gap-4">
+            <Link href="/privacy-policy" className="hover:text-[#0F4C81] transition-colors">Privacy Policy</Link>
+            <span className="text-gray-300">|</span>
+            <Link href="/terms-and-conditions" className="hover:text-[#0F4C81] transition-colors">Terms & Conditions</Link>
           </div>
         </div>
       </div>
-    </div>
+    </footer>
   );
 };
 
 export default Footer;
-

@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Assembly And Testing Machine | Elecmoon"
+      title="Assembly And Testing Machine | Kure Pharma"
       description="Explore our high-quality Assembly And Testing Machine solutions for your business needs."
     >
       {/* Hero Section */}

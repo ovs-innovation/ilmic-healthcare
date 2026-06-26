@@ -302,7 +302,7 @@ const InvoiceForDownload = ({
               >
                 <Image
                   src="/logo/logo.png"
-                  alt="Elecmoon"
+                  alt="Kure Pharma"
                   style={{ width: 80, textAlign: "right" }}
                 />
               </Text>

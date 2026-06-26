@@ -12,8 +12,25 @@ const services = [
   { label: "Smoke Alarm Service", href: "/service/smoke-alarm-service" },
 ];
 
+const productCategories = [
+  { label: "Oncology Medicines", href: "/products?category=Oncology%20Medicines" },
+  { label: "Anti Cancer Drugs", href: "/products?category=Anti%20Cancer%20Drugs" },
+  { label: "Critical Care", href: "/products?category=Critical%20Care" },
+  { label: "Immunotherapy", href: "/products?category=Immunotherapy" },
+  { label: "Targeted Therapy", href: "/products?category=Targeted%20Therapy" },
+  { label: "Hematology", href: "/products?category=Hematology" },
+  { label: "Bone Health", href: "/products?category=Bone%20Health" },
+  { label: "Injectable Medicines", href: "/products?category=Injectable%20Medicines" },
+  { label: "Oral Medicines", href: "/products?category=Oral%20Medicines" },
+  { label: "Imported Medicines", href: "/products?category=Imported%20Medicines" },
+  { label: "HIV Medicines", href: "/products?category=HIV%20Medicines" },
+  { label: "Nephrology Medicines", href: "/products?category=Nephrology%20Medicines" },
+  { label: "Lifesaving Medicines", href: "/products?category=Lifesaving%20Medicines" }
+];
+
 const NavbarPromo = () => {
   const [openService, setOpenService] = useState(false);
+  const [openCategories, setOpenCategories] = useState(false);
 
   return (
     <div className="hidden lg:block bg-white text-black border-b">
@@ -22,6 +39,37 @@ const NavbarPromo = () => {
           <Link href="/" className="hover:text-red-500 transition">
             Home
           </Link>
+
+          {/* Categories Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setOpenCategories(true)}
+            onMouseLeave={() => setOpenCategories(false)}
+          >
+            <button
+              className="flex items-center gap-1 hover:text-red-500 transition focus:outline-none"
+              onClick={() => setOpenCategories((prev) => !prev)}
+            >
+              Categories <span className="text-[10px]">▼</span>
+            </button>
+            {openCategories && (
+              <div
+                className="absolute left-0 top-full w-64 bg-white text-gray-900 shadow-2xl rounded-lg overflow-hidden border border-gray-100 z-50 py-1"
+              >
+                {productCategories.map((item) => (
+                  <Link
+                    key={item.label}
+                    href={item.href}
+                    className="block px-4 py-2.5 text-sm hover:bg-gray-50 hover:text-red-500 transition font-medium"
+                    onClick={() => setOpenCategories(false)}
+                  >
+                    {item.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           <div
             className="relative"
             onMouseEnter={() => setOpenService(true)}

@@ -430,7 +430,7 @@ const BatteryServiceSection = () => {
                     <IconPowerBadge className="w-3.5 h-3.5" />
                   </WhyIconTile>
                   <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#0088FF]">
-                    Why Choose Elecmoon
+                    Why Choose Kure Pharma
                   </span>
                 </div>
 
@@ -449,8 +449,8 @@ const BatteryServiceSection = () => {
                 {/* Image — left inside card */}
                 <div className="relative w-full sm:w-[44%] lg:w-[42%] flex-shrink-0 min-h-[140px] sm:min-h-0 sm:self-stretch bg-[#f3f5f8] border-b sm:border-b-0 sm:border-r border-gray-100">
                   <Image
-                    src="/hero/elecmoon-hero-products.png"
-                    alt="Elecmoon BMS and battery components"
+                    src="/hero-medicines.png"
+                    alt="Kure Pharma BMS and battery components"
                     fill
                     sizes="(max-width: 640px) 100vw, 200px"
                     className="object-contain p-3 sm:p-4"

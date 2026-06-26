@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Solar Application Battery | Elecmoon"
+      title="Solar Application Battery | Kure Pharma"
       description="Explore our high-quality Solar Application Battery solutions for your business needs."
     >
       {/* Hero Section */}

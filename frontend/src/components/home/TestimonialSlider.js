@@ -9,7 +9,7 @@ const testimonials = [
     date: "2022-01-27",
     avatar: "D",
     avatarBg: "bg-red-800",
-    text: "We use Elecmoon Test and Tag Services. They are very professional, reliable, always on time, and send the reports usually the next day. Very Happy with their Service",
+    text: "We use Kure Pharma Test and Tag Services. They are very professional, reliable, always on time, and send the reports usually the next day. Very Happy with their Service",
     hasImage: false,
   },
   {
@@ -27,7 +27,7 @@ const testimonials = [
     date: "2020-05-01",
     avatar: "M",
     avatarBg: "bg-amber-800",
-    text: "Very prompt and Professional service. Urgently needed a job done first thing the following day. The Boys at Elecmoon moved some jobs around to help me out. Will definitely use again.",
+    text: "Very prompt and Professional service. Urgently needed a job done first thing the following day. The Boys at Kure Pharma moved some jobs around to help me out. Will definitely use again.",
     hasReadMore: false,
   },
   {

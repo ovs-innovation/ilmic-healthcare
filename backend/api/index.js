@@ -24,8 +24,11 @@ const commentRoutes = require("../routes/commentRoutes");
 const reviewRoutes = require("../routes/reviewRoutes");
 const batteryServiceRoutes = require("../routes/batteryServiceRoutes");
 const shortVideoRoutes = require("../routes/shortVideoRoutes");
-const { handleShiprocketWebhook } = require("../controller/shiprocketController");
-const { isAuth, isAdmin } = require("../config/auth")
+const brandRoutes = require("../routes/brandRoutes");
+const {
+  handleShiprocketWebhook,
+} = require("../controller/shiprocketController");
+const { isAuth, isAdmin } = require("../config/auth");
 
 const app = express();
 
@@ -37,7 +40,7 @@ app.use(async (req, res, next) => {
   } catch (err) {
     res.status(503).json({
       message: "Database connection failed",
-      error: err.message
+      error: err.message,
     });
   }
 });
@@ -47,13 +50,14 @@ app.set("trust proxy", 1);
 app.use(express.json({ limit: "4mb" }));
 app.use(helmet());
 
-app.use(cors({
-  origin: true, 
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
-
+app.use(
+  cors({
+    origin: true,
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+  }),
+);
 
 //root route
 app.get("/", (req, res) => {
@@ -78,6 +82,7 @@ app.use("/api/comments/", commentRoutes);
 app.use("/api/reviews/", reviewRoutes);
 app.use("/api/battery-service/", batteryServiceRoutes);
 app.use("/api/short-videos/", shortVideoRoutes);
+app.use("/api/brand/", brandRoutes);
 
 //if you not use admin dashboard then these two route will not needed.
 app.use("/api/admin/", adminRoutes);
@@ -98,12 +103,23 @@ app.use("/static", express.static("public"));
 //   res.status(404).send("Not Found");
 // });
 
-
 const PORT = process.env.PORT || 5058;
 
 connectDB()
   .then(() => {
-    app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+    const server = app.listen(PORT, () =>
+      console.log(`server running on port ${PORT}`)
+    );
+    server.on("error", (err) => {
+      if (err.code === "EADDRINUSE") {
+        console.error(
+          `Port ${PORT} is already in use. Stop the other process or run: netstat -ano | findstr :${PORT}`
+        );
+      } else {
+        console.error("Server error:", err.message);
+      }
+      process.exit(1);
+    });
   })
   .catch((err) => {
     console.error("Failed to start server:", err.message);

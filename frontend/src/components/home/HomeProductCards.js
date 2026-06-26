@@ -230,12 +230,18 @@ export const HomePremiumProductCard = ({ product, onEnquire }) => {
 
           <button
             type="button"
-            onClick={core.handleAddToCart}
-            disabled={core.outOfStock}
-            className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#0b1d3d] hover:text-white transition-colors disabled:opacity-40"
-            aria-label="Add to cart"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (onEnquire) {
+                onEnquire(product);
+              } else {
+                core.navigateToProduct();
+              }
+            }}
+            className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#0F4C81] hover:text-white transition-colors"
+            aria-label="Enquire Now"
           >
-            <FiShoppingBag className="w-[18px] h-[18px]" />
+            <FiMessageSquare className="w-[18px] h-[18px]" />
           </button>
         </div>
       </div>
@@ -359,13 +365,16 @@ export const HomeTrendingProductCard = ({ product, onEnquire }) => {
         type="button"
         onClick={(e) => {
           e.stopPropagation();
-          core.handleAddToCart(e);
+          if (onEnquire) {
+            onEnquire(product);
+          } else {
+            core.navigateToProduct();
+          }
         }}
-        disabled={core.outOfStock}
-        className="flex-shrink-0 self-center w-10 h-10 rounded-full bg-[#f3f5f8] border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#0b1d3d] hover:text-white transition-colors disabled:opacity-40"
-        aria-label="Add to cart"
+        className="flex-shrink-0 self-center w-10 h-10 rounded-full bg-[#f3f5f8] border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#0F4C81] hover:text-white transition-colors"
+        aria-label="Enquire Now"
       >
-        <FiShoppingBag className="w-[18px] h-[18px]" />
+        <FiMessageSquare className="w-[18px] h-[18px]" />
       </button>
     </div>
   );

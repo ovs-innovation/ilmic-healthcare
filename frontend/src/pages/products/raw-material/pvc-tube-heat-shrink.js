@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="PVC Tube & Heat Shrink | Elecmoon"
+      title="PVC Tube & Heat Shrink | Kure Pharma"
       description="Explore our high-quality PVC Tube & Heat Shrink solutions for your business needs."
     >
       {/* Hero Section */}

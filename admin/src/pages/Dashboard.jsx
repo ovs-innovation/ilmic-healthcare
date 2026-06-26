@@ -28,7 +28,6 @@ import TableLoading from "@/components/preloader/TableLoading";
 import NotFound from "@/components/table/NotFound";
 import PageTitle from "@/components/Typography/PageTitle";
 import LeadServices from "@/services/LeadServices";
-import OrderServices from "@/services/OrderServices";
 import AnimatedContent from "@/components/common/AnimatedContent";
 
 const Dashboard = () => {
@@ -48,75 +47,11 @@ const Dashboard = () => {
     () => LeadServices.getDashboardRecentLeads({ page: 1, limit: 8 })
   );
 
-  // Order statistics (Admin)
-  const { data: dashboardOrderCount, loading: loadingOrderCount } = useAsync(
-    OrderServices.getDashboardCount
-  );
-  const { data: dashboardOrderAmount, loading: loadingOrderAmount } = useAsync(
-    OrderServices.getDashboardAmount
-  );
-  const { data: dashboardRecentOrders, loading: loadingRecentOrders } = useAsync(
-    () => OrderServices.getDashboardRecentOrder({ page: 1, limit: 8 })
-  );
-
   return (
     <>
       <PageTitle>{t("DashboardOverview")}</PageTitle>
 
       <AnimatedContent>
-        {/* Order Statistics Section */}
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 my-8">
-          <CardItem
-            title="Total Orders"
-            Icon={FiShoppingBag}
-            loading={loadingOrderCount}
-            quantity={dashboardOrderCount?.totalOrder || 0}
-            className="text-purple-600 dark:text-purple-100 bg-purple-100 dark:bg-purple-500"
-          />
-          <CardItem
-            title="Pending Orders"
-            Icon={FiClock}
-            loading={loadingOrderCount}
-            quantity={dashboardOrderCount?.totalPendingOrder?.count || 0}
-            className="text-yellow-600 dark:text-yellow-100 bg-yellow-100 dark:bg-yellow-500"
-          />
-          <CardItem
-            title="Processing Orders"
-            Icon={FiTruck}
-            loading={loadingOrderCount}
-            quantity={dashboardOrderCount?.totalProcessingOrder || 0}
-            className="text-blue-600 dark:text-blue-100 bg-blue-100 dark:bg-blue-500"
-          />
-          <CardItem
-            title="Delivered Orders"
-            Icon={FiCheck}
-            loading={loadingOrderCount}
-            quantity={dashboardOrderCount?.totalDeliveredOrder || 0}
-            className="text-green-600 dark:text-green-100 bg-green-100 dark:bg-green-500"
-          />
-        </div>
-
-        <div className="grid gap-2 mb-8 xl:grid-cols-2 md:grid-cols-2">
-          <CardItemTwo
-            mode={mode}
-            title="Total Revenue"
-            Icon={FiCreditCard}
-            price={dashboardOrderAmount?.totalAmount?.tAmount || 0}
-            className="text-white dark:text-green-100 bg-green-600"
-            loading={loadingOrderAmount}
-            title2="Total Revenue"
-          />
-          <CardItemTwo
-            mode={mode}
-            title="This Month Revenue"
-            Icon={FiCreditCard}
-            price={dashboardOrderAmount?.thisMonthOrderAmount?.tAmount || 0}
-            className="text-white dark:text-purple-100 bg-purple-600"
-            loading={loadingOrderAmount}
-            title2="This Month Revenue"
-          />
-        </div>
-
         {/* Lead Statistics Section */}
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4 my-8">
           <CardItem
@@ -194,63 +129,6 @@ const Dashboard = () => {
         </div>
       </AnimatedContent>
 
-      {/* Recent Orders Section */}
-      <PageTitle>Recent Orders</PageTitle>
-
-      {loadingRecentOrders ? (
-        <TableLoading row={5} col={6} />
-      ) : dashboardRecentOrders?.orders?.length > 0 ? (
-        <TableContainer className="mb-8">
-          <Table>
-            <TableHeader>
-              <tr>
-                <TableCell>User</TableCell>
-                <TableCell>Products</TableCell>
-                <TableCell>Payment</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Total</TableCell>
-                <TableCell>Date</TableCell>
-              </tr>
-            </TableHeader>
-            <tbody>
-              {dashboardRecentOrders.orders.map((order) => (
-                <tr key={order._id} className="hover:bg-green-50 dark:hover:bg-gray-700">
-                  <TableCell>{order?.user_info?.name || "—"}</TableCell>
-                  <TableCell>
-                    <div className="text-sm">
-                      <div className="font-semibold text-gray-700 dark:text-gray-200">
-                        {order?.cart?.[0]?.title || "—"}
-                      </div>
-                      {Array.isArray(order?.cart) && order.cart.length > 1 && (
-                        <div className="text-xs text-gray-500">
-                          +{order.cart.length - 1} more
-                        </div>
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>{order?.paymentMethod || "—"}</TableCell>
-                  <TableCell>{order?.status || "—"}</TableCell>
-                  <TableCell>{order?.total || 0}</TableCell>
-                  <TableCell>
-                    {order?.createdAt ? new Date(order.createdAt).toLocaleString() : "—"}
-                  </TableCell>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-          <TableFooter>
-            <Pagination
-              totalResults={dashboardRecentOrders?.totalOrder || 0}
-              resultsPerPage={8}
-              onChange={() => {}}
-              label="Table navigation"
-            />
-          </TableFooter>
-        </TableContainer>
-      ) : (
-        <NotFound title="Sorry, There are no orders right now." />
-      )}
-
       {/* Recent Leads Section */}
       <PageTitle>Recent Leads</PageTitle>
 
@@ -270,7 +148,7 @@ const Dashboard = () => {
             </TableHeader>
             <tbody>
               {dashboardRecentLeads.leads.map((lead) => (
-                <tr key={lead._id} className="hover:bg-green-50 dark:hover:bg-gray-700">
+                <tr key={lead._id} className="hover:bg-blue-50 dark:hover:bg-gray-700">
                   <TableCell>{lead.name}</TableCell>
                   <TableCell>{lead.email}</TableCell>
                   <TableCell>{lead.phone}</TableCell>

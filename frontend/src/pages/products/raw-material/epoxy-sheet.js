@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Epoxy Sheet | Elecmoon"
+      title="Epoxy Sheet | Kure Pharma"
       description="Explore our high-quality Epoxy Sheet solutions for your business needs."
     >
       {/* Hero Section */}

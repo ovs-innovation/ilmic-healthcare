@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Cell Holder | Elecmoon"
+      title="Cell Holder | Kure Pharma"
       description="Explore our high-quality Cell Holder solutions for your business needs."
     >
       {/* Hero Section */}

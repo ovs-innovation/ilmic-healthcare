@@ -79,8 +79,8 @@ const EnergyStorageSystem = () => {
 
     return (
         <Layout
-            title="Energy Storage System | Elecmoon"
-            description="Explore Elecmoon's advanced Energy Storage Systems — residential, commercial, and industrial battery storage solutions with high energy density and long cycle life."
+            title="Energy Storage System | Kure Pharma"
+            description="Explore Kure Pharma's advanced Energy Storage Systems — residential, commercial, and industrial battery storage solutions with high energy density and long cycle life."
         >
             {/* Hero Section */}
             <div className="relative bg-[#0b1d3d] text-white min-h-[420px] flex items-center overflow-hidden">

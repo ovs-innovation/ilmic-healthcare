@@ -2,7 +2,7 @@ const { default: Image } = require("next/image");
 const { useEffect, useState } = require("react");
 
 const fallbackImage =
-  "https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png";
+  "/no-result.svg";
 
 const ImageWithFallback = ({
   fallback = fallbackImage,

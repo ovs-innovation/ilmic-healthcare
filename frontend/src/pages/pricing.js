@@ -45,7 +45,7 @@ const Pricing = () => {
       {/* Hero */}
       <div className="relative bg-[#111] text-white min-h-[280px] sm:min-h-[340px] lg:min-h-[420px]">
         <Image
-          src="https://www.Elecmoon.com.au/wp-content/uploads/al_opt_content/IMAGE/www.Elecmoon.com.au/wp-content/uploads/2025/02/Microwave-Testing.jpg.bv.webp"
+          src="https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/2025/02/Microwave-Testing.jpg.bv.webp"
           alt="Hero background"
           fill
           className="object-cover opacity-40"
@@ -64,10 +64,10 @@ const Pricing = () => {
         <div className="max-w-screen-2xl mx-auto px-4 sm:px-10 py-10 sm:py-14 lg:py-20 grid lg:grid-cols-2 gap-8 lg:gap-16 items-start lg:items-stretch">
           <div className="space-y-4 sm:space-y-6 lg:space-y-7 flex flex-col justify-center h-full order-2 lg:order-1">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
-              Save Cost on Test &amp; Tag in Melbourne with Elecmoon
+              Save Cost on Test &amp; Tag in Melbourne with Kure Pharma
             </h2>
             <p className="text-base sm:text-lg leading-7 sm:leading-8 text-gray-800">
-              Based in Melbourne, Elecmoon Test &amp; Tag Melbourne offers electrical testing
+              Based in Melbourne, Kure Pharma Test &amp; Tag Melbourne offers electrical testing
               and tagging services in Melbourne with full compliance to test and tag
               regulations that apply for Victoria. We are an experienced team of smart and
               skilled professionals, with full public liability cover and competence in test
@@ -85,7 +85,7 @@ const Pricing = () => {
           </div>
           <div className="relative w-full min-h-[260px] sm:min-h-[360px] lg:min-h-[520px] xl:min-h-[560px] rounded-lg overflow-hidden shadow-lg order-1 lg:order-2">
             <Image
-              src="https://www.Elecmoon.com.au/wp-content/uploads/2025/02/crop-mounter-measuring-voltage_23-2147743122-768x512.avif"
+              src="https://kurepharma.com/wp-content/uploads/2025/02/crop-mounter-measuring-voltage_23-2147743122-768x512.avif"
               alt="Testing panel"
               fill
               className="object-cover"
@@ -182,7 +182,7 @@ const Pricing = () => {
           </div>
           <div className="relative w-full min-h-[240px] sm:min-h-[320px] lg:min-h-[400px] rounded-lg overflow-hidden shadow-lg order-1 lg:order-2">
             <Image
-              src="https://www.Elecmoon.com.au/wp-content/uploads/2025/03/test-and-tag-prices-Melbourne-1.jpg"
+              src="https://kurepharma.com/wp-content/uploads/2025/03/test-and-tag-prices-Melbourne-1.jpg"
               alt="Multimeter"
               fill
               className="object-cover"
@@ -195,7 +195,7 @@ const Pricing = () => {
           <div className="max-w-screen-2xl mx-auto px-4 sm:px-10 pb-10 sm:pb-16 grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
             <div className="relative w-full min-h-[240px] sm:min-h-[360px] lg:min-h-[520px] rounded-lg overflow-hidden shadow-lg order-1">
               <Image
-                src="https://www.Elecmoon.com.au/wp-content/uploads/2025/03/best-test-and-tag-prices-Melbourne.jpg"
+                src="https://kurepharma.com/wp-content/uploads/2025/03/best-test-and-tag-prices-Melbourne.jpg"
                 alt="Equipment testing"
                 fill
                 className="object-cover"

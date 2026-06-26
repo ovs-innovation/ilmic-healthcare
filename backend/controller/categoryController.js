@@ -18,20 +18,52 @@ const resolveCategorySlug = (body = {}, existingSlug = "") => {
   return fromName || existingSlug || "";
 };
 
+const ensureUniqueCategorySlug = async (baseSlug, excludeId = null) => {
+  const normalizedBase = String(baseSlug || "").trim().toLowerCase();
+  if (!normalizedBase) return normalizedBase;
+
+  let slug = normalizedBase;
+  let counter = 2;
+
+  while (true) {
+    const query = { slug };
+    if (excludeId) {
+      query._id = { $ne: excludeId };
+    }
+
+    const existing = await Category.findOne(query).select("_id").lean();
+    if (!existing) {
+      return slug;
+    }
+
+    slug = `${normalizedBase}-${counter}`;
+    counter += 1;
+  }
+};
+
+const formatCategoryError = (err) => {
+  if (err?.code === 11000 && String(err.message).includes("slug")) {
+    return "A category with this name already exists. Please use a different name.";
+  }
+  return err.message;
+};
+
 const addCategory = async (req, res) => {
   try {
+    const baseSlug = resolveCategorySlug(req.body);
     const payload = {
       ...req.body,
-      slug: resolveCategorySlug(req.body),
+      slug: await ensureUniqueCategorySlug(baseSlug),
     };
     const newCategory = new Category(payload);
     await newCategory.save();
     res.status(200).send({
       message: "Category Added Successfully!",
+      category: newCategory,
     });
   } catch (err) {
     res.status(500).send({
-      message: err.message,
+      message: formatCategoryError(err),
     });
   }
 };
@@ -156,18 +188,23 @@ const updateCategory = async (req, res) => {
       };
       category.icon = req.body.icon;
       category.status = req.body.status;
-      category.parentId = req.body.parentId
-        ? req.body.parentId
-        : category.parentId;
-      category.parentName = req.body.parentName;
-      category.slug = resolveCategorySlug(req.body, category.slug);
+      if (req.body.parentId) {
+        category.parentId = req.body.parentId;
+      }
+      if (req.body.parentName !== undefined) {
+        category.parentName = req.body.parentName;
+      }
+      const baseSlug = resolveCategorySlug(req.body, category.slug);
+      category.slug = await ensureUniqueCategorySlug(baseSlug, category._id);
 
       await category.save();
-      res.send({ message: "Category Updated Successfully!" });
+      return res.send({ message: "Category Updated Successfully!" });
     }
+
+    return res.status(404).send({ message: "Category not found." });
   } catch (err) {
     res.status(500).send({
-      message: err.message,
+      message: formatCategoryError(err),
     });
   }
 };

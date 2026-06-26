@@ -1,8 +1,8 @@
 {
-  "name": "elecmoon-store",
+  "name": "kure-pharma-store",
   "version": "0.1.0",
-  "description": "Elecmoon customer storefront built with Next.js and Tailwind CSS",
-  "homepage": "https://elecmoon.vercel.app/",
+  "description": "Kure Pharma customer storefront built with Next.js and Tailwind CSS",
+  "homepage": "https://kurepharma.com/",
   "private": true,
   "scripts": {
     "dev": "next dev",

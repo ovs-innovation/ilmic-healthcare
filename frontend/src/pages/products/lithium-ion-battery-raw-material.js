@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Lithium-ion Battery Raw Material | Elecmoon"
+      title="Lithium-ion Battery Raw Material | Kure Pharma"
       description="Explore our high-quality Lithium-ion Battery Raw Material solutions for your business needs."
     >
       {/* Hero Section */}

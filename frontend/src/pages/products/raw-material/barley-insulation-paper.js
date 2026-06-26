@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="Barley and Insulation Paper | Elecmoon"
+      title="Barley and Insulation Paper | Kure Pharma"
       description="Explore our high-quality Barley and Insulation Paper solutions for your business needs."
     >
       {/* Hero Section */}

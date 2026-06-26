@@ -14,6 +14,7 @@ const EditDeleteButton = ({
   product,
   parent,
   children,
+  viewPath,
 }) => {
   const { t } = useTranslation();
   // console.log('edite delet button')
@@ -23,7 +24,7 @@ const EditDeleteButton = ({
         {children?.length > 0 ? (
           <>
             <Link
-              to={`/categories/${parent?._id}`}
+              to={viewPath || `/categories/${parent?._id}`}
               className="p-2 cursor-pointer text-gray-400 hover:text-green-600 focus:outline-none"
             >
               <Tooltip

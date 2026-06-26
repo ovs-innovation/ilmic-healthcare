@@ -81,7 +81,7 @@ const CouponTable = ({ isCheck, coupons, setIsCheck }) => {
                   />
                 ) : (
                   <Avatar
-                    src={`https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png`}
+                    src={`https://res.cloudinary.com/dkuwefj17/image/upload/v1655097002/placeholder_kvepfp.png`}
                     alt="product"
                   />
                 )}

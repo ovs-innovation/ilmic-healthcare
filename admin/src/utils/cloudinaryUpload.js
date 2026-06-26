@@ -55,7 +55,7 @@ const validateCloudinaryEnv = ({ uploadUrl, uploadPreset, cloudName }) => {
   }
 
   if (isMissingEnvValue(cloudName)) {
-    return "VITE_APP_CLOUD_NAME is missing or invalid. Rebuild admin after setting .env.";
+    return "VITE_APP_CLOUD_NAME or VITE_APP_CLOUDINARY_CLOUD_NAME is missing or invalid. Rebuild admin after setting .env.";
   }
 
   const normalizedUrl = normalizeEnvValue(uploadUrl);
@@ -68,7 +68,7 @@ const validateCloudinaryEnv = ({ uploadUrl, uploadPreset, cloudName }) => {
   }
 
   if (cloudNameFromUrl !== normalizedCloudName) {
-    return `Cloudinary config mismatch: URL uses "${cloudNameFromUrl}" but VITE_APP_CLOUD_NAME is "${normalizedCloudName}".`;
+    return `Cloudinary config mismatch: URL uses "${cloudNameFromUrl}" but cloud name is "${normalizedCloudName}".`;
   }
 
   if (!UPLOAD_PRESET_PATTERN.test(normalizedPreset)) {
@@ -81,7 +81,9 @@ const validateCloudinaryEnv = ({ uploadUrl, uploadPreset, cloudName }) => {
 export const getAdminCloudinaryConfig = () => {
   const uploadUrl = import.meta.env.VITE_APP_CLOUDINARY_URL;
   const uploadPreset = import.meta.env.VITE_APP_CLOUDINARY_UPLOAD_PRESET;
-  const cloudName = import.meta.env.VITE_APP_CLOUD_NAME;
+  const cloudName =
+    import.meta.env.VITE_APP_CLOUD_NAME ||
+    import.meta.env.VITE_APP_CLOUDINARY_CLOUD_NAME;
   const validationError = validateCloudinaryEnv({
     uploadUrl,
     uploadPreset,
@@ -332,3 +334,4 @@ export const uploadPdfToCloudinary = async ({
 
   throw lastError;
 };
+

@@ -6,9 +6,8 @@ import { SidebarContext } from "@/context/SidebarContext";
 import CategoryServices from "@/services/CategoryServices";
 import { notifyError, notifySuccess } from "@/utils/toast";
 import { useImageUploadContext } from "@/context/ImageUploadContext";
-import useTranslationValue from "./useTranslationValue";
 
-const useCategorySubmit = (id, data) => {
+const useCategorySubmit = (id, data, mode = "child", defaultParentId = "") => {
   const { isDrawerOpen, closeDrawer, setIsUpdate, lang } =
     useContext(SidebarContext);
   const [resData, setResData] = useState({});
@@ -20,7 +19,6 @@ const useCategorySubmit = (id, data) => {
   const [selectCategoryName, setSelectCategoryName] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const { handlerTextTranslateHandler } = useTranslationValue();
   const { isUploading } = useImageUploadContext();
 
   const {
@@ -36,6 +34,16 @@ const useCategorySubmit = (id, data) => {
 
   // console.log("resData", resData);
 
+  const buildLocalizedField = (value, language, existing) => {
+    const base =
+      existing && typeof existing === "object" && !Array.isArray(existing)
+        ? { ...existing }
+        : {};
+
+    base[language] = value ? value : "";
+    return base;
+  };
+
   const onSubmit = async ({ name, description }) => {
     try {
       if (isUploading) {
@@ -43,32 +51,26 @@ const useCategorySubmit = (id, data) => {
         return;
       }
 
+      if (!id && mode === "child" && !checked) {
+        notifyError("Please select a parent category first.");
+        return;
+      }
+
       setIsSubmitting(true);
-      const nameTranslates = await handlerTextTranslateHandler(
-        name,
-        language,
-        resData?.name
-      );
-      // console.log("nameTranslates", nameTranslates);
-      // return;
-      const descriptionTranslates = await handlerTextTranslateHandler(
-        description,
-        language,
-        resData?.description
-      );
+
+      const isParentCategory = mode === "parent";
 
       const categoryData = {
-        name: {
-          ...nameTranslates,
-          [language]: name,
-        },
-        description: {
-          ...descriptionTranslates,
-          [language]: description ? description : "",
-        },
-        parentId: checked ? checked : undefined,
-        parentName: selectCategoryName ? selectCategoryName : "Home",
-
+        name: buildLocalizedField(name, language, id ? resData?.name : undefined),
+        description: buildLocalizedField(
+          description,
+          language,
+          id ? resData?.description : undefined
+        ),
+        parentId: isParentCategory || !checked ? undefined : checked,
+        parentName: isParentCategory
+          ? undefined
+          : selectCategoryName || undefined,
         icon: imageUrl,
         status: published ? "show" : "hide",
         lang: language,
@@ -95,7 +97,6 @@ const useCategorySubmit = (id, data) => {
     } catch (err) {
       setIsSubmitting(false);
       notifyError(err ? err?.response?.data?.message : err?.message);
-      closeDrawer();
     }
   };
 
@@ -121,13 +122,10 @@ const useCategorySubmit = (id, data) => {
       clearErrors("parentId");
       clearErrors("parentName");
       clearErrors("description");
-      setSelectCategoryName("Home");
+      setSelectCategoryName("");
       setLanguage(lang);
       setValue("language", language);
-
-      if (data !== undefined && data[0]?._id !== undefined) {
-        setChecked(data[0]._id);
-      }
+      setChecked("");
       return;
     }
     if (id) {
@@ -146,8 +144,8 @@ const useCategorySubmit = (id, data) => {
             setValue("language", language);
             setValue("parentId", res.parentId);
             setValue("parentName", res.parentName);
-            setSelectCategoryName(res.parentName);
-            setChecked(res.parentId);
+            setSelectCategoryName(res.parentName || "Home");
+            setChecked(res.parentId || "");
             setImageUrl(res.icon);
             setPublished(res.status === "show" ? true : false);
           }
@@ -155,8 +153,27 @@ const useCategorySubmit = (id, data) => {
           notifyError(err ? err.response.data.message : err.message);
         }
       })();
+      return;
     }
-  }, [id, setValue, isDrawerOpen, language, clearErrors, data, lang]);
+
+    setChecked("");
+    setSelectCategoryName("");
+    setValue("name", "");
+    setValue("description", "");
+
+    if (mode === "child" && defaultParentId && Array.isArray(data)) {
+      const selectedParent = data.find((cat) => cat._id === defaultParentId);
+      if (selectedParent) {
+        setChecked(defaultParentId);
+        const label =
+          selectedParent.name?.[lang] ||
+          selectedParent.name?.en ||
+          Object.values(selectedParent.name || {})[0] ||
+          "";
+        setSelectCategoryName(label);
+      }
+    }
+  }, [id, setValue, isDrawerOpen, language, clearErrors, data, lang, mode, defaultParentId]);
 
   return {
     register,

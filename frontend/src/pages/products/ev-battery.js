@@ -12,7 +12,7 @@ const ProductPage = () => {
 
   return (
     <Layout
-      title="EV Battery | Elecmoon"
+      title="EV Battery | Kure Pharma"
       description="Explore our high-quality EV Battery solutions for your business needs."
     >
       {/* Hero Section */}

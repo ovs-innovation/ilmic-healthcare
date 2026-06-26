@@ -21,6 +21,10 @@ const SettingServices = {
   getGlobalSetting: async () => {
     return requests.get("/setting/global/all");
   },
+
+  getKureHomepageSetting: async () => {
+    return requests.get("/setting/kure-homepage/all");
+  },
 };
 
 export default SettingServices;

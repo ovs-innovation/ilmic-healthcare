@@ -140,9 +140,9 @@ const myTheme = {
     invalid:
       "border-red-600 dark:bg-gray-700 focus:border-red-400 dark:focus:border-red-400",
     radio:
-      "text-red-600 form-radio focus:border-red-400 focus:outline-none",
+      "text-blue-600 form-radio focus:border-blue-400 focus:outline-none",
     checkbox:
-      "text-red-600 form-checkbox focus:border-red-500 focus:outline-none rounded",
+      "text-blue-600 form-checkbox focus:border-blue-500 focus:outline-none rounded",
   },
   // HelperText
   helperText: {
@@ -185,8 +185,8 @@ const myTheme = {
       right: "ml-2 -mr-1",
     },
     primary: {
-      base: "text-white bg-red-500 border border-transparent",
-      active: "active:bg-red-600 hover:bg-red-600",
+      base: "text-white bg-blue-600 border border-transparent",
+      active: "active:bg-blue-700 hover:bg-blue-700",
       disabled: "opacity-50 cursor-not-allowed",
     },
     modern: {

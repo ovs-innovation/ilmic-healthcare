@@ -8,7 +8,7 @@ import {
   Font,
 } from "@react-pdf/renderer";
 import React from "react";
-import elecmoonLogo from "@/assets/img/logo/elecmoon-logo.jpg";
+import kureLogo from "@/assets/img/logo/logo.png";
 
 Font.register({
   family: "Open Sans",
@@ -82,7 +82,7 @@ const InvoiceForDownload = ({ data, currency, globalSetting, showDateFormat, get
       <Page size="A4" style={S.page}>
         <View style={S.headerRow}>
           <View style={{ width: "55%" }}>
-            <Image src={elecmoonLogo} style={S.logo} />
+            <Image src={kureLogo} style={S.logo} />
             <Text style={S.companyName}>{globalSetting?.company_name || "ECOMPASS LLP"}</Text>
             <Text style={S.companyInfoText}>{globalSetting?.address || "#47, New Anaj Mandi Sector 16, Faridabad - 121002, India"}</Text>
             <Text style={S.companyInfoText}>{`${globalSetting?.email || "ecompassllp@gmail.com"} | GSTIN: ${globalSetting?.vat_number || "06AAIFE7762K1Z0"}`}</Text>

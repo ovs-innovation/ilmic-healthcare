@@ -60,7 +60,7 @@ export const storeCustomization = {
       de: "Kasse",
     },
     phone: "+91 9717372217",
-    logo: "https://res.cloudinary.com/ahossain/image/upload/v1697687802/settings/logo-light_hls14v.svg",
+    logo: "https://res.cloudinary.com/dkuwefj17/image/upload/v1697687802/settings/logo-light_hls14v.svg",
   },
   home: {
     coupon_status: true,
@@ -118,8 +118,8 @@ export const storeCustomization = {
       de: "Schnelle Lieferung zu Ihnen nach Hause",
     },
     quick_delivery_description: {
-      en: "There are many products you will find in our shop, Choose your daily necessary product from our Elecmoon shop and get some special offers. See Our latest discounted products from here and get a special discount.",
-      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihr täglich benötigtes Produkt aus unserem Elecmoon-Shop und erhalten Sie einige Sonderangebote. Sehen Sie sich hier unsere neuesten reduzierten Produkte an und sichern Sie sich einen Sonderrabatt.",
+      en: "There are many products you will find in our shop. Choose your daily essentials from Kure Pharma and enjoy special offers and fast delivery.",
+      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihren täglichen Bedarf bei Kure Pharma und profitieren Sie von Sonderangeboten und schneller Lieferung.",
     },
     quick_delivery_button: {
       en: "Download App",
@@ -127,7 +127,7 @@ export const storeCustomization = {
     },
     quick_delivery_link: "#",
     quick_delivery_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688032/settings/delivery-boy_rluuoq.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688032/settings/delivery-boy_rluuoq.webp",
     latest_discount_title: {
       en: "Latest Discounted Products",
       de: "Neueste reduzierte Produkte",
@@ -138,24 +138,24 @@ export const storeCustomization = {
     },
     latest_discount_product_limit: 18,
     daily_need_title: {
-      en: "Get Your Daily Needs From Our Elecmoon Store",
-      de: "Holen Sie sich Ihren täglichen Bedarf in Ihrem CloudCleaver-Shop",
+      en: "Get Your Daily Needs From Kure Pharma",
+      de: "Holen Sie sich Ihren täglichen Bedarf bei Kure Pharma",
     },
     daily_need_description: {
-      en: "There are many products you will find in our shop, Choose your daily necessary product from our Elecmoon shop and get some special offers.",
-      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihr täglich benötigtes Produkt aus unserem Elecmoon-Shop und erhalten Sie einige Sonderangebote.",
+      en: "There are many products you will find in our shop. Choose your daily essentials from Kure Pharma and enjoy special offers.",
+      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihren täglichen Bedarf bei Kure Pharma und profitieren Sie von Sonderangeboten.",
     },
     daily_need_app_link: "https://www.apple.com/app-store/",
     daily_need_google_link:
       "https://play.google.com/store/games?utm_source=apac_med&utm_medium=hasem&utm_content=Jun0122&utm_campaign=Evergreen&pcampaignid=MKT-EDR-apac-lk-1003227-med-hasem-py-Evergreen-Jun0122-Text_Search_BKWS-BKWS%7CONSEM_kwid_43700071429441653_creativeid_600975795576_device_c&gclid=CjwKCAjwwo-WBhAMEiwAV4dybdy60tnQqCSnQ-cXShNnEcxmaBx2I6iwwc_WEqoA5sN9YSLJEXh9fBoC3u4QAvD_BwE&gclsrc=aw.ds",
     daily_need_img_left:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688091/settings/app-download-img-left_s5n2zf.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688091/settings/app-download-img-left_s5n2zf.webp",
     daily_need_img_right:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688091/settings/app-download-img_c7xqg4.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688091/settings/app-download-img_c7xqg4.webp",
     button1_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688165/settings/app-store_cyyc0f.svg",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688165/settings/app-store_cyyc0f.svg",
     button2_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688167/settings/play-store_cavwua.svg",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688167/settings/play-store_cavwua.svg",
   },
   about_us: {
     header_status: true,
@@ -163,31 +163,30 @@ export const storeCustomization = {
     content_right_status: true,
     content_middle_status: true,
     founder_status: true,
-    header_bg:
-      "",
+    header_bg: "",
     content_right_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439245/settings/v7g6gowiju0wanpwx70f.jpg",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439245/settings/v7g6gowiju0wanpwx70f.jpg",
     content_middle_Img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439195/settings/sl8vzvzm54jgzq6sphn2.jpg",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439195/settings/sl8vzvzm54jgzq6sphn2.jpg",
     founder_one_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439688/settings/team-1_acjmv7.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439688/settings/team-1_acjmv7.webp",
     founder_two_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439689/settings/team-2_dw7zs1.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439689/settings/team-2_dw7zs1.webp",
     founder_three_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439689/settings/team-3_ld3323.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439689/settings/team-3_ld3323.webp",
     founder_four_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439689/settings/team-4_i7jvx7.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439689/settings/team-4_i7jvx7.webp",
     founder_five_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439689/settings/team-5_ylyklw.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439689/settings/team-5_ylyklw.webp",
     founder_six_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697439689/settings/team-6_gmlts4.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439689/settings/team-6_gmlts4.webp",
     title: {
       en: "About Us",
       de: "Über uns",
     },
     top_title: {
-      en: "Welcome to our Elecmoon shop",
-      de: "Willkommen in unserem Elecmoon-Shop",
+      en: "Welcome to Kure Pharma",
+      de: "Willkommen bei Kure Pharma",
     },
     top_description: {
       en: "Holisticly seize parallel metrics and functional ROI.Seamlessly revolutionize error-free internal or organic sources before effective scenarios. Progressively incentivize state of the art applications for efficient intellectual capital. Credibly leverage existing distinctive mindshare through cutting-edge schemas. Proactively procrastinate team building paradigms coordinate client-centric total transparent internal.\n\nDynamically embrace diverse customer service and installed base paradigms. Credibly seize enterprise-wide experiences for end-to-end data. Professionally brand flexible alignments and cost effective architectures. Enthusiastically incentivize seamless communities with seamlessly facilitate revolutionary metrics with strategic theme areas.",
@@ -289,10 +288,9 @@ export const storeCustomization = {
     address_box_status: true,
     left_col_status: true,
     form_status: true,
-    header_bg:
-      "",
+    header_bg: "",
     left_col_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697472924/settings/contact-us_zvwn2n.png",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697472924/settings/contact-us_zvwn2n.png",
     title: {
       en: "Contact Us",
       de: "Kontaktiere uns",
@@ -302,8 +300,8 @@ export const storeCustomization = {
       de: "Schreiben Sie uns eine E-Mail",
     },
     email_box_email: {
-      en: "elecmoonofficial@gmail.com",
-      de: "elecmoonofficial@gmail.com",
+      en: "hello@kurepharma.com",
+      de: "hello@kurepharma.com",
     },
     email_box_text: {
       en: "Interactively grow empowered for process-centric total linkage. ",
@@ -348,8 +346,7 @@ export const storeCustomization = {
   },
   offers: {
     header_status: true,
-    header_bg:
-      "",
+    header_bg: "",
     title: {
       en: "Mega Offer",
       de: "Mega Angebot",
@@ -408,17 +405,16 @@ export const storeCustomization = {
     page_status: true,
     leftcol_status: true,
     rightcol_status: true,
-    header_bg:
-      "",
+    header_bg: "",
     left_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697687955/settings/faq_qr1y1h.svg",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697687955/settings/faq_qr1y1h.svg",
     title: {
       en: "FAQs",
       de: "Häufig gestellte Fragen",
     },
     faq_one: {
-      en: "How does the Elecmoon work?",
-      de: "Wie funktioniert der Elecmoon?",
+      en: "How does the Kure Pharma work?",
+      de: "Wie funktioniert der Kure Pharma?",
     },
     description_one: {
       en: "Yes. You can cancel your subscription anytime. Your subscription will continue to be active until the end of your current term (month or year) but it will not auto-renew. Unless you delete your account manually, your account and all data will be deleted 60 days from the day your subscription becomes inactive.",
@@ -449,15 +445,15 @@ export const storeCustomization = {
       de: "Continually impact seamless imperatives for best-of-breed\nbest practices. Phosfluorescently facilitate parallel\n                      applications with unique imperatives. Proactively\n                      plagiarize functionalized deliverables via inexpensive\n                      solutions. Collaboratively embrace web-enabled\n                      infomediaries rather than diverse testing procedures.",
     },
     faq_five: {
-      en: "What is Elecmoon EC2 auto scaling?",
-      de: "Was ist die automatische Skalierung von Elecmoon EC2?",
+      en: "What is Kure Pharma EC2 auto scaling?",
+      de: "Was ist die automatische Skalierung von Kure Pharma EC2?",
     },
     description_five: {
       en: "Continually impact seamless imperatives for best-of-breed best practices. Phosfluorescently facilitate parallel applications with unique imperatives. Proactively plagiarize functionalized deliverables via inexpensive solutions. Collaboratively embrace web-enabled infomediaries rather than diverse testing procedures.",
       de: "Kontinuierliche Umsetzung nahtloser Anforderungen für Best-of-Breed-Best Practices. Phosfluoreszierend erleichtert parallele Anwendungen mit einzigartigen Anforderungen. Plagiieren Sie proaktiv funktionalisierte Ergebnisse mit kostengünstigen Lösungen. Nutzen Sie gemeinsam webbasierte Infomediaries anstelle verschiedener Testverfahren.",
     },
     faq_six: {
-      en: "What are the benefits of using Elecmoon affliate?",
+      en: "What are the benefits of using Kure Pharma affliate?",
       de: "Welche Vorteile bietet die Nutzung eines Cloud Clever-Partners?",
     },
     description_six: {
@@ -787,20 +783,20 @@ export const storeCustomization = {
     },
     block3_sub_link4: "/user/update-profile",
     block4_logo:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688576/settings/logo-color_el4zmy.svg",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688576/settings/logo-color_el4zmy.svg",
     block4_address: {
       en: "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN",
       de: "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN",
     },
     block4_phone: "+91 9717372217",
-    block4_email: "elecmoonofficial@gmail.com",
+    block4_email: "hello@kurepharma.com",
     social_facebook: "https://www.facebook.com/",
     social_twitter: "https://twitter.com/",
     social_pinterest: "https://www.pinterest.com/",
     social_linkedin: "https://www.linkedin.com/",
     social_whatsapp: "https://web.whatsapp.com/",
     payment_method_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1697688607/settings/payment-logo_qhslgz.webp",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688607/settings/payment-logo_qhslgz.webp",
     bottom_contact: "+91 9717372217",
   },
   slug: {
@@ -836,12 +832,12 @@ export const storeCustomization = {
   },
   seo: {
     favicon: "/favicon.png",
-    meta_description: "React Grocery & Organic Food Store e-commerce Template",
+    meta_description:
+      "Kure Pharma online store for daily essentials and wellness products",
     meta_img:
-      "https://res.cloudinary.com/ahossain/image/upload/v1636729752/facebook-page_j7alju.png",
+      "https://res.cloudinary.com/dkuwefj17/image/upload/v1636729752/facebook-page_j7alju.png",
     meta_keywords: "e-commerce, online store",
-    meta_title:
-      "Elecmoon - React Grocery & Organic Food Store e-commerce Template",
-    meta_url: "https://Elecmoon-store-nine.vercel.app/",
+    meta_title: "Kure Pharma - Online Store",
+    meta_url: "https://kurepharma.com/",
   },
 };

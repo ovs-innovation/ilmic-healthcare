@@ -1,14 +1,8 @@
 import { Avatar, TableBody, TableCell, TableRow } from "@windmill/react-ui";
-import { Link } from "react-router-dom";
-import { IoRemoveSharp } from "react-icons/io5";
-
-//internal import
 
 import CheckBox from "@/components/form/others/CheckBox";
 import useToggleDrawer from "@/hooks/useToggleDrawer";
 import DeleteModal from "@/components/modal/DeleteModal";
-import MainDrawer from "@/components/drawer/MainDrawer";
-import CategoryDrawer from "@/components/drawer/CategoryDrawer";
 import ShowHideButton from "@/components/table/ShowHideButton";
 import EditDeleteButton from "@/components/table/EditDeleteButton";
 import useUtilsFunction from "@/hooks/useUtilsFunction";
@@ -20,10 +14,14 @@ const CategoryTable = ({
   categories,
   setIsCheck,
   useParamId,
-  showChild,
+  variant = "parent",
+  parentNameMap = {},
+  handleUpdate: handleUpdateProp,
 }) => {
-  const { title, serviceId, handleModalOpen, handleUpdate } = useToggleDrawer();
+  const { title, serviceId, handleModalOpen, handleUpdate: handleUpdateLocal } =
+    useToggleDrawer();
   const { showingTranslateValue } = useUtilsFunction();
+  const handleUpdate = handleUpdateProp || handleUpdateLocal;
 
   const handleClick = (e) => {
     const { id, checked } = e.target;
@@ -33,15 +31,13 @@ const CategoryTable = ({
     }
   };
 
+  const isSubVariant = variant === "sub";
+
   return (
     <>
       {isCheck?.length < 1 && (
         <DeleteModal useParamId={useParamId} id={serviceId} title={title} />
       )}
-
-      <MainDrawer>
-        <CategoryDrawer id={serviceId} data={data} lang={lang} />
-      </MainDrawer>
 
       <TableBody>
         {categories?.map((category) => (
@@ -68,52 +64,36 @@ const CategoryTable = ({
                 />
               ) : (
                 <Avatar
-                  src="https://res.cloudinary.com/ahossain/image/upload/v1655097002/placeholder_kvepfp.png"
+                  src="/no-result.svg"
                   alt="product"
                   className="hidden p-1 mr-2 md:block bg-gray-50 shadow-none"
                 />
               )}
             </TableCell>
 
-            <TableCell className="font-medium text-sm ">
-              {category?.children.length > 0 ? (
-                <Link
-                  to={`/categories/${category?._id}`}
-                  className="text-blue-700"
-                >
-                  {showingTranslateValue(category?.name)}
-
-                  <>
-                    {showChild && (
-                      <>
-                        {" "}
-                        <div className="pl-2 ">
-                          {category?.children?.map((child) => (
-                            <div key={child._id}>
-                              <Link
-                                to={`/categories/${child?._id}`}
-                                className="text-blue-700"
-                              >
-                                <div className="flex text-xs items-center  text-blue-800">
-                                  <span className=" text-xs text-gray-500 pr-1">
-                                    <IoRemoveSharp />
-                                  </span>
-                                  <span className="text-gray-500">
-                                    {showingTranslateValue(child.name)}
-                                  </span>
-                                </div>
-                              </Link>
-                            </div>
-                          ))}
-                        </div>
-                      </>
-                    )}
-                  </>
-                </Link>
-              ) : (
-                <span>{showingTranslateValue(category?.name)}</span>
-              )}
+            <TableCell className="font-medium text-sm">
+              <span className="inline-flex items-center gap-2">
+                {showingTranslateValue(category?.name)}
+                {isSubVariant ? (
+                  <span className="rounded bg-green-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-green-700">
+                    Sub
+                  </span>
+                ) : (
+                  <span className="rounded bg-blue-100 px-2 py-0.5 text-[10px] font-semibold uppercase text-blue-700">
+                    Parent
+                  </span>
+                )}
+              </span>
             </TableCell>
+
+            {isSubVariant ? (
+              <TableCell className="text-sm text-gray-600">
+                {parentNameMap[category.parentId] ||
+                  category.parentName ||
+                  "—"}
+              </TableCell>
+            ) : null}
+
             <TableCell className="text-sm">
               {showingTranslateValue(category?.description)}
             </TableCell>
@@ -130,10 +110,15 @@ const CategoryTable = ({
                 id={category?._id}
                 parent={category}
                 isCheck={isCheck}
-                children={category?.children}
+                children={isSubVariant ? [] : category?.children}
                 handleUpdate={handleUpdate}
                 handleModalOpen={handleModalOpen}
                 title={showingTranslateValue(category?.name)}
+                viewPath={
+                  !isSubVariant && category?.children?.length > 0
+                    ? `/sub-categories?parent=${category._id}`
+                    : undefined
+                }
               />
             </TableCell>
           </TableRow>

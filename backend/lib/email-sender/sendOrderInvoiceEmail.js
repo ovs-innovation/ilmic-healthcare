@@ -11,7 +11,7 @@ const formatOrderDate = (date) => {
 
 const buildCompanyInfo = (globalSetting = {}) => ({
   currency: globalSetting.default_currency || "₹",
-  company: globalSetting.company_name || "Elecmoon",
+  company: globalSetting.company_name || "Kure Pharma",
   address: globalSetting.address || "",
   phone: globalSetting.contact || "",
   email: globalSetting.email || "",
@@ -21,7 +21,7 @@ const buildCompanyInfo = (globalSetting = {}) => ({
     globalSetting.from_email ||
     globalSetting.email ||
     process.env.EMAIL_USER ||
-    "sales@Elecmoon.com",
+    "info@kurepharma.com",
 });
 
 const buildInvoicePayload = (order, globalSetting = {}) => {
