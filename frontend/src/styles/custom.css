@@ -1928,8 +1928,7 @@ p:not(:last-of-type) {
   color: white !important;
 }
 
-
-/* Override all Tailwind red colors with #ED1C24 */
+/* Override all Tailwind red colors with #E85B18 (Saffron Orange) */
 .text-red-50,
 .text-red-100,
 .text-red-200,
@@ -1940,7 +1939,7 @@ p:not(:last-of-type) {
 .text-red-700,
 .text-red-800,
 .text-red-900 {
-  color: #ED1C24 !important;
+  color: #E85B18 !important;
 }
 
 .bg-red-50,
@@ -1953,7 +1952,7 @@ p:not(:last-of-type) {
 .bg-red-700,
 .bg-red-800,
 .bg-red-900 {
-  background-color: #ED1C24 !important;
+  background-color: #E85B18 !important;
 }
 
 .border-red-50,
@@ -1966,7 +1965,7 @@ p:not(:last-of-type) {
 .border-red-700,
 .border-red-800,
 .border-red-900 {
-  border-color: #ED1C24 !important;
+  border-color: #E85B18 !important;
 }
 
 .hover\:text-red-50:hover,
@@ -1979,7 +1978,7 @@ p:not(:last-of-type) {
 .hover\:text-red-700:hover,
 .hover\:text-red-800:hover,
 .hover\:text-red-900:hover {
-  color: #ED1C24 !important;
+  color: #E85B18 !important;
 }
 
 .hover\:bg-red-50:hover,
@@ -1992,7 +1991,7 @@ p:not(:last-of-type) {
 .hover\:bg-red-700:hover,
 .hover\:bg-red-800:hover,
 .hover\:bg-red-900:hover {
-  background-color: #ED1C24 !important;
+  background-color: #E85B18 !important;
 }
 
 .focus\:ring-red-50:focus,
@@ -2005,7 +2004,7 @@ p:not(:last-of-type) {
 .focus\:ring-red-700:focus,
 .focus\:ring-red-800:focus,
 .focus\:ring-red-900:focus {
-  --tw-ring-color: #ED1C24 !important;
+  --tw-ring-color: #E85B18 !important;
 }
 
 .focus\:border-red-50:focus,
@@ -2018,7 +2017,7 @@ p:not(:last-of-type) {
 .focus\:border-red-700:focus,
 .focus\:border-red-800:focus,
 .focus\:border-red-900:focus {
-  border-color: #ED1C24 !important;
+  border-color: #E85B18 !important;
 }
 
 /* Override hex red colors */
@@ -2026,7 +2025,7 @@ p:not(:last-of-type) {
 [style*="#EF4036"],
 [style*="#C53030"],
 [style*="#FF8E8E"] {
-  color: #ED1C24 !important;
+  color: #E85B18 !important;
 }
 
 
@@ -2050,11 +2049,16 @@ p:not(:last-of-type) {
 }
 
 /* Final overrides to ensure colors are correct */
+/* ==========================================================
+   TRADITIONAL INDIAN PHARMA AESTHETIC OVERRIDES
+   Palette: Deep Navy #1A2E5B | Maroon #8B1A2E | Antique Gold #B8860B | Cream #FFF9F0
+   ========================================================== */
+
 .custom-navy-button {
-  background-color: #0b1d3d !important;
+  background-color: #1A2E5B !important;
   color: white !important;
   border: none !important;
-  box-shadow: 0 0 15px rgba(255, 255, 255, 0.5) !important;
+  box-shadow: 0 4px 12px rgba(26, 46, 91, 0.35) !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -2063,8 +2067,8 @@ p:not(:last-of-type) {
 }
 
 button.custom-navy-button:hover {
-  background-color: #162542 !important;
-  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6) !important;
+  background-color: #0f1c3a !important;
+  box-shadow: 0 6px 18px rgba(26, 46, 91, 0.45) !important;
 }
 
 .custom-category-item {
@@ -2076,26 +2080,106 @@ button.custom-navy-button:hover {
 }
 
 button.custom-category-item.active {
-  border-left: 4px solid #0b1d3d !important;
+  border-left: 4px solid #8B1A2E !important;
   background-color: white !important;
-  color: #0b1d3d !important;
+  color: #8B1A2E !important;
   font-weight: 700 !important;
 }
 
-
 button.custom-category-item:hover:not(.active) {
-  background-color: #f9fafb !important;
+  background-color: #FFF9F0 !important;
 }
 
-/* Add To Cart Navy Blue Override */
+/* Add To Cart Button */
 .navy-button {
-  background-color: #0b1d3d !important;
+  background-color: #1A2E5B !important;
   color: white !important;
   border: none !important;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+  box-shadow: 0 4px 6px -1px rgba(26, 46, 91, 0.25), 0 2px 4px -1px rgba(26, 46, 91, 0.15) !important;
 }
 
 .navy-button:hover {
-  background-color: #162542 !important;
+  background-color: #0f1c3a !important;
   transform: translateY(-1px);
+}
+
+/* Page background — warm cream */
+body {
+  background-color: #FFF9F0 !important;
+}
+
+/* No top border on header/nav */
+header, nav, .header-container {
+  border-top: none !important;
+}
+
+/* Map old corporate blue to Deep Traditional Navy */
+.bg-\[\#0b1d3d\],
+.bg-\[\#051124\],
+.bg-\[\#0A1D37\],
+.bg-pharma-primary {
+  background-color: #1A2E5B !important;
+}
+
+.hover\:bg-\[\#0b1d3d\]:hover,
+.hover\:bg-\[\#0a3460\]:hover,
+.hover\:bg-\[\#162542\]:hover {
+  background-color: #0f1c3a !important;
+}
+
+.text-\[\#0b1d3d\],
+.text-\[\#051124\],
+.text-\[\#0A1D37\],
+.text-pharma-primary {
+  color: #1A2E5B !important;
+}
+
+.hover\:text-\[\#0b1d3d\]:hover,
+.hover\:text-pharma-primary:hover {
+  color: #0f1c3a !important;
+}
+
+.border-\[\#0b1d3d\],
+.border-\[\#0A1D37\],
+.border-pharma-primary {
+  border-color: #1A2E5B !important;
+}
+
+/* Map old red to Rich Maroon/Burgundy */
+.bg-\[\#C1272D\],
+.bg-\[\#d35400\],
+.bg-pharma-secondary,
+.bg-\[\#ED1C24\] {
+  background-color: #8B1A2E !important;
+}
+
+.text-\[\#ED1C24\] {
+  color: #8B1A2E !important;
+}
+
+.hover\:bg-\[\#C1272D\]:hover,
+.hover\:bg-red-700:hover,
+.hover\:bg-\[\#c03f00\]:hover {
+  background-color: #6d1424 !important;
+}
+
+.text-\[\#C1272D\],
+.text-pharma-secondary {
+  color: #8B1A2E !important;
+}
+
+.border-\[\#C1272D\],
+.border-pharma-secondary {
+  border-color: #8B1A2E !important;
+}
+
+/* Antique gold utility classes */
+.text-pharma-accent {
+  color: #B8860B !important;
+}
+.bg-pharma-accent {
+  background-color: #B8860B !important;
+}
+.border-pharma-accent {
+  border-color: #B8860B !important;
 }

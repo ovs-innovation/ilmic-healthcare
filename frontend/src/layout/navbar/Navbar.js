@@ -29,7 +29,6 @@ const Navbar = () => {
     { name: "Contact Us", href: "/contact-us" },
   ];
 
-
   const generalProductPlaceholder = {
     _id: "general",
     name: "General Sourcing Enquiry",
@@ -70,8 +69,8 @@ const Navbar = () => {
                   href={item.href}
                   className={`flex items-center gap-0.5 px-3 py-2 rounded text-[15px] font-semibold transition-colors ${
                     isActive(item.href)
-                      ? "text-[#0F4C81] font-bold"
-                      : "text-gray-600 hover:text-[#0F4C81]"
+                      ? "text-[#005A60] font-black"
+                      : "text-gray-600 hover:text-[#005A60]"
                   }`}
                 >
                   {item.name}
@@ -82,19 +81,19 @@ const Navbar = () => {
               ))}
             </nav>
 
-            {/* ── Right: Send Enquiry + Phone (Inline Layout) ── */}
+            {/* ── Right side: Saffron Orange Button + Teal Accent for Call ── */}
             <div className="hidden md:flex items-center gap-5 flex-shrink-0">
               <a
                 href="tel:+919910768201"
-                className="flex items-center gap-1.5 text-[15px] font-bold text-gray-700 hover:text-[#0F4C81] transition-colors"
+                className="flex items-center gap-1.5 text-[15px] font-bold text-gray-700 hover:text-[#005A60] transition-colors"
               >
-                <FiPhoneCall className="w-4 h-4 text-[#0F4C81]" />
+                <FiPhoneCall className="w-4 h-4 text-[#005A60]" />
                 +91 99107 68201
               </a>
               <button
                 type="button"
                 onClick={() => setGenericEnquiryOpen(true)}
-                className="bg-[#0F4C81] hover:bg-[#0a3460] text-white text-[14px] font-bold px-5 py-2.5 rounded-md transition-colors cursor-pointer flex items-center gap-1.5"
+                className="bg-[#E65F00] hover:bg-orange-700 text-white text-[14px] font-black px-5 py-2.5 rounded-md transition-colors cursor-pointer flex items-center gap-1.5 uppercase tracking-wide shadow-sm"
               >
                 Send Enquiry <span className="text-[12px] font-black">↗</span>
               </button>
@@ -132,7 +131,7 @@ const Navbar = () => {
                     onClick={() => setMobileMenuOpen(false)}
                     className={`block px-3 py-3 rounded-lg text-base font-semibold transition-colors ${
                       isActive(item.href)
-                        ? "bg-[#0F4C81]/8 text-[#0F4C81]"
+                        ? "bg-[#005A60]/10 text-[#005A60]"
                         : "text-gray-600 hover:bg-gray-50"
                     }`}
                   >
@@ -143,14 +142,14 @@ const Navbar = () => {
               <div className="border-t border-gray-100 p-5 space-y-3">
                 <a
                   href="tel:+919910768201"
-                  className="flex items-center gap-2 text-base font-semibold text-gray-700"
+                  className="flex items-center gap-2 text-base font-semibold text-gray-700 hover:text-[#005A60]"
                 >
-                  <FiPhoneCall className="w-4 h-4 text-[#0F4C81]" />
+                  <FiPhoneCall className="w-4 h-4 text-[#005A60]" />
                   +91 99107 68201
                 </a>
                 <button
                   onClick={() => { setMobileMenuOpen(false); setGenericEnquiryOpen(true); }}
-                  className="w-full bg-[#0F4C81] text-white py-2.5 rounded-lg text-base font-bold cursor-pointer hover:bg-[#0a3460] transition-colors"
+                  className="w-full bg-[#E65F00] text-white py-2.5 rounded-lg text-base font-bold uppercase tracking-wide cursor-pointer hover:bg-orange-700 transition-colors shadow-sm"
                 >
                   Send Enquiry
                 </button>

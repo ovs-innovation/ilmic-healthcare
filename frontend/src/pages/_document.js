@@ -38,7 +38,7 @@ class MyDocument extends Document {
             property="og:description"
             content={
               setting?.meta_description ||
-              "Precision in every Voltage"
+              "Quality medicines and pharmaceutical sourcing across India"
             }
           />
           <meta

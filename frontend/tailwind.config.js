@@ -15,11 +15,11 @@ module.exports = {
     extend: {
       colors: {
         pharma: {
-          primary: "#0F4C81",
-          secondary: "#2A7DE1",
-          accent: "#00B4D8",
-          bg: "#F8FBFF",
-          text: "#1E293B",
+          primary: "#1A2E5B",    /* Deep Traditional Navy */
+          secondary: "#8B1A2E",  /* Rich Maroon / Burgundy */
+          accent: "#B8860B",     /* Deep Antique Gold */
+          bg: "#FFF9F0",         /* Warm Cream Ivory */
+          text: "#1C1814",       /* Dark Charcoal */
         }
       },
       screens: {

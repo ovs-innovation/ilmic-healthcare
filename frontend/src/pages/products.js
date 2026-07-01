@@ -11,19 +11,43 @@ import { FiSearch, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 const DOSAGE_FORMS = ["Tablets", "Capsules", "Injections", "Liquid", "Others"];
 
 const catBgMap = {
-  "Oncology Medicines":   { light: "#F3EEFF", badge: "#7C3AED", accent: "#EDE9FE" },
-  "Anti Cancer Drugs":   { light: "#F3EEFF", badge: "#7C3AED", accent: "#EDE9FE" },
-  "Critical Care":      { light: "#FFF0F0", badge: "#DC2626", accent: "#FEE2E2" },
-  "Immunotherapy":      { light: "#FFF0F5", badge: "#BE185D", accent: "#FCE7F3" },
-  "Targeted Therapy":   { light: "#EFF7FF", badge: "#1D4ED8", accent: "#DBEAFE" },
-  "Hematology":         { light: "#EFF7FF", badge: "#1D4ED8", accent: "#DBEAFE" },
-  "Bone Health":        { light: "#EDFFF5", badge: "#059669", accent: "#D1FAE5" },
-  "Injectable Medicines":{ light: "#FFFBEA", badge: "#D97706", accent: "#FDE68A" },
-  "Oral Medicines":     { light: "#FFFBEA", badge: "#D97706", accent: "#FDE68A" },
-  "Imported Medicines": { light: "#EDFFF5", badge: "#059669", accent: "#D1FAE5" },
-  "HIV Medicines":      { light: "#FFF0F5", badge: "#BE185D", accent: "#FCE7F3" },
-  "Nephrology Medicines":{ light: "#EFF7FF", badge: "#1D4ED8", accent: "#DBEAFE" },
-  "Lifesaving Medicines":{ light: "#FFF0F0", badge: "#DC2626", accent: "#FEE2E2" },
+  "Oncology Medicines": {
+    light: "#F3EEFF",
+    badge: "#7C3AED",
+    accent: "#EDE9FE",
+  },
+  "Anti Cancer Drugs": {
+    light: "#F3EEFF",
+    badge: "#7C3AED",
+    accent: "#EDE9FE",
+  },
+  "Critical Care": { light: "#FFF0F0", badge: "#DC2626", accent: "#FEE2E2" },
+  Immunotherapy: { light: "#FFF0F5", badge: "#BE185D", accent: "#FCE7F3" },
+  "Targeted Therapy": { light: "#EFF7FF", badge: "#1D4ED8", accent: "#DBEAFE" },
+  Hematology: { light: "#EFF7FF", badge: "#1D4ED8", accent: "#DBEAFE" },
+  "Bone Health": { light: "#EDFFF5", badge: "#059669", accent: "#D1FAE5" },
+  "Injectable Medicines": {
+    light: "#FFFBEA",
+    badge: "#D97706",
+    accent: "#FDE68A",
+  },
+  "Oral Medicines": { light: "#FFFBEA", badge: "#D97706", accent: "#FDE68A" },
+  "Imported Medicines": {
+    light: "#EDFFF5",
+    badge: "#059669",
+    accent: "#D1FAE5",
+  },
+  "HIV Medicines": { light: "#FFF0F5", badge: "#BE185D", accent: "#FCE7F3" },
+  "Nephrology Medicines": {
+    light: "#EFF7FF",
+    badge: "#1D4ED8",
+    accent: "#DBEAFE",
+  },
+  "Lifesaving Medicines": {
+    light: "#FFF0F0",
+    badge: "#DC2626",
+    accent: "#FEE2E2",
+  },
 };
 
 const getTitleString = (titleObj) => {
@@ -39,14 +63,21 @@ const getProductImage = (prod) => {
   if (prod.image?.[0]) return prod.image[0];
   if (prod.images?.[0]) return prod.images[0];
   const cat = getTitleString(prod.category?.name || prod.category);
-  const cleanCat = cat.toLowerCase().trim().replace(/[^a-z0-9]+/g, "-");
+  const cleanCat = cat
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-");
   if (cleanCat.includes("oncology")) return "/products/oncology_box.png";
-  if (cleanCat.includes("critical")) return "/products/critical_care_injection.png";
-  if (cleanCat.includes("immunotherapy")) return "/products/immunotherapy_kit.png";
-  if (cleanCat.includes("targeted")) return "/products/targeted_therapy_pack.png";
+  if (cleanCat.includes("critical"))
+    return "/products/critical_care_injection.png";
+  if (cleanCat.includes("immunotherapy"))
+    return "/products/immunotherapy_kit.png";
+  if (cleanCat.includes("targeted"))
+    return "/products/targeted_therapy_pack.png";
   if (cleanCat.includes("hiv")) return "/products/oncology_box.png";
   if (cleanCat.includes("nephrology")) return "/products/oncology_box.png";
-  if (cleanCat.includes("imported")) return "/products/imported_specialty_pack.png";
+  if (cleanCat.includes("imported"))
+    return "/products/imported_specialty_pack.png";
   return "/products/oncology_box.png";
 };
 
@@ -68,8 +99,9 @@ const Products = ({ initialProducts, categories }) => {
     if (router.query.category) {
       const found = categories.find(
         (c) =>
-          getTitleString(c.name).toLowerCase() === router.query.category.toLowerCase() ||
-          c._id === router.query.category
+          getTitleString(c.name).toLowerCase() ===
+            router.query.category.toLowerCase() ||
+          c._id === router.query.category,
       );
       setSelectedCategory(found ? found._id : "");
     } else {
@@ -103,9 +135,11 @@ const Products = ({ initialProducts, categories }) => {
   const handleCategoryChange = (catId) => {
     setSelectedCategory(catId);
     router.push(
-      catId ? { pathname: "/products", query: { category: catId } } : { pathname: "/products" },
+      catId
+        ? { pathname: "/products", query: { category: catId } }
+        : { pathname: "/products" },
       undefined,
-      { shallow: true }
+      { shallow: true },
     );
   };
 
@@ -122,11 +156,31 @@ const Products = ({ initialProducts, categories }) => {
     const name = getProductTitle(prod).toLowerCase();
     const desc = getProductDesc(prod).toLowerCase();
     const d = selectedDosage.toLowerCase();
-    if (d === "tablets" && (name.includes("tablet") || desc.includes("tablet"))) return true;
-    if (d === "capsules" && (name.includes("capsule") || desc.includes("capsule"))) return true;
-    if (d === "injections" && (name.includes("injection") || name.includes("vial") || name.includes("ampoule") || desc.includes("inject"))) return true;
-    if (d === "liquid" && (name.includes("liquid") || name.includes("syrup"))) return true;
-    if (d === "others" && !name.includes("tablet") && !name.includes("capsule") && !name.includes("injection") && !name.includes("liquid")) return true;
+    if (d === "tablets" && (name.includes("tablet") || desc.includes("tablet")))
+      return true;
+    if (
+      d === "capsules" &&
+      (name.includes("capsule") || desc.includes("capsule"))
+    )
+      return true;
+    if (
+      d === "injections" &&
+      (name.includes("injection") ||
+        name.includes("vial") ||
+        name.includes("ampoule") ||
+        desc.includes("inject"))
+    )
+      return true;
+    if (d === "liquid" && (name.includes("liquid") || name.includes("syrup")))
+      return true;
+    if (
+      d === "others" &&
+      !name.includes("tablet") &&
+      !name.includes("capsule") &&
+      !name.includes("injection") &&
+      !name.includes("liquid")
+    )
+      return true;
     return false;
   });
 
@@ -134,11 +188,16 @@ const Products = ({ initialProducts, categories }) => {
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     const nameA = getProductTitle(a);
     const nameB = getProductTitle(b);
-    return sortBy === "A-Z" ? nameA.localeCompare(nameB) : nameB.localeCompare(nameA);
+    return sortBy === "A-Z"
+      ? nameA.localeCompare(nameB)
+      : nameB.localeCompare(nameA);
   });
 
   /* ── Pagination ── */
-  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / itemsPerPage));
+  const totalPages = Math.max(
+    1,
+    Math.ceil(sortedProducts.length / itemsPerPage),
+  );
   const indexOfFirst = (currentPage - 1) * itemsPerPage;
   const indexOfLast = indexOfFirst + itemsPerPage;
   const currentItems = sortedProducts.slice(indexOfFirst, indexOfLast);
@@ -146,7 +205,8 @@ const Products = ({ initialProducts, categories }) => {
   const generalProductPlaceholder = {
     _id: "general",
     name: "General Sourcing Enquiry",
-    shortDescription: "Inquire about customized packaging or general bulk drug sourcing.",
+    shortDescription:
+      "Inquire about customized packaging or general bulk drug sourcing.",
   };
 
   /* ── Visible page buttons ── */
@@ -154,7 +214,11 @@ const Products = ({ initialProducts, categories }) => {
     if (totalPages <= 7) return [...Array(totalPages)].map((_, i) => i + 1);
     const pages = [1];
     if (currentPage > 3) pages.push("...");
-    for (let p = Math.max(2, currentPage - 1); p <= Math.min(totalPages - 1, currentPage + 1); p++) {
+    for (
+      let p = Math.max(2, currentPage - 1);
+      p <= Math.min(totalPages - 1, currentPage + 1);
+      p++
+    ) {
       pages.push(p);
     }
     if (currentPage < totalPages - 2) pages.push("...");
@@ -169,21 +233,20 @@ const Products = ({ initialProducts, categories }) => {
     >
       <div className="bg-[#F8FBFF] min-h-screen">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
           {/* ── Breadcrumb ── */}
           <nav className="flex items-center gap-1.5 text-[12px] font-medium text-gray-500 mb-6">
-            <Link href="/" className="hover:text-[#0F4C81] transition-colors">Home</Link>
+            <Link href="/" className="hover:text-[#0F4C81] transition-colors">
+              Home
+            </Link>
             <FiChevronRight className="w-3.5 h-3.5" />
             <span className="text-gray-800 font-semibold">Products</span>
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-
             {/* ══════════════════════════════
                 SIDEBAR
             ══════════════════════════════ */}
             <aside className="lg:col-span-3 space-y-4">
-
               {/* Therapeutic Areas Filter */}
               <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
                 <div className="bg-[#0F4C81] text-white px-4 py-3 text-[12px] font-extrabold uppercase tracking-wider">
@@ -200,25 +263,48 @@ const Products = ({ initialProducts, categories }) => {
                       }`}
                     >
                       {selectedCategory === "" && (
-                        <svg viewBox="0 0 10 10" fill="none" className="w-2.5 h-2.5">
-                          <path d="M2 5l2.5 2.5 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        <svg
+                          viewBox="0 0 10 10"
+                          fill="none"
+                          className="w-2.5 h-2.5"
+                        >
+                          <path
+                            d="M2 5l2.5 2.5 4-4"
+                            stroke="white"
+                            strokeWidth="1.5"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
                         </svg>
                       )}
                     </div>
                     <span
                       className={`text-[13px] font-semibold transition-colors ${
-                        selectedCategory === "" ? "text-[#0F4C81] font-bold" : "text-gray-600 group-hover:text-gray-800"
+                        selectedCategory === ""
+                          ? "text-[#0F4C81] font-bold"
+                          : "text-gray-600 group-hover:text-gray-800"
                       }`}
                     >
                       All Categories
                     </span>
                   </label>
-                  <input type="hidden" checked={selectedCategory === ""} onChange={() => handleCategoryChange("")} />
+                  <input
+                    type="hidden"
+                    checked={selectedCategory === ""}
+                    onChange={() => handleCategoryChange("")}
+                  />
 
                   {categories.map((cat) => (
-                    <label key={cat._id} className="flex items-center gap-3 cursor-pointer group">
+                    <label
+                      key={cat._id}
+                      className="flex items-center gap-3 cursor-pointer group"
+                    >
                       <div
-                        onClick={() => handleCategoryChange(selectedCategory === cat._id ? "" : cat._id)}
+                        onClick={() =>
+                          handleCategoryChange(
+                            selectedCategory === cat._id ? "" : cat._id,
+                          )
+                        }
                         className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
                           selectedCategory === cat._id
                             ? "bg-[#0F4C81] border-[#0F4C81]"
@@ -226,15 +312,31 @@ const Products = ({ initialProducts, categories }) => {
                         }`}
                       >
                         {selectedCategory === cat._id && (
-                          <svg viewBox="0 0 10 10" fill="none" className="w-2.5 h-2.5">
-                            <path d="M2 5l2.5 2.5 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <svg
+                            viewBox="0 0 10 10"
+                            fill="none"
+                            className="w-2.5 h-2.5"
+                          >
+                            <path
+                              d="M2 5l2.5 2.5 4-4"
+                              stroke="white"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
                         )}
                       </div>
                       <span
-                        onClick={() => handleCategoryChange(selectedCategory === cat._id ? "" : cat._id)}
+                        onClick={() =>
+                          handleCategoryChange(
+                            selectedCategory === cat._id ? "" : cat._id,
+                          )
+                        }
                         className={`text-[13px] font-semibold cursor-pointer transition-colors ${
-                          selectedCategory === cat._id ? "text-[#0F4C81] font-bold" : "text-gray-600 group-hover:text-gray-800"
+                          selectedCategory === cat._id
+                            ? "text-[#0F4C81] font-bold"
+                            : "text-gray-600 group-hover:text-gray-800"
                         }`}
                       >
                         {getTitleString(cat.name)}
@@ -251,9 +353,16 @@ const Products = ({ initialProducts, categories }) => {
                 </div>
                 <div className="p-4 space-y-3">
                   {DOSAGE_FORMS.map((dosage) => (
-                    <label key={dosage} className="flex items-center gap-3 cursor-pointer group">
+                    <label
+                      key={dosage}
+                      className="flex items-center gap-3 cursor-pointer group"
+                    >
                       <div
-                        onClick={() => setSelectedDosage(selectedDosage === dosage ? "" : dosage)}
+                        onClick={() =>
+                          setSelectedDosage(
+                            selectedDosage === dosage ? "" : dosage,
+                          )
+                        }
                         className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
                           selectedDosage === dosage
                             ? "bg-[#0F4C81] border-[#0F4C81]"
@@ -261,15 +370,31 @@ const Products = ({ initialProducts, categories }) => {
                         }`}
                       >
                         {selectedDosage === dosage && (
-                          <svg viewBox="0 0 10 10" fill="none" className="w-2.5 h-2.5">
-                            <path d="M2 5l2.5 2.5 4-4" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          <svg
+                            viewBox="0 0 10 10"
+                            fill="none"
+                            className="w-2.5 h-2.5"
+                          >
+                            <path
+                              d="M2 5l2.5 2.5 4-4"
+                              stroke="white"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
                           </svg>
                         )}
                       </div>
                       <span
-                        onClick={() => setSelectedDosage(selectedDosage === dosage ? "" : dosage)}
+                        onClick={() =>
+                          setSelectedDosage(
+                            selectedDosage === dosage ? "" : dosage,
+                          )
+                        }
                         className={`text-[13px] font-semibold cursor-pointer transition-colors ${
-                          selectedDosage === dosage ? "text-[#0F4C81] font-bold" : "text-gray-600 group-hover:text-gray-800"
+                          selectedDosage === dosage
+                            ? "text-[#0F4C81] font-bold"
+                            : "text-gray-600 group-hover:text-gray-800"
                         }`}
                       >
                         {dosage}
@@ -284,14 +409,16 @@ const Products = ({ initialProducts, categories }) => {
                 MAIN CONTENT
             ══════════════════════════════ */}
             <main className="lg:col-span-9 space-y-5">
-
               {/* Page heading + search */}
               <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <h1 className="text-2xl font-black text-[#0F4C81] tracking-tight">Our Products</h1>
+                    <h1 className="text-2xl font-black text-[#0F4C81] tracking-tight">
+                      Our Products
+                    </h1>
                     <p className="text-[13px] text-gray-500 font-medium mt-1 max-w-lg">
-                      A wide range of oncology, critical care, HIV, nephrology and specialty medicines from trusted global manufacturers.
+                      A wide range of oncology, critical care, HIV, nephrology
+                      and specialty medicines from trusted global manufacturers.
                     </p>
                   </div>
                   <div className="relative flex-shrink-0 w-full sm:w-56">
@@ -311,10 +438,13 @@ const Products = ({ initialProducts, categories }) => {
               <div className="flex items-center justify-between">
                 <span className="text-[12px] font-semibold text-gray-500">
                   Showing {sortedProducts.length > 0 ? indexOfFirst + 1 : 0} -{" "}
-                  {Math.min(indexOfLast, sortedProducts.length)} of {sortedProducts.length} products
+                  {Math.min(indexOfLast, sortedProducts.length)} of{" "}
+                  {sortedProducts.length} products
                 </span>
                 <div className="flex items-center gap-2">
-                  <span className="text-[12px] font-semibold text-gray-500">Sort by:</span>
+                  <span className="text-[12px] font-semibold text-gray-500">
+                    Sort by:
+                  </span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
@@ -327,14 +457,16 @@ const Products = ({ initialProducts, categories }) => {
               </div>
 
               {/* Product Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-6">
                 {currentItems.length > 0 ? (
                   currentItems.map((prod) => (
-                    <ProductCard 
-                      key={prod._id} 
-                      product={prod} 
-                      onEnquire={handleEnquireClick} 
-                      overrideCategoryName={getTitleString(prod.category?.name || prod.category)} 
+                    <ProductCard
+                      key={prod._id}
+                      product={prod}
+                      onEnquire={handleEnquireClick}
+                      overrideCategoryName={getTitleString(
+                        prod.category?.name || prod.category,
+                      )}
                     />
                   ))
                 ) : (
@@ -357,7 +489,10 @@ const Products = ({ initialProducts, categories }) => {
 
                   {getPageButtons().map((page, i) =>
                     page === "..." ? (
-                      <span key={`dot-${i}`} className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm">
+                      <span
+                        key={`dot-${i}`}
+                        className="w-8 h-8 flex items-center justify-center text-gray-400 text-sm"
+                      >
                         ...
                       </span>
                     ) : (
@@ -372,11 +507,13 @@ const Products = ({ initialProducts, categories }) => {
                       >
                         {page}
                       </button>
-                    )
+                    ),
                   )}
 
                   <button
-                    onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
                     disabled={currentPage === totalPages}
                     className="w-8 h-8 rounded border border-gray-200 bg-white text-gray-600 flex items-center justify-center hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
@@ -389,17 +526,47 @@ const Products = ({ initialProducts, categories }) => {
               <div className="mt-8 bg-[#0F4C81] rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-md">
                 <div className="flex items-center gap-4 text-center sm:text-left">
                   <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0">
-                    <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-white">
-                      <rect x="3" y="4" width="18" height="16" rx="2" stroke="white" strokeWidth="1.5"/>
-                      <path d="M7 9h10M7 13h6" stroke="white" strokeWidth="1.5" strokeLinecap="round"/>
-                      <circle cx="18" cy="16" r="3" fill="white" opacity="0.3"/>
-                      <path d="M17 16l1 1 1.5-1.5" stroke="white" strokeWidth="1"/>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      className="w-6 h-6 text-white"
+                    >
+                      <rect
+                        x="3"
+                        y="4"
+                        width="18"
+                        height="16"
+                        rx="2"
+                        stroke="white"
+                        strokeWidth="1.5"
+                      />
+                      <path
+                        d="M7 9h10M7 13h6"
+                        stroke="white"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                      />
+                      <circle
+                        cx="18"
+                        cy="16"
+                        r="3"
+                        fill="white"
+                        opacity="0.3"
+                      />
+                      <path
+                        d="M17 16l1 1 1.5-1.5"
+                        stroke="white"
+                        strokeWidth="1"
+                      />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-white font-extrabold text-base">Need Product Information?</h3>
+                    <h3 className="text-white font-extrabold text-base">
+                      Need Product Information?
+                    </h3>
                     <p className="text-blue-200 text-[12px] font-medium mt-0.5">
-                      Our team is ready to assist you with product availability, information and business enquiries.
+                      Our team is ready to assist you with product availability,
+                      information and business enquiries.
                     </p>
                   </div>
                 </div>
@@ -410,7 +577,6 @@ const Products = ({ initialProducts, categories }) => {
                   Send Enquiry Now
                 </button>
               </div>
-
             </main>
           </div>
         </div>
@@ -458,6 +624,5 @@ export const getServerSideProps = async (context) => {
     return { props: { initialProducts: [], categories: [] } };
   }
 };
-
 
 export default Products;

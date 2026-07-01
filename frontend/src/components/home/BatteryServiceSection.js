@@ -2,13 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  FiBattery,
-  FiZap,
-  FiPhone,
-  FiX,
-  FiChevronDown,
-} from "react-icons/fi";
+import { FiBattery, FiZap, FiPhone, FiX, FiChevronDown } from "react-icons/fi";
 import { toast } from "react-toastify";
 import BatteryServiceServices from "@services/BatteryServiceServices";
 import {
@@ -56,14 +50,38 @@ const WHY_FEATURES = [
 ];
 
 const STATS = [
-  { Icon: IconCustomers, value: "2500+", label: "Happy Customers", variant: "blue" },
-  { Icon: IconOrderBox, value: "5000+", label: "Orders Delivered", variant: "green" },
-  { Icon: IconSatisfaction, value: "98%", label: "Customer Satisfaction", variant: "amber" },
-  { Icon: IconLiveSupport, value: "24/7", label: "Expert Support", variant: "navy" },
+  {
+    Icon: IconCustomers,
+    value: "2500+",
+    label: "Happy Customers",
+    variant: "blue",
+  },
+  {
+    Icon: IconOrderBox,
+    value: "5000+",
+    label: "Orders Delivered",
+    variant: "green",
+  },
+  {
+    Icon: IconSatisfaction,
+    value: "98%",
+    label: "Customer Satisfaction",
+    variant: "amber",
+  },
+  {
+    Icon: IconLiveSupport,
+    value: "24/7",
+    label: "Expert Support",
+    variant: "navy",
+  },
 ];
 
 const CARD_HIGHLIGHTS = [
-  { Icon: IconBatteryPack, label: "BMS, Cells & Battery Packs", variant: "blue" },
+  {
+    Icon: IconBatteryPack,
+    label: "Indian-grade BMS, Cells & Battery Packs",
+    variant: "blue",
+  },
   { Icon: IconEnergyUse, label: "EV, Solar & Industrial Use", variant: "red" },
   { Icon: IconDelivery, label: "Pan India Fast Delivery", variant: "green" },
   { Icon: IconGenuine, label: "100% Tested & Genuine", variant: "navy" },
@@ -91,7 +109,13 @@ const SERVICE_TYPES = [
   "Leakage Fix",
   "Other",
 ];
-const SERVICE_TAGS = ["Repair", "Reconditioning", "Testing", "Cell Replace", "Leakage Fix"];
+const SERVICE_TAGS = [
+  "Repair",
+  "Reconditioning",
+  "Testing",
+  "Cell Replace",
+  "Leakage Fix",
+];
 
 const inp =
   "w-full border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800 placeholder-gray-400 focus:outline-none focus:border-[#0b1d3d] focus:ring-1 focus:ring-[#0b1d3d] transition-all bg-white";
@@ -147,7 +171,9 @@ const BatteryModal = ({ onClose }) => {
       toast.success("🔋 Request submitted! We will contact you shortly.");
       onClose();
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to submit. Please try again.");
+      toast.error(
+        err?.response?.data?.message || "Failed to submit. Please try again.",
+      );
     } finally {
       setSubmitting(false);
     }
@@ -214,8 +240,8 @@ const BatteryModal = ({ onClose }) => {
               ))}
 
               <p className="text-[11px] text-gray-500 leading-relaxed mt-4">
-                Certified technicians for Lead Acid, Lithium Ion, Tubular &amp; all battery types.
-                Affordable pricing with service guarantee.
+                Certified technicians for Lead Acid, Lithium Ion, Tubular &amp;
+                all battery types. Affordable pricing with service guarantee.
               </p>
             </div>
 
@@ -251,7 +277,10 @@ const BatteryModal = ({ onClose }) => {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="px-6 py-4 flex flex-col gap-3">
+            <form
+              onSubmit={handleSubmit}
+              className="px-6 py-4 flex flex-col gap-3"
+            >
               <div className="grid grid-cols-2 gap-4">
                 <FL label="Full Name" required>
                   <input
@@ -380,7 +409,10 @@ const BatteryModal = ({ onClose }) => {
                 </FL>
               </div>
 
-              <FL label="Problem Description — what's wrong with the battery?" required>
+              <FL
+                label="Problem Description — what's wrong with the battery?"
+                required
+              >
                 <textarea
                   className={`${inp} resize-none`}
                   rows={2}
@@ -435,25 +467,26 @@ const BatteryServiceSection = () => {
                 </div>
 
                 <h2 className="text-2xl sm:text-3xl lg:text-[2.1rem] font-black text-[#0b1d3d] leading-[1.15] tracking-tight mb-4">
-                  Powering India with Trusted{" "}
+                  Powering India’s Energy Needs with Trusted{" "}
                   <span className="text-[#0088FF]">Battery Solutions</span>
                 </h2>
 
                 <p className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-xl">
-                  From high-performance BMS to custom battery packs, we deliver quality,
-                  reliability, and performance you can trust.
+                  From high-performance BMS to custom battery packs, we deliver
+                  rugged, reliable solutions built for India’s homes, EVs, solar
+                  systems and factories.
                 </p>
               </div>
 
               <div className="flex-1 min-h-[180px] max-h-[260px] lg:max-h-none rounded-2xl overflow-hidden bg-white shadow-[0_8px_40px_rgba(11,29,61,0.08)] border border-gray-100 flex flex-col sm:flex-row">
                 {/* Image — left inside card */}
-                <div className="relative w-full sm:w-[44%] lg:w-[42%] flex-shrink-0 min-h-[140px] sm:min-h-0 sm:self-stretch bg-[#f3f5f8] border-b sm:border-b-0 sm:border-r border-gray-100">
+                <div className="relative w-full sm:w-[50%] lg:w-[48%] flex-shrink-0 min-h-[180px] sm:min-h-0 sm:self-stretch bg-[#fff7ed] border-b sm:border-b-0 sm:border-r border-gray-100">
                   <Image
                     src="/hero-medicines.png"
-                    alt="Kure Pharma BMS and battery components"
+                    alt="Indian battery components and BMS solutions"
                     fill
-                    sizes="(max-width: 640px) 100vw, 200px"
-                    className="object-contain p-3 sm:p-4"
+                    sizes="(max-width: 640px) 100vw, 260px"
+                    className="object-contain p-4 sm:p-5"
                   />
                 </div>
 
@@ -467,7 +500,10 @@ const BatteryServiceSection = () => {
                   </h3>
                   <ul className="space-y-2 sm:space-y-2.5">
                     {CARD_HIGHLIGHTS.map(({ Icon, label, variant }) => (
-                      <li key={label} className="flex items-center gap-2.5 min-w-0">
+                      <li
+                        key={label}
+                        className="flex items-center gap-2.5 min-w-0"
+                      >
                         <WhyIconTile variant={variant} size="sm">
                           <Icon className="w-[15px] h-[15px]" />
                         </WhyIconTile>
@@ -488,13 +524,19 @@ const BatteryServiceSection = () => {
                   key={title}
                   className="bg-white rounded-xl sm:rounded-2xl border border-gray-100 shadow-[0_2px_16px_rgba(11,29,61,0.05)] p-4 sm:p-5 lg:p-6 transition-shadow duration-300 hover:shadow-[0_8px_28px_rgba(11,29,61,0.08)] h-full flex flex-col"
                 >
-                  <WhyIconTile variant={variant} size="md" className="mb-3 sm:mb-4">
+                  <WhyIconTile
+                    variant={variant}
+                    size="md"
+                    className="mb-3 sm:mb-4"
+                  >
                     <Icon className="w-[20px] h-[20px] sm:w-[22px] sm:h-[22px]" />
                   </WhyIconTile>
                   <h3 className="text-sm font-black text-[#0b1d3d] mb-1.5 sm:mb-2 leading-snug">
                     {title}
                   </h3>
-                  <p className="text-xs sm:text-[13px] text-gray-500 leading-relaxed">{desc}</p>
+                  <p className="text-xs sm:text-[13px] text-gray-500 leading-relaxed">
+                    {desc}
+                  </p>
                 </div>
               ))}
             </div>
