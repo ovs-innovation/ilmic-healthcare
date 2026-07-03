@@ -24,6 +24,7 @@ const Uploader = ({
   folder,
   targetWidth = 800,
   targetHeight = 800,
+  maxFilesOverride,
 }) => {
   const [loading, setLoading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -36,7 +37,10 @@ const Uploader = ({
   const abortControllerRef = useRef(null);
 
   const cloudinaryConfig = useMemo(() => getAdminCloudinaryConfig(), []);
-  const maxFiles = globalSetting?.number_of_image_per_product || 10;
+  const maxFiles =
+    Number(maxFilesOverride) > 0
+      ? Number(maxFilesOverride)
+      : globalSetting?.number_of_image_per_product || 10;
 
   const resizeImageToFixedDimensions = useCallback(
     async (file, width, height) => {

@@ -20,7 +20,7 @@ const Layout = ({ title, description, children }) => {
     <>
       <ToastContainer />
 
-      <div className="font-sans overflow-x-hidden min-h-screen flex flex-col justify-between bg-white text-gray-800">
+      <div className="font-sans overflow-x-hidden min-h-screen flex flex-col bg-[#FFF9F0] text-[#1C1814]">
         <Head>
           <title>
             {title ? `Kure Pharma | ${title}` : "Kure Pharma | Trusted Pharmaceutical Solutions"}
@@ -29,22 +29,22 @@ const Layout = ({ title, description, children }) => {
             name="description"
             content={
               description ||
-              "Providing trusted and high-quality pharmaceutical products and healthcare solutions globally."
+              "India's trusted pharmaceutical distributor — oncology, critical care & specialty medicines across Bharat."
             }
           />
           <link rel="icon" href="/favicon.png" />
         </Head>
 
-        <div>
+        <div className="flex-1 flex flex-col">
           <Navbar />
-          <main className="bg-white">{children}</main>
+          <main className="flex-1">{children}</main>
         </div>
 
         {/* Floating action buttons */}
         <div className="fixed right-4 bottom-6 flex flex-col gap-3 z-30">
           {/* WhatsApp floating button */}
           <a
-            href="https://wa.me/919910768201"
+            href="https://wa.me/919911972234"
             target="_blank"
             rel="noopener noreferrer"
             className="w-12 h-12 rounded-full bg-[#25D366] text-white flex items-center justify-center shadow-lg hover:bg-[#20BD5A] transition-all hover:scale-105"

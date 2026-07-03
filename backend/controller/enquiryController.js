@@ -88,7 +88,7 @@ const createEnquiry = async (req, res) => {
               </div>
               <div style="padding:24px;background:#f9fafb">
                 <p style="color:#374151">We have received your enquiry regarding <strong>${productName || "our products"}</strong> and our team will get back to you within <strong>24 hours</strong>.</p>
-                <p style="color:#374151">📞 You can also reach us at: <a href="tel:+919910768201" style="color:#0F4C81;font-weight:bold">+91 99107 68201</a></p>
+                <p style="color:#374151">📞 You can also reach us at: <a href="tel:+919911972234" style="color:#0F4C81;font-weight:bold">+91 99119 72234</a></p>
               </div>
               <div style="padding:16px 24px;background:#0F4C81;text-align:center">
                 <p style="color:#bfdbfe;margin:0;font-size:12px">Kure Pharma – Trusted Pharmaceutical Distributor</p>

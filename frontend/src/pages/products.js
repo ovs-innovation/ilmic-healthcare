@@ -2,10 +2,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import Layout from "@layout/Layout";
+import PageHero from "@components/ui/PageHero";
 import ProductServices from "@services/ProductServices";
 import CategoryServices from "@services/CategoryServices";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
 import ProductCard from "@components/product/ProductCard";
+import { getProductImageSrc } from "@utils/productImage";
 import { FiSearch, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
 const DOSAGE_FORMS = ["Tablets", "Capsules", "Injections", "Liquid", "Others"];
@@ -59,27 +61,7 @@ const getTitleString = (titleObj) => {
   return "";
 };
 
-const getProductImage = (prod) => {
-  if (prod.image?.[0]) return prod.image[0];
-  if (prod.images?.[0]) return prod.images[0];
-  const cat = getTitleString(prod.category?.name || prod.category);
-  const cleanCat = cat
-    .toLowerCase()
-    .trim()
-    .replace(/[^a-z0-9]+/g, "-");
-  if (cleanCat.includes("oncology")) return "/products/oncology_box.png";
-  if (cleanCat.includes("critical"))
-    return "/products/critical_care_injection.png";
-  if (cleanCat.includes("immunotherapy"))
-    return "/products/immunotherapy_kit.png";
-  if (cleanCat.includes("targeted"))
-    return "/products/targeted_therapy_pack.png";
-  if (cleanCat.includes("hiv")) return "/products/oncology_box.png";
-  if (cleanCat.includes("nephrology")) return "/products/oncology_box.png";
-  if (cleanCat.includes("imported"))
-    return "/products/imported_specialty_pack.png";
-  return "/products/oncology_box.png";
-};
+const getProductImage = (prod) => getProductImageSrc(prod);
 
 const Products = ({ initialProducts, categories }) => {
   const router = useRouter();
@@ -108,6 +90,12 @@ const Products = ({ initialProducts, categories }) => {
       setSelectedCategory("");
     }
   }, [router.query.category, categories]);
+
+  useEffect(() => {
+    if (router.query.name) {
+      setSearchQuery(String(router.query.name));
+    }
+  }, [router.query.name]);
 
   /* ── Fetch on filter change ── */
   useEffect(() => {
@@ -231,11 +219,18 @@ const Products = ({ initialProducts, categories }) => {
       title="Products - Specialty Medicine Directory | Kure Pharma"
       description="Browse Kure Pharma's oncology, critical care, HIV, nephrology, and specialty pharmaceutical product range."
     >
-      <div className="bg-[#F8FBFF] min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <PageHero
+        breadcrumb="Products"
+        title="Specialty Medicine"
+        highlight="Directory"
+        subtitle="Browse oncology, critical care, HIV, nephrology & imported specialty pharmaceuticals — sourced for hospitals across India."
+        bgImage="/hero-indian-pharma.png"
+      />
+      <div className="kure-section-cream min-h-screen kure-products-page">
+        <div className="kure-container py-8">
           {/* ── Breadcrumb ── */}
           <nav className="flex items-center gap-1.5 text-[12px] font-medium text-gray-500 mb-6">
-            <Link href="/" className="hover:text-[#0F4C81] transition-colors">
+            <Link href="/" className="hover:text-[#1A2E5B] transition-colors">
               Home
             </Link>
             <FiChevronRight className="w-3.5 h-3.5" />
@@ -248,8 +243,8 @@ const Products = ({ initialProducts, categories }) => {
             ══════════════════════════════ */}
             <aside className="lg:col-span-3 space-y-4">
               {/* Therapeutic Areas Filter */}
-              <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-                <div className="bg-[#0F4C81] text-white px-4 py-3 text-[12px] font-extrabold uppercase tracking-wider">
+              <div className="kure-card overflow-hidden">
+                <div className="bg-[#1A2E5B] text-white px-4 py-3 text-[12px] font-extrabold uppercase tracking-wider">
                   Therapeutic Areas
                 </div>
                 <div className="p-4 space-y-3">
@@ -258,8 +253,8 @@ const Products = ({ initialProducts, categories }) => {
                     <div
                       className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                         selectedCategory === ""
-                          ? "bg-[#0F4C81] border-[#0F4C81]"
-                          : "border-gray-300 group-hover:border-[#0F4C81]"
+                          ? "bg-[#1A2E5B] border-[#1A2E5B]"
+                          : "border-gray-300 group-hover:border-[#1A2E5B]"
                       }`}
                     >
                       {selectedCategory === "" && (
@@ -281,7 +276,7 @@ const Products = ({ initialProducts, categories }) => {
                     <span
                       className={`text-[13px] font-semibold transition-colors ${
                         selectedCategory === ""
-                          ? "text-[#0F4C81] font-bold"
+                          ? "text-[#1A2E5B] font-bold"
                           : "text-gray-600 group-hover:text-gray-800"
                       }`}
                     >
@@ -307,8 +302,8 @@ const Products = ({ initialProducts, categories }) => {
                         }
                         className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
                           selectedCategory === cat._id
-                            ? "bg-[#0F4C81] border-[#0F4C81]"
-                            : "border-gray-300 group-hover:border-[#0F4C81]"
+                            ? "bg-[#1A2E5B] border-[#1A2E5B]"
+                            : "border-gray-300 group-hover:border-[#1A2E5B]"
                         }`}
                       >
                         {selectedCategory === cat._id && (
@@ -335,7 +330,7 @@ const Products = ({ initialProducts, categories }) => {
                         }
                         className={`text-[13px] font-semibold cursor-pointer transition-colors ${
                           selectedCategory === cat._id
-                            ? "text-[#0F4C81] font-bold"
+                            ? "text-[#1A2E5B] font-bold"
                             : "text-gray-600 group-hover:text-gray-800"
                         }`}
                       >
@@ -348,7 +343,7 @@ const Products = ({ initialProducts, categories }) => {
 
               {/* Dosage Form Filter */}
               <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-                <div className="bg-[#0F4C81] text-white px-4 py-3 text-[12px] font-extrabold uppercase tracking-wider">
+                <div className="bg-[#1A2E5B] text-white px-4 py-3 text-[12px] font-extrabold uppercase tracking-wider">
                   Dosage Form
                 </div>
                 <div className="p-4 space-y-3">
@@ -365,8 +360,8 @@ const Products = ({ initialProducts, categories }) => {
                         }
                         className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
                           selectedDosage === dosage
-                            ? "bg-[#0F4C81] border-[#0F4C81]"
-                            : "border-gray-300 group-hover:border-[#0F4C81]"
+                            ? "bg-[#1A2E5B] border-[#1A2E5B]"
+                            : "border-gray-300 group-hover:border-[#1A2E5B]"
                         }`}
                       >
                         {selectedDosage === dosage && (
@@ -393,7 +388,7 @@ const Products = ({ initialProducts, categories }) => {
                         }
                         className={`text-[13px] font-semibold cursor-pointer transition-colors ${
                           selectedDosage === dosage
-                            ? "text-[#0F4C81] font-bold"
+                            ? "text-[#1A2E5B] font-bold"
                             : "text-gray-600 group-hover:text-gray-800"
                         }`}
                       >
@@ -413,7 +408,7 @@ const Products = ({ initialProducts, categories }) => {
               <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <h1 className="text-2xl font-black text-[#0F4C81] tracking-tight">
+                    <h1 className="text-2xl font-black text-[#1A2E5B] tracking-tight">
                       Our Products
                     </h1>
                     <p className="text-[13px] text-gray-500 font-medium mt-1 max-w-lg">
@@ -428,7 +423,7 @@ const Products = ({ initialProducts, categories }) => {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search medicines..."
-                      className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-[13px] focus:outline-none focus:ring-1 focus:ring-[#0F4C81] focus:border-[#0F4C81] bg-gray-50 transition"
+                      className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-[13px] focus:outline-none focus:ring-1 focus:ring-[#1A2E5B] focus:border-[#1A2E5B] bg-gray-50 transition"
                     />
                   </div>
                 </div>
@@ -448,7 +443,7 @@ const Products = ({ initialProducts, categories }) => {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="border border-gray-200 rounded-lg text-[12px] font-semibold text-gray-700 py-1.5 px-3 bg-white focus:outline-none focus:ring-1 focus:ring-[#0F4C81] cursor-pointer"
+                    className="border border-gray-200 rounded-lg text-[12px] font-semibold text-gray-700 py-1.5 px-3 bg-white focus:outline-none focus:ring-1 focus:ring-[#1A2E5B] cursor-pointer"
                   >
                     <option value="A-Z">A - Z</option>
                     <option value="Z-A">Z - A</option>
@@ -457,13 +452,14 @@ const Products = ({ initialProducts, categories }) => {
               </div>
 
               {/* Product Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-5 lg:gap-6">
+              <div className="kure-catalog-grid grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
                 {currentItems.length > 0 ? (
                   currentItems.map((prod) => (
                     <ProductCard
                       key={prod._id}
                       product={prod}
                       onEnquire={handleEnquireClick}
+                      largeImage
                       overrideCategoryName={getTitleString(
                         prod.category?.name || prod.category,
                       )}
@@ -501,7 +497,7 @@ const Products = ({ initialProducts, categories }) => {
                         onClick={() => setCurrentPage(page)}
                         className={`w-8 h-8 rounded border text-[13px] font-bold transition-colors ${
                           currentPage === page
-                            ? "bg-[#0F4C81] border-[#0F4C81] text-white"
+                            ? "bg-[#1A2E5B] border-[#1A2E5B] text-white"
                             : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                         }`}
                       >
@@ -523,7 +519,7 @@ const Products = ({ initialProducts, categories }) => {
               )}
 
               {/* ── CTA Banner ── */}
-              <div className="mt-8 bg-[#0F4C81] rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-md">
+              <div className="mt-8 bg-[#1A2E5B] rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-md">
                 <div className="flex items-center gap-4 text-center sm:text-left">
                   <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0">
                     <svg
@@ -572,7 +568,7 @@ const Products = ({ initialProducts, categories }) => {
                 </div>
                 <button
                   onClick={() => setGenericEnquiryOpen(true)}
-                  className="bg-[#E6890A] hover:bg-[#d17a09] text-white font-extrabold text-sm px-6 py-3 rounded-lg transition-colors cursor-pointer flex-shrink-0 shadow"
+                  className="bg-[#B8860B] hover:bg-[#d17a09] text-white font-extrabold text-sm px-6 py-3 rounded-lg transition-colors cursor-pointer flex-shrink-0 shadow"
                 >
                   Send Enquiry Now
                 </button>

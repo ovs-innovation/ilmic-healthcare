@@ -60,6 +60,21 @@ const pages = [
     icon: FiFileText,
   },
   {
+    title: "Shipping Policy",
+    href: "/shipping-policy",
+    icon: FiTruck,
+  },
+  {
+    title: "Return & Refund Policy",
+    href: "/return-and-refund-policy",
+    icon: FiFileText,
+  },
+  {
+    title: "Legal Disclaimer",
+    href: "/legal-disclaimer",
+    icon: FiAlertCircle,
+  },
+  {
     title: "404",
     href: "/404",
     icon: FiAlertCircle,

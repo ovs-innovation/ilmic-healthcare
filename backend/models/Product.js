@@ -215,11 +215,47 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    indications: {
+      type: String,
+      required: false,
+    },
+    dosage: {
+      type: String,
+      required: false,
+    },
     packaging: {
       type: String,
       required: false,
     },
+    storage: {
+      type: String,
+      required: false,
+    },
     storageConditions: {
+      type: String,
+      required: false,
+    },
+    customSections: [
+      {
+        title: { type: String, default: "" },
+        content: { type: String, default: "" },
+      },
+    ],
+    productFaqs: [
+      {
+        question: { type: String, default: "" },
+        answer: { type: String, default: "" },
+      },
+    ],
+    seoTitle: {
+      type: String,
+      required: false,
+    },
+    seoDescription: {
+      type: String,
+      required: false,
+    },
+    seoKeywords: {
       type: String,
       required: false,
     },

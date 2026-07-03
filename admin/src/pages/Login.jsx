@@ -71,7 +71,7 @@ const Login = () => {
         {/* Bottom: Footer text */}
         <div className="relative z-10 px-10 pb-8">
           <p className="text-blue-300/60 text-[11px] font-medium">
-            © 2024 Kure Pharma Pvt. Ltd. · All Rights Reserved
+            © {new Date().getFullYear()} Kure Pharma · All Rights Reserved
           </p>
         </div>
       </div>
@@ -189,7 +189,7 @@ const Login = () => {
             {/* Trust note */}
             <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-gray-400 font-medium">
               <FiShield className="w-3.5 h-3.5 text-[#0F4C81]" />
-              Secure admin access · Kure Pharma Pvt. Ltd.
+              Secure admin access · Kure Pharma
             </div>
           </div>
         </div>

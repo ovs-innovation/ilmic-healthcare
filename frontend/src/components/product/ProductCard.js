@@ -1,5 +1,6 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useCart } from "react-use-cart";
@@ -27,6 +28,8 @@ import BulkDiscountBadge from "@components/common/BulkDiscountBadge";
 import MainModal from "@components/modal/MainModal";
 import { getProductImageSrc } from "@utils/productImage";
 import { IMAGE_PLACEHOLDER, isCloudinaryUrl } from "@utils/cloudinaryImage";
+import CatalogProductImage from "@components/ui/CatalogProductImage";
+import CatalogReadMore from "@components/ui/CatalogReadMore";
 
 const ProductCard = ({ 
   product, 
@@ -35,7 +38,8 @@ const ProductCard = ({
   hideHoverActions = false, 
   hideAddToCart = true,
   hideBuyNow = true,
-  forceEnquiry = true
+  forceEnquiry = true,
+  largeImage = false,
 }) => {
   const router = useRouter();
   const { addItem } = useCart();
@@ -158,10 +162,46 @@ const ProductCard = ({
   };
 
   const outOfStock = !isInStock(product);
+  const productTitle = showingTranslateValue(product.title);
+
+  if (largeImage) {
+    return (
+      <>
+        <div
+          className="group flex flex-col h-full w-full min-w-0 border-2 border-[#c9a066]/55 rounded-sm bg-white overflow-hidden hover:border-[#b8860b]/80 hover:shadow-[0_6px_20px_rgba(184,134,11,0.12)] transition-all duration-300"
+          onMouseEnter={prefetchProduct}
+          onTouchStart={prefetchProduct}
+        >
+          <div
+            onClick={() => productPath && router.push(productPath)}
+            className="relative w-full cursor-pointer bg-white"
+          >
+            {showProductImage ? (
+              <CatalogProductImage src={productImageSrc} alt={productTitle} />
+            ) : (
+              <div className="kure-catalog-img-frame">
+                <FiShoppingBag className="w-10 h-10 text-gray-200" aria-hidden />
+              </div>
+            )}
+          </div>
+
+          <div className="kure-catalog-card-body">
+            <h2
+              onClick={() => productPath && router.push(productPath)}
+              className="kure-catalog-card-title cursor-pointer"
+            >
+              {productTitle}
+            </h2>
+            <CatalogReadMore href={productPath || "/products"} />
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
-      <div className="group bg-white rounded-xl sm:rounded-2xl overflow-hidden border border-gray-100/80 flex flex-col h-full min-w-0 w-full transition-all duration-300 hover:shadow-[0_20px_50px_rgba(0,0,0,0.08)] sm:hover:-translate-y-1"
+      <div className="group kure-product-tile flex flex-col h-full min-w-0 w-full"
         onMouseEnter={prefetchProduct}
         onTouchStart={prefetchProduct}
       >
@@ -169,12 +209,18 @@ const ProductCard = ({
         {/* Product Image */}
         <div
           onClick={navigateToProduct}
-          className="relative w-full flex-shrink-0 cursor-pointer bg-gray-50 overflow-hidden"
+          className="relative w-full flex-shrink-0 cursor-pointer bg-[#FAF6F0] overflow-hidden"
         >
-          <div className="relative w-full pb-[100%] sm:pb-[75%]">
+          <div
+            className={`relative w-full ${
+              largeImage
+                ? "aspect-[16/10] sm:aspect-[2/1]"
+                : "aspect-[4/3] sm:aspect-[16/10]"
+            }`}
+          >
             <div className="absolute top-2 left-2 right-2 z-10 flex flex-wrap gap-1 pointer-events-none max-w-full">
               {showOriginalPrice && (
-                <span className="bg-[#ED1C24] text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider shrink-0">
+                <span className="bg-[#8B1A2E] text-white text-[8px] sm:text-[9px] font-black px-2 py-0.5 rounded-full shadow-md uppercase tracking-wider shrink-0">
                   Sale
                 </span>
               )}
@@ -216,8 +262,14 @@ const ProductCard = ({
                   src={productImageSrc}
                   alt={showingTranslateValue(product.title)}
                   fill
-                  sizes="(max-width: 400px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 230px"
-                  className="object-contain p-2 sm:p-3 group-hover:scale-[1.04] transition-transform duration-500"
+                  sizes={
+                    largeImage
+                      ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
+                      : "(max-width: 400px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 230px"
+                  }
+                  className={`object-contain group-hover:scale-[1.06] transition-transform duration-500 ${
+                    largeImage ? "p-1 sm:p-2" : "p-2 sm:p-3"
+                  }`}
                   unoptimized={isCloudinaryUrl(productImageSrc)}
                   onError={() => setImgError(true)}
                 />
@@ -233,13 +285,13 @@ const ProductCard = ({
         {/* Product Info */}
         <div className="px-3 pt-3 pb-3 sm:px-4 sm:pt-3 sm:pb-4 flex flex-col flex-grow min-w-0 text-left">
           {/* Category */}
-          <div className="text-[9px] text-[#ED1C24] font-black mb-1.5 uppercase tracking-[0.12em] sm:tracking-[0.15em] truncate w-full">
+          <div className="text-[9px] text-[#8B1A2E] font-black mb-1.5 uppercase tracking-[0.12em] sm:tracking-[0.15em] truncate w-full">
             {categoryName}
           </div>
 
           {/* Brand Name */}
           <h2
-            className="text-sm sm:text-base font-extrabold text-gray-900 mb-1 leading-snug cursor-pointer hover:text-[#0b1d3d] transition-colors truncate"
+            className="text-sm sm:text-base font-extrabold text-gray-900 mb-1 leading-snug cursor-pointer hover:text-[#1A2E5B] transition-colors truncate"
             onClick={navigateToProduct}
           >
             {showingTranslateValue(product.title)}
@@ -276,7 +328,7 @@ const ProductCard = ({
                   router.push(productPath);
                 }
               }}
-              className="w-full flex items-center justify-center gap-1.5 bg-[#0b1d3d] hover:bg-[#162542] text-white py-2 px-3 rounded-lg text-[11px] font-black uppercase tracking-wide transition-all duration-200"
+              className="w-full flex items-center justify-center gap-1.5 bg-[#1A2E5B] hover:bg-[#162542] text-white py-2 px-3 rounded-lg text-[11px] font-black uppercase tracking-wide transition-all duration-200"
             >
               View Details
             </button>
@@ -303,7 +355,7 @@ const ProductCard = ({
                   <FiShoppingBag className="w-16 h-16 text-gray-200" aria-hidden />
                 )}
                 <div className="absolute top-4 left-4">
-                   <span className="bg-[#0b1d3d] text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-sm uppercase tracking-widest">
+                   <span className="bg-[#1A2E5B] text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-sm uppercase tracking-widest">
                     Quick View
                   </span>
                 </div>
@@ -311,7 +363,7 @@ const ProductCard = ({
 
             {/* Content Side */}
             <div className="w-full md:w-1/2 p-8 flex flex-col">
-               <div className="mb-2 uppercase text-[9px] font-black text-[#ED1C24] tracking-[0.2em]">
+               <div className="mb-2 uppercase text-[9px] font-black text-[#8B1A2E] tracking-[0.2em]">
                  {categoryName}
                </div>
                <h2 className="text-2xl font-black text-gray-900 mb-6 leading-tight">
@@ -327,7 +379,7 @@ const ProductCard = ({
                     <div className="flex justify-between items-start px-5 py-3.5 border-b border-gray-100">
                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider pt-1">Price</span>
                        <div className="flex flex-col items-end">
-                          <span className="text-2xl font-black text-[#0b1d3d]">{currency}{getNumberTwo(price)}</span>
+                          <span className="text-2xl font-black text-[#1A2E5B]">{currency}{getNumberTwo(price)}</span>
                           <span className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Inclusive of GST</span>
                           {(product?.price - (product?.basePrice || product?.price)) > 0 && (
                             <span className="text-[9px] text-green-600 font-bold mt-1 uppercase tracking-tighter text-right">
@@ -354,7 +406,7 @@ const ProductCard = ({
                         handleBuyNow();
                         setIsModalOpen(false);
                       }}
-                      className="w-full bg-[#ED1C24] hover:bg-red-700 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 active:scale-[0.98]"
+                      className="w-full bg-[#8B1A2E] hover:bg-red-700 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 active:scale-[0.98]"
                     >
                       <FiZap className="w-4 h-4" />
                       Buy Now
@@ -366,7 +418,7 @@ const ProductCard = ({
                         handleAddToCart();
                         setIsModalOpen(false);
                       }}
-                      className="w-full bg-[#0b1d3d] hover:bg-[#162542] text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-[#0b1d3d]/10 flex items-center justify-center gap-2 active:scale-[0.98]"
+                      className="w-full bg-[#1A2E5B] hover:bg-[#162542] text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-[#1A2E5B]/10 flex items-center justify-center gap-2 active:scale-[0.98]"
                     >
                       <FiShoppingBag className="w-4 h-4" />
                       Add To Cart
@@ -377,7 +429,7 @@ const ProductCard = ({
                       setIsModalOpen(false);
                       navigateToProduct();
                     }}
-                    className="w-full text-gray-400 hover:text-[#0b1d3d] py-2 rounded-2xl font-bold text-[10px] transition-all uppercase tracking-widest hover:bg-gray-50"
+                    className="w-full text-gray-400 hover:text-[#1A2E5B] py-2 rounded-2xl font-bold text-[10px] transition-all uppercase tracking-widest hover:bg-gray-50"
                   >
                     View Full Details →
                   </button>

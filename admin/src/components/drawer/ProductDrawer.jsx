@@ -128,6 +128,8 @@ const ProductDrawer = ({ id }) => {
     setDatasheetUrl,
     customSections,
     setCustomSections,
+    productFaqs,
+    setProductFaqs,
   } = useProductSubmit(id, selectedServices);
 
   const { showingTranslateValue } = useUtilsFunction();
@@ -212,6 +214,22 @@ const ProductDrawer = ({ id }) => {
 
   const handleCustomSectionChange = (index, field, val) => {
     setCustomSections((prev) => {
+      const next = [...prev];
+      next[index] = { ...next[index], [field]: val };
+      return next;
+    });
+  };
+
+  const handleAddProductFaq = () => {
+    setProductFaqs((prev) => [...prev, { question: "", answer: "" }]);
+  };
+
+  const handleRemoveProductFaq = (index) => {
+    setProductFaqs((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
+  const handleProductFaqChange = (index, field, val) => {
+    setProductFaqs((prev) => {
       const next = [...prev];
       next[index] = { ...next[index], [field]: val };
       return next;
@@ -757,7 +775,7 @@ const ProductDrawer = ({ id }) => {
               {/* ─────────────────────────────────────────────────────────
                   SECTION 5 — PRODUCT IMAGE
               ───────────────────────────────────────────────────────── */}
-              <SectionHeader title="5. Product Image" />
+              <SectionHeader title="5. Product Images (4 angles) — 1 mandatory + 3 optional" />
 
               <div className="grid grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 mb-6">
                 <LabelArea label={t("ProductImage")} />
@@ -767,6 +785,7 @@ const ProductDrawer = ({ id }) => {
                     folder="product"
                     imageUrl={imageUrl}
                     setImageUrl={setImageUrl}
+                    maxFilesOverride={4}
                   />
                 </div>
               </div>
@@ -1204,6 +1223,60 @@ const ProductDrawer = ({ id }) => {
                   </div>
                 ) : (
                   <p className="text-xs text-gray-400 italic">No custom sections added yet. Click "+ Add Custom Section" to include dynamic metadata tabs.</p>
+                )}
+              </div>
+
+              {/* ─────────────────────────────────────────────────────────
+                  SECTION 11 — PRODUCT-SPECIFIC FAQs
+              ───────────────────────────────────────────────────────── */}
+              <div className="border-t border-gray-200 dark:border-gray-600 my-6 pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-widest">11. Product FAQs (shown on product page)</h4>
+                  <button
+                    type="button"
+                    onClick={handleAddProductFaq}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1.5 px-3 rounded-lg shadow-sm transition-colors"
+                  >
+                    + Add FAQ
+                  </button>
+                </div>
+
+                {productFaqs && productFaqs.length > 0 ? (
+                  <div className="space-y-4 border border-gray-150 rounded-xl p-4 bg-gray-50/50">
+                    {productFaqs.map((faq, idx) => (
+                      <div key={idx} className="border border-gray-200 rounded-lg p-3 bg-white space-y-3 relative shadow-xs">
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveProductFaq(idx)}
+                          className="absolute top-2 right-2 text-xs font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-2 py-1 rounded"
+                        >
+                          Remove
+                        </button>
+                        <div className="pr-16">
+                          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">Question</label>
+                          <input
+                            type="text"
+                            value={faq.question}
+                            onChange={(e) => handleProductFaqChange(idx, "question", e.target.value)}
+                            placeholder="e.g. Is a prescription required for this medicine?"
+                            className="w-full border border-gray-250 rounded-lg py-1.5 px-3 text-xs focus:outline-none focus:ring-1 focus:ring-[#0F4C81]"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-[10px] font-black text-gray-400 uppercase tracking-wider mb-1">Answer</label>
+                          <textarea
+                            value={faq.answer}
+                            onChange={(e) => handleProductFaqChange(idx, "answer", e.target.value)}
+                            placeholder="Answer shown on the product FAQs tab..."
+                            rows="3"
+                            className="w-full border border-gray-250 rounded-lg py-1.5 px-3 text-xs focus:outline-none focus:ring-1 focus:ring-[#0F4C81]"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400 italic">No product FAQs added. Default sourcing FAQs will show on the website until you add custom ones here.</p>
                 )}
               </div>
 

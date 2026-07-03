@@ -31,11 +31,29 @@ const PolicyContentRenderer = ({ cmsHtml, sections, loading, error }) => {
     return (
       <div className="text-sm text-gray-700 leading-[1.75]">
         {blocks.map((block, index) => {
+          if (block.type === "heading") {
+            return (
+              <h2 key={index} className="text-base font-bold text-gray-900 mt-6 mb-3 first:mt-0">
+                {block.text}
+              </h2>
+            );
+          }
+
+          if (block.type === "list") {
+            return (
+              <ul key={index} className="mb-4 list-disc pl-5 space-y-2">
+                {block.items.map((item, itemIndex) => (
+                  <li key={itemIndex}>{item}</li>
+                ))}
+              </ul>
+            );
+          }
+
           if (block.type === "link") {
             return (
               <p key={index} className="mb-4 last:mb-0">
                 {block.prefix}
-                <Link href={block.href} className="text-[#ED1C24] hover:underline">
+                <Link href={block.href} className="text-[#1A2E5B] font-semibold hover:underline">
                   {block.label}
                 </Link>
               </p>

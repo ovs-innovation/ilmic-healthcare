@@ -4,21 +4,18 @@ const { connectDB } = require("../config/db");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 
-const categoriesData = [
-  { name: "Oncology Medicines", slug: "oncology-medicines", image: "/products/oncology_box.png", status: "show" },
-  { name: "Anti Cancer Drugs", slug: "anti-cancer-drugs", image: "/products/cancer_treatment_pack.png", status: "show" },
-  { name: "Critical Care", slug: "critical-care", image: "/products/critical_care_injection.png", status: "show" },
-  { name: "Immunotherapy", slug: "immunotherapy", image: "/products/immunotherapy_kit.png", status: "show" },
-  { name: "Targeted Therapy", slug: "targeted-therapy", image: "/products/targeted_therapy_pack.png", status: "show" },
-  { name: "Hematology", slug: "hematology", image: "/products/oncology_box.png", status: "show" },
-  { name: "Bone Health", slug: "bone-health", image: "/products/bone_health_kit.png", status: "show" },
-  { name: "Injectable Medicines", slug: "injectable-medicines", image: "/products/injection_vial.png", status: "show" },
-  { name: "Oral Medicines", slug: "oral-medicines", image: "/products/capsule_bottle.png", status: "show" },
-  { name: "Imported Medicines", slug: "imported-medicines", image: "/products/imported_specialty_pack.png", status: "show" },
-  { name: "HIV Medicines", slug: "hiv-medicines", image: "/products/oncology_box.png", status: "show" },
-  { name: "Nephrology Medicines", slug: "nephrology-medicines", image: "/products/oncology_box.png", status: "show" },
-  { name: "Lifesaving Medicines", slug: "lifesaving-medicines", image: "/products/lifesaving_emergency_box.png", status: "show" }
-];
+const {
+  kureTherapeuticCategories,
+} = require("../utils/kureTherapeuticCategories");
+
+const categoriesData = kureTherapeuticCategories.map(
+  ({ name, slug, image, status }) => ({
+    name,
+    slug,
+    image,
+    status,
+  }),
+);
 
 // Generate 90 realistic wholesale B2B oncology/critical care/specialty medicines
 const medicinesList = [
