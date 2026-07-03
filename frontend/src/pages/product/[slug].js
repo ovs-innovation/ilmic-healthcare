@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import Link from "next/link";
@@ -23,6 +23,8 @@ import {
 } from "react-icons/fi";
 import { FaWhatsapp, FaGlobe } from "react-icons/fa";
 import { getProductImageSrc } from "@utils/productImage";
+import CatalogProductImage from "@components/ui/CatalogProductImage";
+import CatalogReadMore from "@components/ui/CatalogReadMore";
 
 const catColorMap = {
   "Oncology Medicines":   { light: "bg-[#F3EEFF]", text: "text-[#7C3AED]", border: "border-[#7C3AED]/20", badge: "bg-[#7C3AED] text-white", textBg: "bg-[#F3EEFF] text-[#7C3AED]" },
@@ -37,6 +39,21 @@ const catColorMap = {
   "Imported Medicines": { light: "bg-[#EDFFF5]", text: "text-[#059669]", border: "border-[#059669]/20", badge: "bg-[#059669] text-white", textBg: "bg-[#EDFFF5] text-[#059669]" },
   "Specialty Pharma":   { light: "bg-[#FFFBEA]", text: "text-[#D97706]", border: "border-[#D97706]/20", badge: "bg-[#D97706] text-white", textBg: "bg-[#FFFBEA] text-[#D97706]" },
 };
+
+const DEFAULT_PRODUCT_FAQS = [
+  {
+    question: "Is a medical prescription mandatory to import or source this medicine?",
+    answer: "Yes. Under international and local regulatory laws, a valid prescription from a registered medical specialist is required to secure sourcing quotes and supply.",
+  },
+  {
+    question: "How are temperature-sensitive (cold-chain) oncology drugs shipped?",
+    answer: "We deploy specialized temperature-controlled packaging utilizing validated cold-chain logistics (2°C to 8°C) with real-time temperature loggers to preserve efficacy.",
+  },
+  {
+    question: "What documentation is provided for pharmaceutical clearance?",
+    answer: "All shipments are accompanied by Certificate of Analysis (COA), manufacturer invoice, country of origin certificate, and import/export documentation.",
+  },
+];
 
 const getTitleString = (titleObj) => {
   if (!titleObj) return "";
@@ -54,6 +71,7 @@ const getDetailProductImage = (prod) => {
 const ProductScreen = ({ product, relatedProducts }) => {
   const { showingTranslateValue } = useUtilsFunction();
   const [activeTab, setActiveTab] = useState("description");
+  const [activeImageIdx, setActiveImageIdx] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const {
     register,
@@ -61,6 +79,34 @@ const ProductScreen = ({ product, relatedProducts }) => {
     reset,
     formState: { errors },
   } = useForm();
+
+  const productFaqs = useMemo(() => {
+    const custom = Array.isArray(product?.productFaqs)
+      ? product.productFaqs.filter((f) => f?.question?.trim())
+      : [];
+    return custom.length > 0 ? custom : DEFAULT_PRODUCT_FAQS;
+  }, [product?.productFaqs]);
+
+  const infoTabs = useMemo(() => {
+    const baseTabs = [
+      { id: "description", label: "Description", icon: FiInfo },
+      { id: "composition", label: "Composition", icon: FiDatabase },
+      { id: "indications", label: "Indications", icon: FiActivity },
+      { id: "dosage", label: "Dosage", icon: FiHeart },
+      { id: "packaging", label: "Packaging", icon: FiBox },
+      { id: "storage", label: "Storage", icon: FiLayers },
+      { id: "faqs", label: "FAQs", icon: FiHelpCircle },
+    ];
+    const customTabs = (product?.customSections || [])
+      .filter((sec) => sec?.title?.trim())
+      .map((sec, idx) => ({
+        id: `custom-${idx}`,
+        label: sec.title,
+        icon: FiGlobe,
+        content: sec.content || "",
+      }));
+    return [...baseTabs, ...customTabs];
+  }, [product?.customSections]);
 
   if (!product) {
     return (
@@ -81,6 +127,13 @@ const ProductScreen = ({ product, relatedProducts }) => {
   const catName = getTitleString(product.category?.name || product.category) || "Specialty Pharma";
   const colors = catColorMap[catName] || { light: "bg-gray-50", text: "text-[#0F4C81]", border: "border-gray-200", badge: "bg-[#0F4C81] text-white", textBg: "bg-gray-100 text-gray-800" };
   const imageUrl = getDetailProductImage(product);
+  const activeCustomTab = infoTabs.find((tab) => tab.id === activeTab && tab.content !== undefined);
+  const galleryImages = useMemo(() => {
+    const imgs = Array.isArray(product?.image) ? product.image.filter(Boolean) : [];
+    // Fallback to resolved imageUrl for older products with missing arrays
+    const base = imgs.length > 0 ? imgs : imageUrl ? [imageUrl] : [];
+    return base.slice(0, 4);
+  }, [product?.image, imageUrl]);
 
   const focusEnquiryForm = () => {
     const nameField = document.getElementById("enquiry-name");
@@ -97,7 +150,6 @@ const ProductScreen = ({ product, relatedProducts }) => {
         name: data.name,
         email: data.email,
         phone: data.phone,
-        companyName: data.companyName,
         address: data.address,
         state: data.state,
         district: data.district,
@@ -171,21 +223,61 @@ const ProductScreen = ({ product, relatedProducts }) => {
               {/* Section 1: Hero Section Card */}
               <div className="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
                 {/* Left: Product Image */}
-                <div className="md:col-span-5 flex flex-col items-center justify-center">
-                  <div className={`w-full rounded-xl aspect-square flex items-center justify-center p-6 overflow-hidden relative border border-slate-100 bg-slate-50/30`}>
-                    <img
-                      src={imageUrl}
+                <div className="md:col-span-6 flex flex-col items-stretch justify-center kure-product-gallery">
+                  <div className="kure-product-gallery__main relative w-full rounded-2xl border border-slate-100 overflow-hidden bg-white shadow-sm">
+                    <CatalogProductImage
+                      src={galleryImages[activeImageIdx] || galleryImages[0] || imageUrl}
                       alt={productName}
-                      className="max-h-[220px] w-auto object-contain transition-transform duration-500 hover:scale-105"
+                      className="kure-product-gallery__main-frame"
                     />
                     <span className={`absolute top-3 left-3 text-[9px] font-black px-2.5 py-1 rounded-full border uppercase tracking-wider shadow-sm ${colors.badge} ${colors.border}`}>
                       {catName}
                     </span>
                   </div>
+
+                  {/* 4-angle thumbnails (1 mandatory + 3 optional) */}
+                  <div className="kure-product-gallery__thumbs">
+                    {Array.from({ length: 4 }).map((_, idx) => {
+                      const thumbSrc = galleryImages[idx];
+                      const isActive = idx === activeImageIdx;
+                      const angleLabels = ["Main", "Angle 2", "Angle 3", "Angle 4"];
+                      return (
+                        <button
+                          key={idx}
+                          type="button"
+                          onClick={() => thumbSrc && setActiveImageIdx(idx)}
+                          disabled={!thumbSrc}
+                          className={`kure-product-gallery__thumb ${
+                            isActive ? "kure-product-gallery__thumb--active" : ""
+                          } ${thumbSrc ? "" : "kure-product-gallery__thumb--empty"}`}
+                          aria-label={`Product image ${idx + 1}`}
+                          aria-pressed={isActive}
+                        >
+                          {thumbSrc ? (
+                            <img
+                              src={thumbSrc}
+                              alt={`${productName} thumbnail ${idx + 1}`}
+                              loading="lazy"
+                            />
+                          ) : (
+                            <span className="kure-product-gallery__thumb-placeholder">
+                              <span className="kure-product-gallery__thumb-placeholder-icon">+</span>
+                              <span>{angleLabels[idx]}</span>
+                            </span>
+                          )}
+                          {thumbSrc && (
+                            <span className="kure-product-gallery__thumb-label">
+                              {angleLabels[idx]}
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
                 {/* Right: Spec Details & Sourcing CTA */}
-                <div className="md:col-span-7 space-y-6">
+                <div className="md:col-span-6 space-y-6">
                   <div>
                     <span className="text-[9px] font-bold uppercase tracking-wider text-[#0F4C81] bg-[#0F4C81]/10 px-2.5 py-1 rounded-md border border-[#0F4C81]/15">
                       {catName} Category
@@ -243,7 +335,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
                       Send Enquiry
                     </button>
                     <a
-                      href={`https://wa.me/919910768201?text=Hello%20Kure%20Pharma%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
+                      href={`https://wa.me/919911972234?text=Hello%20Kure%20Pharma%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[11px] py-3 px-6 rounded-xl transition-all shadow-sm uppercase tracking-wider text-center"
@@ -313,15 +405,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
               {/* Section 3: Tabbed Technical Information */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] overflow-hidden">
                 <div className="flex flex-wrap border-b border-slate-100 bg-slate-50/60 scrollbar-thin overflow-x-auto">
-                  {[
-                    { id: "description", label: "Description", icon: FiInfo },
-                    { id: "composition", label: "Composition", icon: FiDatabase },
-                    { id: "indications", label: "Indications", icon: FiActivity },
-                    { id: "dosage", label: "Dosage", icon: FiHeart },
-                    { id: "packaging", label: "Packaging", icon: FiBox },
-                    { id: "storage", label: "Storage", icon: FiLayers },
-                    { id: "faqs", label: "FAQs", icon: FiHelpCircle }
-                  ].map((tab) => {
+                  {infoTabs.map((tab) => {
                     const TabIcon = tab.icon;
                     return (
                       <button
@@ -381,40 +465,22 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   )}
                   {activeTab === "faqs" && (
                     <div className="space-y-4">
-                      <div>
-                        <h5 className="font-bold text-slate-850 mb-1">Q: Is a medical prescription mandatory to import or source this medicine?</h5>
-                        <p className="text-slate-550">A: Yes. Under international and local regulatory laws, a valid prescription from a registered medical specialist is required to secure sourcing quotes and supply.</p>
-                      </div>
-                      <div>
-                        <h5 className="font-bold text-slate-850 mb-1">Q: How are temperature-sensitive (cold-chain) oncology drugs shipped?</h5>
-                        <p className="text-slate-550">A: We deploy specialized temperature-controlled packaging utilizing validated cold-chain logistics (2°C to 8°C) with real-time temperature loggers to preserve efficacy.</p>
-                      </div>
-                      <div>
-                        <h5 className="font-bold text-slate-850 mb-1">Q: What documentation is provided for pharmaceutical clearance?</h5>
-                        <p className="text-slate-550">A: All shipments are accompanied by Certificate of Analysis (COA), manufacturer invoice, country of origin certificate, and import/export documentation.</p>
-                      </div>
+                      {productFaqs.map((faq, idx) => (
+                        <div key={idx}>
+                          <h5 className="font-bold text-slate-850 mb-1">Q: {faq.question}</h5>
+                          <p className="text-slate-550">A: {faq.answer}</p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {activeCustomTab && (
+                    <div>
+                      <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-3">{activeCustomTab.label}</h4>
+                      <p className="text-slate-600 whitespace-pre-line">{activeCustomTab.content}</p>
                     </div>
                   )}
                 </div>
               </div>
-
-              {/* Section 4: Dynamic Custom Sections Array */}
-              {product.customSections && product.customSections.length > 0 && (
-                <div className="space-y-6">
-                  {product.customSections.map((sec, idx) => (
-                    <div key={idx} className="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
-                      <div className="border-b border-slate-100 pb-3 mb-4">
-                        <h2 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
-                          <FaGlobe className="text-[#0F4C81] w-4 h-4" /> {sec.title}
-                        </h2>
-                      </div>
-                      <div className="text-[13px] font-medium text-slate-600 leading-relaxed whitespace-pre-line">
-                        {sec.content}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
 
             </div>
 
@@ -464,20 +530,10 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   <input
                     {...register("phone", { required: "Phone is required" })}
                     type="text"
-                    placeholder="e.g. +91 99107..."
+                    placeholder="e.g. +91 99119..."
                     className={`w-full bg-slate-50 border rounded-xl py-3 px-4 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/15 focus:border-[#0F4C81] transition duration-200 ${
                       errors.phone ? "border-red-500" : "border-slate-200"
                     }`}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-[9px] font-bold text-slate-450 uppercase tracking-wider mb-1">Company / Institution</label>
-                  <input
-                    {...register("companyName")}
-                    type="text"
-                    placeholder="Institution / Pharmacy Name"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl py-3 px-4 text-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0F4C81]/15 focus:border-[#0F4C81] transition duration-200"
                   />
                 </div>
 
@@ -569,13 +625,23 @@ const ProductScreen = ({ product, relatedProducts }) => {
 
               <div className="border-t border-slate-100 pt-4">
                 <a
-                  href={`https://wa.me/919910768201?text=Hello%20Kure%20Pharma%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
+                  href={`https://wa.me/919911972234?text=Hello%20Kure%20Pharma%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs py-3.5 rounded-xl transition-all duration-300 shadow-sm uppercase tracking-widest flex items-center justify-center gap-2 text-center"
                 >
                   <FaWhatsapp className="w-4.5 h-4.5" /> WhatsApp Sourcing
                 </a>
+              </div>
+
+              <div className="border-t border-slate-100 pt-5">
+                <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-3">Why source from Kure Pharma</h4>
+                <ul className="space-y-2 text-[11px] text-slate-550">
+                  <li className="flex gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#0F4C81] shrink-0" /> Verified sourcing support and batch/expiry confirmation where applicable</li>
+                  <li className="flex gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#0F4C81] shrink-0" /> Cold-chain logistics assistance for temperature-sensitive products</li>
+                  <li className="flex gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#0F4C81] shrink-0" /> Hospital/clinic supply handling and bulk enquiry support</li>
+                  <li className="flex gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#0F4C81] shrink-0" /> Fast quotation via WhatsApp and email</li>
+                </ul>
               </div>
             </div>
 
@@ -590,7 +656,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   View All Products →
                 </Link>
               </div>
-              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 sm:gap-6">
+              <div className="kure-catalog-grid grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {relatedProducts.map((p) => {
                   const pCatName = getTitleString(p.category?.name || p.category) || catName;
                   const pColors = catColorMap[pCatName] || colors;
@@ -599,27 +665,12 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   return (
                     <div 
                       key={p._id} 
-                      className="bg-white rounded-2xl border border-slate-100 hover:border-slate-200/60 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] hover:shadow-[0_12px_24px_-6px_rgba(15,76,129,0.08)] hover:-translate-y-1 transition-all duration-300 flex flex-col group p-4 text-center relative overflow-hidden"
+                      className="flex flex-col group border-2 border-[#c9a066]/55 rounded-sm bg-white overflow-hidden hover:border-[#b8860b]/80 transition-all duration-300 text-center"
                     >
-                      {/* Category Tag */}
-                      <span className={`absolute top-2.5 left-2.5 text-[8px] font-black px-2.5 py-0.5 rounded-full border tracking-wider uppercase z-10 shadow-sm ${pColors.badge} ${pColors.border}`}>
-                        {pCatName}
-                      </span>
-                      {/* Image area */}
-                      <div className="relative h-28 w-full flex items-center justify-center bg-white mb-3 mt-2 overflow-hidden rounded-lg">
-                        <img src={pImg} alt={pTitle} className="h-full w-full object-contain p-1 transition-transform duration-500 group-hover:scale-105" />
-                      </div>
-                      {/* Details */}
-                      <div className="flex flex-col flex-grow justify-between">
-                        <div className="w-full">
-                          <h4 className="text-[12px] font-bold text-slate-800 line-clamp-2 leading-snug mb-1 min-h-[32px] group-hover:text-[#0F4C81] transition-colors duration-200">{pTitle}</h4>
-                          <p className="text-[10px] text-slate-400 font-medium truncate mb-3">{p.composition || "Specialty Formulation"}</p>
-                        </div>
-                        <div className="mt-auto w-full flex justify-center pb-0.5">
-                          <Link href={`/product/${p.slug}`} className="inline-flex items-center justify-center w-full text-[10px] font-extrabold text-[#0F4C81] hover:text-white border border-[#0F4C81]/25 hover:border-[#0F4C81] hover:bg-[#0F4C81] py-1.5 px-3 rounded-lg transition-all duration-200 uppercase tracking-wider">
-                            Read more
-                          </Link>
-                        </div>
+                      <CatalogProductImage src={pImg} alt={pTitle} />
+                      <div className="kure-catalog-card-body">
+                        <h4 className="kure-catalog-card-title">{pTitle}</h4>
+                        <CatalogReadMore href={`/product/${p.slug}`} />
                       </div>
                     </div>
                   );

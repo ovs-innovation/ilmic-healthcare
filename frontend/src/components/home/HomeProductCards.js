@@ -238,7 +238,7 @@ export const HomePremiumProductCard = ({ product, onEnquire }) => {
                 core.navigateToProduct();
               }
             }}
-            className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#0F4C81] hover:text-white transition-colors"
+            className="absolute bottom-3 right-3 z-10 w-10 h-10 rounded-full bg-white shadow-lg border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#1A2E5B] hover:text-white transition-colors"
             aria-label="Enquire Now"
           >
             <FiMessageSquare className="w-[18px] h-[18px]" />
@@ -371,7 +371,7 @@ export const HomeTrendingProductCard = ({ product, onEnquire }) => {
             core.navigateToProduct();
           }
         }}
-        className="flex-shrink-0 self-center w-10 h-10 rounded-full bg-[#f3f5f8] border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#0F4C81] hover:text-white transition-colors"
+        className="flex-shrink-0 self-center w-10 h-10 rounded-full bg-[#f3f5f8] border border-gray-100 flex items-center justify-center text-[#0b1d3d] hover:bg-[#1A2E5B] hover:text-white transition-colors"
         aria-label="Enquire Now"
       >
         <FiMessageSquare className="w-[18px] h-[18px]" />

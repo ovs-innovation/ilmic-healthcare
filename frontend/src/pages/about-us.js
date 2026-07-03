@@ -16,6 +16,7 @@ import {
   FiHeart,
 } from "react-icons/fi";
 import Layout from "@layout/Layout";
+import PageHero from "@components/ui/PageHero";
 
 /* ─── Brand tokens ────────────────────────────────────────
    navy   : #1A2E5B  (deep traditional navy — like classic Indian pharma letterheads)
@@ -35,100 +36,18 @@ const AboutUsRedesign = () => {
   return (
     <Layout
       title="About Us - Kure Pharma | Premium Pharmaceutical Distributor"
-      description="Since 2016, Kure Pharma is a trusted trader, wholesaler, and supply partner of Anti-Cancer, Oncology, Critical Care, HIV, and Specialty medicines, led by Mr. Hitesh Sharma."
+      description="Established in 2016, Kure Pharma is a trusted trader, wholesaler, distributor, and retailer of pharmaceutical tablets, injectables, anti-cancer, oncology, critical care, and specialty medicines under Mr. Hitesh Sharma."
     >
-      {/* ── 1. HERO ── */}
-      <section
-        className="relative py-24 lg:py-36 overflow-hidden bg-cover bg-center bg-no-repeat"
-        style={{
-          backgroundImage: `linear-gradient(135deg, ${NAVY}F5 0%, ${NAVY}D0 60%, rgba(139,26,46,0.82) 100%), url('/about-hero-medicines.png')`,
-        }}
-      >
-        {/* subtle diagonal line overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "repeating-linear-gradient(45deg, white, white 1px, transparent 1px, transparent 12px)",
-          }}
-        />
-        {/* gold top-border accent */}
-        <div className="absolute top-0 left-0 right-0 h-1" style={{ background: GOLD }} />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          {/* breadcrumb */}
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2 text-[10px] font-black text-white/80 uppercase tracking-widest mb-6 bg-white/10 px-5 py-2 rounded-full border border-white/20 backdrop-blur-sm"
-          >
-            <Link href="/" className="hover:text-yellow-300 transition-colors">Home</Link>
-            <FiChevronRight className="w-3 h-3 text-white/40" />
-            <span className="text-white">About Kure Pharma</span>
-          </motion.div>
-
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl lg:text-7xl font-black text-white tracking-tight leading-none mb-5"
-          >
-            Redefining Medicine
-            <br />
-            <span
-              className="text-transparent bg-clip-text"
-              style={{ backgroundImage: `linear-gradient(90deg, #D4A831, #F5D070, #B8860B)` }}
-            >
-              Distribution in India
-            </span>
-          </motion.h1>
-
-          {/* gold rule */}
-          <motion.div
-            initial={{ scaleX: 0 }}
-            animate={{ scaleX: 1 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-            className="w-20 h-0.5 mx-auto mb-8"
-            style={{ background: GOLD }}
-          />
-
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="text-blue-100 max-w-2xl mx-auto text-base sm:text-lg leading-relaxed font-medium"
-          >
-            Established in 2016, Kure Pharma stands at the forefront of specialty pharmaceutical supply — bridging global manufacturers and patients who need life-saving medications.
-          </motion.p>
-
-          {/* trust badges */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-            className="flex flex-wrap justify-center gap-3 mt-10"
-          >
-            {[
-              { icon: FiShield, text: "100% Genuine Sourced" },
-              { icon: FiTruck,  text: "Pan-India Delivery"   },
-              { icon: FiAward,  text: "Trusted Since 2016"   },
-            ].map(({ icon: Icon, text }) => (
-              <div
-                key={text}
-                className="flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-sm border border-white/20 bg-white/10"
-              >
-                <Icon className="w-3.5 h-3.5" style={{ color: "#D4A831" }} />
-                <span className="text-white text-[11px] font-bold uppercase tracking-wider">{text}</span>
-              </div>
-            ))}
-          </motion.div>
-        </div>
-      </section>
-
+      <PageHero
+        breadcrumb="About Us"
+        title="About"
+        highlight="Kure Pharma"
+        subtitle="Established in 2016 — a trusted name in pharmaceutical distribution under the leadership of Mr. Hitesh Sharma."
+        bgImage="/about-hero-indian.png"
+      />
       {/* ── 2. STATS CARD ── */}
       <section className="relative z-20 -mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-white rounded-2xl shadow-xl border border-gray-100 p-8 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="kure-card p-8 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-8">
           {[
             { count: "9+ Years",  label: "Industry Legacy",      desc: "Delivering trust since 2016",        icon: FiAward,   iconColor: GOLD,   bg: "#FFFBEE" },
             { count: "500+",      label: "Specialty Medicines",   desc: "Oncology, ICU & Critical care",     icon: FiPackage, iconColor: NAVY,   bg: "#EEF0F8" },
@@ -172,7 +91,7 @@ const AboutUsRedesign = () => {
                 style={{ border: `6px solid white`, boxShadow: `0 20px 60px rgba(26,46,91,0.18)` }}
               >
                 <img
-                  src="/about-us.jpg"
+                  src="/about-indian-healthcare.png"
                   alt="Kure Pharma Corporate Operations"
                   className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700"
                   onError={(e) => { e.target.style.display = "none"; }}
@@ -182,7 +101,7 @@ const AboutUsRedesign = () => {
                     className="text-[9px] font-black uppercase tracking-widest mb-2 px-3 py-1 rounded-full self-start border"
                     style={{ color: "#D4A831", borderColor: "#D4A831", background: "rgba(180,134,11,0.15)" }}
                   >
-                    KURE PHARMA PVT LTD
+                    Kure Pharma
                   </span>
                   <h4 className="text-lg font-black leading-snug">Delivering Critical Healthcare Everywhere</h4>
                   <p className="text-white/75 text-xs font-semibold mt-1">Sourcing authentic oncology and specialty drugs pan-India.</p>
@@ -210,9 +129,8 @@ const AboutUsRedesign = () => {
                   Leadership &amp; Legacy
                 </div>
                 <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight" style={{ color: NAVY }}>
-                  Ethical Sourcing,{" "}
-                  <br />
-                  <span style={{ color: MAROON }}>Uncompromising Trust</span>
+                  About{" "}
+                  <span style={{ color: MAROON }}>Kure Pharma</span>
                 </h2>
               </div>
 
@@ -249,12 +167,12 @@ const AboutUsRedesign = () => {
                       transition={{ duration: 0.25 }}
                       className="space-y-4"
                     >
-                      <h3 className="text-lg font-black" style={{ color: NAVY }}>Established under Mr. Hitesh Sharma</h3>
+                      <h3 className="text-lg font-black" style={{ color: NAVY }}>Established in 2016</h3>
                       <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-medium">
-                        Since our inception in 2016, Kure Pharma has focused on sourcing high-end pharmaceutical tablets, injectable formulations, and life-critical compounds under the direction of <strong>Mr. Hitesh Sharma</strong>.
+                        Established in 2016, Kure Pharma has emerged as a trusted name in the pharmaceutical industry under the leadership of <strong>Mr. Hitesh Sharma</strong>. We are engaged as a Trader, Wholesaler/Distributor, Retailer, and Supplier of Services, offering a comprehensive range of Pharmaceutical Tablets, Injectable Medicines, Anti-Cancer Medicines, Oncology Drugs, Critical Care Medicines, and Specialty Pharmaceuticals.
                       </p>
                       <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-medium">
-                        We operate as authorized distributors, suppliers, and traders, fulfilling specialized medicine requirements for key hospital pharmacies, clinics, and government supply bodies nationwide.
+                        Our commitment to quality, authenticity, and timely delivery has enabled us to serve hospitals, healthcare institutions, pharmacies, and distributors. We strive to make life-saving medicines more accessible through ethical business practices, competitive pricing, and dependable customer support while maintaining the highest standards of quality and compliance.
                       </p>
                     </motion.div>
                   )}
@@ -377,12 +295,12 @@ const AboutUsRedesign = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             {[
-              { title: "Anti-Cancer Medicines",    desc: "Top-tier oncology drugs, targeted therapeutic compounds, chemotherapy vials, and supportive care items.",          image: "/products/oncology.png"  },
-              { title: "Critical Care",            desc: "Emergency ICU formulations, high-strength antibiotics, cardiovascular, and emergency injections.",                 image: "/products/critical.png"  },
-              { title: "Lifesaving Medicines",     desc: "Anti-retroviral treatments, organ transplant solutions, and nephrology drugs.",                                    image: "/products/hiv.png"       },
-              { title: "Imported Specialty Drugs", desc: "Novel global molecules and rare disease drugs imported legally with full compliance pathways.",                    image: "/products/imported.png"  },
-              { title: "Hormonal & Biotech Items", desc: "Precision biosimilars, growth hormones, and biotech formulations requiring cold storage.",                        image: "/products/specialty.png" },
-              { title: "Injectables & Infusions",  desc: "IV infusions, lyophilized injections, and sterile fluid formulations for hospital suites.",                       image: "/products/nephrology.png"},
+              { title: "Pharmaceutical Tablets",   desc: "Oral formulations, targeted therapy tablets, and prescription medicines sourced from trusted Indian manufacturers.", image: "/products/ramiven.png" },
+              { title: "Injectable Medicines",     desc: "ICU-grade injectables, biologics, and infusion formulations with cold-chain handling where required.",                 image: "/products/adcetris.png" },
+              { title: "Anti-Cancer Medicines",    desc: "Authenticated anti-cancer medicines for hospitals, oncology centres, and specialty pharmacies.",                    image: "/products/ramiven.png"  },
+              { title: "Oncology Drugs",           desc: "Oncology biologics, monoclonal antibodies, and targeted cancer therapies from licensed suppliers.",                 image: "/products/hertuma.png"  },
+              { title: "Critical Care Medicines",  desc: "Life-critical ICU medicines and emergency injectables for hospitals and healthcare institutions.",                  image: "/products/darzalex.png" },
+              { title: "Specialty Pharmaceuticals", desc: "Imported specialty drugs, HIV, nephrology, and rare-disease medicines with regulatory compliance.",              image: "/products/tagrisso.png" },
             ].map((cat, idx) => (
               <div
                 key={idx}
@@ -443,14 +361,14 @@ const AboutUsRedesign = () => {
                 iconBg: `rgba(139,26,46,0.25)`,
                 iconColor: "#F5A8B4",
                 title: "Our Dedicated Mission",
-                body: "To streamline the distribution of lifesaving medical formulations across India, ensuring clinics and pharmacies receive 100% authentic drugs at reasonable prices, backed by high-speed logistics and support.",
+                body: "To make life-saving medicines more accessible across India through ethical business practices, competitive pricing, dependable customer support, and the highest standards of quality and compliance.",
               },
               {
                 icon: FiEye,
                 iconBg: `rgba(212,168,49,0.2)`,
                 iconColor: "#D4A831",
                 title: "Our Vision",
-                body: "To become India's most recognized and respected trader and supplier of anti-cancer, critical care, and special formulations — setting high standards of medicine authenticity and client-centric distribution.",
+                body: "To be a trusted trader, wholesaler, distributor, and retailer of pharmaceutical tablets, injectables, oncology, critical care, and specialty medicines — serving hospitals, healthcare institutions, pharmacies, and distributors nationwide.",
               },
             ].map((card, i) => (
               <div

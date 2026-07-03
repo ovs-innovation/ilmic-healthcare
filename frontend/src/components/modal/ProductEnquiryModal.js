@@ -24,7 +24,6 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
         name: data.name,
         email: data.email,
         phone: data.phone,
-        companyName: data.companyName,
         productId: isValidObjectId ? product._id : null,
         productName: product.name || "General Sourcing Enquiry",
         message: data.message,
@@ -59,7 +58,7 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
           <span className="text-[10px] font-bold text-[#2A7DE1] uppercase tracking-wider block">
             Send Enquiry
           </span>
-          <h2 className="text-xl font-extrabold text-[#0F4C81] mt-1">
+          <h2 className="text-xl font-extrabold text-[#1A2E5B] mt-1">
             {product.name}
           </h2>
           <p className="text-xs text-gray-500 mt-1">
@@ -70,7 +69,7 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
         <form onSubmit={handleSubmit(onSubmitEnquiry)} className="space-y-4">
           
           <div>
-            <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+            <label className="block text-xs font-bold text-[#1A2E5B] uppercase tracking-wide mb-1">
               Your Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -86,7 +85,7 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+              <label className="block text-xs font-bold text-[#1A2E5B] uppercase tracking-wide mb-1">
                 Email Address <span className="text-red-500">*</span>
               </label>
               <input
@@ -104,7 +103,7 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+              <label className="block text-xs font-bold text-[#1A2E5B] uppercase tracking-wide mb-1">
                 Phone Number <span className="text-red-500">*</span>
               </label>
               <input
@@ -120,19 +119,7 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
-              Company Name
-            </label>
-            <input
-              {...register("companyName")}
-              type="text"
-              placeholder="e.g. Acme Pharmacy Ltd"
-              className="w-full border border-gray-200 rounded-lg py-2 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#2A7DE1]/30 focus:border-[#2A7DE1]"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-bold text-[#0F4C81] uppercase tracking-wide mb-1">
+            <label className="block text-xs font-bold text-[#1A2E5B] uppercase tracking-wide mb-1">
               Message / Specific Requirements <span className="text-red-500">*</span>
             </label>
             <textarea
@@ -148,7 +135,7 @@ const ProductEnquiryModal = ({ modalOpen, setModalOpen, product }) => {
 
           <button
             type="submit"
-            className="w-full bg-[#0F4C81] text-white py-3 rounded-lg font-bold text-sm hover:bg-[#2A7DE1] shadow-lg shadow-[#0F4C81]/15 hover:shadow-xl hover:shadow-[#2A7DE1]/15 transition-all duration-300 uppercase tracking-wider cursor-pointer"
+            className="w-full bg-[#1A2E5B] text-white py-3 rounded-lg font-bold text-sm hover:bg-[#2A7DE1] shadow-lg shadow-[#1A2E5B]/15 hover:shadow-xl hover:shadow-[#2A7DE1]/15 transition-all duration-300 uppercase tracking-wider cursor-pointer"
           >
             Submit Enquiry
           </button>

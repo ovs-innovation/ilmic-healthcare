@@ -258,6 +258,15 @@ const updateProduct = async (req, res) => {
       product.storageConditions = req.body.storageConditions || req.body.storage;
       product.storage = req.body.storage;
       product.availableStrengths = req.body.availableStrengths;
+      product.customSections = Array.isArray(req.body.customSections)
+        ? req.body.customSections
+        : product.customSections;
+      product.productFaqs = Array.isArray(req.body.productFaqs)
+        ? req.body.productFaqs
+        : product.productFaqs;
+      product.seoTitle = req.body.seoTitle || "";
+      product.seoDescription = req.body.seoDescription || "";
+      product.seoKeywords = req.body.seoKeywords || "";
 
       // Recalculate basePrice if price and gstPercentage are present
       const currentPrice = Number(req.body.price || product.price || 0);

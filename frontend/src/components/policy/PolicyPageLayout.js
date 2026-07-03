@@ -19,6 +19,9 @@ const PolicyPageLayout = ({
     <Layout title={title} description={title}>
       <div className="bg-white min-h-[60vh]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8 lg:py-12">
+          <h1 className="text-2xl sm:text-3xl font-black text-[#1A2E5B] mb-2">
+            {title}
+          </h1>
           {lastUpdated && (
             <p className="text-xs text-gray-500 mb-6">{lastUpdated}</p>
           )}
@@ -38,8 +41,8 @@ const PolicyPageLayout = ({
                   href={item.href}
                   className={
                     router.pathname === item.href
-                      ? "text-[#ED1C24] font-medium"
-                      : "text-gray-600 hover:text-[#ED1C24]"
+                      ? "text-[#1A2E5B] font-semibold"
+                      : "text-gray-600 hover:text-[#1A2E5B]"
                   }
                 >
                   {item.label}

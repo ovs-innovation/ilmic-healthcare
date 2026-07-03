@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;1,9..40,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -18,7 +18,7 @@ html,
 body {
   max-width: 100%;
   overflow-x: hidden;
-  font-family: 'DM Sans', Inter, sans-serif;
+  font-family: 'Poppins', 'Noto Sans Devanagari', sans-serif;
   font-size: 15px;
   letter-spacing: -0.01em;
 }
@@ -2182,4 +2182,4 @@ header, nav, .header-container {
 }
 .border-pharma-accent {
   border-color: #B8860B !important;
-}
+}

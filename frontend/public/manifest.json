@@ -1,14 +1,14 @@
 {
-  "theme_color": "#f69435",
-  "background_color": "#f69435",
+  "theme_color": "#1A2E5B",
+  "background_color": "#FFF9F0",
   "display": "standalone",
   "orientation": "portrait",
   "scope": "/",
   "start_url": "/",
   "id": "/",
   "short_name": "Kure Pharma",
-  "name": "Kure Pharma - Online Store",
-  "description": "Kure Pharma online store for daily essentials and wellness products",
+  "name": "Kure Pharma - Indian Pharmaceutical Distributor",
+  "description": "Trusted Pan-India distributor of oncology, critical care and specialty medicines",
   "icons": [
     {
       "src": "/icon-192x192.png",

@@ -59,6 +59,7 @@ const useProductSubmit = (id, selectedServices = []) => {
   const [quantityTiers, setQuantityTiers] = useState([]);
   const [datasheetUrl, setDatasheetUrl] = useState("");
   const [customSections, setCustomSections] = useState([]);
+  const [productFaqs, setProductFaqs] = useState([]);
 
   const HSN_PATTERN = /^[0-9A-Za-z]{2,8}$/;
 
@@ -287,6 +288,7 @@ const useProductSubmit = (id, selectedServices = []) => {
         seoDescription: data.seoDescription || "",
         seoKeywords: data.seoKeywords || "",
         customSections: customSections || [],
+        productFaqs: productFaqs || [],
       };
 
       // console.log("productData ===========>", productData, "data", data);
@@ -549,6 +551,9 @@ const useProductSubmit = (id, selectedServices = []) => {
             setValue("seoKeywords", res.seoKeywords || "");
             setCustomSections(
               Array.isArray(res.customSections) ? res.customSections : [],
+            );
+            setProductFaqs(
+              Array.isArray(res.productFaqs) ? res.productFaqs : [],
             );
             setHighlights(
               res.highlights && res.highlights[language ? language : "en"]
@@ -1108,6 +1113,8 @@ const useProductSubmit = (id, selectedServices = []) => {
     setDatasheetUrl,
     customSections,
     setCustomSections,
+    productFaqs,
+    setProductFaqs,
   };
 };
 

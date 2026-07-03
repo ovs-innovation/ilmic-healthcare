@@ -97,7 +97,7 @@ const KurePharmaHeroLogo = () => (
         </svg>
       </span>
       <span className="text-[1.65rem] sm:text-[1.85rem] font-black tracking-[-0.02em] text-[#111] leading-none">
-        KURE PHARMA
+        Kure Pharma
       </span>
     </div>
     <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.32em] text-[#222] mt-1.5 pr-0.5">
