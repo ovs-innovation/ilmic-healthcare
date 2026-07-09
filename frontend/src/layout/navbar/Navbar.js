@@ -1,64 +1,65 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState, useEffect } from "react";
-import { FiMenu, FiX, FiPhoneCall, FiShield, FiTruck, FiAward, FiSearch } from "react-icons/fi";
+import { useState, useEffect, useRef } from "react";
+import {
+  FiMenu,
+  FiX,
+  FiPhoneCall,
+  FiGlobe,
+  FiShield,
+  FiSearch,
+  FiMail,
+  FiChevronDown,
+  FiArrowRight,
+} from "react-icons/fi";
 import dynamic from "next/dynamic";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
+import { ILMIC_LOGO, ilmicCategories } from "@utils/ilmicDefaults";
 
 const Navbar = () => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
   const [genericEnquiryOpen, setGenericEnquiryOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const dropdownRef = useRef(null);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   const handleSearch = (event) => {
     event.preventDefault();
     const query = searchQuery.trim();
-    if (!query) {
-      router.push("/products");
-      return;
-    }
-    router.push({
-      pathname: "/products",
-      query: { name: query },
-    });
+    router.push(query ? { pathname: "/products", query: { name: query } } : "/products");
     setSearchQuery("");
     closeMobileMenu();
   };
 
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [router.asPath]);
+  useEffect(() => { setMobileMenuOpen(false); setProductsOpen(false); }, [router.asPath]);
 
   useEffect(() => {
     if (typeof document === "undefined") return undefined;
     document.body.style.overflow = mobileMenuOpen ? "hidden" : "";
-    return () => {
-      document.body.style.overflow = "";
-    };
+    return () => { document.body.style.overflow = ""; };
   }, [mobileMenuOpen]);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 8);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    const onClickOutside = (e) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setProductsOpen(false);
+    };
+    document.addEventListener("mousedown", onClickOutside);
+    return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
   const navLinks = [
-    { name: "Home", href: "/" },
+    { name: "Services", href: "/services" },
     { name: "About Us", href: "/about-us" },
-    { name: "Products", href: "/products" },
-    { name: "Contact", href: "/contact-us" },
+    { name: "Contact Us", href: "/contact-us" },
   ];
 
-  const generalProductPlaceholder = {
+  const generalPlaceholder = {
     _id: "general",
-    name: "General Sourcing Enquiry",
-    shortDescription: "Bulk pharmaceutical sourcing across India.",
+    name: "Product Enquiry",
+    shortDescription: "Enquire about oncology, general pharma, or surgical products.",
   };
 
   const isActive = (href) => {
@@ -66,192 +67,187 @@ const Navbar = () => {
     return router.pathname.startsWith(href);
   };
 
+  const productsActive =
+    router.pathname.startsWith("/products") ||
+    router.pathname.startsWith("/product") ||
+    router.pathname.startsWith("/category");
+
+  const navLinkClass = (active) =>
+    `px-3 py-2 text-[13px] font-bold transition-colors relative ${
+      active ? "text-ilmic-blue" : "text-[#1a3a52] hover:text-ilmic-blue"
+    }`;
+
   return (
     <>
-      <div className="kure-trust-strip hidden sm:block">
-        <div className="kure-container flex flex-wrap items-center justify-center gap-x-6 gap-y-1 py-1.5">
-          <span className="flex items-center gap-1.5">
-            <FiShield className="w-3.5 h-3.5 text-[#FF9933]" />
-            CDSCO Compliant Sourcing
+      {/* Top utility bar — reference exact */}
+      <div className="bg-[#0c4a6e] text-white text-[11px] font-medium hidden lg:block border-b border-white/5">
+        <div className="max-w-[1320px] mx-auto px-6 flex items-center justify-between h-9">
+          <span className="flex items-center gap-1.5 opacity-95">
+            <FiShield className="w-3 h-3 text-[#7ec8e3]" />
+            Oncology <span className="opacity-50 mx-0.5">•</span> General Pharma <span className="opacity-50 mx-0.5">•</span> Surgical
           </span>
-          <span className="hidden md:inline text-white/30">|</span>
-          <span className="flex items-center gap-1.5">
-            <FiTruck className="w-3.5 h-3.5 text-[#FF9933]" />
-            Pan-India Cold Chain Delivery
+          <span className="flex items-center gap-1.5 opacity-95">
+            <FiGlobe className="w-3 h-3 text-[#7ec8e3]" />
+            International Export Markets
           </span>
-          <span className="hidden lg:inline text-white/30">|</span>
-          <span className="hidden lg:flex items-center gap-1.5">
-            <FiAward className="w-3.5 h-3.5 text-[#FF9933]" />
-            Trusted Since 2016 · Delhi NCR
-          </span>
+          <div className="flex items-center gap-5">
+            <a href="mailto:ilmic.healthcare@gmail.com" className="flex items-center gap-1.5 hover:text-white transition-colors opacity-95">
+              <FiMail className="w-3 h-3 text-[#7ec8e3]" />
+              ilmic.healthcare@gmail.com
+            </a>
+            <a href="tel:+918810272080" className="flex items-center gap-1.5 hover:text-white transition-colors opacity-95">
+              <FiPhoneCall className="w-3 h-3 text-[#7ec8e3]" />
+              +91 88102 72080
+            </a>
+          </div>
         </div>
       </div>
 
-      <header
-        className={`sticky top-0 z-50 bg-[#FFF9F0]/95 backdrop-blur-md transition-shadow duration-300 ${
-          isScrolled ? "shadow-lg shadow-[#1A2E5B]/8" : "border-b border-[#B8860B]/15"
-        }`}
-      >
-        <div className="kure-container">
-          <div className="flex items-center justify-between h-16 lg:h-[80px] gap-2 lg:gap-3">
-            <Link
-              href="/"
-              className="relative flex items-center flex-shrink-0 min-w-0 z-20 -ml-1 sm:-ml-1.5 lg:-ml-2"
-            >
-              <img
-                src="/kure-logo.png"
-                alt="Kure Pharma"
-                className="h-[3.6rem] sm:h-[3.9rem] lg:h-[120px] w-auto max-w-[11rem] sm:max-w-[12.5rem] lg:max-w-none object-contain lg:-my-[1.25rem] drop-shadow-sm"
-              />
+      {/* Main navbar */}
+      <header className="sticky top-0 z-50 bg-white border-b border-[#e2edf5] shadow-[0_1px_0_rgba(0,0,0,0.04)]">
+        <div className="max-w-[1320px] mx-auto px-4 sm:px-6">
+          <div className="hidden lg:grid lg:grid-cols-[200px_1fr_auto] lg:items-center lg:gap-4 h-[72px]">
+            {/* Logo */}
+            <Link href="/" className="flex items-center flex-shrink-0">
+              <img src={ILMIC_LOGO} alt="ILMIC Health Care" className="h-[52px] w-auto max-w-[180px] object-contain" />
             </Link>
 
-            <nav className="hidden lg:flex items-center gap-0.5 flex-shrink-0">
-              {navLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`kure-nav-link ${isActive(item.href) ? "active" : ""}`}
+            {/* Center nav */}
+            <nav className="flex items-center justify-center gap-0.5 flex-wrap">
+              <Link href="/" className={navLinkClass(isActive("/"))}>
+                Home
+                {isActive("/") && <span className="absolute -bottom-[13px] left-3 right-3 h-[2px] bg-ilmic-blue rounded-full" />}
+              </Link>
+
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setProductsOpen((o) => !o)}
+                  className={`flex items-center gap-0.5 ${navLinkClass(productsActive)}`}
                 >
+                  Products
+                  <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${productsOpen ? "rotate-180" : ""}`} />
+                </button>
+                {productsOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-52 bg-white rounded-xl border border-[#e2edf5] shadow-xl py-1.5 z-50">
+                    <Link href="/products" className="block px-4 py-2 text-sm font-semibold hover:bg-[#f0f7fc] text-[#1a3a52]" onClick={() => setProductsOpen(false)}>All Products</Link>
+                    {ilmicCategories.map((cat) => (
+                      <Link key={cat.name} href={`/products?category=${encodeURIComponent(cat.category)}`} className="block px-4 py-2 text-sm text-[#5a7394] hover:bg-[#f0f7fc]" onClick={() => setProductsOpen(false)}>
+                        {cat.icon} {cat.name}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {navLinks.map((item) => (
+                <Link key={item.href} href={item.href} className={navLinkClass(isActive(item.href))}>
                   {item.name}
+                  {isActive(item.href) && <span className="absolute -bottom-[13px] left-3 right-3 h-[2px] bg-ilmic-blue rounded-full" />}
                 </Link>
               ))}
             </nav>
 
-            <form
-              onSubmit={handleSearch}
-              className="kure-nav-search hidden md:flex flex-1 min-w-0 max-w-[11rem] lg:max-w-[15rem] xl:max-w-[17rem]"
-            >
-              <FiSearch className="kure-nav-search__icon" aria-hidden />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search medicines..."
-                className="kure-nav-search__input"
-                aria-label="Search medicines"
-              />
-            </form>
+            {/* Right utilities */}
+            <div className="flex items-center gap-3 justify-end min-w-0">
+              <form onSubmit={handleSearch} className="relative w-[160px] xl:w-[175px]">
+                <input
+                  type="search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search products..."
+                  className="w-full h-9 pl-3.5 pr-9 text-[12px] border border-[#d4e3ef] rounded-full bg-[#f8fbfd] text-[#1a3a52] focus:outline-none focus:border-ilmic-blue focus:ring-1 focus:ring-ilmic-blue/20"
+                />
+                <button type="submit" className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8aa3b8]" aria-label="Search">
+                  <FiSearch className="w-3.5 h-3.5" />
+                </button>
+              </form>
 
-            <div className="hidden md:flex items-center gap-3 lg:gap-4 flex-shrink-0">
-              <a
-                href="tel:+919911972234"
-                className="flex items-center gap-2 text-sm font-bold text-[#1A2E5B] hover:text-[#8B1A2E] transition-colors"
-              >
-                <span className="w-9 h-9 rounded-full bg-[#1A2E5B]/8 flex items-center justify-center">
-                  <FiPhoneCall className="w-4 h-4 text-[#1A2E5B]" />
+              <div className="flex items-center gap-2">
+                <span className="w-9 h-9 rounded-full bg-[#e8f4fa] flex items-center justify-center flex-shrink-0">
+                  <FiPhoneCall className="w-4 h-4 text-ilmic-blue" />
                 </span>
-                <span className="hidden xl:inline">+91 99119 72234</span>
-              </a>
+                <div className="text-[10.5px] leading-[1.35] font-bold text-[#1a3a52]">
+                  <a href="tel:+918810272080" className="block hover:text-ilmic-blue">+91 88102 72080</a>
+                  <a href="tel:+919217174829" className="block text-[#6b8499] font-semibold hover:text-ilmic-blue">+91 92171 74829</a>
+                </div>
+              </div>
+
               <button
                 type="button"
                 onClick={() => setGenericEnquiryOpen(true)}
-                className="kure-btn kure-btn-primary !py-2.5 !px-5 !text-xs"
+                className="inline-flex items-center gap-2 h-9 pl-4 pr-1.5 rounded-lg bg-ilmic-blue text-white text-[12px] font-bold hover:bg-ilmic-blue-dark transition-colors"
               >
                 Send Enquiry
+                <span className="w-6 h-6 rounded-full bg-white/20 flex items-center justify-center">
+                  <FiArrowRight className="w-3 h-3" />
+                </span>
               </button>
             </div>
+          </div>
 
-            <button
-              type="button"
-              onClick={() => setMobileMenuOpen((open) => !open)}
-              className="lg:hidden p-2.5 rounded-lg text-[#1A2E5B] hover:bg-[#1A2E5B]/8 border border-[#1A2E5B]/10 transition-colors shrink-0"
-              aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
-              aria-expanded={mobileMenuOpen}
-            >
-              {mobileMenuOpen ? (
-                <FiX className="w-6 h-6" />
-              ) : (
-                <FiMenu className="w-6 h-6" />
-              )}
-            </button>
+          {/* Mobile row */}
+          <div className="flex lg:hidden items-center justify-between h-16 gap-2">
+            <Link href="/"><img src={ILMIC_LOGO} alt="ILMIC" className="h-10 w-auto max-w-[130px] object-contain" /></Link>
+            <div className="flex items-center gap-2">
+              <button type="button" onClick={() => setGenericEnquiryOpen(true)} className="text-[11px] font-bold px-3 py-2 rounded-lg bg-ilmic-blue text-white">Enquiry</button>
+              <button type="button" onClick={() => setMobileMenuOpen((o) => !o)} className="p-2 rounded-lg border border-[#e2edf5]" aria-label="Menu">
+                {mobileMenuOpen ? <FiX className="w-5 h-5" /> : <FiMenu className="w-5 h-5" />}
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       {mobileMenuOpen && (
-        <div className="kure-mobile-menu lg:hidden" role="presentation">
-          <button
-            type="button"
-            className="kure-mobile-menu__overlay"
-            onClick={closeMobileMenu}
-            aria-label="Close menu"
-          />
-          <div
-            className="kure-mobile-menu__panel"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Mobile navigation"
-          >
-            <div className="kure-mobile-menu__header">
-              <Link href="/" className="flex items-center shrink-0" onClick={closeMobileMenu}>
-                <img
-                  src="/kure-logo.png"
-                  alt="Kure Pharma"
-                  className="h-11 w-auto object-contain"
-                />
-              </Link>
-              <button
-                type="button"
-                className="kure-mobile-menu__close"
-                onClick={closeMobileMenu}
-                aria-label="Close menu"
-              >
-                <FiX className="w-6 h-6" />
-              </button>
+        <div className="llmic-mobile-menu lg:hidden">
+          <button type="button" className="llmic-mobile-menu__overlay" onClick={closeMobileMenu} aria-label="Close" />
+          <div className="llmic-mobile-menu__panel">
+            <div className="llmic-mobile-menu__header">
+              <Link href="/" onClick={closeMobileMenu}><img src={ILMIC_LOGO} alt="ILMIC" className="h-10 w-auto" /></Link>
+              <button type="button" className="llmic-mobile-menu__close" onClick={closeMobileMenu}><FiX className="w-6 h-6" /></button>
             </div>
-
-            <form onSubmit={handleSearch} className="kure-nav-search px-4 pb-3 md:hidden">
-              <FiSearch className="kure-nav-search__icon" aria-hidden />
-              <input
-                type="search"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search medicines..."
-                className="kure-nav-search__input"
-                aria-label="Search medicines"
-              />
-            </form>
-
-            <nav className="kure-mobile-menu__nav">
-              {navLinks.map((item) => (
+            <nav className="llmic-mobile-menu__nav">
+              <form onSubmit={handleSearch} className="px-1 pb-2">
+                <div className="relative">
+                  <input
+                    type="search"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search products..."
+                    className="w-full h-10 pl-4 pr-10 text-sm border border-ilmic-border rounded-xl bg-ilmic-blue-soft focus:outline-none focus:border-ilmic-blue"
+                  />
+                  <button type="submit" className="absolute right-3 top-1/2 -translate-y-1/2 text-ilmic-muted" aria-label="Search">
+                    <FiSearch className="w-4 h-4" />
+                  </button>
+                </div>
+              </form>
+              <Link href="/" onClick={closeMobileMenu} className="llmic-mobile-menu__link">Home</Link>
+              <Link href="/products" onClick={closeMobileMenu} className="llmic-mobile-menu__link">Products</Link>
+              {ilmicCategories.map((cat) => (
                 <Link
-                  key={item.href}
-                  href={item.href}
+                  key={cat.name}
+                  href={`/products?category=${encodeURIComponent(cat.category)}`}
                   onClick={closeMobileMenu}
-                  className={`kure-mobile-menu__link ${
-                    isActive(item.href) ? "kure-mobile-menu__link--active" : ""
-                  }`}
+                  className="llmic-mobile-menu__link !text-sm !font-medium !text-ilmic-muted"
                 >
-                  {item.name}
+                  {cat.icon} {cat.name}
                 </Link>
               ))}
+              {navLinks.map((item) => (
+                <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="llmic-mobile-menu__link">{item.name}</Link>
+              ))}
             </nav>
-
-            <div className="kure-mobile-menu__footer">
-              <a href="tel:+919911972234" className="kure-mobile-menu__phone">
-                <FiPhoneCall className="w-4 h-4 shrink-0" />
-                <span>+91 99119 72234</span>
-              </a>
-              <button
-                type="button"
-                onClick={() => {
-                  closeMobileMenu();
-                  setGenericEnquiryOpen(true);
-                }}
-                className="kure-btn kure-btn-primary w-full"
-              >
-                Send Enquiry
-              </button>
+            <div className="llmic-mobile-menu__footer">
+              <a href="tel:+918810272080" className="llmic-mobile-menu__phone"><FiPhoneCall /> +91 88102 72080</a>
+              <a href="tel:+919217174829" className="llmic-mobile-menu__phone"><FiPhoneCall /> +91 92171 74829</a>
+              <button type="button" onClick={() => { closeMobileMenu(); setGenericEnquiryOpen(true); }} className="llmic-btn llmic-btn-coral w-full">Send Enquiry</button>
             </div>
           </div>
         </div>
       )}
 
-      <ProductEnquiryModal
-        modalOpen={genericEnquiryOpen}
-        setModalOpen={setGenericEnquiryOpen}
-        product={generalProductPlaceholder}
-      />
+      <ProductEnquiryModal modalOpen={genericEnquiryOpen} setModalOpen={setGenericEnquiryOpen} product={generalPlaceholder} />
     </>
   );
 };

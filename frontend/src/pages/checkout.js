@@ -276,8 +276,8 @@ const Checkout = () => {
           amount:
             razorpayOrder?.amount ?? Math.round(grandTotal * 100),
           currency: razorpayOrder?.currency ?? "INR",
-          name: "Kure Pharma",
-          description: "Kure Pharma Order Payment",
+          name: "ILMIC Health Care",
+          description: "ILMIC Health Care Order Payment",
           order_id: razorpayOrder?.id,
           prefill: {
             name: fullName,
@@ -342,7 +342,7 @@ const Checkout = () => {
     !isBuyNowFlow
   ) {
     return (
-      <Layout title="Checkout" description="Complete your order at Kure Pharma">
+      <Layout title="Checkout" description="Complete your order at ILMIC Health Care">
         <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
           <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mb-6">
             <FiShoppingBag className="w-12 h-12 text-gray-300" />
@@ -363,7 +363,7 @@ const Checkout = () => {
   }
 
   return (
-    <Layout title="Checkout" description="Complete your order at Kure Pharma">
+    <Layout title="Checkout" description="Complete your order at ILMIC Health Care">
       <div className="bg-gray-50 min-h-screen py-10 lg:py-20">
         <div className="max-w-screen-2xl mx-auto px-3 sm:px-6 lg:px-10 min-w-0">
           {/* Go Back Button */}

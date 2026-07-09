@@ -635,7 +635,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
               </div>
 
               <div className="border-t border-slate-100 pt-5">
-                <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-3">Why source from Kure Pharma</h4>
+                <h4 className="text-[10px] font-black text-slate-700 uppercase tracking-widest mb-3">Why source from ILMIC Health Care</h4>
                 <ul className="space-y-2 text-[11px] text-slate-550">
                   <li className="flex gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#0F4C81] shrink-0" /> Verified sourcing support and batch/expiry confirmation where applicable</li>
                   <li className="flex gap-2"><span className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#0F4C81] shrink-0" /> Cold-chain logistics assistance for temperature-sensitive products</li>

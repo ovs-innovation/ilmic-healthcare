@@ -18,13 +18,13 @@ const NotFound = () => {
   return (
     <>
       <Head>
-        <title>Kure Pharma | 404</title>
+        <title>ILMIC Health Care | 404</title>
         <meta name="description" content="This is page not found 404 page" />
         <link rel="icon" href="/favicon.png" />
       </Head>
       <div className="px-6 py-10 lg:py-20 bg-green-50 h-screen flex flex-wrap content-center">
         <div className="block justify-items-stretch mx-auto items-center text-center">
-          <Image width={650} height={450} src="/404.svg" alt="Kure Pharma" />
+          <Image width={650} height={450} src="/404.svg" alt="ILMIC Health Care" />
           <h2 className="font-bold font-serif font-2xl lg:text-4xl leading-6 mb-4">
             Page is not found!
           </h2>

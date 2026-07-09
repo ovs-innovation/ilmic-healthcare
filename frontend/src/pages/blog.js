@@ -43,15 +43,11 @@ const Blog = () => {
   };
 
   return (
-    <Layout title="Blog" description="Kure Pharma Test & Tag Melbourne Blog">
-      {/* Hero Section */}
-      <div className="relative bg-[#111] text-white min-h-[380px] sm:min-h-[380px] lg:min-h-[420px]">
-        <Image
-          src="https://kurepharma.com/wp-content/uploads/al_opt_content/IMAGE/kurepharma.com/wp-content/uploads/2025/03/Fire-Safety-Training-for-Oil-Gas-960x640-1.jpg.bv.webp"
-          alt="Blog"
-          fill
-          className="object-cover opacity-40"
-          priority
+    <Layout title="Blog" description="ILMIC Health Care — pharma industry news, oncology updates and export insights.">
+      <div className="relative bg-slate-900 text-white min-h-[320px] flex items-center">
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-30"
+          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80)" }}
         />
         <div className="relative max-w-screen-2xl mx-auto px-4 sm:px-10 py-24 lg:py-32 text-center">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-6">

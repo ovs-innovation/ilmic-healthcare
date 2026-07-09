@@ -26,7 +26,7 @@ const Invoice = ({ data, printRef, globalSetting, currency }) => {
                 <span className="text-green-500">{data.status}</span>
               )}
               {data.status === "Pending" && (
-                <span className="text-orange-500">{data.status}</span>
+                <span className="text-ilmic-blue">{data.status}</span>
               )}
               {data.status === "Cancel" && (
                 <span className="text-red-500">{data.status}</span>

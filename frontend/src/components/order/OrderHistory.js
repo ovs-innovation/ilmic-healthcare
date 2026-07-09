@@ -23,7 +23,7 @@ const OrderHistory = ({ order, currency }) => {
           <span className="text-green-500">{order.status}</span>
         )}
         {order.status === "Pending" && (
-          <span className="text-orange-500">{order.status}</span>
+          <span className="text-ilmic-blue">{order.status}</span>
         )}
         {order.status === "Cancel" && (
           <span className="text-red-500">{order.status}</span>

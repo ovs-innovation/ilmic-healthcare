@@ -1,468 +1,156 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  FiChevronRight,
-  FiCheckCircle,
-  FiShield,
-  FiTarget,
-  FiEye,
-  FiTruck,
-  FiAward,
-  FiActivity,
-  FiPackage,
-  FiStar,
-  FiUsers,
-  FiHeart,
-} from "react-icons/fi";
+import { motion } from "framer-motion";
+import { FiChevronRight, FiShield, FiTarget, FiEye, FiGlobe, FiAward, FiUsers, FiHeart } from "react-icons/fi";
 import Layout from "@layout/Layout";
-import PageHero from "@components/ui/PageHero";
+import { companyProfile } from "@utils/ilmicDefaults";
 
-/* ─── Brand tokens ────────────────────────────────────────
-   navy   : #1A2E5B  (deep traditional navy — like classic Indian pharma letterheads)
-   maroon : #8B1A2E  (rich burgundy-maroon)
-   gold   : #B8860B  (antique dark gold)
-   cream  : #FFF9F0  (warm ivory — old parchment feel)
-   ──────────────────────────────────────────────────────── */
-
-const NAVY   = "#1A2E5B";
-const MAROON = "#8B1A2E";
-const GOLD   = "#B8860B";
-const CREAM  = "#FFF9F0";
-
-const AboutUsRedesign = () => {
-  const [activeTab, setActiveTab] = useState("story");
+const AboutUs = () => {
+  const [activeTab, setActiveTab] = useState("profile");
 
   return (
     <Layout
-      title="About Us - Kure Pharma | Premium Pharmaceutical Distributor"
-      description="Established in 2016, Kure Pharma is a trusted trader, wholesaler, distributor, and retailer of pharmaceutical tablets, injectables, anti-cancer, oncology, critical care, and specialty medicines under Mr. Hitesh Sharma."
+      title="About ILMIC Health Care Pvt. Ltd."
+      description="ILMIC Health Care Pvt. Ltd. incorporated 28th Aug 2021. Oncology, general pharma, surgical products, hospital management & medical tourism. Led by Mr. Maroof Reza."
     >
-      <PageHero
-        breadcrumb="About Us"
-        title="About"
-        highlight="Kure Pharma"
-        subtitle="Established in 2016 — a trusted name in pharmaceutical distribution under the leadership of Mr. Hitesh Sharma."
-        bgImage="/about-hero-indian.png"
-      />
-      {/* ── 2. STATS CARD ── */}
-      <section className="relative z-20 -mt-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="kure-card p-8 sm:p-10 grid grid-cols-2 lg:grid-cols-4 gap-8">
+      <section className="relative min-h-[50vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: "url(https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80)" }} />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-900/80 to-slate-900/60" />
+        <div className="relative llmic-container py-20">
+          <p className="text-blue-300 text-sm font-bold uppercase tracking-widest mb-4">About Company</p>
+          <h1 className="text-4xl sm:text-5xl font-black text-white leading-tight max-w-3xl">
+            ILMIC <span className="text-blue-300">Health Care Pvt. Ltd.</span>
+          </h1>
+          <p className="text-slate-300 text-lg mt-4 max-w-2xl">
+            Incorporated 28th August 2021 — focused exclusively on health sector since beginning.
+          </p>
+        </div>
+      </section>
+
+      <section className="relative z-10 -mt-10 llmic-container">
+        <div className="llmic-card p-8 grid grid-cols-2 lg:grid-cols-4 gap-8">
           {[
-            { count: "9+ Years",  label: "Industry Legacy",      desc: "Delivering trust since 2016",        icon: FiAward,   iconColor: GOLD,   bg: "#FFFBEE" },
-            { count: "500+",      label: "Specialty Medicines",   desc: "Oncology, ICU & Critical care",     icon: FiPackage, iconColor: NAVY,   bg: "#EEF0F8" },
-            { count: "1000+",     label: "Partners Sourced",      desc: "Hospitals & retail pharmacies",     icon: FiUsers,   iconColor: MAROON, bg: "#F8EEEE" },
-            { count: "100%",      label: "Genuine Products",      desc: "Direct manufacturer sourcing",      icon: FiShield,  iconColor: NAVY,   bg: "#EEF0F8" },
+            { count: "2021", label: "Incorporated", desc: "Companies Act 2013", icon: FiAward },
+            { count: "50+", label: "Hospitals Managed", desc: "Abroad & medical tourism", icon: FiHeart },
+            { count: "8+", label: "Export Markets", desc: "Africa, Dubai, CIS & more", icon: FiGlobe },
+            { count: "3", label: "Core Divisions", desc: "Oncology, Pharma, Surgical", icon: FiShield },
           ].map((item, i) => (
-            <div key={i} className="flex flex-col sm:flex-row items-center sm:items-start text-center sm:text-left gap-4">
-              <div
-                className="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
-                style={{ background: item.bg, color: item.iconColor }}
-              >
-                <item.icon className="w-5 h-5" />
+            <div key={i} className="text-center">
+              <div className="w-12 h-12 rounded-xl bg-ilmic-blue-light text-ilmic-blue flex items-center justify-center mx-auto mb-3">
+                <item.icon className="w-6 h-6" />
               </div>
-              <div>
-                <div className="text-xl sm:text-2xl font-black text-gray-900 leading-tight" style={{ color: NAVY }}>{item.count}</div>
-                <div className="text-xs font-bold text-gray-600 mt-0.5">{item.label}</div>
-                <div className="text-[10px] text-gray-400 font-medium mt-0.5">{item.desc}</div>
-              </div>
+              <div className="text-2xl font-black text-slate-900">{item.count}</div>
+              <div className="text-sm font-bold text-slate-700 mt-1">{item.label}</div>
+              <div className="text-xs text-slate-500 mt-0.5">{item.desc}</div>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ── 3. STORY SECTION ── */}
-      <section className="py-20 lg:py-28 relative overflow-hidden" style={{ background: CREAM }}>
-        {/* subtle watermark-like ornament */}
-        <div
-          className="absolute right-0 top-1/2 -translate-y-1/2 w-72 h-72 opacity-[0.03] pointer-events-none select-none text-[20rem] font-black leading-none"
-          style={{ color: NAVY }}
-        >
-          K
-        </div>
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
-
-            {/* Left image */}
-            <div className="lg:col-span-5 relative flex justify-center">
-              <div
-                className="relative rounded-2xl overflow-hidden shadow-2xl max-w-sm sm:max-w-md w-full"
-                style={{ border: `6px solid white`, boxShadow: `0 20px 60px rgba(26,46,91,0.18)` }}
-              >
-                <img
-                  src="/about-indian-healthcare.png"
-                  alt="Kure Pharma Corporate Operations"
-                  className="w-full h-auto object-cover hover:scale-105 transition-transform duration-700"
-                  onError={(e) => { e.target.style.display = "none"; }}
-                />
-                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white" style={{ background: "linear-gradient(to top, rgba(26,46,91,0.85) 0%, transparent 60%)" }}>
-                  <span
-                    className="text-[9px] font-black uppercase tracking-widest mb-2 px-3 py-1 rounded-full self-start border"
-                    style={{ color: "#D4A831", borderColor: "#D4A831", background: "rgba(180,134,11,0.15)" }}
-                  >
-                    Kure Pharma
-                  </span>
-                  <h4 className="text-lg font-black leading-snug">Delivering Critical Healthcare Everywhere</h4>
-                  <p className="text-white/75 text-xs font-semibold mt-1">Sourcing authentic oncology and specialty drugs pan-India.</p>
-                </div>
-              </div>
-
-              {/* Badge */}
-              <div
-                className="absolute -bottom-5 -right-5 text-white rounded-xl shadow-lg px-5 py-4 flex flex-col items-center z-20"
-                style={{ background: MAROON }}
-              >
-                <span className="text-2xl font-black leading-none">9+</span>
-                <span className="text-[9px] font-bold uppercase tracking-wider mt-0.5" style={{ color: "#F5C6C6" }}>Yrs Trust</span>
-              </div>
-            </div>
-
-            {/* Right tabs */}
-            <div className="lg:col-span-7 space-y-8">
-              <div>
-                <div
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 mb-5 rounded-sm text-[10px] font-black uppercase tracking-[0.2em]"
-                  style={{ background: "#F5EDD5", color: GOLD, borderLeft: `3px solid ${GOLD}` }}
-                >
-                  <FiStar className="w-3 h-3" />
-                  Leadership &amp; Legacy
-                </div>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-tight" style={{ color: NAVY }}>
-                  About{" "}
-                  <span style={{ color: MAROON }}>Kure Pharma</span>
-                </h2>
-              </div>
-
-              {/* Tab buttons */}
-              <div className="flex gap-2 flex-wrap border-b border-gray-200 pb-4">
-                {[
-                  { id: "story",     icon: FiActivity, title: "Our Story"           },
-                  { id: "approach",  icon: FiPackage,  title: "Logistics"            },
-                  { id: "guarantee", icon: FiShield,   title: "Authenticity Pledge"  },
-                ].map((tab) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className="flex items-center gap-2 px-5 py-2.5 text-xs sm:text-sm font-bold cursor-pointer transition-all duration-200"
-                    style={
-                      activeTab === tab.id
-                        ? { background: NAVY, color: "white", borderRadius: "6px", boxShadow: "0 4px 12px rgba(26,46,91,0.25)" }
-                        : { background: "white", color: "#4b5563", border: "1px solid #e5e7eb", borderRadius: "6px" }
-                    }
-                  >
-                    <tab.icon className="w-4 h-4" />
-                    <span>{tab.title}</span>
-                  </button>
-                ))}
-              </div>
-
-              {/* Tab body */}
-              <div className="min-h-[220px]">
-                <AnimatePresence mode="wait">
-                  {activeTab === "story" && (
-                    <motion.div
-                      key="story"
-                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.25 }}
-                      className="space-y-4"
-                    >
-                      <h3 className="text-lg font-black" style={{ color: NAVY }}>Established in 2016</h3>
-                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-medium">
-                        Established in 2016, Kure Pharma has emerged as a trusted name in the pharmaceutical industry under the leadership of <strong>Mr. Hitesh Sharma</strong>. We are engaged as a Trader, Wholesaler/Distributor, Retailer, and Supplier of Services, offering a comprehensive range of Pharmaceutical Tablets, Injectable Medicines, Anti-Cancer Medicines, Oncology Drugs, Critical Care Medicines, and Specialty Pharmaceuticals.
-                      </p>
-                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-medium">
-                        Our commitment to quality, authenticity, and timely delivery has enabled us to serve hospitals, healthcare institutions, pharmacies, and distributors. We strive to make life-saving medicines more accessible through ethical business practices, competitive pricing, and dependable customer support while maintaining the highest standards of quality and compliance.
-                      </p>
-                    </motion.div>
-                  )}
-                  {activeTab === "approach" && (
-                    <motion.div
-                      key="approach"
-                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.25 }}
-                      className="space-y-4"
-                    >
-                      <h3 className="text-lg font-black" style={{ color: NAVY }}>Timely Delivery &amp; Cold-Chain Logistics</h3>
-                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-medium">
-                        We employ strict cold-chain management and verified shipping channels to preserve the potency and bio-structure of delicate injectable solutions and oncology drugs.
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                        {[
-                          "Real-time temperature tracking & storage",
-                          "Hassle-free shipping across Pan-India",
-                          "Experienced medical product packaging",
-                          "Verified logistics partners & networks",
-                        ].map((item, idx) => (
-                          <div key={idx} className="flex items-center gap-2 text-xs font-bold text-gray-700">
-                            <FiCheckCircle className="w-4 h-4 flex-shrink-0" style={{ color: MAROON }} />
-                            <span>{item}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                  {activeTab === "guarantee" && (
-                    <motion.div
-                      key="guarantee"
-                      initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.25 }}
-                      className="space-y-4"
-                    >
-                      <h3 className="text-lg font-black" style={{ color: NAVY }}>Zero Tolerance for Counterfeit Drugs</h3>
-                      <p className="text-gray-600 text-sm sm:text-base leading-relaxed font-medium">
-                        Every product is backed by batch analysis certificates, direct sourcing trails, and strict laboratory controls. Your patients&apos; safety is Kure Pharma&apos;s highest priority.
-                      </p>
-                      <div className="flex flex-wrap gap-4 mt-6">
-                        <div className="flex items-center gap-2 px-4 py-3 rounded-lg border" style={{ background: "#F8EEEE", borderColor: `${MAROON}30` }}>
-                          <FiShield className="w-5 h-5 flex-shrink-0" style={{ color: MAROON }} />
-                          <span className="text-[11px] font-black uppercase tracking-wide" style={{ color: MAROON }}>100% Genuine</span>
-                        </div>
-                        <div className="flex items-center gap-2 px-4 py-3 rounded-lg border" style={{ background: "#FFFBEE", borderColor: `${GOLD}40` }}>
-                          <FiAward className="w-5 h-5 flex-shrink-0" style={{ color: GOLD }} />
-                          <span className="text-[11px] font-black uppercase tracking-wide" style={{ color: GOLD }}>FDA Approved Brands</span>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. TIMELINE ── */}
-      <section className="py-20 lg:py-24 bg-white border-y border-gray-100 relative overflow-hidden">
-        {/* gold thin top accent */}
-        <div className="absolute top-0 left-1/4 right-1/4 h-px" style={{ background: GOLD }} />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 space-y-3">
-            <span
-              className="inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[0.2em] border"
-              style={{ color: GOLD, borderColor: GOLD, background: "#FFFBEE" }}
-            >
-              Our Milestones
-            </span>
-            <h2 className="text-3xl md:text-5xl font-black text-gray-900 tracking-tight">
-              The Growth of <span style={{ color: MAROON }}>Kure Pharma</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-            <div className="hidden md:block absolute top-7 left-[12%] right-[12%] h-px" style={{ background: `linear-gradient(90deg, ${NAVY}, ${MAROON})`, opacity: 0.25 }} />
-
+      <section className="llmic-section bg-white">
+        <div className="llmic-container">
+          <div className="flex flex-wrap gap-2 mb-10 border-b border-slate-200 pb-4">
             {[
-              { year: "2016", title: "Kure Pharma Founded",        desc: "Established operations in Delhi NCR region, setting up strong trader connections." },
-              { year: "2019", title: "Pan-India Expansion",        desc: "Registered supplies for leading corporate hospitals and regional pharmacy chains."  },
-              { year: "2022", title: "Cold-Chain Integration",     desc: "Implemented advanced refrigeration capabilities for sensitive oncology injectables." },
-              { year: "2026", title: "Digitized Supply Ecosystem", desc: "Launched dynamic digital catalogs for fast sourcing of lifesaving & specialty drugs." },
-            ].map((m, idx) => (
-              <div
-                key={idx}
-                className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm relative z-10 flex flex-col items-center text-center space-y-4 hover:shadow-md transition-all duration-300"
-                style={{ borderTop: `3px solid ${idx % 2 === 0 ? NAVY : MAROON}` }}
+              { id: "profile", label: "Company Profile" },
+              { id: "introduction", label: "Introduction" },
+              { id: "management", label: "Management" },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === tab.id ? "bg-ilmic-blue text-white" : "bg-slate-100 text-slate-600 hover:bg-slate-200"}`}
               >
-                <div
-                  className="w-14 h-14 rounded-full text-white flex items-center justify-center font-black text-sm shadow"
-                  style={{ background: idx % 2 === 0 ? NAVY : MAROON }}
-                >
-                  {m.year}
-                </div>
-                <h4 className="font-black text-gray-900 text-sm">{m.title}</h4>
-                <p className="text-xs text-gray-500 font-medium leading-relaxed">{m.desc}</p>
-              </div>
+                {tab.label}
+              </button>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* ── 5. PRODUCT PORTFOLIO ── */}
-      <section className="py-20 lg:py-28" style={{ background: CREAM }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16 space-y-3">
-            <span
-              className="inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[0.2em] border"
-              style={{ color: MAROON, borderColor: MAROON, background: "#F8EEEE" }}
-            >
-              Our Sourcing Portfolios
-            </span>
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight" style={{ color: NAVY }}>
-              Products We Deliver <span style={{ color: MAROON }}>With Care</span>
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            {[
-              { title: "Pharmaceutical Tablets",   desc: "Oral formulations, targeted therapy tablets, and prescription medicines sourced from trusted Indian manufacturers.", image: "/products/ramiven.png" },
-              { title: "Injectable Medicines",     desc: "ICU-grade injectables, biologics, and infusion formulations with cold-chain handling where required.",                 image: "/products/adcetris.png" },
-              { title: "Anti-Cancer Medicines",    desc: "Authenticated anti-cancer medicines for hospitals, oncology centres, and specialty pharmacies.",                    image: "/products/ramiven.png"  },
-              { title: "Oncology Drugs",           desc: "Oncology biologics, monoclonal antibodies, and targeted cancer therapies from licensed suppliers.",                 image: "/products/hertuma.png"  },
-              { title: "Critical Care Medicines",  desc: "Life-critical ICU medicines and emergency injectables for hospitals and healthcare institutions.",                  image: "/products/darzalex.png" },
-              { title: "Specialty Pharmaceuticals", desc: "Imported specialty drugs, HIV, nephrology, and rare-disease medicines with regulatory compliance.",              image: "/products/tagrisso.png" },
-            ].map((cat, idx) => (
-              <div
-                key={idx}
-                className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col group"
-                style={{ borderTop: `3px solid ${idx % 2 === 0 ? NAVY : MAROON}` }}
-              >
-                {/* big product image */}
-                <div className="w-full h-44 flex items-center justify-center rounded-lg mb-5 overflow-hidden" style={{ background: "#F4F6FC" }}>
-                  <img
-                    src={cat.image}
-                    alt={cat.title}
-                    className="w-full h-full object-contain p-3 group-hover:scale-105 transition-transform duration-300"
-                    onError={(e) => { e.target.style.display = "none"; }}
-                  />
-                </div>
-                <h4 className="text-base font-black text-gray-900 mb-2">{cat.title}</h4>
-                <p className="text-xs text-gray-500 font-medium leading-relaxed flex-1">{cat.desc}</p>
-                <Link
-                  href="/products"
-                  className="inline-flex items-center gap-1 mt-5 text-xs font-black uppercase tracking-wider transition-colors"
-                  style={{ color: NAVY }}
-                >
-                  Browse Range <FiChevronRight className="w-3.5 h-3.5" />
-                </Link>
+          {activeTab === "profile" && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
+              <h2 className="llmic-heading mb-6">Company's Profile</h2>
+              <div className="space-y-4 text-slate-600 leading-relaxed text-base">
+                <p>
+                  <strong className="text-slate-900">ILMIC HEALTH CARE PVT. LTD.</strong> was incorporated on <strong>28th August 2021</strong> under the Companies Act 2013 (18 of 2013), registered with the Registrar of Companies, Delhi & NCR.
+                </p>
+                <p>
+                  Our company's diverse interests range from <strong>Hospital Management</strong>, <strong>Pharmaceuticals</strong>, <strong>All Hospital Products</strong>, and <strong>Foods</strong>.
+                </p>
+                <p>
+                  Since the beginning, our company has been focusing exclusively towards the health sector, till date.
+                </p>
+                <p>
+                  Our company has a strong presence in domestic & international markets of pharmaceuticals, like <strong>Oncology Products</strong>, <strong>Pediatric Products</strong>, <strong>Health Supplements</strong>, <strong>Cardio-diabetic Products</strong> in our own brands.
+                </p>
+                <p>
+                  Our company's offices in <strong>Luanda (Republic of Angola)</strong> and <strong>Delhi (India)</strong> are there for effective services & business expansions.
+                </p>
               </div>
-            ))}
-          </div>
-        </div>
-      </section>
+            </motion.div>
+          )}
 
-      {/* ── 6. VISION & MISSION ── */}
-      <section className="py-20 lg:py-24 relative overflow-hidden" style={{ background: NAVY }}>
-        {/* Subtle diagonal overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.05] pointer-events-none"
-          style={{
-            backgroundImage: "repeating-linear-gradient(-45deg, white, white 1px, transparent 1px, transparent 14px)",
-          }}
-        />
-        {/* gold top accent */}
-        <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: GOLD }} />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-14">
-            <span
-              className="inline-block px-4 py-1 mb-4 text-[10px] font-black uppercase tracking-[0.2em] border"
-              style={{ color: "#D4A831", borderColor: "#D4A831", background: "rgba(212,168,49,0.1)" }}
-            >
-              Our Purpose
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-black text-white">Vision &amp; Mission</h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {[
-              {
-                icon: FiTarget,
-                iconBg: `rgba(139,26,46,0.25)`,
-                iconColor: "#F5A8B4",
-                title: "Our Dedicated Mission",
-                body: "To make life-saving medicines more accessible across India through ethical business practices, competitive pricing, dependable customer support, and the highest standards of quality and compliance.",
-              },
-              {
-                icon: FiEye,
-                iconBg: `rgba(212,168,49,0.2)`,
-                iconColor: "#D4A831",
-                title: "Our Vision",
-                body: "To be a trusted trader, wholesaler, distributor, and retailer of pharmaceutical tablets, injectables, oncology, critical care, and specialty medicines — serving hospitals, healthcare institutions, pharmacies, and distributors nationwide.",
-              },
-            ].map((card, i) => (
-              <div
-                key={i}
-                className="p-8 sm:p-12 rounded-xl hover:bg-white/5 transition-all duration-300"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}
-              >
-                <div
-                  className="w-14 h-14 rounded-xl flex items-center justify-center mb-8"
-                  style={{ background: card.iconBg, color: card.iconColor }}
-                >
-                  <card.icon className="w-6 h-6" />
-                </div>
-                <h3 className="text-xl font-black text-white mb-4">{card.title}</h3>
-                <p className="text-blue-100/70 text-sm sm:text-base leading-relaxed font-medium">{card.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── 7. FAQ ── */}
-      <section className="py-20 lg:py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-14 space-y-3">
-            <span
-              className="inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[0.2em] border"
-              style={{ color: NAVY, borderColor: NAVY, background: "#EEF0F8" }}
-            >
-              Frequently Asked
-            </span>
-            <h2 className="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">Distribution &amp; Supply FAQs</h2>
-          </div>
-
-          <div className="space-y-4">
-            {[
-              { q: "Where does Kure Pharma deliver medicines?",          a: "We provide comprehensive distribution across all states in India, serving local pharmacies, corporate hospital suites, diagnostic clinics, and individual practitioner centers." },
-              { q: "How do you verify the authenticity of medications?", a: "Every batch is sourced directly from licensed pharma companies or their authorized importers. We trace every batch ID and provide full certification trails for complete peace of mind." },
-              { q: "What is your typical turnaround time for orders?",   a: "In-stock formulations are dispatched within 24 hours. Critical air logistics is prioritized for urgent lifesaving compounds with transparent tracking." },
-            ].map((faq, idx) => (
-              <div
-                key={idx}
-                className="p-6 sm:p-8 rounded-xl border border-gray-100 hover:border-gray-300 hover:shadow-sm transition-all duration-300"
-                style={{ background: CREAM }}
-              >
-                <div className="flex gap-4 items-start">
-                  <div
-                    className="w-7 h-7 rounded flex items-center justify-center flex-shrink-0 text-white text-[11px] font-black mt-0.5"
-                    style={{ background: NAVY }}
-                  >
-                    Q
-                  </div>
-                  <div>
-                    <h4 className="font-black text-gray-900 text-sm sm:text-base mb-2">{faq.q}</h4>
-                    <p className="text-xs sm:text-sm text-gray-500 font-medium leading-relaxed">{faq.a}</p>
-                  </div>
+          {activeTab === "introduction" && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="max-w-4xl">
+              <h2 className="llmic-heading mb-6">Introduction</h2>
+              <div className="space-y-4 text-slate-600 leading-relaxed text-base">
+                <p>
+                  ILMIC HEALTH CARE PVT. LTD. is one of the fastest growing privately held pharmaceutical companies in India, headquartered at <strong>New Delhi</strong>, in the capital of India.
+                </p>
+                <p>
+                  The company has been in export for the last 5 years of medicine — both <strong>Oncology</strong> and <strong>General Pharma</strong>, <strong>Medical Tourism</strong>, providing <strong>Training Programs</strong>, conducting <strong>International Medical Conferences</strong>, providing <strong>Doctors on Call for Critical Surgeries</strong>, and supplier of any type of <strong>Hospital Accessories</strong> in various countries like:
+                </p>
+                <div className="flex flex-wrap gap-2 my-4">
+                  {companyProfile.markets.map((m) => (
+                    <span key={m} className="px-3 py-1.5 bg-ilmic-blue-light text-ilmic-blue-dark text-sm font-semibold rounded-full border border-ilmic-border">{m}</span>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
+            </motion.div>
+          )}
+
+          {activeTab === "management" && (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="grid md:grid-cols-2 gap-8">
+              <div className="llmic-card p-8">
+                <div className="w-14 h-14 rounded-2xl bg-ilmic-blue-light text-ilmic-blue flex items-center justify-center mb-6">
+                  <FiUsers className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-black text-slate-900 mb-2">Management & Organisation</h3>
+                <p className="text-slate-600 leading-relaxed mb-4">
+                  Our group is headed by our <strong>Managing Director Mr. Maroof Reza</strong>, who has experience in health sectors since long.
+                </p>
+                <p className="text-slate-600 leading-relaxed">
+                  <strong>Focus:</strong> We are participating in the hospital management of about more than <strong>50 hospitals abroad</strong> & medical tourism.
+                </p>
+              </div>
+              <div className="llmic-card p-8">
+                <div className="w-14 h-14 rounded-2xl bg-ilmic-blue-light text-ilmic-blue flex items-center justify-center mb-6">
+                  <FiTarget className="w-7 h-7" />
+                </div>
+                <h3 className="text-xl font-black text-slate-900 mb-2">Our Focus Areas</h3>
+                <ul className="space-y-3 text-slate-600">
+                  {["Oncology Medicines Export", "General Pharma Products", "Surgical & Hospital Accessories", "Hospital Management (50+ abroad)", "Medical Tourism Services", "International Medical Conferences", "Doctors on Call for Critical Surgeries"].map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-sm">
+                      <FiChevronRight className="w-4 h-4 text-ilmic-blue flex-shrink-0" />{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          )}
         </div>
       </section>
 
-      {/* ── 8. CTA BANNER ── */}
-      <section className="py-16 relative overflow-hidden" style={{ background: `linear-gradient(135deg, #0d1a34 0%, ${NAVY} 50%, #2a0e1a 100%)` }}>
-        <div className="absolute top-0 left-0 right-0 h-0.5" style={{ background: GOLD }} />
-        <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ background: GOLD }} />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6 relative z-10">
-          <div className="w-12 h-0.5 mx-auto" style={{ background: GOLD }} />
-          <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">Partner with a Trusted Name</h2>
-          <p className="text-blue-200 text-sm sm:text-base max-w-xl mx-auto font-medium">
-            Contact us today for wholesale contract rates, rare drug sourcing requests, or to register your hospital pharmacy account.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-            <Link
-              href="/contact-us"
-              className="inline-flex items-center justify-center gap-2 bg-white px-8 py-4 rounded font-extrabold text-sm hover:bg-gray-100 transition-all shadow-lg hover:scale-105 active:scale-95"
-              style={{ color: NAVY }}
-            >
-              Contact Our Desk <FiChevronRight className="w-4 h-4" />
-            </Link>
-            <Link
-              href="/products"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded font-extrabold text-sm transition-all hover:scale-105 active:scale-95 shadow-lg border-2"
-              style={{ background: MAROON, color: "white", borderColor: MAROON }}
-            >
-              Browse Catalog <FiChevronRight className="w-4 h-4" />
-            </Link>
-          </div>
+      <section className="llmic-section-sm bg-ilmic-blue">
+        <div className="llmic-container text-center">
+          <h2 className="text-3xl font-black text-white mb-4">Partner With ILMIC Health Care</h2>
+          <p className="text-ilmic-blue-light mb-8 max-w-xl mx-auto">For bulk orders, export enquiries, hospital supply, and medical tourism.</p>
+          <Link href="/contact-us" className="llmic-btn bg-white text-ilmic-blue-dark hover:bg-ilmic-blue-light !px-10">
+            Contact Us <FiChevronRight className="inline" />
+          </Link>
         </div>
       </section>
     </Layout>
   );
 };
 
-export default AboutUsRedesign;
+export default AboutUs;

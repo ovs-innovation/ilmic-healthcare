@@ -15,7 +15,7 @@ const StatusLabel = ({ status }) => {
     return <span className="text-green-600 font-bold">{status}</span>;
   }
   if (status === "Pending") {
-    return <span className="text-orange-500 font-bold">{status}</span>;
+    return <span className="text-ilmic-blue font-bold">{status}</span>;
   }
   if (status === "Cancel") {
     return <span className="text-red-500 font-bold">{status}</span>;

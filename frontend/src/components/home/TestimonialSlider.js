@@ -186,7 +186,7 @@ const TestimonialSlider = () => {
           </div>
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-black text-gray-900 tracking-tight px-2">
             What Our{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-400">
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-ilmic-blue">
               Happy Clients
             </span>{" "}
             Say

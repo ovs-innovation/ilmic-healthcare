@@ -283,8 +283,8 @@ const ServiceDetails = () => {
 
   return (
     <Layout
-      title={`${serviceName} | Kure Pharma`}
-      description={serviceDesc ? serviceDesc.substring(0, 160) : `${serviceName} service by Kure Pharma`}
+      title={`${serviceName} | ILMIC Health Care`}
+      description={serviceDesc ? serviceDesc.substring(0, 160) : `${serviceName} by ILMIC Health Care`}
     >
       <style dangerouslySetInnerHTML={{ __html: customStyles }} />
 
@@ -592,7 +592,7 @@ const ServiceDetails = () => {
                       </div>
                       <div>
                         <p className="text-[10px] font-black uppercase text-white/40 tracking-wider">Email Support</p>
-                        <p className="text-sm font-bold">hello@kurepharma.com</p>
+                        <p className="text-sm font-bold">ilmic.healthcare@gmail.com</p>
                       </div>
                     </div>
                   </div>
@@ -628,7 +628,7 @@ const ServiceDetails = () => {
         <div className="max-w-screen-xl mx-auto px-4 sm:px-10">
           <div className="text-center mb-12">
             <h3 className="text-3xl font-black text-white mb-3">
-              Why Partner With <span className="text-[#ff5c23]">Kure Pharma</span>?
+              Why Partner With <span className="text-teal-500">ILMIC Health Care</span>?
             </h3>
             <div className="w-20 h-1 bg-[#ff5c23] mx-auto rounded-full" />
           </div>

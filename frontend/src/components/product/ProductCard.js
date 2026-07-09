@@ -62,7 +62,10 @@ const ProductCard = ({
 
   const productImageSrc = getProductImageSrc(product);
   const showProductImage = productImageSrc !== IMAGE_PLACEHOLDER && !imgError;
-  const categoryName = overrideCategoryName || showingTranslateValue(product?.category?.name) || "Electronics";
+  const categoryName =
+    overrideCategoryName ||
+    showingTranslateValue(product?.category?.name) ||
+    "Products";
   const categoryId = product?.category?._id || product?.category;
   const productPath = product?.slug ? `/product/${product.slug}` : null;
   const categoryPath = categoryId
@@ -165,34 +168,85 @@ const ProductCard = ({
   const productTitle = showingTranslateValue(product.title);
 
   if (largeImage) {
+    const dosageForm = product?.dosageForm || product?.form || "Product";
+    const composition =
+      product?.composition ||
+      showingTranslateValue(product?.description) ||
+      "";
+
     return (
       <>
         <div
-          className="group flex flex-col h-full w-full min-w-0 border-2 border-[#c9a066]/55 rounded-sm bg-white overflow-hidden hover:border-[#b8860b]/80 hover:shadow-[0_6px_20px_rgba(184,134,11,0.12)] transition-all duration-300"
+          className="llmic-card group flex flex-col h-full w-full min-w-0 overflow-hidden hover:shadow-[0_18px_60px_rgba(15,23,42,0.10)] transition-all duration-300"
           onMouseEnter={prefetchProduct}
           onTouchStart={prefetchProduct}
         >
           <div
             onClick={() => productPath && router.push(productPath)}
-            className="relative w-full cursor-pointer bg-white"
+            className="relative w-full cursor-pointer bg-slate-100"
           >
             {showProductImage ? (
-              <CatalogProductImage src={productImageSrc} alt={productTitle} />
+              <img
+                src={productImageSrc}
+                alt={productTitle}
+                className="w-full h-[280px] sm:h-[320px] object-cover"
+                loading="lazy"
+              />
             ) : (
-              <div className="kure-catalog-img-frame">
-                <FiShoppingBag className="w-10 h-10 text-gray-200" aria-hidden />
+              <div className="w-full h-[280px] sm:h-[320px] flex items-center justify-center">
+                <FiShoppingBag
+                  className="w-10 h-10 text-slate-300"
+                  aria-hidden
+                />
               </div>
             )}
+
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/55 via-transparent to-transparent" />
+            <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between gap-3">
+              <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/90 text-slate-800 text-xs font-bold">
+                {dosageForm}
+              </span>
+              {categoryName ? (
+                <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-ilmic-blue/20 border border-blue-300/25 text-ilmic-blue-light text-xs font-bold">
+                  {categoryName}
+                </span>
+              ) : null}
+            </div>
           </div>
 
-          <div className="kure-catalog-card-body">
+          <div className="p-5 sm:p-6">
             <h2
               onClick={() => productPath && router.push(productPath)}
-              className="kure-catalog-card-title cursor-pointer"
+              className="text-xl sm:text-2xl font-black text-slate-900 leading-snug cursor-pointer hover:text-ilmic-blue-dark transition-colors"
             >
               {productTitle}
             </h2>
-            <CatalogReadMore href={productPath || "/products"} />
+            {composition ? (
+              <p className="text-sm sm:text-base text-slate-600 leading-relaxed mt-2 line-clamp-3">
+                {composition}
+              </p>
+            ) : null}
+
+            <div className="flex gap-3 mt-5">
+              {onEnquire ? (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onEnquire(product);
+                  }}
+                  className="llmic-btn llmic-btn-coral flex-1 !py-3"
+                >
+                  Enquire Now
+                </button>
+              ) : null}
+              <Link
+                href={productPath || "/products"}
+                className="llmic-btn llmic-btn-navy !py-3"
+              >
+                Details
+              </Link>
+            </div>
           </div>
         </div>
       </>

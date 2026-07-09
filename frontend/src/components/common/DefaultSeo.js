@@ -11,15 +11,15 @@ const DefaultSeo = () => {
     <NextSeo
       title={
         globalSetting?.meta_title ||
-        "Kure Pharma – Trusted Pharmaceutical Distributor"
+        "ILMIC Health Care Pvt. Ltd. – Oncology, Pharma & Surgical"
       }
       openGraph={{
         type: "website",
         locale: "en_IE",
-        url: globalSetting?.meta_url || "https://kurepharma.com/",
+        url: globalSetting?.meta_url || "https://ilmichealthcare.com/",
         site_name:
           globalSetting?.meta_title ||
-          "Kure Pharma – Trusted Pharmaceutical Distributor",
+          "ILMIC Health Care Pvt. Ltd.",
       }}
       twitter={{
         handle: "@handle",

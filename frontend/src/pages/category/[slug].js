@@ -51,7 +51,7 @@ const CategoryPage = ({ products, attributes, category, slug }) => {
   return (
     <Layout
       title={categoryTitle}
-      description={`Browse ${categoryTitle} products at Kure Pharma`}
+      description={`Browse ${categoryTitle} products at ILMIC Health Care`}
     >
       <div className="mx-auto max-w-screen-2xl px-3 sm:px-10">
         <div className="flex flex-col py-6 lg:py-8">

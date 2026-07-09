@@ -18,19 +18,18 @@ const FAQ = () => {
 
   return (
     <Layout
-      title={`${pageTitle} | Kure Pharma`}
-      description="Frequently asked questions about Kure Pharma wholesale distribution of oncology, critical care, HIV, and specialty medicines across India."
+      title={`${pageTitle} | ILMIC Health Care`}
+      description="Frequently asked questions about ILMIC Health Care — oncology, general pharma, surgical products and export enquiries."
     >
       <PageHero
         breadcrumb="FAQ"
         title={pageTitle}
-        highlight="Kure Pharma"
-        subtitle="Answers about ordering, delivery, prescriptions, and authentic specialty medicine supply across India."
-        bgImage="/about-hero-indian.png"
+        highlight="ILMIC Health Care"
+        subtitle="Answers about product enquiries, bulk orders, export documentation, and oncology & pharma supply."
       />
 
-      <section className="kure-section kure-section-white">
-        <div className="kure-container max-w-4xl">
+      <section className="llmic-section bg-white">
+        <div className="llmic-container max-w-4xl">
           {loading ? (
             <div className="space-y-4 animate-pulse">
               {[1, 2, 3, 4].map((item) => (

@@ -6,8 +6,9 @@ import PageHero from "@components/ui/PageHero";
 import ProductServices from "@services/ProductServices";
 import CategoryServices from "@services/CategoryServices";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
-import ProductCard from "@components/product/ProductCard";
+import IlmicProductCard from "@components/product/IlmicProductCard";
 import { filterStorefrontProducts } from "@utils/storefrontProducts";
+import { heroProducts as ilmicHeroProducts } from "@utils/ilmicDefaults";
 import { FiSearch, FiChevronRight, FiChevronLeft } from "react-icons/fi";
 
 const DOSAGE_FORMS = ["Tablets", "Capsules", "Injections", "Liquid", "Others"];
@@ -74,7 +75,7 @@ const Products = ({ initialProducts, categories }) => {
   const [enquiryModalOpen, setEnquiryModalOpen] = useState(false);
   const [genericEnquiryOpen, setGenericEnquiryOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const itemsPerPage = 6;
 
   /* ── Sync URL query → state ── */
   useEffect(() => {
@@ -216,25 +217,25 @@ const Products = ({ initialProducts, categories }) => {
 
   return (
     <Layout
-      title="Products - Specialty Medicine Directory | Kure Pharma"
-      description="Browse Kure Pharma's oncology, critical care, HIV, nephrology, and specialty pharmaceutical product range."
+      title="Products - Oncology, General Pharma & Surgical | ILMIC Health Care"
+      description="Browse ILMIC Health Care products — QLQ 10, IMIC ENERGY, CTUXIL 500, ABIRAMIC 250, PACMIC 300 and more. Oncology, General Pharma & Surgical."
     >
       <PageHero
         breadcrumb="Products"
-        title="Specialty Medicine"
-        highlight="Directory"
-        subtitle="Browse oncology, critical care, HIV, nephrology & imported specialty pharmaceuticals — sourced for hospitals across India."
-        bgImage="/hero-indian-pharma.png"
+        title="Our"
+        highlight="Products"
+        subtitle="Oncology, General Pharma & Surgical products — in our own brands. Exporting globally from Delhi, India."
+        bgImage="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80"
       />
-      <div className="kure-section-cream min-h-screen kure-products-page">
-        <div className="kure-container py-8">
+      <div className="min-h-screen bg-slate-50">
+        <div className="llmic-container py-10">
           {/* ── Breadcrumb ── */}
-          <nav className="flex items-center gap-1.5 text-[12px] font-medium text-gray-500 mb-6">
-            <Link href="/" className="hover:text-[#1A2E5B] transition-colors">
+          <nav className="flex items-center gap-1.5 text-[12px] font-medium text-slate-500 mb-6">
+            <Link href="/" className="hover:text-ilmic-blue-dark transition-colors">
               Home
             </Link>
             <FiChevronRight className="w-3.5 h-3.5" />
-            <span className="text-gray-800 font-semibold">Products</span>
+            <span className="text-slate-900 font-semibold">Products</span>
           </nav>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -243,7 +244,7 @@ const Products = ({ initialProducts, categories }) => {
             ══════════════════════════════ */}
             <aside className="hidden lg:block lg:col-span-3 space-y-4">
               {/* Therapeutic Areas Filter */}
-              <div className="kure-card overflow-hidden">
+              <div className="llmic-card overflow-hidden">
                 <div className="bg-transparent text-slate-800 border-b border-slate-100 px-5 py-4 text-xs font-extrabold uppercase tracking-wider">
                   Therapeutic Areas
                 </div>
@@ -253,8 +254,8 @@ const Products = ({ initialProducts, categories }) => {
                     <div
                       className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
                         selectedCategory === ""
-                          ? "bg-[#1A2E5B] border-[#1A2E5B]"
-                          : "border-gray-300 group-hover:border-[#1A2E5B]"
+                          ? "bg-ilmic-blue border-ilmic-blue"
+                          : "border-gray-300 group-hover:border-ilmic-blue"
                       }`}
                     >
                       {selectedCategory === "" && (
@@ -276,7 +277,7 @@ const Products = ({ initialProducts, categories }) => {
                     <span
                       className={`text-[13px] font-semibold transition-colors ${
                         selectedCategory === ""
-                          ? "text-[#1A2E5B] font-bold"
+                          ? "text-ilmic-blue-dark font-bold"
                           : "text-gray-600 group-hover:text-gray-800"
                       }`}
                     >
@@ -302,8 +303,8 @@ const Products = ({ initialProducts, categories }) => {
                         }
                         className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
                           selectedCategory === cat._id
-                            ? "bg-[#1A2E5B] border-[#1A2E5B]"
-                            : "border-gray-300 group-hover:border-[#1A2E5B]"
+                            ? "bg-ilmic-blue border-ilmic-blue"
+                            : "border-gray-300 group-hover:border-ilmic-blue"
                         }`}
                       >
                         {selectedCategory === cat._id && (
@@ -329,8 +330,8 @@ const Products = ({ initialProducts, categories }) => {
                           )
                         }
                         className={`text-[13px] font-semibold cursor-pointer transition-colors ${
-                          selectedCategory === cat._id
-                            ? "text-[#1A2E5B] font-bold"
+                        selectedCategory === cat._id
+                            ? "text-ilmic-blue-dark font-bold"
                             : "text-gray-600 group-hover:text-gray-800"
                         }`}
                       >
@@ -342,7 +343,7 @@ const Products = ({ initialProducts, categories }) => {
               </div>
 
               {/* Dosage Form Filter */}
-              <div className="kure-card overflow-hidden">
+              <div className="llmic-card overflow-hidden">
                 <div className="bg-transparent text-slate-800 border-b border-slate-100 px-5 py-4 text-xs font-extrabold uppercase tracking-wider">
                   Dosage Form
                 </div>
@@ -360,8 +361,8 @@ const Products = ({ initialProducts, categories }) => {
                         }
                         className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
                           selectedDosage === dosage
-                            ? "bg-[#1A2E5B] border-[#1A2E5B]"
-                            : "border-gray-300 group-hover:border-[#1A2E5B]"
+                            ? "bg-ilmic-blue border-ilmic-blue"
+                            : "border-gray-300 group-hover:border-ilmic-blue"
                         }`}
                       >
                         {selectedDosage === dosage && (
@@ -387,8 +388,8 @@ const Products = ({ initialProducts, categories }) => {
                           )
                         }
                         className={`text-[13px] font-semibold cursor-pointer transition-colors ${
-                          selectedDosage === dosage
-                            ? "text-[#1A2E5B] font-bold"
+                        selectedDosage === dosage
+                            ? "text-ilmic-blue-dark font-bold"
                             : "text-gray-600 group-hover:text-gray-800"
                         }`}
                       >
@@ -405,15 +406,14 @@ const Products = ({ initialProducts, categories }) => {
             ══════════════════════════════ */}
             <main className="lg:col-span-9 space-y-5">
               {/* Page heading + search */}
-              <div className="bg-white rounded-lg border border-gray-200 p-5 shadow-sm">
+              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div>
-                    <h1 className="text-2xl font-black text-[#1A2E5B] tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                       Our Products
                     </h1>
-                    <p className="text-[13px] text-gray-500 font-medium mt-1 max-w-lg">
-                      A wide range of oncology, critical care, HIV, nephrology
-                      and specialty medicines from trusted global manufacturers.
+                    <p className="text-[13px] text-slate-500 font-medium mt-1 max-w-lg">
+                      Oncology, General Pharma & Surgical products. Bulk orders and export enquiries supported.
                     </p>
                   </div>
                   <div className="relative flex-shrink-0 w-full sm:w-56">
@@ -422,8 +422,8 @@ const Products = ({ initialProducts, categories }) => {
                       type="text"
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder="Search medicines..."
-                      className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-[13px] focus:outline-none focus:ring-1 focus:ring-[#1A2E5B] focus:border-[#1A2E5B] bg-gray-50 transition"
+                      placeholder="Search products..."
+                      className="w-full pl-9 pr-4 py-2.5 border border-slate-200 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-ilmic-blue/15 focus:border-ilmic-blue bg-slate-50 transition"
                     />
                   </div>
                 </div>
@@ -443,7 +443,7 @@ const Products = ({ initialProducts, categories }) => {
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="border border-gray-200 rounded-lg text-[12px] font-semibold text-gray-700 py-1.5 px-3 bg-white focus:outline-none focus:ring-1 focus:ring-[#1A2E5B] cursor-pointer"
+                    className="border border-slate-200 rounded-xl text-[12px] font-semibold text-slate-700 py-2 px-3 bg-white focus:outline-none focus:ring-2 focus:ring-ilmic-blue/15 focus:border-ilmic-blue cursor-pointer"
                   >
                     <option value="A-Z">A - Z</option>
                     <option value="Z-A">Z - A</option>
@@ -521,17 +521,15 @@ const Products = ({ initialProducts, categories }) => {
                 </div>
               </div>
 
-              <div className="kure-catalog-grid grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+              {/* Ecommerce-style grid cards (enquiry based) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
                 {currentItems.length > 0 ? (
                   currentItems.map((prod) => (
-                    <ProductCard
+                    <IlmicProductCard
                       key={prod._id}
                       product={prod}
                       onEnquire={handleEnquireClick}
-                      largeImage
-                      overrideCategoryName={getTitleString(
-                        prod.category?.name || prod.category,
-                      )}
+                      layout="tile"
                     />
                   ))
                 ) : (
@@ -566,7 +564,7 @@ const Products = ({ initialProducts, categories }) => {
                         onClick={() => setCurrentPage(page)}
                         className={`w-8 h-8 rounded border text-[13px] font-bold transition-colors ${
                           currentPage === page
-                            ? "bg-[#1A2E5B] border-[#1A2E5B] text-white"
+                            ? "bg-ilmic-blue border-ilmic-blue text-white"
                             : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
                         }`}
                       >
@@ -588,7 +586,7 @@ const Products = ({ initialProducts, categories }) => {
               )}
 
               {/* ── CTA Banner ── */}
-              <div className="mt-8 bg-[#1A2E5B] rounded-xl p-6 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-md">
+              <div className="mt-8 bg-slate-900 rounded-2xl p-6 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-5 shadow-md">
                 <div className="flex items-center gap-4 text-center sm:text-left">
                   <div className="w-12 h-12 rounded-full bg-white/15 flex items-center justify-center flex-shrink-0">
                     <svg
@@ -629,15 +627,14 @@ const Products = ({ initialProducts, categories }) => {
                     <h3 className="text-white font-extrabold text-base">
                       Need Product Information?
                     </h3>
-                    <p className="text-blue-200 text-[12px] font-medium mt-0.5">
-                      Our team is ready to assist you with product availability,
-                      information and business enquiries.
+                    <p className="text-slate-300 text-[12px] font-medium mt-0.5">
+                      Our team will help with product availability, export documentation, and bulk order enquiries.
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => setGenericEnquiryOpen(true)}
-                  className="bg-[#B8860B] hover:bg-[#d17a09] text-white font-extrabold text-sm px-6 py-3 rounded-lg transition-colors cursor-pointer flex-shrink-0 shadow"
+                  className="llmic-btn llmic-btn-coral flex-shrink-0 !px-6 !py-3"
                 >
                   Send Enquiry Now
                 </button>
@@ -671,9 +668,12 @@ export const getServerSideProps = async (context) => {
     const categoriesRes = await CategoryServices.getAllCategories();
 
     // /products/store returns { products: [...], ... } in all cases
-    const initialProducts = filterStorefrontProducts(
-      productsRes?.products || [],
-    );
+    const dbProducts = filterStorefrontProducts(productsRes?.products || []);
+
+    // Always show ILMIC products (fallback) even if DB is empty/blocked.
+    const dbSlugs = new Set(dbProducts.map((p) => p.slug).filter(Boolean));
+    const fallback = (ilmicHeroProducts || []).filter((p) => !dbSlugs.has(p.slug));
+    const initialProducts = [...dbProducts, ...fallback];
 
     // /categories/show returns a direct array
     const categories = Array.isArray(categoriesRes)

@@ -1,5 +1,5 @@
 import "@styles/custom.css";
-import "@styles/kure-design.css";
+import "@styles/medical-tourism.css";
 import { CartProvider } from "react-use-cart";
 import { PersistGate } from "redux-persist/integration/react";
 import { persistStore } from "redux-persist";
@@ -63,7 +63,7 @@ function MyApp({ Component, pageProps }) {
           handlePageView();
 
           const handleRouteChange = (url) => {
-            handlePageView(`/${router.pathname}`, "Kure Pharma");
+            handlePageView(`/${router.pathname}`, "ILMIC Health Care");
           };
 
           router.events.on("routeChangeComplete", handleRouteChange);

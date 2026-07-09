@@ -8,18 +8,22 @@ module.exports = {
 
   theme: {
     fontFamily: {
-      sans: ["'Poppins'", "'Noto Sans Devanagari'", "sans-serif"],
-      serif: ["'Poppins'", "'Noto Sans Devanagari'", "sans-serif"],
+      sans: ["'Inter'", "system-ui", "sans-serif"],
+      serif: ["'Inter'", "system-ui", "sans-serif"],
       DejaVu: ["DejaVu Sans", "Arial", "sans-serif"],
     },
     extend: {
       colors: {
-        pharma: {
-          primary: "#1A2E5B",    /* Deep Traditional Navy */
-          secondary: "#8B1A2E",  /* Rich Maroon / Burgundy */
-          accent: "#B8860B",     /* Deep Antique Gold */
-          bg: "#FFF9F0",         /* Warm Cream Ivory */
-          text: "#1C1814",       /* Dark Charcoal */
+        ilmic: {
+          blue: "#1E5A9E",
+          "blue-dark": "#15477A",
+          "blue-darker": "#0F3A66",
+          "blue-light": "#E8F2FC",
+          "blue-soft": "#F5F9FF",
+          white: "#FFFFFF",
+          text: "#0F3A66",
+          muted: "#5A7394",
+          border: "#C5D9EE",
         }
       },
       screens: {

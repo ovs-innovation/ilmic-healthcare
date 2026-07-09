@@ -7,10 +7,12 @@ class MyDocument extends Document {
     // Default SEO settings - API call removed to prevent blocking errors
     const setting = {
       favicon: "/favicon.png",
-      meta_title: "Kure Pharma – Trusted Pharmaceutical Distributor",
-      meta_description: "Quality medicines and pharmaceutical sourcing across India",
-      meta_keywords: "pharma medicines oncology critical care kure pharma",
-      meta_url: "https://kurepharma.com/",
+      meta_title: "ILMIC Health Care Pvt. Ltd. – Oncology, Pharma & Surgical",
+      meta_description:
+        "ILMIC Health Care Pvt. Ltd. — Oncology, General Pharma & Surgical products. Exporter and supplier with offices in Delhi (India) and Luanda (Angola).",
+      meta_keywords:
+        "ILMIC, ILMIC Health Care, oncology medicines, general pharma, surgical products, pharmaceutical exporter, hospital supplies",
+      meta_url: "https://ilmichealthcare.com/",
       meta_img: "/favicon.png",
     };
 
@@ -30,7 +32,7 @@ class MyDocument extends Document {
             property="og:title"
             content={
               setting?.meta_title ||
-              "Kure Pharma – Trusted Pharmaceutical Distributor"
+              "ILMIC Health Care Pvt. Ltd. – Oncology, Pharma & Surgical"
             }
           />
           <meta property="og:type" content="eCommerce Website" />
@@ -38,7 +40,7 @@ class MyDocument extends Document {
             property="og:description"
             content={
               setting?.meta_description ||
-              "Quality medicines and pharmaceutical sourcing across India"
+              "ILMIC Health Care Pvt. Ltd. — Oncology, General Pharma & Surgical products."
             }
           />
           <meta
@@ -48,7 +50,7 @@ class MyDocument extends Document {
           <meta
             property="og:url"
             content={
-              setting?.meta_url || "https://kurepharma.com/"
+              setting?.meta_url || "https://ilmichealthcare.com/"
             }
           />
           <meta
