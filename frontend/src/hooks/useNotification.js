@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux";
 
 // Create a single socket instance
 // const socket = io(process.env.NEXT_PUBLIC_API_SOCKET_URL);
-// const socket = io("https://kurepharma.com");
+// const socket = io("https://ilmichealthcare.com");
 
 const useNotification = () => {
   const dispatch = useDispatch();

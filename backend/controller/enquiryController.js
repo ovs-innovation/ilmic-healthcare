@@ -49,7 +49,7 @@ const createEnquiry = async (req, res) => {
         const htmlBody = `
           <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden">
             <div style="background:#0F4C81;padding:24px;text-align:center">
-              <h1 style="color:white;margin:0;font-size:22px">📩 New Enquiry – Kure Pharma</h1>
+              <h1 style="color:white;margin:0;font-size:22px">📩 New Enquiry – ILMIC Health Care</h1>
             </div>
             <div style="padding:24px;background:#f9fafb">
               <table style="width:100%;border-collapse:collapse">
@@ -62,14 +62,14 @@ const createEnquiry = async (req, res) => {
               </table>
             </div>
             <div style="padding:16px 24px;background:#0F4C81;text-align:center">
-              <p style="color:#bfdbfe;margin:0;font-size:12px">Kure Pharma – Pharmaceutical Distributor | kurepharma.com</p>
+              <p style="color:#bfdbfe;margin:0;font-size:12px">ILMIC Health Care – Pharmaceutical Distributor | ilmichealthcare.com</p>
             </div>
           </div>
         `;
 
         // 1. Notify admin
         await transporter.sendMail({
-          from: `"Kure Pharma Enquiries" <${mailUser}>`,
+          from: `"ILMIC Health Care Enquiries" <${mailUser}>`,
           to: adminEmail,
           subject: `🔔 New Enquiry from ${name} – ${productName || "General"}`,
           html: htmlBody,
@@ -78,9 +78,9 @@ const createEnquiry = async (req, res) => {
 
         // 2. Send confirmation to customer
         await transporter.sendMail({
-          from: `"Kure Pharma" <${mailUser}>`,
+          from: `"ILMIC Health Care" <${mailUser}>`,
           to: email,
-          subject: `We received your enquiry – Kure Pharma`,
+          subject: `We received your enquiry – ILMIC Health Care`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden">
               <div style="background:#0F4C81;padding:24px;text-align:center">
@@ -88,10 +88,10 @@ const createEnquiry = async (req, res) => {
               </div>
               <div style="padding:24px;background:#f9fafb">
                 <p style="color:#374151">We have received your enquiry regarding <strong>${productName || "our products"}</strong> and our team will get back to you within <strong>24 hours</strong>.</p>
-                <p style="color:#374151">📞 You can also reach us at: <a href="tel:+919911972234" style="color:#0F4C81;font-weight:bold">+91 99119 72234</a></p>
+                <p style="color:#374151">📞 You can also reach us at: <a href="tel:+9188102 72080" style="color:#0F4C81;font-weight:bold">+91 88102 72080</a></p>
               </div>
               <div style="padding:16px 24px;background:#0F4C81;text-align:center">
-                <p style="color:#bfdbfe;margin:0;font-size:12px">Kure Pharma – Trusted Pharmaceutical Distributor</p>
+                <p style="color:#bfdbfe;margin:0;font-size:12px">ILMIC Health Care – Trusted Pharmaceutical Distributor</p>
               </div>
             </div>
           `,

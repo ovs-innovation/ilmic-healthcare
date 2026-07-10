@@ -56,7 +56,7 @@ const SidebarContent = () => {
 
       // Handle top-level routes
       const routeKey = route.path?.split("?")[0].split("/")[1];
-      return routeKey && effectiveAccessList.includes(routeKey) ? route : null;
+      return routeKey && (effectiveAccessList.includes(routeKey) || routeKey === "leads" || routeKey === "faq") ? route : null;
     })
     .filter(Boolean);
 
@@ -66,9 +66,9 @@ const SidebarContent = () => {
     <div className="py-4 text-gray-500 dark:text-gray-400">
       <a className=" text-gray-900 dark:text-gray-200" href="/dashboard">
         {mode === "dark" ? (
-          <img src={logoLight} alt="Kure Pharma" width="135" className="pl-6" />
+          <img src={logoLight} alt="ILMIC Health Care" width="135" className="pl-6" />
         ) : (
-          <img src={logoDark} alt="Kure Pharma" width="135" className="pl-6" />
+          <img src={logoDark} alt="ILMIC Health Care" width="135" className="pl-6" />
         )}
       </a>
       <ul className="mt-8">

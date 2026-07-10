@@ -75,14 +75,14 @@ const Homepage = () => {
                 <TextInput
                   value={settings.hero?.phone}
                   onChange={(e) => updateNested("hero", "phone", e.target.value)}
-                  placeholder="+91 99119 72234"
+                  placeholder="+91 88102 72080"
                 />
               </Field>
               <Field label="WhatsApp Number (digits only)">
                 <TextInput
                   value={settings.hero?.whatsapp}
                   onChange={(e) => updateNested("hero", "whatsapp", e.target.value)}
-                  placeholder="919911972234"
+                  placeholder="9188102 72080"
                 />
               </Field>
               <Field label="Primary Button Text">
@@ -211,14 +211,14 @@ const Homepage = () => {
                 <TextInput
                   value={settings.footer?.phone}
                   onChange={(e) => updateNested("footer", "phone", e.target.value)}
-                  placeholder="+91 99119 72234"
+                  placeholder="+91 88102 72080"
                 />
               </Field>
               <Field label="Phone Link (tel:)">
                 <TextInput
                   value={settings.footer?.phoneHref}
                   onChange={(e) => updateNested("footer", "phoneHref", e.target.value)}
-                  placeholder="tel:+919911972234"
+                  placeholder="tel:+9188102 72080"
                 />
               </Field>
 
@@ -226,7 +226,7 @@ const Homepage = () => {
                 <TextInput
                   value={settings.footer?.email}
                   onChange={(e) => updateNested("footer", "email", e.target.value)}
-                  placeholder="Kure.export@gmail.com"
+                  placeholder="ilmic.healthcare@gmail.com"
                 />
               </Field>
               <Field label="Working Hours">
@@ -253,7 +253,7 @@ const Homepage = () => {
                 <TextInput
                   value={settings.footer?.whatsappUrl}
                   onChange={(e) => updateNested("footer", "whatsappUrl", e.target.value)}
-                  placeholder="https://wa.me/919911972234"
+                  placeholder="https://wa.me/9188102 72080"
                 />
               </Field>
               <Field label="Facebook Link">

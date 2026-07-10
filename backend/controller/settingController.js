@@ -235,26 +235,26 @@ const updateStoreCustomizationSetting = async (req, res) => {
   }
 };
 
-const kureHomepageDefaults = require("../utils/kureHomepageDefaults");
+const ilmicHomepageDefaults = require("../utils/ilmicHomepageDefaults");
 
-const getKureHomepageSetting = async (req, res) => {
+const getIlmicHomepageSetting = async (req, res) => {
   try {
-    const doc = await Setting.findOne({ name: "kureHomepageSetting" });
+    const doc = await Setting.findOne({ name: "ilmicHomepageSetting" });
     if (!doc?.setting) {
-      return res.send(kureHomepageDefaults);
+      return res.send(ilmicHomepageDefaults);
     }
-    res.send({ ...kureHomepageDefaults, ...doc.setting });
+    res.send({ ...ilmicHomepageDefaults, ...doc.setting });
   } catch (err) {
     res.status(500).send({ message: err.message });
   }
 };
 
-const updateKureHomepageSetting = async (req, res) => {
+const updateIlmicHomepageSetting = async (req, res) => {
   try {
     const { setting } = req.body;
     const updated = await Setting.findOneAndUpdate(
-      { name: "kureHomepageSetting" },
-      { $set: { setting, name: "kureHomepageSetting" } },
+      { name: "ilmicHomepageSetting" },
+      { $set: { setting, name: "ilmicHomepageSetting" } },
       { new: true, upsert: true }
     );
 
@@ -278,6 +278,6 @@ module.exports = {
   addStoreCustomizationSetting,
   getStoreCustomizationSetting,
   updateStoreCustomizationSetting,
-  getKureHomepageSetting,
-  updateKureHomepageSetting,
+  getIlmicHomepageSetting,
+  updateIlmicHomepageSetting,
 };

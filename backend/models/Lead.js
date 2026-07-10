@@ -18,8 +18,8 @@ const leadSchema = new mongoose.Schema({
   quantity: { type: Number },
   enquiryType: {
     type: String,
-    enum: ['single', 'bulk', 'cart_quote', 'service'],
-    default: 'bulk',
+    enum: ['general', 'product', 'quote', 'service', 'single', 'bulk', 'cart_quote'],
+    default: 'general',
   },
   currency: { type: String, default: '₹' },
   listUnitPrice: { type: Number },
@@ -33,6 +33,10 @@ const leadSchema = new mongoose.Schema({
     enum: ['pending', 'contacted', 'in_progress', 'completed', 'cancelled'],
     default: 'pending'
   },
+  company: { type: String, default: "" },
+  country: { type: String, default: "" },
+  assignedTo: { type: String, default: "" },
+  adminNotes: { type: String, default: "" },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

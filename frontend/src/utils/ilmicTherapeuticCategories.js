@@ -1,4 +1,4 @@
-export const kureTherapeuticCategories = [
+export const ilmicTherapeuticCategories = [
   {
     name: "Anti-Cancer Medicines",
     category: "Anti-Cancer Medicines",
@@ -57,7 +57,7 @@ export const kureTherapeuticCategories = [
   },
 ];
 
-export const popularCategoryItems = kureTherapeuticCategories.map(
+export const popularCategoryItems = ilmicTherapeuticCategories.map(
   ({ name, category, bgColor, textColor, icon }) => ({
     name,
     category,
@@ -67,4 +67,4 @@ export const popularCategoryItems = kureTherapeuticCategories.map(
   }),
 );
 
-export default kureTherapeuticCategories;
+export default ilmicTherapeuticCategories;

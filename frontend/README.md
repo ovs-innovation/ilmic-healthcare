@@ -1,1 +1,1 @@
-Kure Pharma Frontend Documentation
+ILMIC Health Care Frontend Documentation

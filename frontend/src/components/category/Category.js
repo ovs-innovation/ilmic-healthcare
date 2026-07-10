@@ -36,7 +36,7 @@ const Category = () => {
                 width={100}
                 height={38}
                 src="/logo/full-logo.png"
-                alt="Kure Pharma"
+                alt="ILMIC Health Care"
               />
             </Link>
           </h2>

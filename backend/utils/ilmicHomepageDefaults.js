@@ -1,11 +1,11 @@
-import { popularCategoryItems } from "./kureTherapeuticCategories";
+const { popularCategoryItems } = require("./ilmicTherapeuticCategories");
 
-const kureHomepageDefaults = {
+const ilmicHomepageDefaults = {
   seo: {
     title:
-      "Kure Pharma - Trusted Pharmaceutical Distributor | Oncology, Critical Care, Specialty Medicines",
+      "ILMIC Health Care - Trusted Pharmaceutical Distributor | Oncology, Critical Care, Specialty Medicines",
     description:
-      "Kure Pharma is a leading pharmaceutical wholesaler and distributor of Anti-Cancer, Oncology, Critical Care, HIV, Nephrology & Specialty medicines. Established 2016, Noida.",
+      "ILMIC Health Care is a leading pharmaceutical wholesaler and distributor of Anti-Cancer, Oncology, Critical Care, HIV, Nephrology & Specialty medicines. Established 2016, Noida.",
   },
   hero: {
     enabled: true,
@@ -28,8 +28,8 @@ const kureHomepageDefaults = {
     ],
     ctaPrimary: { text: "View Full Product Range", link: "/products" },
     ctaSecondary: { text: "Send Enquiry", action: "enquiry" },
-    phone: "+91 99119 72234",
-    whatsapp: "919911972234",
+    phone: "+91 88102 72080",
+    whatsapp: "9188102 72080",
     slides: [
       {
         tagline: "Prescription Medicines · Specialty Pharma",
@@ -109,7 +109,7 @@ const kureHomepageDefaults = {
         image: "/products/ramiven.png",
         category: "Anti-Cancer Medicines",
         accent: "navy",
-        linkText: "Browse Oncology",
+        linkText: "Browse Anti-Cancer",
         linkUrl: "/products?category=Anti-Cancer Medicines",
       },
       {
@@ -162,37 +162,24 @@ const kureHomepageDefaults = {
     title: "Need Medicine Sourcing Assistance?",
     subtitle:
       "Call us or send an enquiry — our team responds within 24 hours.",
-    phone: "+91 99119 72234",
-    phoneHref: "tel:+919911972234",
+    phone: "+91 88102 72080",
+    phoneHref: "tel:+9188102 72080",
     enquiryButtonText: "Send Enquiry",
   },
   footer: {
     description:
       "भारत का विश्वसनीय फार्मास्युटिकल वितरक — Oncology, Critical Care, HIV & Specialty medicines. Serving hospitals & pharmacies across India since 2016.",
     badges: ["Quality Assured", "Pan-India"],
-    phone: "+91 99119 72234",
-    phoneHref: "tel:+919911972234",
-    email: "Kure.export@gmail.com",
+    phone: "+91 88102 72080",
+    phoneHref: "tel:+9188102 72080",
+    email: "ilmic.healthcare@gmail.com",
     address:
       "B-1/D, Saurav Vihar, Jaitpur,\nBadarpur, New Delhi – 110044",
     hours: "Mon–Sat: 10 AM – 7 PM IST",
-    whatsappUrl: "https://wa.me/919911972234",
+    whatsappUrl: "https://wa.me/9188102 72080",
     facebookUrl: "https://facebook.com",
     copyright: "Proudly serving India.",
   },
 };
 
-export const fallbackBrands = [
-  { name: "Mankind", logo: "/brands/mankind.png" },
-  { name: "Natco Pharma", logo: "/brands/natco.svg" },
-  { name: "Bharat Serums", logo: "/brands/bharat-serums.webp" },
-  { name: "Glenmark", logo: "/brands/glenmark.png" },
-  { name: "Lilly", logo: "/brands/lilly.svg" },
-  { name: "Pfizer", logo: "/brands/pfizer.svg" },
-  { name: "AstraZeneca", logo: "/brands/astrazeneca.svg" },
-  { name: "Novartis", logo: "/brands/novartis.svg" },
-  { name: "Novo Nordisk", logo: "/brands/novo-nordisk.svg" },
-  { name: "Astellas", logo: "/brands/astellas.svg" },
-];
-
-export default kureHomepageDefaults;
+module.exports = ilmicHomepageDefaults;

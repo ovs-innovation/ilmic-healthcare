@@ -28,8 +28,8 @@ const HomeHero = ({
   ctaPrimary = { text: "View Full Product Range", link: "/products" },
   ctaSecondary = { text: "Send Enquiry" },
   onEnquiry,
-  phone = "+91 99119 72234",
-  whatsapp = "919911972234",
+  phone = "+91 88102 72080",
+  whatsapp = "9188102 72080",
 }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const slideCount = slides.length;
@@ -63,33 +63,33 @@ const HomeHero = ({
       : slide.titleText || "Leading Pharmaceutical Wholesale Distributors in India.";
 
   return (
-    <section className="kure-hero-v2" aria-label="Kure Pharma hero">
-      <div className="kure-hero-v2__mesh" aria-hidden />
+    <section className="ilmic-hero-v2" aria-label="ILMIC Health Care hero">
+      <div className="ilmic-hero-v2__mesh" aria-hidden />
 
-      <div className="kure-container kure-hero-v2__body">
-        <div className="kure-hero-v2__main">
-          <div className="kure-hero-v2__copy">
-            <p className="kure-hero-v2__eyebrow">
+      <div className="ilmic-container ilmic-hero-v2__body">
+        <div className="ilmic-hero-v2__main">
+          <div className="ilmic-hero-v2__copy">
+            <p className="ilmic-hero-v2__eyebrow">
               {slide.tagline || "Prescription Medicines · Specialty Pharma"}
             </p>
 
-            <h1 className="kure-hero-v2__title">{headline}</h1>
+            <h1 className="ilmic-hero-v2__title">{headline}</h1>
 
-            <p className="kure-hero-v2__desc">
+            <p className="ilmic-hero-v2__desc">
               {slide.subtitle ||
                 "Government-approved pharmaceutical wholesaler supplying hospitals, pharmacies and clinics across India."}
             </p>
 
-            <p className="kure-hero-v2__locations">
+            <p className="ilmic-hero-v2__locations">
               <FiMapPin className="w-3.5 h-3.5 shrink-0" aria-hidden />
               {slide.cities ||
                 "Delhi NCR · Mumbai · Lucknow · Kolkata · Chandigarh · Pan-India"}
             </p>
 
-            <div className="kure-hero-v2__cta-row">
+            <div className="ilmic-hero-v2__cta-row">
               <Link
                 href={ctaPrimary.link || "/products"}
-                className="kure-hero-v2__cta-primary"
+                className="ilmic-hero-v2__cta-primary"
               >
                 {ctaPrimary.text || "View Full Product Range"}
                 <FiArrowRight className="w-4 h-4" aria-hidden />
@@ -97,28 +97,28 @@ const HomeHero = ({
               <button
                 type="button"
                 onClick={onEnquiry}
-                className="kure-hero-v2__cta-secondary"
+                className="ilmic-hero-v2__cta-secondary"
               >
                 {ctaSecondary.text || "Send Enquiry"}
               </button>
             </div>
 
-            <div className="kure-hero-v2__contact">
+            <div className="ilmic-hero-v2__contact">
               {phone && (
-                <a href={`tel:${phone.replace(/\s+/g, '')}`} className="kure-hero-v2__phone">
+                <a href={`tel:${phone.replace(/\s+/g, '')}`} className="ilmic-hero-v2__phone">
                   <FiPhone className="w-3.5 h-3.5" aria-hidden />
                   {phone}
                 </a>
               )}
               {phone && whatsapp && (
-                <span className="kure-hero-v2__contact-dot" aria-hidden />
+                <span className="ilmic-hero-v2__contact-dot" aria-hidden />
               )}
               {whatsapp && (
                 <a
-                  href={`https://wa.me/${whatsapp.replace(/\+/g, '').replace(/\s+/g, '')}?text=Hello%20Kure%20Pharma%2C%20I%20need%20a%20sourcing%20quote.`}
+                  href={`https://wa.me/${whatsapp.replace(/\+/g, '').replace(/\s+/g, '')}?text=Hello%20ILMIC%20Health%20Care%2C%20I%20need%20a%20sourcing%20quote.`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="kure-hero-v2__whatsapp-link"
+                  className="ilmic-hero-v2__whatsapp-link"
                 >
                   <FaWhatsapp className="w-3.5 h-3.5" aria-hidden />
                   WhatsApp
@@ -127,26 +127,26 @@ const HomeHero = ({
             </div>
           </div>
 
-          <div className="kure-hero-v2__visual">
-            <div className="kure-hero-v2__showcase">
+          <div className="ilmic-hero-v2__visual">
+            <div className="ilmic-hero-v2__showcase">
               {slides.map((item, idx) => (
                 <img
                   key={idx}
                   src={getSlideScene(item, idx)}
                   alt=""
-                  className={`kure-hero-v2__showcase-img ${
-                    idx === currentSlide ? "kure-hero-v2__showcase-img--active" : ""
+                  className={`ilmic-hero-v2__showcase-img ${
+                    idx === currentSlide ? "ilmic-hero-v2__showcase-img--active" : ""
                   }`}
                 />
               ))}
-              <div className="kure-hero-v2__showcase-shade" aria-hidden />
+              <div className="ilmic-hero-v2__showcase-shade" aria-hidden />
 
               {slideCount > 1 && (
                 <>
                   <button
                     type="button"
                     onClick={prevSlide}
-                    className="kure-hero-v2__showcase-btn kure-hero-v2__showcase-btn--prev"
+                    className="ilmic-hero-v2__showcase-btn ilmic-hero-v2__showcase-btn--prev"
                     aria-label="Previous slide"
                   >
                     <FiChevronLeft className="w-5 h-5" />
@@ -154,19 +154,19 @@ const HomeHero = ({
                   <button
                     type="button"
                     onClick={nextSlide}
-                    className="kure-hero-v2__showcase-btn kure-hero-v2__showcase-btn--next"
+                    className="ilmic-hero-v2__showcase-btn ilmic-hero-v2__showcase-btn--next"
                     aria-label="Next slide"
                   >
                     <FiChevronRight className="w-5 h-5" />
                   </button>
-                  <div className="kure-hero-v2__dots">
+                  <div className="ilmic-hero-v2__dots">
                     {slides.map((_, idx) => (
                       <button
                         key={idx}
                         type="button"
                         onClick={() => goTo(idx)}
-                        className={`kure-hero-v2__dot ${
-                          currentSlide === idx ? "kure-hero-v2__dot--active" : ""
+                        className={`ilmic-hero-v2__dot ${
+                          currentSlide === idx ? "ilmic-hero-v2__dot--active" : ""
                         }`}
                         aria-label={`Slide ${idx + 1}`}
                       />

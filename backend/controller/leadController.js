@@ -40,6 +40,34 @@ const normalizeLeadInput = (body = {}) => {
     payload.location = locationText;
   }
 
+  // Standardize enquiryType based on payload indicators
+  let type = payload.enquiryType;
+  if (!type) {
+    if (payload.service) {
+      type = "service";
+    } else if (payload.productId || (payload.product && payload.product.id && !payload.product.items)) {
+      type = "product";
+    } else if (payload.product && (payload.product.type === "quote_request" || payload.product.items)) {
+      type = "quote";
+    } else {
+      type = "general";
+    }
+  } else {
+    const lowerType = String(type).toLowerCase();
+    if (lowerType.includes("quote") || lowerType.includes("cart")) {
+      type = "quote";
+    } else if (lowerType.includes("service") || lowerType.includes("hospital management")) {
+      type = "service";
+    } else if (lowerType.includes("product") || lowerType.includes("single")) {
+      type = "product";
+    } else if (lowerType.includes("general") || lowerType.includes("contact") || lowerType.includes("tourism") || lowerType.includes("export") || lowerType.includes("oncology") || lowerType.includes("surgical") || lowerType.includes("pharma")) {
+      type = "general";
+    } else {
+      type = "general";
+    }
+  }
+  payload.enquiryType = type;
+
   return payload;
 };
 
@@ -81,13 +109,87 @@ exports.getUserLeads = async (req, res) => {
 // Get all leads with filtering and pagination
 exports.getLeads = async (req, res) => {
   try {
-    const { name, email, phone, status, startDate, endDate, page = 1, limit = 10 } = req.query;
+    const { 
+      name, 
+      email, 
+      phone, 
+      status, 
+      startDate, 
+      endDate, 
+      page = 1, 
+      limit = 10,
+      search = "",
+      product = "",
+      country = "",
+      enquiryType
+    } = req.query;
+    
     const query = {};
+    if (enquiryType) query.enquiryType = enquiryType;
 
     if (name) query.name = { $regex: name, $options: "i" };
     if (email) query.email = { $regex: email, $options: "i" };
     if (phone) query.phone = { $regex: phone, $options: "i" };
     if (status) query.status = status;
+
+    if (country) {
+      query.$or = [
+        { country: { $regex: country, $options: "i" } },
+        { address: { $regex: country, $options: "i" } },
+        { state: { $regex: country, $options: "i" } },
+        { location: { $regex: country, $options: "i" } }
+      ];
+    }
+
+    if (product) {
+      const productRegex = { $regex: product, $options: "i" };
+      const productConditions = [
+        { "product.title": productRegex },
+        { "product.name": productRegex },
+        { "product.category.name": productRegex },
+        { "product.items.name": productRegex }
+      ];
+      if (query.$or) {
+        query.$and = [
+          { $or: query.$or },
+          { $or: productConditions }
+        ];
+        delete query.$or;
+      } else {
+        query.$or = productConditions;
+      }
+    }
+
+    if (search) {
+      const searchRegex = { $regex: search, $options: "i" };
+      const searchConditions = [
+        { name: searchRegex },
+        { email: searchRegex },
+        { phone: searchRegex },
+        { company: searchRegex },
+        { address: searchRegex },
+        { state: searchRegex },
+        { location: searchRegex },
+        { message: searchRegex },
+        { service: searchRegex },
+        { "product.title": searchRegex },
+        { "product.name": searchRegex },
+        { "product.items.name": searchRegex }
+      ];
+
+      if (query.$and) {
+        query.$and.push({ $or: searchConditions });
+      } else if (query.$or) {
+        query.$and = [
+          { $or: query.$or },
+          { $or: searchConditions }
+        ];
+        delete query.$or;
+      } else {
+        query.$or = searchConditions;
+      }
+    }
+
     if (startDate || endDate) {
       query.createdAt = {};
       if (startDate) query.createdAt.$gte = new Date(startDate);
@@ -106,6 +208,37 @@ exports.getLeads = async (req, res) => {
     const totalDoc = await Lead.countDocuments(query);
 
     res.status(200).json({ success: true, leads, totalDoc });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Bulk delete leads
+exports.bulkDeleteLeads = async (req, res) => {
+  try {
+    const { ids } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ success: false, message: "Invalid or empty IDs array" });
+    }
+    const result = await Lead.deleteMany({ _id: { $in: ids } });
+    res.status(200).json({ success: true, message: `Successfully deleted ${result.deletedCount} leads` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Bulk status update
+exports.bulkStatusUpdate = async (req, res) => {
+  try {
+    const { ids, status } = req.body;
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ success: false, message: "Invalid or empty IDs array" });
+    }
+    if (!status) {
+      return res.status(400).json({ success: false, message: "Status value is required" });
+    }
+    const result = await Lead.updateMany({ _id: { $in: ids } }, { status, updatedAt: Date.now() });
+    res.status(200).json({ success: true, message: `Successfully updated status to ${status} for ${result.modifiedCount} leads` });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }

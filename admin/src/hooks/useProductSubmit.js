@@ -142,6 +142,11 @@ const useProductSubmit = (id, selectedServices = []) => {
         return notifyError("Image is required!");
       }
 
+      if (Array.isArray(imageUrl) && imageUrl.length > 4) {
+        setIsSubmitting(false);
+        return notifyError("Maximum 4 images are allowed.");
+      }
+
       // if (data.originalPrice < data.price) {
       //   setIsSubmitting(false);
       //   return notifyError(

@@ -1,13 +1,13 @@
-export const kureDefaultFaqItems = [
+export const ilmicDefaultFaqItems = [
   {
-    question: "Where does Kure Pharma deliver medicines?",
+    question: "Where does ILMIC Health Care deliver medicines?",
     answer:
       "We supply hospitals, pharmacies, clinics, and distributors across Noida, Delhi NCR, Mumbai, Lucknow, Kolkata, Patna, Chandigarh, and pan-India, subject to product availability and regulatory requirements.",
   },
   {
-    question: "How do I place an order with Kure Pharma?",
+    question: "How do I place an order with ILMIC Health Care?",
     answer:
-      "Call us at +91 99119 72234, email Kure.export@gmail.com, use the website enquiry form, or WhatsApp us with your product requirement, prescription details (where applicable), and delivery location.",
+      "Call us at +91 88102 72080, email ilmic.healthcare@gmail.com, use the website enquiry form, or WhatsApp us with your product requirement, prescription details (where applicable), and delivery location.",
   },
   {
     question: "Do you deliver medicines in emergency situations?",
@@ -17,7 +17,7 @@ export const kureDefaultFaqItems = [
   {
     question: "How do I know the medicines supplied are authentic?",
     answer:
-      "Kure Pharma sources medicines directly from licensed manufacturers and authorised distributors. We maintain batch records and supply only genuine, quality-assured pharmaceutical products.",
+      "ILMIC Health Care sources medicines directly from licensed manufacturers and authorised distributors. We maintain batch records and supply only genuine, quality-assured pharmaceutical products.",
   },
   {
     question: "Why is a prescription required for some medicines?",
@@ -35,9 +35,9 @@ export const kureDefaultFaqItems = [
       "Anti-Cancer Medicines, Oncology Drugs, Critical Care Medicines, Lifesaving Drugs, Imported medicine, HIV, and Nephrology Medicine — plus related injectables and specialty pharmaceuticals.",
   },
   {
-    question: "How can I contact Kure Pharma for support?",
+    question: "How can I contact ILMIC Health Care for support?",
     answer:
-      "Phone: +91 99119 72234 | Email: Kure.export@gmail.com | Address: B-1/D, Saurav Vihar, Jaitpur, Badarpur, New Delhi – 110044, India.",
+      "Phone: +91 88102 72080 | Email: ilmic.healthcare@gmail.com | Address: Delhi, India, India.",
   },
 ];
 
@@ -63,7 +63,7 @@ const readLocalized = (value, lang = "en") => {
 
 export const getFaqItemsFromSettings = (faqSetting, lang = "en") => {
   if (!faqSetting || faqSetting.page_status === false) {
-    return kureDefaultFaqItems;
+    return ilmicDefaultFaqItems;
   }
 
   const items = FAQ_SLOT_KEYS.map((key) => ({
@@ -71,7 +71,7 @@ export const getFaqItemsFromSettings = (faqSetting, lang = "en") => {
     answer: readLocalized(faqSetting[`description_${key}`], lang),
   })).filter((item) => item.question && item.answer);
 
-  return items.length ? items : kureDefaultFaqItems;
+  return items.length ? items : ilmicDefaultFaqItems;
 };
 
 export const getFaqPageTitle = (faqSetting, lang = "en") =>

@@ -10,7 +10,7 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 import { getCategorySearchUrl } from "@utils/categoryUrl";
 import { getProductImageSrc } from "@utils/productImage";
 
-const RECENT_KEY = "kure_pharma_recent_searches";
+const RECENT_KEY = "ilmic_healthcare_recent_searches";
 const MAX_RECENT = 5;
 const MAX_SUGGESTIONS = 6;
 

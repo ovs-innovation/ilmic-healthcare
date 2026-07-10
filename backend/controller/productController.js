@@ -594,6 +594,20 @@ const getProductsByType = async (req, res) => {
   }
 };
 
+const uploadProductImage = async (req, res) => {
+  try {
+    const { image, folder } = req.body;
+    if (!image) {
+      return res.status(400).send({ message: "Image base64 data is required" });
+    }
+    const { uploadImage } = require("../utils/upload");
+    const secureUrl = await uploadImage(image, folder || "product", req);
+    res.send({ secureUrl });
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
 module.exports = {
   addProduct,
   addAllProducts,
@@ -610,5 +624,7 @@ module.exports = {
   getProductsByTag,
   getProductsByType,
   getProductsByService,
+  uploadProductImage,
 };
+
 

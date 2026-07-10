@@ -55,6 +55,16 @@ module.exports = withPWA({
         protocol: "https",
         hostname: "**",
       },
+      {
+        protocol: "http",
+        hostname: "localhost",
+        port: "5058",
+      },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "5058",
+      },
     ],
     // Avoid 401 spam when old Cloudinary assets are private/deleted
     unoptimized: process.env.NODE_ENV === "development",

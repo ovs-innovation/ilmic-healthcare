@@ -51,7 +51,7 @@ const Card = ({ id, image, index, moveCard, handleRemoveImage }) => {
       item.index = hoverIndex;
     },
   });
-  const [{}, drag] = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     type: ItemTypes.CARD,
     item: () => {
       return { id, index };
@@ -63,27 +63,36 @@ const Card = ({ id, image, index, moveCard, handleRemoveImage }) => {
 
   drag(drop(ref));
   return (
-    <div ref={ref} data-handler-id={handlerId}>
-      <div className="relative">
-        <img
-          className="inline-flex border rounded-md border-gray-100 dark:border-gray-600 w-24 max-h-24 p-2 m-2"
-          src={image}
-          alt="product"
-        />
-        {index === 0 && (
-          <p className="text-xs absolute py-1 w-full bottom-0 inset-x-0 bg-blue-500 rounded-full text-white text-center ">
-            Default Image
-          </p>
-        )}
+    <div
+      ref={ref}
+      data-handler-id={handlerId}
+      className={`group relative aspect-square w-full bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm transition-all duration-300 hover:shadow-md hover:border-slate-300 dark:hover:border-slate-600 ${
+        isDragging ? "opacity-40" : "opacity-100"
+      }`}
+    >
+      <img
+        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        src={image}
+        alt="product"
+      />
+      {index === 0 ? (
+        <span className="absolute top-2 left-2 text-[10px] font-extrabold uppercase tracking-wider bg-blue-600 text-white px-2 py-0.5 rounded shadow">
+          Main Photo
+        </span>
+      ) : (
+        <span className="absolute top-2 left-2 text-[10px] font-bold uppercase tracking-wider bg-slate-900/60 text-white px-2 py-0.5 rounded backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity">
+          Drag to Reorder
+        </span>
+      )}
 
-        <button
-          type="button"
-          className="absolute top-0 right-0 text-red-500 focus:outline-none"
-          onClick={() => handleRemoveImage(image)}
-        >
-          <FiXCircle />
-        </button>
-      </div>
+      {/* Delete button hover overlay */}
+      <button
+        type="button"
+        className="absolute top-2 right-2 text-white bg-red-600 hover:bg-red-700 p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 hover:scale-110 focus:outline-none"
+        onClick={() => handleRemoveImage(image)}
+      >
+        <FiXCircle className="text-base" />
+      </button>
     </div>
   );
 };

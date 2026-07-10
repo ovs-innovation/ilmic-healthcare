@@ -6,7 +6,7 @@ const customerInvoiceEmailBody = (option) => {
 >
 
   <head>
-    <title>Kure Pharma</title>
+    <title>ILMIC Health Care</title>
     <!--[if !mso]><!-->
     <meta http-equiv='X-UA-Compatible' content='IE=edge' />
     <!--<![endif]-->
@@ -104,7 +104,7 @@ const customerInvoiceEmailBody = (option) => {
                                           <img
                                             alt
                                             height='auto'
-                                            src='https://kurepharma.com/kure-logo.png'
+                                            src='https://ilmichealthcare.com/ilmic-logo.png'
                                             style='border:0;display:block;outline:none;text-decoration:none;height:auto;width:80px;font-size:13px;padding-bottom:30px;'
                                             width='80'
                                             height='80'
@@ -558,7 +558,7 @@ const customerInvoiceEmailBody = (option) => {
                                                         You are receiving this
                                                         email because you
                                                         registered with
-                                                        Kure Pharma and agreed
+                                                        ILMIC Health Care and agreed
                                                         to receive emails from
                                                         us regarding new
                                                         features, events and
@@ -566,7 +566,7 @@ const customerInvoiceEmailBody = (option) => {
                                                         <p
                                                           style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:400;line-height:16px;text-align:center;color:#303030;"
                                                         >
-                                                          &copy; Kure Pharma,
+                                                          &copy; ILMIC Health Care,
                                                           All Rights Reserved.</p></div>
                                                     </td>
                                                   </tr>

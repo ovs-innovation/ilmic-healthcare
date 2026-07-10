@@ -36,7 +36,7 @@ const queryClient = new QueryClient({
 
 const AppCartProvider = ({ children }) => {
   return (
-    <CartProvider id="kure_pharma_cart">
+    <CartProvider id="ilmic_healthcare_cart">
       {children}
     </CartProvider>
   );

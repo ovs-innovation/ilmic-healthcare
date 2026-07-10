@@ -27,7 +27,20 @@ const ServicesPage = () => {
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeService, setActiveService] = useState(null);
+  const [mounted, setMounted] = useState(false);
   const { showingTranslateValue } = useUtilsFunction();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const scrollToServices = (e) => {
+    e?.preventDefault?.();
+    const element = document.getElementById("services-grid");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   useEffect(() => {
     import("@services/ServiceServices")
@@ -50,7 +63,8 @@ const ServicesPage = () => {
     icon: service.icon || "🏥",
     group: service.group || "Medical",
     image: serviceImages[service.slug] || "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80",
-    href: `/service/${service.slug}`,
+    href: service.slug ? `/service/${service.slug}` : "",
+    slug: service.slug,
     key: service._id || service.slug,
   });
 
@@ -63,42 +77,55 @@ const ServicesPage = () => {
     >
       {/* Hero Slider */}
       <div className="relative w-full h-[500px] lg:h-[600px] overflow-hidden">
-        <Swiper
-          modules={[Autoplay, EffectFade, Navigation, Pagination]}
-          effect="fade"
-          speed={1000}
-          autoplay={{ delay: 5000, disableOnInteraction: false }}
-          navigation
-          pagination={{ clickable: true }}
-          loop
-          className="w-full h-full"
-        >
-          {displayList.slice(0, 4).map((service) => (
-            <SwiperSlide key={service.key} className="relative w-full h-full">
-              <div className="absolute inset-0">
-                <Image src={service.image} alt={service.title} fill className="object-cover" priority />
-                <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/70 to-slate-900/40" />
-              </div>
-              <div className="relative llmic-container h-full flex items-center">
-                <div className="max-w-2xl space-y-6">
-                  <span className="inline-flex items-center gap-2 px-4 py-2 bg-ilmic-blue/20 border border-blue-300/30 rounded-full text-blue-200 text-sm font-bold">
-                    {service.icon} {service.group}
-                  </span>
-                  <h2 className="text-white font-black text-3xl sm:text-5xl leading-tight">{service.title}</h2>
-                  <p className="text-slate-300 text-lg leading-relaxed line-clamp-3">{service.description}</p>
-                  <div className="flex flex-wrap gap-4">
-                    <Link href={service.href} className="llmic-btn llmic-btn-coral !px-8">
-                      Explore Service
-                    </Link>
-                    <Link href="/contact-us" className="llmic-btn llmic-btn-outline !px-8">
-                      Contact Us
-                    </Link>
+        {mounted && !loading && displayList.length > 0 && (
+          <Swiper
+            key={displayList.length}
+            modules={[Autoplay, EffectFade, Navigation, Pagination]}
+            effect="fade"
+            speed={1000}
+            autoplay={{ delay: 5000, disableOnInteraction: false }}
+            navigation
+            pagination={{ clickable: true }}
+            loop
+            className="w-full h-full"
+          >
+            {displayList.slice(0, 4).map((service) => (
+              <SwiperSlide key={service.key} className="relative w-full h-full">
+                <div className="absolute inset-0">
+                  <Image src={service.image} alt={service.title} fill className="object-cover" priority />
+                  <div className="absolute inset-0 bg-gradient-to-r from-slate-900/90 via-slate-900/70 to-slate-900/40" />
+                </div>
+                <div className="relative z-10 llmic-container h-full flex items-center">
+                  <div className="max-w-2xl space-y-6">
+                    <span className="inline-flex items-center gap-2 px-4 py-2 bg-ilmic-blue/20 border border-blue-300/30 rounded-full text-blue-200 text-sm font-bold">
+                      {service.icon} {service.group}
+                    </span>
+                    <h2 className="text-white font-black text-3xl sm:text-5xl leading-tight">{service.title}</h2>
+                    <p className="text-slate-300 text-lg leading-relaxed line-clamp-3">{service.description}</p>
+                    <div className="flex flex-wrap gap-4 swiper-no-swiping">
+                      {service.slug ? (
+                        <Link href={service.href} className="llmic-btn llmic-btn-coral !px-8 cursor-pointer">
+                          Explore Service
+                        </Link>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={scrollToServices}
+                          className="llmic-btn llmic-btn-coral !px-8 cursor-pointer"
+                        >
+                          Explore Service
+                        </button>
+                      )}
+                      <Link href="/contact-us" className="llmic-btn llmic-btn-outline !px-8 cursor-pointer">
+                        Contact Us
+                      </Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        )}
       </div>
 
       {/* Intro */}
@@ -119,7 +146,7 @@ const ServicesPage = () => {
       </section>
 
       {/* Services Grid */}
-      <section className="llmic-section bg-slate-50">
+      <section id="services-grid" className="llmic-section !bg-slate-50">
         <div className="llmic-container">
           <div className="text-center mb-12">
             <p className="llmic-eyebrow">All Services</p>
@@ -153,7 +180,7 @@ const ServicesPage = () => {
       </section>
 
       {/* Why Choose */}
-      <section className="llmic-section bg-slate-900 text-white">
+      <section className="llmic-section !bg-slate-900 text-white">
         <div className="llmic-container">
           <div className="text-center mb-12">
             <p className="llmic-eyebrow !text-blue-300">Why LLMIC</p>
@@ -183,7 +210,7 @@ const ServicesPage = () => {
               <Link href="/contact-us" className="llmic-btn bg-white text-ilmic-blue-dark hover:bg-ilmic-blue-light !px-10">
                 Start Free Consultation
               </Link>
-              <a href="https://wa.me/919911972234" target="_blank" rel="noopener noreferrer" className="llmic-btn llmic-btn-outline !px-10">
+              <a href="https://wa.me/9188102 72080" target="_blank" rel="noopener noreferrer" className="llmic-btn llmic-btn-outline !px-10">
                 WhatsApp Us
               </a>
             </div>

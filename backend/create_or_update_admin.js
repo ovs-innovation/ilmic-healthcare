@@ -11,8 +11,8 @@ const run = async () => {
     });
     console.log("Connected to MongoDB.");
 
-    const email = "admin@kurepharma.com";
-    const password = "KurePharmaAdmin2026!";
+    const email = "admin@ilmichealthcare.com";
+    const password = "IlmicHealthCareAdmin2026!";
     const hashedPassword = bcrypt.hashSync(password, 10);
 
     const updateData = {

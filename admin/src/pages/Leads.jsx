@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   Button,
   Card,
@@ -15,7 +16,6 @@ import {
   FiTrash2,
   FiUser,
   FiMail,
-  FiMessageCircle,
   FiCheck,
   FiSearch,
   FiFilter,
@@ -23,6 +23,9 @@ import {
   FiEye,
   FiPhone,
   FiCalendar,
+  FiGlobe,
+  FiBriefcase,
+  FiChevronRight,
 } from "react-icons/fi";
 import exportFromJSON from "export-from-json";
 import PageTitle from "@/components/Typography/PageTitle";
@@ -46,527 +49,595 @@ const getSafeImages = (imageData) => {
 };
 
 const Leads = () => {
+  const history = useHistory();
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [searchName, setSearchName] = useState("");
-  const [searchEmail, setSearchEmail] = useState("");
-  const [searchPhone, setSearchPhone] = useState("");
-  const [searchVariant, setSearchVariant] = useState("");
-  const [searchStatus, setSearchStatus] = useState("");
+
+  // Filters & Search
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("");
+  const [countryFilter, setCountryFilter] = useState("");
+  const [productFilter, setProductFilter] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+
+  // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [resultsPerPage, setResultsPerPage] = useState(10);
-  const [stats, setStats] = useState(null);
-  const [statsLoading, setStatsLoading] = useState(true);
-
-  const fetchStats = async () => {
-    try {
-      const res = await LeadServices.getDashboardCount();
-      setStats(res);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setStatsLoading(false);
-    }
-  };
   const [totalResults, setTotalResults] = useState(0);
-  const [loadingExport, setLoadingExport] = useState(false);
+
+  // Selection states (for bulk actions)
+  const [selectedIds, setSelectedIds] = useState([]);
+
+  const headerCheckboxRef = useRef(null);
+
+  const allVisibleSelected = leads.length > 0 && leads.every((l) => selectedIds.includes(l._id));
+  const someVisibleSelected = leads.length > 0 && leads.some((l) => selectedIds.includes(l._id)) && !allVisibleSelected;
+
+  useEffect(() => {
+    if (headerCheckboxRef.current) {
+      headerCheckboxRef.current.indeterminate = someVisibleSelected;
+    }
+  }, [leads, selectedIds, someVisibleSelected]);
+
+  // Modal states
   const [selectedLead, setSelectedLead] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [leadToDelete, setLeadToDelete] = useState(null);
-  const [updatingStatus, setUpdatingStatus] = useState(null);
 
-  const fetchLeads = async (params = {}) => {
+  // Modal form states
+  const [modalStatus, setModalStatus] = useState("");
+  const [modalAssignee, setModalAssignee] = useState("");
+  const [modalNotes, setModalNotes] = useState("");
+  const [savingModal, setSavingModal] = useState(false);
+
+  // Quick action state
+  const [updatingStatusId, setUpdatingStatusId] = useState(null);
+
+  const { pathname } = useLocation();
+
+  // Determine enquiryType filter from route
+  let enquiryType = "";
+  if (pathname === "/leads/general") {
+    enquiryType = "general";
+  } else if (pathname === "/leads/product") {
+    enquiryType = "product";
+  } else if (pathname === "/leads/quote") {
+    enquiryType = "quote";
+  } else if (pathname === "/leads/service") {
+    enquiryType = "service";
+  }
+
+  let pageTitle = "All Enquiries";
+  let pageSubtitle = "Manage all customer enquiries from one place.";
+  if (enquiryType === "general") {
+    pageTitle = "General Enquiries";
+    pageSubtitle = "Contact requests, exports, medical tourism and hospitality queries.";
+  } else if (enquiryType === "product") {
+    pageTitle = "Product Enquiries";
+    pageSubtitle = "Direct quote requests and inquiries for specific products.";
+  } else if (enquiryType === "quote") {
+    pageTitle = "Quote Requests";
+    pageSubtitle = "Bulk quotes, cart quote requests, and order slab pricing.";
+  } else if (enquiryType === "service") {
+    pageTitle = "Service Enquiries";
+    pageSubtitle = "Clinical services, hospital management, and sourcing contract requests.";
+  }
+
+  const fetchLeads = async () => {
     setLoading(true);
     try {
       const res = await LeadServices.getAllLeads({
-        name: searchName,
-        email: searchEmail,
-        phone: searchPhone,
-        variant: searchVariant,
-        status: searchStatus,
-        page: currentPage,
-        limit: resultsPerPage,
+        search: searchTerm,
+        status: statusFilter,
+        country: countryFilter,
+        product: productFilter,
         startDate,
         endDate,
-        ...params,
+        page: currentPage,
+        limit: resultsPerPage,
+        enquiryType,
       });
       setLeads(res.leads || []);
-      setTotalResults(res.totalDoc || (res.leads ? res.leads.length : 0));
+      setTotalResults(res.totalDoc || 0);
     } catch (err) {
-      setError(err?.response?.data?.message || err?.message);
+      setError(err?.response?.data?.message || err?.message || "Failed to fetch enquiries");
     } finally {
       setLoading(false);
     }
   };
 
+  // Re-fetch triggers
   useEffect(() => {
-    fetchLeads({
-      name: searchName,
-      email: searchEmail,
-      phone: searchPhone,
-      variant: searchVariant,
-      status: searchStatus,
-      page: currentPage,
-      limit: resultsPerPage,
-      startDate,
-      endDate,
-    });
-    // eslint-disable-next-line
-  }, [
-    searchName,
-    searchEmail,
-    searchPhone,
-    searchVariant,
-    searchStatus,
-    startDate,
-    endDate,
-    currentPage,
-    resultsPerPage,
-  ]);
+    fetchLeads();
+  }, [currentPage, resultsPerPage, searchTerm, statusFilter, countryFilter, productFilter, startDate, endDate, pathname]);
 
+  // Load modal variables when selectedLead changes
   useEffect(() => {
-    fetchStats();
-  }, [leads]);
-
-  const handleFilter = (e) => {
-    e.preventDefault();
-    setCurrentPage(1);
-  };
+    if (selectedLead) {
+      setModalStatus(selectedLead.status || "pending");
+      setModalAssignee(selectedLead.assignedTo || "");
+      setModalNotes(selectedLead.adminNotes || "");
+    }
+  }, [selectedLead]);
 
   const handleReset = () => {
-    setSearchName("");
-    setSearchEmail("");
-    setSearchPhone("");
-    setSearchVariant("");
-    setSearchStatus("");
+    setSearchTerm("");
+    setStatusFilter("");
+    setCountryFilter("");
+    setProductFilter("");
     setStartDate("");
     setEndDate("");
     setCurrentPage(1);
-    fetchLeads({
-      name: "",
-      email: "",
-      phone: "",
-      variant: "",
-      status: "",
-      page: 1,
-      startDate: "",
-      endDate: "",
-    });
+  };
+
+  const handleStatusChange = async (leadId, newStatus) => {
+    setUpdatingStatusId(leadId);
+    try {
+      await LeadServices.updateLead(leadId, { status: newStatus });
+      notifySuccess("Status updated successfully");
+      fetchLeads();
+    } catch (err) {
+      notifyError(err?.response?.data?.message || err?.message || "Failed to update status");
+    } finally {
+      setUpdatingStatusId(null);
+    }
+  };
+
+  const handleSaveModalChanges = async () => {
+    if (!selectedLead) return;
+    setSavingModal(true);
+    try {
+      await LeadServices.updateLead(selectedLead._id, {
+        status: modalStatus,
+        assignedTo: modalAssignee,
+        adminNotes: modalNotes,
+      });
+      notifySuccess("Enquiry saved successfully");
+      setModalOpen(false);
+      fetchLeads();
+    } catch (err) {
+      notifyError(err?.response?.data?.message || err?.message || "Failed to save changes");
+    } finally {
+      setSavingModal(false);
+    }
   };
 
   const handleDeleteLead = async () => {
     if (!leadToDelete) return;
     try {
       await LeadServices.deleteLead(leadToDelete._id);
-      notifySuccess("Lead deleted successfully");
+      notifySuccess("Enquiry deleted successfully");
       setDeleteModalOpen(false);
       setLeadToDelete(null);
       fetchLeads();
     } catch (err) {
-      notifyError(err?.response?.data?.message || err?.message || "Failed to delete lead");
+      notifyError(err?.response?.data?.message || err?.message || "Failed to delete enquiry");
     }
   };
 
-  const handleStatusChange = async (leadId, newStatus) => {
-    setUpdatingStatus(leadId);
+  // Checkbox helpers
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedIds((prev) => {
+        const newIds = [...prev];
+        leads.forEach((l) => {
+          if (!newIds.includes(l._id)) {
+            newIds.push(l._id);
+          }
+        });
+        return newIds;
+      });
+    } else {
+      const visibleIds = leads.map((l) => l._id);
+      setSelectedIds((prev) => prev.filter((id) => !visibleIds.includes(id)));
+    }
+  };
+
+  const handleSelectRow = (id, checked) => {
+    if (checked) {
+      setSelectedIds((prev) => {
+        if (prev.includes(id)) return prev;
+        return [...prev, id];
+      });
+    } else {
+      setSelectedIds((prev) => prev.filter((item) => item !== id));
+    }
+  };
+
+  // Bulk Actions
+  const handleBulkDelete = async () => {
+    if (selectedIds.length === 0) return;
+    if (!window.confirm(`Are you sure you want to delete ${selectedIds.length} selected enquiries?`)) return;
     try {
-      await LeadServices.updateLead(leadId, { status: newStatus });
-      notifySuccess("Lead status updated successfully");
+      await LeadServices.bulkDeleteLeads(selectedIds);
+      notifySuccess("Selected enquiries deleted successfully");
+      setSelectedIds([]);
       fetchLeads();
     } catch (err) {
-      notifyError(err?.response?.data?.message || err?.message || "Failed to update status");
-    } finally {
-      setUpdatingStatus(null);
+      notifyError(err?.response?.data?.message || err?.message || "Failed to delete enquiries");
     }
+  };
+
+  const handleBulkStatusChange = async (status) => {
+    if (selectedIds.length === 0) return;
+    try {
+      await LeadServices.bulkStatusUpdate(selectedIds, status);
+      notifySuccess(`Selected enquiries marked as ${status}`);
+      setSelectedIds([]);
+      fetchLeads();
+    } catch (err) {
+      notifyError(err?.response?.data?.message || err?.message || "Failed to update enquiries");
+    }
+  };
+
+  const handleBulkExport = () => {
+    const selectedLeads = leads.filter((l) => selectedIds.includes(l._id));
+    exportLeadsToCsv(selectedLeads);
   };
 
   const getStatusColor = (status) => {
     switch (status) {
       case "pending":
-        return "bg-yellow-100 text-yellow-800";
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
       case "contacted":
-        return "bg-blue-100 text-blue-800";
-      case "in_progress":
-        return "bg-purple-100 text-purple-800";
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400";
       case "completed":
-        return "bg-green-100 text-green-800";
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
       case "cancelled":
-        return "bg-red-100 text-red-800";
+        return "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400";
       default:
-        return "bg-gray-100 text-gray-800";
+        return "bg-gray-100 text-gray-800 dark:bg-gray-700/50 dark:text-gray-400";
     }
   };
 
-  const handleDownloadLeads = async () => {
-    try {
-      setLoadingExport(true);
-      const res = await LeadServices.getAllLeads({
-        name: searchName,
-        email: searchEmail,
-        phone: searchPhone,
-        variant: searchVariant,
-        startDate,
-        endDate,
-        page: 1,
-        limit: 10000,
-      });
-      const exportData = (res.leads || []).map((lead) => ({
-        name: lead.name,
-        type: lead.isEnterprise ? "Enterprise" : "Individual",
-        email: lead.email,
-        phone: lead.phone,
-        address: lead.address || "N/A",
-        state: lead.state || "N/A",
-        district: lead.district || "N/A",
-        pincode: lead.pincode || "N/A",
-        message: lead.message,
-        product: lead.product?.items?.length > 0
-          ? lead.product.items.map(i => `${i.name} (Qty: ${i.quantity})`).join(', ')
-          : getLangValue(lead.product?.title),
-        category: lead.product?.items?.length > 0
-          ? [...new Set(lead.product.items.map(i => i.category))].join(', ')
-          : getLangValue(lead.product?.category?.name),
-        price: lead.product?.items?.length > 0
-            ? lead.product.items.reduce((acc, i) => acc + (i.price * i.quantity), 0)
-            : lead.product?.prices?.price,
-        quantity: lead.product?.items?.length > 0
-            ? lead.product.items.reduce((acc, i) => acc + i.quantity, 0)
-            : lead.quantity,
-        enquiryType: lead.enquiryType || "",
-        currency: lead.currency || "₹",
-        unitPrice: lead.unitPrice,
-        estimatedTotal: lead.estimatedTotal,
-        discountPercent: lead.discountPercent,
-        tierLabel: lead.tierLabel || "",
-        pricingNote: lead.pricingNote || "",
-        // Variant information
-        variantTitle:
-          getLangValue(lead.product?.variant?.title) || "No variant",
-        variantSku: lead.product?.variant?.sku || lead.product?.sku || "N/A",
-        variantBarcode: lead.product?.variant?.barcode || "N/A",
-        variantSlug: lead.product?.variant?.slug || "N/A",
-        // Additional context
-        hasVariants: lead.product?.hasVariants ? "Yes" : "No",
-        totalVariants: lead.product?.totalVariants || "0",
-        status: lead.status || "pending",
-        enquiryDate: lead.enquiryDate
-          ? new Date(lead.enquiryDate).toLocaleString()
-          : "N/A",
-        currentLanguage: lead.currentLanguage || "N/A",
-        date: new Date(lead.createdAt).toLocaleString(),
-      }));
-      exportFromJSON({
-        data: exportData,
-        fileName: "leads",
-        exportType: exportFromJSON.types.csv,
-      });
-      setLoadingExport(false);
-    } catch (err) {
-      setLoadingExport(false);
-      alert(err?.response?.data?.message || err?.message);
-    }
+  // CSV Export utility
+  const exportLeadsToCsv = (dataset) => {
+    const exportData = dataset.map((lead) => ({
+      name: lead.name,
+      company: lead.company || (lead.isEnterprise ? "Enterprise" : "Individual"),
+      country: lead.country || "N/A",
+      email: lead.email,
+      phone: lead.phone,
+      address: lead.address || "N/A",
+      state: lead.state || "N/A",
+      district: lead.district || "N/A",
+      pincode: lead.pincode || "N/A",
+      message: lead.message,
+      enquiryType: lead.enquiryType || "General",
+      product: lead.product?.items?.length > 0
+        ? lead.product.items.map(i => `${i.name} (Qty: ${i.quantity})`).join(', ')
+        : getLangValue(lead.product?.title) || "N/A",
+      quantity: lead.product?.items?.length > 0
+        ? lead.product.items.reduce((acc, i) => acc + i.quantity, 0)
+        : lead.quantity || 1,
+      estimatedTotal: lead.product?.items?.length > 0
+        ? lead.product.items.reduce((acc, i) => acc + (i.price * i.quantity), 0)
+        : lead.estimatedTotal || 0,
+      status: lead.status || "pending",
+      assignedTo: lead.assignedTo || "Unassigned",
+      adminNotes: lead.adminNotes || "",
+      date: new Date(lead.createdAt).toLocaleString(),
+    }));
+
+    exportFromJSON({
+      data: exportData,
+      fileName: "customer_enquiries",
+      exportType: exportFromJSON.types.csv,
+    });
+  };
+
+  const handleDownloadFiltered = () => {
+    exportLeadsToCsv(leads);
   };
 
   return (
     <>
+      {/* Top Title & Subtitle */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between my-6 gap-4">
         <div>
           <h1 className="text-2xl font-black text-gray-800 dark:text-gray-150 tracking-tight">
-            Customer Enquiries
+            {pageTitle}
           </h1>
-          <p className="text-xs text-gray-450 dark:text-gray-450 mt-1">
-            Manage incoming product and service inquiries
+          <p className="text-xs text-gray-455 mt-1">
+            {pageSubtitle}
           </p>
         </div>
-        <button
-          type="button"
-          onClick={handleDownloadLeads}
-          disabled={loadingExport}
-          className="flex items-center gap-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-sm transition-all"
-        >
-          {loadingExport ? (
-            <span>Processing...</span>
-          ) : (
-            <>
-              Download CSV
-              <IoCloudDownloadOutline className="text-sm" />
-            </>
-          )}
-        </button>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={fetchLeads}
+            className="flex items-center gap-1.5 border border-gray-250 dark:border-gray-650 bg-white dark:bg-gray-750 text-gray-700 dark:text-gray-200 font-bold text-xs py-2 px-3 rounded-xl hover:bg-slate-50 transition-all"
+            title="Refresh Leads"
+          >
+            <FiRefreshCw className={loading ? "animate-spin" : ""} /> Refresh
+          </button>
+          <button
+            type="button"
+            onClick={handleDownloadFiltered}
+            className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs py-2 px-3.5 rounded-xl shadow-sm transition-all"
+          >
+            <IoCloudDownloadOutline className="text-sm" /> Export CSV
+          </button>
+        </div>
       </div>
 
-
-      {/* Filter Card */}
+      {/* Filter and Search Card */}
       <Card className="min-w-0 shadow-sm overflow-hidden bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-gray-150 dark:border-gray-700/80 mb-6 rounded-2xl">
-        <CardBody className="p-5">
-          <form onSubmit={handleFilter} className="space-y-4">
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-              <div>
-                <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Search Name</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="search"
-                    value={searchName}
-                    onChange={(e) => setSearchName(e.target.value)}
-                    placeholder="E.g. Glenza"
-                    style={{ paddingLeft: "36px" }}
-                    className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
-                  />
-                  <FiUser style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Search Email</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="search"
-                    value={searchEmail}
-                    onChange={(e) => setSearchEmail(e.target.value)}
-                    placeholder="E.g. customer@kure.com"
-                    style={{ paddingLeft: "36px" }}
-                    className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
-                  />
-                  <FiMail style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Search Phone</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="search"
-                    value={searchPhone}
-                    onChange={(e) => setSearchPhone(e.target.value)}
-                    placeholder="E.g. +91 9898..."
-                    style={{ paddingLeft: "36px" }}
-                    className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
-                  />
-                  <FiPhone style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Search Variant / Product</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="search"
-                    value={searchVariant}
-                    onChange={(e) => setSearchVariant(e.target.value)}
-                    placeholder="E.g. Eltrombopag"
-                    style={{ paddingLeft: "36px" }}
-                    className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
-                  />
-                  <FiSearch style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
-                </div>
+        <CardBody className="p-5 space-y-4">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {/* Search Input */}
+            <div>
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Search Keywords</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="search"
+                  value={searchTerm}
+                  onChange={(e) => {
+                    setSearchTerm(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Name, email, phone, company..."
+                  style={{ paddingLeft: "36px" }}
+                  className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
+                />
+                <FiSearch style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-4 items-end pt-2">
-              <div>
-                <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Filter Status</label>
-                <select
-                  value={searchStatus}
-                  onChange={(e) => setSearchStatus(e.target.value)}
-                  className="block w-full text-xs border border-gray-250 dark:border-gray-650 dark:bg-gray-750 dark:text-gray-200 py-2 px-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
-                >
-                  <option value="">All Status</option>
-                  <option value="pending">Pending</option>
-                  <option value="contacted">Contacted</option>
-                  <option value="in_progress">In Progress</option>
-                  <option value="completed">Completed</option>
-                  <option value="cancelled">Cancelled</option>
-                </select>
-              </div>
+            {/* Status Filter */}
+            <div>
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Filter Status</label>
+              <select
+                value={statusFilter}
+                onChange={(e) => {
+                  setStatusFilter(e.target.value);
+                  setCurrentPage(1);
+                }}
+                className="block w-full text-xs border border-gray-250 dark:border-gray-650 dark:bg-gray-750 dark:text-gray-200 py-2 px-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
+              >
+                <option value="">All Statuses</option>
+                <option value="pending">Pending</option>
+                <option value="contacted">Contacted</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+            </div>
 
-              <div>
-                <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Start Date</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    style={{ paddingLeft: "36px" }}
-                    className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
-                  />
-                  <FiCalendar style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">End Date</label>
-                <div style={{ position: "relative" }}>
-                  <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    style={{ paddingLeft: "36px" }}
-                    className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
-                  />
-                  <FiCalendar style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                <button
-                  type="submit"
-                  className="flex-1 bg-[#0b1d3d] hover:bg-[#152e5a] text-white font-bold text-xs py-2.5 rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <FiFilter /> Filter
-                </button>
-                <button
-                  type="button"
-                  onClick={handleReset}
-                  className="flex-1 border border-gray-250 dark:border-gray-650 dark:bg-gray-750 dark:text-gray-200 hover:bg-gray-55 dark:hover:bg-gray-750 font-bold text-xs py-2.5 rounded-xl shadow-xs transition-colors flex items-center justify-center gap-1.5"
-                >
-                  <FiRefreshCw /> Reset
-                </button>
+            {/* Country Filter */}
+            <div>
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Country</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="search"
+                  value={countryFilter}
+                  onChange={(e) => {
+                    setCountryFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Filter country..."
+                  style={{ paddingLeft: "36px" }}
+                  className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
+                />
+                <FiGlobe style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
               </div>
             </div>
-          </form>
+
+            {/* Product Filter */}
+            <div>
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Product</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="search"
+                  value={productFilter}
+                  onChange={(e) => {
+                    setProductFilter(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  placeholder="Filter product name..."
+                  style={{ paddingLeft: "36px" }}
+                  className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
+                />
+                <FiBriefcase style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
+              </div>
+            </div>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-4 items-end pt-2 border-t border-gray-100 dark:border-gray-700">
+            {/* Start Date */}
+            <div>
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Start Date</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => {
+                    setStartDate(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  style={{ paddingLeft: "36px" }}
+                  className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
+                />
+                <FiCalendar style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
+              </div>
+            </div>
+
+            {/* End Date */}
+            <div>
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">End Date</label>
+              <div style={{ position: "relative" }}>
+                <input
+                  type="date"
+                  value={endDate}
+                  onChange={(e) => {
+                    setEndDate(e.target.value);
+                    setCurrentPage(1);
+                  }}
+                  style={{ paddingLeft: "36px" }}
+                  className="w-full pr-4 py-2 border border-gray-250 dark:border-gray-650 rounded-xl text-xs dark:bg-gray-750 dark:text-gray-100 focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
+                />
+                <FiCalendar style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", zIndex: 10, pointerEvents: "none" }} className="text-gray-400 w-4 h-4" />
+              </div>
+            </div>
+
+            {/* Entries Size */}
+            <div>
+              <label className="text-[10px] font-black text-gray-400 dark:text-gray-555 uppercase tracking-widest block mb-1.5">Entries Per Page</label>
+              <select
+                value={resultsPerPage}
+                onChange={(e) => {
+                  setResultsPerPage(Number(e.target.value));
+                  setCurrentPage(1);
+                }}
+                className="block w-full text-xs border border-gray-250 dark:border-gray-650 dark:bg-gray-750 dark:text-gray-200 py-2 px-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
+              >
+                <option value={10}>10 Entries</option>
+                <option value={25}>25 Entries</option>
+                <option value={50}>50 Entries</option>
+                <option value={100}>100 Entries</option>
+              </select>
+            </div>
+
+            {/* Actions button */}
+            <div className="flex gap-2">
+              <Button
+                layout="outline"
+                onClick={handleReset}
+                className="w-full py-2.5 rounded-xl border border-gray-200 hover:bg-slate-50 transition-colors flex items-center justify-center gap-1.5 text-xs font-bold"
+              >
+                <FiRefreshCw /> Reset Filters
+              </Button>
+            </div>
+          </div>
         </CardBody>
       </Card>
+
+      {/* Bulk Actions Floating Bar */}
+      {selectedIds.length > 0 && (
+        <Card className="min-w-0 shadow-md bg-blue-50 dark:bg-slate-800 border border-blue-200 dark:border-slate-700 mb-6 rounded-2xl animate-fade-in-up">
+          <CardBody className="p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-blue-500 animate-ping" />
+              <p className="text-xs font-black text-blue-900 dark:text-blue-200">
+                Selected {selectedIds.length} enquiries
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => handleBulkStatusChange("contacted")}
+                className="px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
+              >
+                Mark as Contacted
+              </button>
+              <button
+                onClick={() => handleBulkStatusChange("completed")}
+                className="px-3.5 py-1.5 bg-green-600 hover:bg-green-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
+              >
+                Mark as Completed
+              </button>
+              <button
+                onClick={handleBulkExport}
+                className="px-3.5 py-1.5 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-700 dark:text-slate-200 rounded-xl text-xs font-bold transition-colors"
+              >
+                Export Selected
+              </button>
+              <button
+                onClick={handleBulkDelete}
+                className="px-3.5 py-1.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
+              >
+                Delete Selected
+              </button>
+              <button
+                onClick={() => setSelectedIds([])}
+                className="text-xs font-bold text-slate-500 hover:text-slate-700 ml-2"
+              >
+                Clear
+              </button>
+            </div>
+          </CardBody>
+        </Card>
+      )}
+
       {loading ? (
-        <TableLoading row={8} col={5} width={160} height={20} />
+        <TableLoading row={8} col={10} width={160} height={20} />
       ) : error ? (
-        <span className="text-center mx-auto text-red-500">{error}</span>      ) : leads.length > 0 ? (
+        <div className="text-center py-10 bg-white rounded-3xl border text-red-500">{error}</div>
+      ) : leads.length > 0 ? (
         <>
-          {/* Mobile Enquiries Card Layout */}
+          {/* Mobile Layout */}
           <div className="block lg:hidden space-y-4 mb-8">
             {leads.map((lead) => (
               <div
                 key={lead._id}
                 className="bg-white dark:bg-gray-850 rounded-2xl border border-gray-150 dark:border-gray-750 p-4 shadow-xs relative space-y-3"
               >
-                {/* Header: Name and badges */}
+                {/* Header info */}
                 <div className="flex items-start justify-between gap-2">
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-extrabold text-sm text-gray-800 dark:text-gray-100">
-                        {lead.name}
-                      </h4>
-                      {lead.isEnterprise && (
-                        <span className="text-[8px] bg-indigo-600 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-wider">
-                          Enterprise
-                        </span>
-                      )}
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.includes(lead._id)}
+                      onChange={(e) => handleSelectRow(lead._id, e.target.checked)}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-4 h-4 rounded text-blue-600 border-gray-300 focus:ring-blue-500 cursor-pointer"
+                    />
+                    <div>
+                      <h4 className="font-extrabold text-sm text-gray-855 dark:text-gray-100">{lead.name}</h4>
+                      <p className="text-[10px] text-gray-450 mt-0.5">{new Date(lead.createdAt).toLocaleDateString()}</p>
                     </div>
-                    <p className="text-[10px] text-gray-400 mt-0.5">
-                      {new Date(lead.createdAt).toLocaleString()}
-                    </p>
                   </div>
-                  
-                  {/* Action buttons */}
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <button
-                      onClick={() => {
-                        setSelectedLead(lead);
-                        setModalOpen(true);
-                      }}
-                      className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/10"
+                      onClick={() => history.push(`/leads/${lead._id}`)}
+                      className="text-blue-500 hover:text-blue-700 p-1.5 rounded-lg hover:bg-blue-50 cursor-pointer"
                       title="View details"
                     >
                       <FiEye className="w-4 h-4" />
                     </button>
                     <button
-                      onClick={(e) => {
-                        e.stopPropagation();
+                      onClick={() => {
                         setLeadToDelete(lead);
                         setDeleteModalOpen(true);
                       }}
-                      className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
-                      title="Delete Lead"
+                      className="text-red-500 hover:text-red-700 p-1.5 rounded-lg hover:bg-red-55"
                     >
                       <FiTrash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
 
-                {/* Contact Data */}
-                <div className="grid grid-cols-2 gap-2 text-[11px] text-gray-500 border-t border-b border-gray-100 dark:border-gray-750 py-2">
-                  <div className="flex items-center gap-1.5 truncate">
-                    <FiMail className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                    <span className="truncate font-mono">{lead.email}</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <FiPhone className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
-                    <span>{lead.phone}</span>
-                  </div>
+                {/* Additional metrics */}
+                <div className="grid grid-cols-2 gap-2 text-xs border-t border-b py-2 text-gray-500">
+                  <div className="truncate"><span className="font-bold">Company:</span> {lead.company || "Individual"}</div>
+                  <div className="truncate"><span className="font-bold">Country:</span> {lead.country || "N/A"}</div>
+                  <div className="truncate"><span className="font-bold">Phone:</span> {lead.phone}</div>
+                  <div className="truncate"><span className="font-bold">Type:</span> {lead.enquiryType || "General"}</div>
                 </div>
 
-                {/* Service/Product Requested */}
-                <div className="space-y-1.5">
-                  <div className="flex items-center justify-between text-xs">
-                    <span className="text-gray-400 font-bold uppercase text-[9px] tracking-wider">Requested:</span>
-                    <span className="font-extrabold text-indigo-600 dark:text-indigo-400">
-                      {lead.service || "General enquiry"}
-                    </span>
-                  </div>
-                  
-                  <div className="text-[11px] text-gray-700 dark:text-gray-300">
-                    {lead.product?.items?.length > 0 ? (
-                      <span className="font-bold text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-300 px-2 py-0.5 rounded">
-                        {lead.product.items.length} Products
-                      </span>
-                    ) : (
-                      <span className="italic">{getLangValue(lead.product?.title) || "No Product"}</span>
-                    )}
-                  </div>
-
-                  {/* Quantity and Price Tags */}
-                  {(lead.quantity || lead.estimatedTotal) && (
-                    <div className="flex flex-wrap gap-1.5 pt-0.5">
-                      {lead.quantity != null && (
-                        <span className="text-[9px] font-bold text-[#0b1d3d] dark:text-blue-300 bg-[#0b1d3d]/5 dark:bg-blue-900/10 px-2 py-0.5 rounded">
-                          Qty: {lead.quantity}
-                        </span>
-                      )}
-                      {lead.estimatedTotal != null && (
-                        <span className="text-[9px] font-bold text-green-800 dark:text-green-300 bg-green-50/10 dark:bg-green-900/10 px-2 py-0.5 rounded">
-                          Est: {lead.currency || "₹"}{lead.estimatedTotal}
-                        </span>
-                      )}
-                      {lead.enquiryType === "bulk" && (
-                        <span className="text-[8px] font-black uppercase text-amber-850 dark:text-amber-300 bg-amber-50/10 dark:bg-amber-900/10 px-1.5 py-0.5 rounded">
-                          Bulk
-                        </span>
-                      )}
-                    </div>
-                  )}
-                </div>
-
-                {/* Footer: Schedule & Status select */}
-                <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-gray-750">
-                  <div className="flex items-center gap-1.5 text-[10px] text-gray-600 dark:text-gray-400 font-bold bg-gray-50 dark:bg-gray-750 border border-gray-100 dark:border-gray-700 px-2.5 py-1 rounded-lg">
-                    <FiCalendar className="w-3.5 h-3.5 text-gray-400" />
-                    <span>{lead.serviceDate || "N/A"}</span>
-                  </div>
-
-                  <div>
-                    <select
-                      value={lead.status || "pending"}
-                      onChange={(e) => handleStatusChange(lead._id, e.target.value)}
-                      disabled={updatingStatus === lead._id}
-                      className={`text-[10px] font-black uppercase tracking-wider px-3 py-1.5 rounded-full border-0 ${getStatusColor(lead.status || "pending")} ${
-                        updatingStatus === lead._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                      }`}
-                    >
-                      <option value="pending">Pending</option>
-                      <option value="contacted">Contacted</option>
-                      <option value="in_progress">In Progress</option>
-                      <option value="completed">Completed</option>
-                      <option value="cancelled">Cancelled</option>
-                    </select>
-                  </div>
+                <div className="flex justify-between items-center text-xs">
+                  <span className="font-semibold text-slate-700 truncate max-w-[200px]">
+                    {lead.product?.items?.length > 0
+                      ? `${lead.product.items.length} Products`
+                      : getLangValue(lead.product?.title) || "Manual Quote"}
+                  </span>
+                  <select
+                    value={lead.status || "pending"}
+                    onChange={(e) => handleStatusChange(lead._id, e.target.value)}
+                    disabled={updatingStatusId === lead._id}
+                    className={`text-[9px] font-black uppercase tracking-wider px-2 py-1 border-0 rounded-full ${getStatusColor(lead.status || "pending")}`}
+                  >
+                    <option value="pending">Pending</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="completed">Completed</option>
+                    <option value="cancelled">Cancelled</option>
+                  </select>
                 </div>
               </div>
             ))}
 
-            {/* Mobile Pagination Card */}
+            {/* Pagination Controls */}
             <div className="bg-white dark:bg-gray-800 rounded-2xl border border-gray-150 dark:border-gray-750 p-4 flex justify-center shadow-xs">
               <Pagination
                 totalResults={totalResults}
@@ -578,138 +649,110 @@ const Leads = () => {
           </div>
 
           {/* Desktop Table View */}
-          <TableContainer className="hidden lg:block mb-8 rounded-3xl overflow-hidden border border-gray-150 dark:border-gray-700/80 shadow-xs">
-            <Table className="min-w-[720px]">
+          <TableContainer className="hidden lg:block mb-8 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-xs responsive-table-container">
+            <Table className="crm-table">
               <TableHeader>
                 <tr className="bg-gray-50/50 dark:bg-gray-900/20 text-gray-500 uppercase tracking-wider text-[10px] font-black">
-                  <TableCell className="py-3">Customer Info</TableCell>
-                  <TableCell className="py-3">Service / Product Requested</TableCell>
-                  <TableCell className="py-3">Schedule Date</TableCell>
-                  <TableCell className="py-3">Current Status</TableCell>
-                  <TableCell className="py-3">Date Submitted</TableCell>
+                  <TableCell className="py-3 w-10">
+                    <input
+                      type="checkbox"
+                      ref={headerCheckboxRef}
+                      onChange={handleSelectAll}
+                      onClick={(e) => e.stopPropagation()}
+                      checked={allVisibleSelected}
+                      className="w-4 h-4 rounded text-blue-600 border-gray-300 focus:ring-blue-500 cursor-pointer"
+                    />
+                  </TableCell>
+                  <TableCell className="py-3">Customer Name</TableCell>
+                  <TableCell className="py-3">Company</TableCell>
+                  <TableCell className="py-3">Country</TableCell>
+                  <TableCell className="py-3">Phone</TableCell>
+                  <TableCell className="py-3">Email</TableCell>
+                  <TableCell className="py-3">Enquiry Type</TableCell>
+                  <TableCell className="py-3">Product</TableCell>
+                  <TableCell className="py-3">Date</TableCell>
+                  <TableCell className="py-3 text-center">Status</TableCell>
                   <TableCell className="py-3 text-right">Actions</TableCell>
                 </tr>
               </TableHeader>
-              <tbody className="divide-y divide-gray-100 dark:divide-gray-750 text-xs font-semibold text-gray-755 dark:text-gray-305 bg-white dark:bg-gray-800">
+              <tbody className="divide-y divide-gray-100 dark:divide-gray-755 text-xs font-semibold text-gray-755 dark:text-gray-305 bg-white dark:bg-gray-800">
                 {leads.map((lead) => (
                   <tr
                     key={lead._id}
                     className="hover:bg-blue-50/30 dark:hover:bg-gray-755/20 transition-colors"
                   >
-                    <TableCell
-                      className="cursor-pointer py-3.5"
-                      onClick={() => {
-                        setSelectedLead(lead);
-                        setModalOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col gap-0.5">
-                        <div className="flex items-center gap-2">
-                          <span className="font-bold text-gray-855 dark:text-gray-100">{lead.name}</span>
-                          {lead.isEnterprise && (
-                            <span className="text-[8px] bg-indigo-650 text-white px-1.5 py-0.5 rounded font-black uppercase tracking-widest">Enterprise</span>
-                          )}
-                        </div>
-                        <span className="text-[10px] text-gray-500 font-mono">{lead.email}</span>
-                        <span className="text-[10px] text-gray-500 font-medium">{lead.phone}</span>
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      className="cursor-pointer py-3.5"
-                      onClick={() => {
-                        setSelectedLead(lead);
-                        setModalOpen(true);
-                      }}
-                    >
-                      <div className="flex flex-col">
-                        <span className="text-xs font-bold text-indigo-600 dark:text-indigo-400">{lead.service || "N/A"}</span>
-                        <div className="flex items-center space-x-2 mt-1">
-                           {lead.product?.items?.length > 0 ? (
-                            <span className="text-[10px] font-bold text-blue-600 bg-blue-50 dark:bg-blue-900/20 dark:text-blue-300 px-2 py-0.5 rounded">
-                              {lead.product.items.length} Products
-                            </span>
-                          ) : (
-                            <span className="text-[10px] text-gray-500 italic truncate max-w-[140px] sm:max-w-[200px]">{getLangValue(lead.product?.title) || "No Product"}</span>
-                          )}
-                        </div>
-                        {(lead.quantity || lead.estimatedTotal) && (
-                          <div className="mt-1.5 flex flex-wrap gap-1.5">
-                            {lead.quantity != null && (
-                              <span className="text-[9px] font-bold text-[#0b1d3d] dark:text-blue-300 bg-[#0b1d3d]/5 dark:bg-blue-900/10 px-2 py-0.5 rounded">
-                                Qty: {lead.quantity}
-                              </span>
-                            )}
-                            {lead.estimatedTotal != null && (
-                              <span className="text-[9px] font-bold text-green-800 dark:text-green-300 bg-green-55/10 dark:bg-green-900/10 px-2 py-0.5 rounded">
-                                Est: {lead.currency || "₹"}{lead.estimatedTotal}
-                              </span>
-                            )}
-                            {lead.enquiryType === "bulk" && (
-                              <span className="text-[8px] font-black uppercase text-amber-850 dark:text-amber-300 bg-amber-50/10 dark:bg-amber-900/10 px-1.5 py-0.5 rounded">
-                                Bulk
-                              </span>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell
-                      className="cursor-pointer py-3.5"
-                      onClick={() => {
-                        setSelectedLead(lead);
-                        setModalOpen(true);
-                      }}
-                    >
-                      <span className="text-[10px] text-gray-600 dark:text-gray-400 font-bold bg-gray-50 dark:bg-gray-750 border border-gray-100 dark:border-gray-700 px-2 py-1 rounded-lg">
-                        {lead.serviceDate || "N/A"}
-                      </span>
-                    </TableCell>
                     <TableCell className="py-3.5">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(lead._id)}
+                        onChange={(e) => handleSelectRow(lead._id, e.target.checked)}
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-4 h-4 rounded text-blue-600 border-gray-300 focus:ring-blue-500 cursor-pointer"
+                      />
+                    </TableCell>
+                    <TableCell
+                      className="cursor-pointer py-3.5 font-bold text-gray-855 dark:text-gray-100"
+                      onClick={() => {
+                        setSelectedLead(lead);
+                        setModalOpen(true);
+                      }}
+                    >
+                      {lead.name}
+                    </TableCell>
+                    <TableCell className="py-3.5 text-gray-600 dark:text-gray-400">
+                      {lead.company || (lead.isEnterprise ? "Enterprise" : "Individual")}
+                    </TableCell>
+                    <TableCell className="py-3.5 text-gray-600 dark:text-gray-400">
+                      {lead.country || lead.state || "N/A"}
+                    </TableCell>
+                    <TableCell className="py-3.5">{lead.phone}</TableCell>
+                    <TableCell className="py-3.5 font-mono text-gray-500">{lead.email}</TableCell>
+                    <TableCell className="py-3.5 text-xs font-bold text-slate-700 capitalize">
+                      {lead.enquiryType || "General"}
+                    </TableCell>
+                    <TableCell className="py-3.5 text-gray-700 dark:text-gray-300">
+                      {lead.product?.items?.length > 0 ? (
+                        <span className="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">
+                          {lead.product.items.length} Products
+                        </span>
+                      ) : (
+                        <span className="italic truncate block max-w-[150px]">{getLangValue(lead.product?.title) || "Manual Quote"}</span>
+                      )}
+                    </TableCell>
+                    <TableCell className="py-3.5 text-gray-500">
+                      {new Date(lead.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="py-3.5 text-center">
                       <select
                         value={lead.status || "pending"}
                         onChange={(e) => handleStatusChange(lead._id, e.target.value)}
-                        disabled={updatingStatus === lead._id}
-                        onClick={(e) => e.stopPropagation()}
-                        className={`text-[10px] font-black uppercase tracking-wider px-2.5 py-1 rounded-full border-0 ${getStatusColor(lead.status || "pending")} ${
-                          updatingStatus === lead._id ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
-                        }`}
+                        disabled={updatingStatusId === lead._id}
+                        className={`text-[9px] font-black uppercase tracking-wider px-2.5 py-1 border-0 rounded-full cursor-pointer ${getStatusColor(
+                          lead.status || "pending"
+                        )} ${updatingStatusId === lead._id ? "opacity-50" : ""}`}
                       >
                         <option value="pending">Pending</option>
                         <option value="contacted">Contacted</option>
-                        <option value="in_progress">In Progress</option>
                         <option value="completed">Completed</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
                     </TableCell>
-                    <TableCell
-                      className="cursor-pointer py-3.5"
-                      onClick={() => {
-                        setSelectedLead(lead);
-                        setModalOpen(true);
-                      }}
-                    >
-                      <span className="text-gray-500 dark:text-gray-450">{new Date(lead.createdAt).toLocaleString()}</span>
-                    </TableCell>
                     <TableCell className="py-3.5 text-right">
-                      <div className="flex items-center justify-end gap-1">
+                      <div className="flex justify-end gap-1">
                         <button
-                          onClick={() => {
-                            setSelectedLead(lead);
-                            setModalOpen(true);
-                          }}
-                          className="text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 p-1.5 rounded-lg hover:bg-blue-50 dark:hover:bg-blue-900/10"
-                          title="View details"
+                          onClick={() => history.push(`/leads/${lead._id}`)}
+                          className="text-blue-500 hover:text-blue-700 p-1.5 rounded-lg hover:bg-blue-50 cursor-pointer"
+                          title="View"
                         >
                           <FiEye className="w-4 h-4" />
                         </button>
                         <button
-                          onClick={(e) => {
-                            e.stopPropagation();
+                          onClick={() => {
                             setLeadToDelete(lead);
                             setDeleteModalOpen(true);
                           }}
-                          className="text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/10"
-                          title="Delete Lead"
+                          className="text-red-500 hover:text-red-700 p-1.5 rounded-lg hover:bg-red-55"
+                          title="Delete"
                         >
                           <FiTrash2 className="w-4 h-4" />
                         </button>
@@ -730,530 +773,256 @@ const Leads = () => {
           </TableContainer>
         </>
       ) : (
-        <NotFound title="No leads found." />
+        <NotFound title="No customer enquiries found matching the filters." />
       )}
-      {/* Lead Details Modal */}
+
+      {/* CRM Lead Details Modal */}
       {modalOpen && selectedLead && (
-        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black bg-opacity-40 p-2 sm:p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl w-full max-h-[92vh] sm:max-h-[90vh] p-4 sm:p-6 relative overflow-y-auto overflow-x-hidden min-w-0">
-            <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-green-600 text-2xl"
-              onClick={() => setModalOpen(false)}
-            >
-              &times;
-            </button>
-            <h2 className="text-xl font-bold mb-4">Lead Details</h2>
-
-            {/* Product Images Section */}
-            <div className="mb-6">
-              <h3 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300">
-                {selectedLead.product?.items?.length > 0 
-                  ? "Requested Products" 
-                  : selectedLead.product?.variant
-                  ? "Variant Images"
-                  : "Product Images"}
-              </h3>
-              <div className="flex flex-wrap gap-4">
-                {(() => {
-                  if (selectedLead.product?.items?.length > 0) {
-                    return selectedLead.product.items.map((item, index) => (
-                      <div key={index} className="flex flex-col items-center gap-2 p-2 border border-gray-100 rounded-lg">
-                        <img
-                          src={item.image}
-                          alt={item.name}
-                          className="w-24 h-24 object-cover rounded-lg border border-gray-200"
-                          onError={(e) => {
-                            e.target.src = "/no-result.svg";
-                          }}
-                        />
-                        <div className="text-center">
-                          <p className="text-xs font-bold text-gray-800 line-clamp-1 w-24">{item.name}</p>
-                          <p className="text-[10px] text-gray-500 font-medium">{item.category || "No Category"}</p>
-                          <p className="text-[10px] text-green-600 font-bold">Qty: {item.quantity}</p>
-                        </div>
-                      </div>
-                    ));
-                  }
-
-                  const variantImages = getSafeImages(selectedLead.product?.variant?.image);
-                  const mainImages = getSafeImages(selectedLead.product?.images);
-
-                  if (variantImages.length > 0) {
-                    return variantImages.map((img, index) => (
-                      <div key={index} className="relative">
-                        <img
-                          src={img}
-                          alt={`Variant ${index + 1}`}
-                          className="w-24 h-24 object-cover rounded-lg border border-gray-200"
-                          onError={(e) => { e.target.src = "/no-result.svg"; }}
-                        />
-                      </div>
-                    ));
-                  } else if (mainImages.length > 0) {
-                    return mainImages.map((img, index) => (
-                      <div key={index} className="relative">
-                        <img
-                          src={img}
-                          alt={`Product ${index + 1}`}
-                          className="w-24 h-24 object-cover rounded-lg border border-gray-200"
-                          onError={(e) => { e.target.src = "/no-result.svg"; }}
-                        />
-                      </div>
-                    ));
-                  } else {
-                    return (
-                      <div className="w-24 h-24 bg-gray-200 rounded-lg flex items-center justify-center">
-                        <span className="text-gray-500 text-xs text-center">No Image</span>
-                      </div>
-                    );
-                  }
-                })()}
-              </div>
-            </div>
-
-            {/* Lead Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Customer Information */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">
-                  Customer Information
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-xs p-2 sm:p-4 overflow-y-auto">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-xl max-w-5xl w-full max-h-[94vh] flex flex-col relative overflow-hidden animate-fade-in-up">
+            {/* Modal Header */}
+            <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100 bg-slate-50 flex-shrink-0">
+              <div>
+                <h3 className="font-extrabold text-slate-800 text-sm sm:text-base leading-tight">
+                  Enquiry Reference ID: {selectedLead._id}
                 </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Name:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.name}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Email:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.email}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Phone:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.phone}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Type:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200 font-bold">
-                      {selectedLead.isEnterprise ? "Enterprise / Company" : "Individual Customer"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between items-start">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Full Address:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200 text-right max-w-[200px]">
-                      {selectedLead.address || "N/A"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      State:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.state || "N/A"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      District:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.district || "N/A"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Pincode:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.pincode || "N/A"}
-                    </span>
-                  </div>
-                   <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Date:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {new Date(selectedLead.createdAt).toLocaleString()}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Status:
-                    </span>
-                    <span className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor(selectedLead.status || "pending")}`}>
-                      {(selectedLead.status || "pending").charAt(0).toUpperCase() + (selectedLead.status || "pending").slice(1).replace("_", " ")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Service Requested Details */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">
-                  Service Request Details
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Selected Service:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200 font-bold">
-                      {selectedLead.service || "Not specified"}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Schedule / Date:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200 font-bold">
-                      {selectedLead.serviceDate || "Not specified"}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-              {/* Product Information */}
-              <div className="space-y-3">
-                <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 border-b pb-2">
-                  Product Overview
-                </h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Total Products:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.product?.items?.length || (selectedLead.product?.title ? 1 : 0)}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium text-gray-600 dark:text-gray-400">
-                      Main Category:
-                    </span>
-                    <span className="text-gray-800 dark:text-gray-200">
-                      {selectedLead.product?.items?.length > 0
-                        ? [...new Set(selectedLead.product.items.map(i => i.category))].join(', ')
-                        : (getLangValue(selectedLead.product?.category?.name) || "Not specified")}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Variant or Product Information */}
-            {selectedLead.product?.variant ? (
-              // Show variant information if variant exists
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300 border-b pb-2">
-                  Selected Variant Details
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Variant Title:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200">
-                        {getLangValue(selectedLead.product.variant.title)}
-                      </span>
-                    </div>
-                    {/* <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">Variant SKU:</span>
-                      <span className="text-gray-800 dark:text-gray-200">{selectedLead.product.variant.sku || "Not specified"}</span>
-                    </div> */}
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Variant Barcode:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200">
-                        {selectedLead.product.variant.barcode ||
-                          "Not specified"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Variant Slug:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200">
-                        {selectedLead.product.variant.slug || "Not specified"}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Variant Description:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200 max-w-xs truncate">
-                        {getLangValue(
-                          selectedLead.product.variant.description
-                        ) || "Not specified"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Variant Highlights:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200 max-w-xs truncate">
-                        {getLangValue(
-                          selectedLead.product.variant.highlights
-                        ) || "Not specified"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              // Show product information if no variant
-              <div className="mt-6">
-                <h3 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300 border-b pb-2">
-                  Product Details
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Product Title:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200">
-                        {getLangValue(selectedLead.product?.title)}
-                      </span>
-                    </div>
-                    {/* <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">Product SKU:</span>
-                      <span className="text-gray-800 dark:text-gray-200">{selectedLead.product?.sku || "Not specified"}</span>
-                    </div> */}
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Product Slug:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200">
-                        {selectedLead.product?.slug || "Not specified"}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Product Description:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200 max-w-xs truncate">
-                        {getLangValue(selectedLead.product?.description) ||
-                          "Not specified"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Product Highlights:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200 max-w-xs truncate">
-                        {getLangValue(selectedLead.product?.highlights) ||
-                          "Not specified"}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="font-medium text-gray-600 dark:text-gray-400">
-                        Stock:
-                      </span>
-                      <span className="text-gray-800 dark:text-gray-200">
-                        {selectedLead.product?.stock ||
-                          selectedLead.product?.stockQuantity ||
-                          "Not specified"}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Message */}
-            <div className="mt-6">
-              <h3 className="text-lg font-semibold mb-3 text-gray-700 dark:text-gray-300 border-b pb-2">
-                Customer Message
-              </h3>
-              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-                <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">
-                  {selectedLead.message || "No message provided"}
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mt-0.5">
+                  Customer Enquiry CRM Worksheet
                 </p>
               </div>
+              <button
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 text-lg transition-colors"
+                onClick={() => setModalOpen(false)}
+              >
+                &times;
+              </button>
             </div>
 
-            {/* Additional Context */}
-            {(selectedLead.service || selectedLead.serviceDate || selectedLead.message) && (
-              <div className="mt-6">
-                <h3 className="text-xl font-bold mb-4 text-[#EF4036] border-b pb-2">
-                  Service Quote Details
-                </h3>
-                <div className="bg-red-50 dark:bg-gray-700/50 p-6 rounded-xl border border-red-100 dark:border-red-900/30">
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
-                      <div className="space-y-4">
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-red-600 uppercase tracking-wider mb-1">Requested Service</span>
-                          <span className="text-lg font-bold text-gray-900 dark:text-gray-100">{selectedLead.service || "General Test & Tag"}</span>
-                        </div>
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-red-600 uppercase tracking-wider mb-1">Requested Schedule</span>
-                          <span className="text-lg font-bold text-gray-900 dark:text-gray-100">{selectedLead.serviceDate || "Not Specified"}</span>
-                        </div>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="flex flex-col">
-                          <span className="text-xs font-bold text-red-600 uppercase tracking-wider mb-1">Location / Site</span>
-                          <span className="text-base font-semibold text-gray-800 dark:text-gray-200">{selectedLead.location || "N/A"}</span>
-                          <span className="text-sm text-gray-500">{selectedLead.district}, {selectedLead.state} - {selectedLead.pincode}</span>
-                        </div>
-                      </div>
-                   </div>
-                   <div className="mt-4 pt-4 border-t border-red-200/50">
-                      <span className="text-xs font-bold text-red-600 uppercase tracking-wider mb-1 block">Customer Message</span>
-                      <p className="text-gray-800 dark:text-gray-200 bg-white/50 dark:bg-gray-800 p-4 rounded-lg italic">
-                        "{selectedLead.message || "No special instructions provided."}"
-                      </p>
-                   </div>
-                </div>
-              </div>
-            )}
+            {/* Modal Body */}
+            <div className="flex-grow overflow-y-auto p-6 space-y-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
-            {/* Quantity & pricing (bulk enquiries) */}
-            {(selectedLead.quantity || selectedLead.unitPrice || selectedLead.estimatedTotal) && (
-              <div className="mt-6 rounded-xl border-2 border-green-200 bg-green-50/50 dark:bg-gray-800/50 p-4 sm:p-6">
-                <h3 className="text-lg font-bold text-green-800 dark:text-green-400 mb-4 border-b border-green-200 pb-2">
-                  Quantity &amp; pricing estimate
-                </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 text-sm">
-                  <div>
-                    <p className="text-[10px] uppercase font-bold text-gray-500">Type</p>
-                    <p className="font-bold capitalize">{selectedLead.enquiryType || "bulk"}</p>
+                {/* Left Side: customer info & products */}
+                <div className="lg:col-span-8 space-y-6">
+                  {/* Customer Information */}
+                  <div className="bg-slate-50/60 p-5 rounded-2xl border border-slate-100">
+                    <h4 className="text-xs font-black text-ilmic-blue uppercase tracking-wider mb-4 pb-1 border-b border-slate-200">
+                      Customer Information
+                    </h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-semibold">
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-gray-400">Name</p>
+                        <p className="text-slate-800">{selectedLead.name}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-gray-400">Company</p>
+                        <p className="text-slate-800">{selectedLead.company || "Individual Client"}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-gray-400">Country</p>
+                        <p className="text-slate-800">{selectedLead.country || selectedLead.state || "N/A"}</p>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase font-bold text-gray-400">Phone</p>
+                        <p className="text-slate-800">{selectedLead.phone}</p>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <p className="text-[10px] uppercase font-bold text-gray-400">Email Address</p>
+                        <p className="text-slate-800 font-mono">{selectedLead.email}</p>
+                      </div>
+                      <div className="sm:col-span-2">
+                        <p className="text-[10px] uppercase font-bold text-gray-400">Full Address</p>
+                        <p className="text-slate-600 leading-relaxed font-normal">
+                          {selectedLead.address || "N/A"}
+                          {selectedLead.district && `, ${selectedLead.district}`}
+                          {selectedLead.state && `, ${selectedLead.state}`}
+                          {selectedLead.pincode && ` - ${selectedLead.pincode}`}
+                        </p>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-[10px] uppercase font-bold text-gray-500">Quantity</p>
-                    <p className="font-bold">{selectedLead.quantity ?? "—"}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase font-bold text-gray-500">Slab</p>
-                    <p className="font-bold">{selectedLead.tierLabel || "—"}</p>
-                  </div>
-                  <div>
-                    <p className="text-[10px] uppercase font-bold text-gray-500">Unit price</p>
-                    <p className="font-bold">
-                      {selectedLead.listUnitPrice != null && (
-                        <span className="line-through text-gray-400 mr-2 text-xs">
-                          {selectedLead.currency || "₹"}
-                          {selectedLead.listUnitPrice}
-                        </span>
+
+                  {/* Products Details List */}
+                  <div className="bg-slate-50/60 p-5 rounded-2xl border border-slate-100">
+                    <h4 className="text-xs font-black text-ilmic-blue uppercase tracking-wider mb-4 pb-1 border-b border-slate-200">
+                      Enquiry &amp; Quote Details
+                    </h4>
+                    <div className="space-y-4">
+                      {selectedLead.product?.items?.length > 0 ? (
+                        selectedLead.product.items.map((item, index) => (
+                          <div key={index} className="flex items-center gap-4 p-3 border rounded-xl bg-white">
+                            <img
+                              src={item.image}
+                              className="w-16 h-16 object-cover rounded-lg shadow-xs border flex-shrink-0"
+                              onError={(e) => e.target.src = "/no-result.svg"}
+                            />
+                            <div className="flex-grow min-w-0">
+                              <h5 className="font-bold text-slate-800 text-sm truncate">{item.name}</h5>
+                              <p className="text-[10px] text-gray-400 capitalize">{item.category}</p>
+                              <div className="flex justify-between items-center mt-1">
+                                <span className="text-xs font-extrabold text-blue-600">Qty: {item.quantity}</span>
+                                <span className="text-[10px] font-mono text-gray-400">ID: {item.id}</span>
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      ) : (
+                        <div className="flex flex-col sm:flex-row gap-4 p-3 border rounded-xl bg-white">
+                          {getSafeImages(selectedLead.product?.variant?.image || selectedLead.product?.images).slice(0, 1).map((img, i) => (
+                            <img
+                              key={i}
+                              src={img}
+                              className="w-20 h-20 object-cover rounded-lg border shadow-xs flex-shrink-0"
+                              onError={(e) => e.target.src = "/no-result.svg"}
+                            />
+                          ))}
+                          <div className="flex-grow space-y-1">
+                            <h5 className="font-bold text-slate-800 text-sm">{getLangValue(selectedLead.product?.title) || "Manual Quote"}</h5>
+                            <span className="inline-block px-2 py-0.5 bg-green-50 text-green-700 text-[10px] font-black rounded-full">
+                              {getLangValue(selectedLead.product?.category?.name) || "General"}
+                            </span>
+                            <div className="grid grid-cols-2 gap-4 pt-1 text-[11px]">
+                              <div>
+                                <span className="text-gray-400 block uppercase font-bold text-[9px]">Variant</span>
+                                <span className="font-bold text-slate-700">{getLangValue(selectedLead.product?.variant?.title) || "Standard"}</span>
+                              </div>
+                              <div>
+                                <span className="text-gray-400 block uppercase font-bold text-[9px]">SKU</span>
+                                <span className="font-bold text-slate-700">{selectedLead.product?.variant?.sku || selectedLead.product?.sku || "N/A"}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       )}
-                      {selectedLead.currency || "₹"}
-                      {selectedLead.unitPrice ?? "—"}
-                    </p>
+                    </div>
+
+                    {/* Quantity pricing for bulk orders */}
+                    {(selectedLead.quantity || selectedLead.estimatedTotal) && (
+                      <div className="grid grid-cols-3 gap-4 mt-4 pt-4 border-t border-slate-200 text-xs font-semibold">
+                        <div>
+                          <p className="text-[9px] uppercase font-black text-gray-400">Quote Type</p>
+                          <p className="text-slate-800 capitalize">{selectedLead.enquiryType || "bulk"}</p>
+                        </div>
+                        <div>
+                          <p className="text-[9px] uppercase font-black text-gray-400">Slab Count</p>
+                          <p className="text-slate-800 font-extrabold">{selectedLead.quantity || "—"}</p>
+                        </div>
+                        <div>
+                          <p className="text-[9px] uppercase font-black text-gray-400">Estimated Total</p>
+                          <p className="text-sm font-black text-blue-600">
+                            {selectedLead.currency || "₹"}{selectedLead.estimatedTotal || "0"}
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div>
-                    <p className="text-[10px] uppercase font-bold text-gray-500">Discount</p>
-                    <p className="font-bold text-green-700">
-                      {selectedLead.discountPercent > 0
-                        ? `${selectedLead.discountPercent}%`
-                        : "—"}
-                    </p>
-                  </div>
-                  <div className="col-span-2 sm:col-span-1">
-                    <p className="text-[10px] uppercase font-bold text-gray-500">Est. total</p>
-                    <p className="text-xl font-black text-[#0b1d3d] dark:text-white">
-                      {selectedLead.currency || "₹"}
-                      {selectedLead.estimatedTotal ?? "—"}
+
+                  {/* Customer Message */}
+                  <div className="bg-slate-50/60 p-5 rounded-2xl border border-slate-100">
+                    <h4 className="text-xs font-black text-ilmic-blue uppercase tracking-wider mb-2.5 pb-1 border-b border-slate-200">
+                      Message
+                    </h4>
+                    <p className="text-slate-600 text-xs leading-relaxed italic bg-white p-4 rounded-xl border border-slate-100">
+                      "{selectedLead.message || "No comments or description provided by the client."}"
                     </p>
                   </div>
                 </div>
-                {selectedLead.pricingNote && (
-                  <p className="mt-3 text-xs text-gray-600 dark:text-gray-300 italic">
-                    {selectedLead.pricingNote}
-                  </p>
-                )}
-              </div>
-            )}
 
-            {/* Product Section for Both Single and Multi-Product Leads */}
-            <div className="mt-8">
-              <h3 className="text-lg font-bold mb-4 text-gray-800 dark:text-gray-200">
-                {selectedLead.product?.items?.length > 0 ? "Items in Quote Request" : "Product Details"}
-              </h3>
-              
-              <div className="grid grid-cols-1 gap-4">
-                {selectedLead.product?.items?.length > 0 ? (
-                  // MULTI-PRODUCT (from Cart)
-                  selectedLead.product.items.map((item, index) => (
-                    <div key={index} className="flex items-center gap-4 p-4 border rounded-xl bg-gray-50 dark:bg-gray-800/50">
-                      <img 
-                        src={item.image} 
-                        className="w-20 h-20 object-cover rounded-lg shadow-sm border" 
-                        onError={(e) => e.target.src = "/no-result.svg"}
-                      />
-                      <div className="flex-grow">
-                        <h4 className="font-bold text-gray-900 dark:text-gray-100">{item.name}</h4>
-                        <p className="text-sm text-gray-500">{item.category}</p>
-                        <div className="flex justify-between items-center mt-1">
-                          <span className="text-sm font-bold text-red-600">Quantity: {item.quantity}</span>
-                          <span className="text-xs text-gray-400">ID: {item.id}</span>
-                        </div>
+                {/* Right Side: Admin CRM interactions */}
+                <div className="lg:col-span-4 space-y-6">
+                  {/* Timeline & Metadata */}
+                  <div className="bg-slate-50/60 p-5 rounded-2xl border border-slate-100 space-y-3 text-xs font-semibold">
+                    <h4 className="text-xs font-black text-ilmic-blue uppercase tracking-wider pb-1 border-b border-slate-200">
+                      CRM Timeline
+                    </h4>
+                    <div className="space-y-2.5">
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Submitted</span>
+                        <span className="text-slate-800">{new Date(selectedLead.createdAt).toLocaleString()}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-400">Last Action</span>
+                        <span className="text-slate-800">{new Date(selectedLead.updatedAt).toLocaleString()}</span>
                       </div>
                     </div>
-                  ))
-                ) : (
-                  // SINGLE PRODUCT (from Product Detail page)
-                  <div className="flex flex-col md:flex-row gap-6 p-4 border rounded-xl bg-gray-50 dark:bg-gray-800/50">
-                    <div className="flex gap-2">
-                       {getSafeImages(selectedLead.product?.variant?.image).concat(getSafeImages(selectedLead.product?.images)).slice(0,1).map((img, i) => (
-                         <img key={i} src={img} className="w-32 h-32 object-cover rounded-xl border shadow-sm" onError={(e) => e.target.src = "/no-result.svg"} />
-                       ))}
-                       {(!selectedLead.product?.images || selectedLead.product.images.length === 0) && !selectedLead.product?.variant?.image && (
-                         <div className="w-32 h-32 bg-gray-200 rounded-xl flex items-center justify-center text-gray-400 text-xs text-center p-2">No Image Found</div>
-                       )}
+                  </div>
+
+                  {/* CRM Status & Notes Editor */}
+                  <div className="bg-slate-50/60 p-5 rounded-2xl border border-slate-100 space-y-4">
+                    <h4 className="text-xs font-black text-ilmic-blue uppercase tracking-wider pb-1 border-b border-slate-200">
+                      CRM Status & Actions
+                    </h4>
+
+                    {/* Status Dropdown */}
+                    <div>
+                      <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
+                        Status badge
+                      </label>
+                      <select
+                        value={modalStatus}
+                        onChange={(e) => setModalStatus(e.target.value)}
+                        className="w-full text-xs border border-gray-250 dark:border-gray-650 dark:bg-gray-750 dark:text-gray-200 py-2 px-3 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] cursor-pointer"
+                      >
+                        <option value="pending">Pending</option>
+                        <option value="contacted">Contacted</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                      </select>
                     </div>
-                    <div className="flex-grow space-y-2">
-                       <h4 className="text-xl font-bold text-gray-900">{getLangValue(selectedLead.product?.title) || "Manual Quote"}</h4>
-                       <span className="px-3 py-1 bg-green-100 text-green-800 text-xs font-bold rounded-full">
-                         {getLangValue(selectedLead.product?.category?.name) || "General"}
-                       </span>
-                       <div className="grid grid-cols-2 gap-4 mt-4">
-                          <div>
-                            <p className="text-[10px] text-gray-400 uppercase font-bold">Variant</p>
-                            <p className="text-sm font-semibold">{getLangValue(selectedLead.product?.variant?.title) || "Standard"}</p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] text-gray-400 uppercase font-bold">SKU</p>
-                            <p className="text-sm font-semibold">{selectedLead.product?.variant?.sku || selectedLead.product?.sku || "N/A"}</p>
-                          </div>
-                       </div>
+
+                    {/* Assignee Field */}
+                    <div>
+                      <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
+                        Assignee (Staff Name/ID)
+                      </label>
+                      <input
+                        type="text"
+                        value={modalAssignee}
+                        onChange={(e) => setModalAssignee(e.target.value)}
+                        placeholder="e.g. Sales Executive"
+                        className="w-full text-xs border border-gray-250 dark:border-gray-650 dark:bg-gray-750 dark:text-gray-200 py-2.5 px-3.5 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0b1d3d]"
+                      />
+                    </div>
+
+                    {/* Internal Notes */}
+                    <div>
+                      <label className="block text-[10px] font-black text-gray-400 uppercase tracking-widest mb-1.5">
+                        Internal Admin Notes
+                      </label>
+                      <textarea
+                        value={modalNotes}
+                        onChange={(e) => setModalNotes(e.target.value)}
+                        placeholder="Log status changes, details discussed, follow-ups..."
+                        rows={5}
+                        className="w-full text-xs border border-gray-250 dark:border-gray-650 dark:bg-gray-750 dark:text-gray-200 py-2.5 px-3.5 rounded-xl focus:outline-none focus:ring-1 focus:ring-[#0b1d3d] resize-none"
+                      />
+                    </div>
+
+                    {/* Save Action Button */}
+                    <div className="pt-2">
+                      <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700 shadow-sm rounded-xl font-bold uppercase tracking-wider text-xs py-3 cursor-pointer"
+                        disabled={savingModal}
+                        onClick={handleSaveModalChanges}
+                      >
+                        {savingModal ? "Saving Details..." : "Save Changes"}
+                      </Button>
                     </div>
                   </div>
-                )}
+                </div>
+
               </div>
             </div>
           </div>
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Single Lead Delete Modal */}
       {deleteModalOpen && leadToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-md w-full p-6 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-xs">
+          <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-lg max-w-md w-full p-6 relative animate-fade-in-up">
             <button
-              className="absolute top-2 right-2 text-gray-500 hover:text-red-600 text-2xl"
+              className="absolute top-3 right-3 text-gray-500 hover:text-red-600 text-2xl"
               onClick={() => {
                 setDeleteModalOpen(false);
                 setLeadToDelete(null);
@@ -1261,16 +1030,16 @@ const Leads = () => {
             >
               &times;
             </button>
-            <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-200">
-              Delete Lead
+            <h2 className="text-lg font-black text-gray-855 dark:text-gray-200 mb-2">
+              Delete Enquiry
             </h2>
-            <p className="text-gray-600 dark:text-gray-400 mb-6">
-              Are you sure you want to delete the lead from{" "}
-              <strong>{leadToDelete.name}</strong>? This action cannot be undone.
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-6 leading-relaxed">
+              Are you sure you want to permanently delete the enquiry from <strong>{leadToDelete.name}</strong>? This action will remove it from the system and cannot be undone.
             </p>
-            <div className="flex justify-end space-x-3">
+            <div className="flex justify-end gap-2.5">
               <Button
                 layout="outline"
+                className="rounded-xl font-bold text-xs"
                 onClick={() => {
                   setDeleteModalOpen(false);
                   setLeadToDelete(null);
@@ -1279,7 +1048,7 @@ const Leads = () => {
                 Cancel
               </Button>
               <Button
-                className="bg-red-600 hover:bg-red-700"
+                className="bg-red-650 hover:bg-red-750 rounded-xl font-bold text-xs"
                 onClick={handleDeleteLead}
               >
                 Delete

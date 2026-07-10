@@ -223,12 +223,12 @@ const ProductScreen = ({ product, relatedProducts }) => {
               {/* Section 1: Hero Section Card */}
               <div className="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
                 {/* Left: Product Image */}
-                <div className="md:col-span-6 flex flex-col items-stretch justify-center kure-product-gallery">
-                  <div className="kure-product-gallery__main relative w-full rounded-2xl border border-slate-100 overflow-hidden bg-white shadow-sm">
+                <div className="md:col-span-6 flex flex-col items-stretch justify-center ilmic-product-gallery">
+                  <div className="ilmic-product-gallery__main relative w-full rounded-2xl border border-slate-100 overflow-hidden bg-white shadow-sm">
                     <CatalogProductImage
                       src={galleryImages[activeImageIdx] || galleryImages[0] || imageUrl}
                       alt={productName}
-                      className="kure-product-gallery__main-frame"
+                      className="ilmic-product-gallery__main-frame"
                     />
                     <span className={`absolute top-3 left-3 text-[9px] font-black px-2.5 py-1 rounded-full border uppercase tracking-wider shadow-sm ${colors.badge} ${colors.border}`}>
                       {catName}
@@ -236,7 +236,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   </div>
 
                   {/* 4-angle thumbnails (1 mandatory + 3 optional) */}
-                  <div className="kure-product-gallery__thumbs">
+                  <div className="ilmic-product-gallery__thumbs">
                     {Array.from({ length: 4 }).map((_, idx) => {
                       const thumbSrc = galleryImages[idx];
                       const isActive = idx === activeImageIdx;
@@ -247,9 +247,9 @@ const ProductScreen = ({ product, relatedProducts }) => {
                           type="button"
                           onClick={() => thumbSrc && setActiveImageIdx(idx)}
                           disabled={!thumbSrc}
-                          className={`kure-product-gallery__thumb ${
-                            isActive ? "kure-product-gallery__thumb--active" : ""
-                          } ${thumbSrc ? "" : "kure-product-gallery__thumb--empty"}`}
+                          className={`ilmic-product-gallery__thumb ${
+                            isActive ? "ilmic-product-gallery__thumb--active" : ""
+                          } ${thumbSrc ? "" : "ilmic-product-gallery__thumb--empty"}`}
                           aria-label={`Product image ${idx + 1}`}
                           aria-pressed={isActive}
                         >
@@ -260,13 +260,13 @@ const ProductScreen = ({ product, relatedProducts }) => {
                               loading="lazy"
                             />
                           ) : (
-                            <span className="kure-product-gallery__thumb-placeholder">
-                              <span className="kure-product-gallery__thumb-placeholder-icon">+</span>
+                            <span className="ilmic-product-gallery__thumb-placeholder">
+                              <span className="ilmic-product-gallery__thumb-placeholder-icon">+</span>
                               <span>{angleLabels[idx]}</span>
                             </span>
                           )}
                           {thumbSrc && (
-                            <span className="kure-product-gallery__thumb-label">
+                            <span className="ilmic-product-gallery__thumb-label">
                               {angleLabels[idx]}
                             </span>
                           )}
@@ -335,7 +335,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
                       Send Enquiry
                     </button>
                     <a
-                      href={`https://wa.me/919911972234?text=Hello%20Kure%20Pharma%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
+                      href={`https://wa.me/9188102 72080?text=Hello%20ILMIC%20Health%20Care%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[11px] py-3 px-6 rounded-xl transition-all shadow-sm uppercase tracking-wider text-center"
@@ -625,7 +625,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
 
               <div className="border-t border-slate-100 pt-4">
                 <a
-                  href={`https://wa.me/919911972234?text=Hello%20Kure%20Pharma%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
+                  href={`https://wa.me/9188102 72080?text=Hello%20ILMIC%20Health%20Care%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs py-3.5 rounded-xl transition-all duration-300 shadow-sm uppercase tracking-widest flex items-center justify-center gap-2 text-center"
@@ -656,7 +656,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   View All Products →
                 </Link>
               </div>
-              <div className="kure-catalog-grid grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="ilmic-catalog-grid grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {relatedProducts.map((p) => {
                   const pCatName = getTitleString(p.category?.name || p.category) || catName;
                   const pColors = catColorMap[pCatName] || colors;
@@ -668,8 +668,8 @@ const ProductScreen = ({ product, relatedProducts }) => {
                       className="flex flex-col group border-2 border-[#c9a066]/55 rounded-sm bg-white overflow-hidden hover:border-[#b8860b]/80 transition-all duration-300 text-center"
                     >
                       <CatalogProductImage src={pImg} alt={pTitle} />
-                      <div className="kure-catalog-card-body">
-                        <h4 className="kure-catalog-card-title">{pTitle}</h4>
+                      <div className="ilmic-catalog-card-body">
+                        <h4 className="ilmic-catalog-card-title">{pTitle}</h4>
                         <CatalogReadMore href={`/product/${p.slug}`} />
                       </div>
                     </div>

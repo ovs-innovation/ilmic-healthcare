@@ -39,13 +39,12 @@ const Home = ({ products, services, homepageSettings }) => {
     setEnquiryModalOpen(true);
   };
 
-  // Use DB products if available, else fallback hero products; merge featured first
-  const dbSlugs = new Set((products || []).map((p) => p.slug));
-  const fallbackToAdd = heroProducts.filter((p) => !dbSlugs.has(p.slug));
-  const displayProducts = [...(products || []), ...fallbackToAdd].slice(0, 12);
-  const heroDisplay = displayProducts.length
-    ? displayProducts.filter((p) => p.featured !== false).slice(0, 5)
-    : heroProducts;
+  // Storefront products from database only (no static/mock fallbacks)
+  const displayProducts = (products || []).slice(0, 12);
+  let heroDisplay = displayProducts.filter((p) => p.featured !== false).slice(0, 5);
+  if (heroDisplay.length === 0 && displayProducts.length > 0) {
+    heroDisplay = displayProducts.slice(0, 5);
+  }
 
   const generalPlaceholder = {
     _id: "general",
@@ -161,7 +160,7 @@ export const getServerSideProps = async () => {
   const [productsResult, servicesResult, homepageResult] = await Promise.allSettled([
     ProductServices.getAllProducts({ limit: 20 }),
     ServiceServices.getShowingServices(),
-    SettingServices.getKureHomepageSetting(),
+    SettingServices.getIlmicHomepageSetting(),
   ]);
 
   const productsRes = productsResult.status === "fulfilled" ? productsResult.value : null;

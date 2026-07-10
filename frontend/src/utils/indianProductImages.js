@@ -1,4 +1,4 @@
-import { kureTherapeuticCategories } from "./kureTherapeuticCategories";
+import { ilmicTherapeuticCategories } from "./ilmicTherapeuticCategories";
 
 /** Generic / AI-looking packshots — avoid on site */
 export const GENERIC_PRODUCT_IMAGES = new Set([
@@ -44,7 +44,7 @@ export const getIndianCategoryImage = (categoryName = "") => {
   }
 
   const normalized = categoryName.toLowerCase();
-  const matched = kureTherapeuticCategories.find(
+  const matched = ilmicTherapeuticCategories.find(
     (item) =>
       item.name.toLowerCase() === normalized ||
       item.category.toLowerCase() === normalized,

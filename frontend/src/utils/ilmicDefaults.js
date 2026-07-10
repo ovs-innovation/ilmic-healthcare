@@ -23,7 +23,7 @@ const ilmicDefaults = {
           "Oncology, General Pharma & Surgical products — exporting to Dubai, Africa, Bangladesh, CIS countries and beyond.",
         cities: "Delhi (India) · Luanda (Angola) · Global Export Markets",
         bgImage:
-          "https://images.unsplash.com/photo-1576086213369-97a3b6096d16?auto=format&fit=crop&w=1400&q=85",
+          "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85",
       },
     ],
     features: [

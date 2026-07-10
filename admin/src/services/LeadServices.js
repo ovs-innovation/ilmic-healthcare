@@ -12,9 +12,13 @@ const LeadServices = {
     limit = 20,
     startDate = "",
     endDate = "",
+    search = "",
+    product = "",
+    country = "",
+    enquiryType = "",
   } = {}) => {
     return requests.get(
-      `/leads?name=${name}&email=${email}&phone=${phone}&status=${status}&page=${page}&limit=${limit}&startDate=${startDate}&endDate=${endDate}`,
+      `/leads?name=${name}&email=${email}&phone=${phone}&status=${status}&page=${page}&limit=${limit}&startDate=${startDate}&endDate=${endDate}&search=${search}&product=${product}&country=${country}&enquiryType=${enquiryType}`,
       body,
       headers
     );
@@ -30,6 +34,14 @@ const LeadServices = {
 
   deleteLead: async (id) => {
     return requests.delete(`/leads/${id}`);
+  },
+
+  bulkDeleteLeads: async (ids) => {
+    return requests.post("/leads/bulk-delete", { ids });
+  },
+
+  bulkStatusUpdate: async (ids, status) => {
+    return requests.post("/leads/bulk-status", { ids, status });
   },
 
   getDashboardCount: async () => {

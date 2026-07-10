@@ -3,6 +3,13 @@ body
   > iframe[style*="2147483647"]:not([id="webpack-dev-server-client-overlay"]) {
   display: none;
 }
+/* Hide browser native password reveal eye button */
+input[type="password"]::-ms-reveal,
+input[type="password"]::-ms-clear,
+input[type="password"]::-webkit-contacts-auto-fill-button,
+input[type="password"]::-webkit-credentials-auto-fill-button {
+  display: none !important;
+}
 .chart {
   height: 320px !important;
   width: 320px !important;
@@ -1374,3 +1381,448 @@ input[type="number"]::-webkit-outer-spin-button {
 .tab-exit {
   animation: exitAnimation 0.8s ease forwards;
 }
+
+/* ==========================================================================
+   PREMIUM SAAS ADMIN COMPONENT OVERRIDES
+   ========================================================================== */
+
+/* --- Dropdown Select and Options overrides --- */
+select, .modern-select {
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+  border: 1px solid #D1D5DB !important;
+  border-radius: 0.5rem !important; /* rounded-lg */
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.875rem !important;
+  line-height: 1.25rem !important;
+  font-family: inherit !important;
+  outline: none !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+select:hover:not(:disabled) {
+  border-color: #94A3B8 !important;
+}
+
+select:focus:not(:disabled) {
+  border-color: #3B82F6 !important; /* blue-500 */
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  background-color: #FFFFFF !important;
+}
+
+/* Option element overrides to ensure high contrast dropdowns */
+select option, .modern-select option {
+  background-color: #FFFFFF !important;
+  color: #1E293B !important;
+  padding: 8px 12px !important;
+}
+
+/* Selected option style */
+select option:checked, select option[selected] {
+  background-color: #3B82F6 !important;
+  color: #FFFFFF !important;
+}
+
+/* Hover background for option tags in supporting browsers */
+select option:hover {
+  background-color: #DBEAFE !important;
+  color: #1E293B !important;
+}
+
+/* Dark mode inputs and select overrides */
+.theme-dark select, .dark select {
+  background-color: #1E293B !important;
+  color: #F1F5F9 !important;
+  border-color: #334155 !important;
+}
+
+.theme-dark select:hover:not(:disabled), .dark select:hover:not(:disabled) {
+  border-color: #475569 !important;
+}
+
+.theme-dark select:focus:not(:disabled), .dark select:focus:not(:disabled) {
+  background-color: #0F172A !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+.theme-dark select option, .dark select option {
+  background-color: #1E293B !important;
+  color: #F1F5F9 !important;
+}
+
+/* --- Input and Textarea Premium Enhancements --- */
+input, textarea {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+input:hover:not(:disabled), textarea:hover:not(:disabled) {
+  border-color: #94A3B8 !important;
+}
+
+input:focus:not(:disabled), textarea:focus:not(:disabled) {
+  background-color: #FFFFFF !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15) !important;
+  color: #1E293B !important;
+}
+
+/* Dark Mode Inputs and Textareas */
+.theme-dark input, .theme-dark textarea, .dark input, .dark textarea {
+  background-color: #1E293B !important;
+  border-color: #334155 !important;
+  color: #F1F5F9 !important;
+}
+
+.theme-dark input:hover:not(:disabled), .theme-dark textarea:hover:not(:disabled), .dark input:hover:not(:disabled), .dark textarea:hover:not(:disabled) {
+  border-color: #475569 !important;
+}
+
+.theme-dark input:focus:not(:disabled), .theme-dark textarea:focus:not(:disabled), .dark input:focus:not(:disabled), .dark textarea:focus:not(:disabled) {
+  background-color: #0F172A !important;
+  border-color: #3B82F6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
+}
+
+/* Disabled states */
+input:disabled, textarea:disabled, select:disabled {
+  background-color: #F1F5F9 !important;
+  color: #94A3B8 !important;
+  border-color: #E2E8F0 !important;
+  cursor: not-allowed !important;
+  opacity: 0.7;
+}
+
+.theme-dark input:disabled, .theme-dark textarea:disabled, .theme-dark select:disabled,
+.dark input:disabled, .dark textarea:disabled, .dark select:disabled {
+  background-color: #334155 !important;
+  color: #64748B !important;
+  border-color: #475569 !important;
+}
+
+/* Placeholder color styling */
+::placeholder, .placeholder-slate-400::placeholder {
+  color: #94A3B8 !important;
+}
+
+/* --- Redesigned Drag & Drop Area --- */
+.premium-upload-area {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-width: 2px;
+  border-style: dashed;
+}
+
+.premium-upload-area:hover {
+  border-color: #3B82F6;
+  background-color: rgba(248, 250, 252, 0.8);
+}
+
+.theme-dark .premium-upload-area:hover, .dark .premium-upload-area:hover {
+  border-color: #3B82F6;
+  background-color: rgba(30, 41, 59, 0.5);
+}
+
+/* --- Premium FAQ Cards --- */
+.faq-card {
+  border: 1px solid #E2E8F0;
+  background-color: #FFFFFF;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  transition: all 0.2s ease-in-out;
+}
+
+.faq-card:hover {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border-color: #CBD5E1;
+}
+
+.theme-dark .faq-card, .dark .faq-card {
+  border-color: #334155;
+  background-color: #1E293B;
+}
+
+.theme-dark .faq-card:hover, .dark .faq-card:hover {
+  border-color: #475569;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+}
+
+/* Dark theme input styling overrides */
+.theme-dark input,
+.theme-dark select,
+.theme-dark textarea,
+.dark input,
+.dark select,
+.dark textarea {
+  color: #FFFFFF !important;
+  background-color: #1E293B !important;
+  border-color: #334155 !important;
+}
+
+.theme-dark input::placeholder,
+.theme-dark textarea::placeholder,
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: #9CA3AF !important;
+  opacity: 1 !important;
+}
+
+.theme-dark input:focus,
+.theme-dark select:focus,
+.theme-dark textarea:focus,
+.dark input:focus,
+.dark select:focus,
+.dark textarea:focus {
+  border-color: #3B82F6 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4) !important;
+}
+
+.theme-dark option,
+.dark option {
+  background-color: #1E293B !important;
+  color: #FFFFFF !important;
+}
+
+/* Table container styling overrides */
+.responsive-table-container {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+/* Table layout adjustments for Enquiries table */
+.crm-table {
+  width: 100% !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+}
+
+/* Explicit widths for columns to ensure perfect alignment and fit */
+.crm-table th:nth-child(1), .crm-table td:nth-child(1) { width: 45px !important; text-align: center !important; } /* Checkbox */
+.crm-table th:nth-child(2), .crm-table td:nth-child(2) { width: 140px !important; } /* Customer Name */
+.crm-table th:nth-child(3), .crm-table td:nth-child(3) { width: 100px !important; } /* Company */
+.crm-table th:nth-child(4), .crm-table td:nth-child(4) { width: 90px !important; }  /* Country */
+.crm-table th:nth-child(5), .crm-table td:nth-child(5) { width: 110px !important; } /* Phone */
+.crm-table th:nth-child(6), .crm-table td:nth-child(6) { width: 180px !important; } /* Email */
+.crm-table th:nth-child(7), .crm-table td:nth-child(7) { width: 90px !important; }  /* Enquiry Type */
+.crm-table th:nth-child(8), .crm-table td:nth-child(8) { width: 140px !important; } /* Product */
+.crm-table th:nth-child(9), .crm-table td:nth-child(9) { width: 90px !important; }  /* Date */
+.crm-table th:nth-child(10), .crm-table td:nth-child(10) { width: 110px !important; text-align: center !important; } /* Status */
+.crm-table th:nth-child(11), .crm-table td:nth-child(11) { width: 80px !important; text-align: right !important; }   /* Actions */
+
+/* Sticky Columns */
+.crm-table th:nth-child(1), .crm-table td:nth-child(1) {
+  position: sticky !important;
+  left: 0 !important;
+  background-color: inherit !important;
+  z-index: 10 !important;
+}
+
+.crm-table th:nth-child(11), .crm-table td:nth-child(11) {
+  position: sticky !important;
+  right: 0 !important;
+  background-color: inherit !important;
+  z-index: 10 !important;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Ensure background is opaque for sticky columns */
+.crm-table tr {
+  background-color: #ffffff !important;
+}
+.theme-dark .crm-table tr, .dark .crm-table tr {
+  background-color: #1e293b !important;
+}
+
+.crm-table tr:hover {
+  background-color: #f8fafc !important;
+}
+.theme-dark .crm-table tr:hover, .dark .crm-table tr:hover {
+  background-color: #334155 !important;
+}
+
+/* Adjust cell padding to be premium and readable */
+.crm-table th, .crm-table td {
+  padding: 12px 8px !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  vertical-align: middle !important;
+}
+
+/* Dark mode general contrast overrides */
+.theme-dark .text-gray-400, .dark .text-gray-400 {
+  color: #9CA3AF !important;
+}
+.theme-dark .text-gray-500, .dark .text-gray-500 {
+  color: #D1D5DB !important;
+}
+.theme-dark .text-gray-600, .dark .text-gray-600 {
+  color: #E5E7EB !important;
+}
+.theme-dark .text-gray-700, .dark .text-gray-700 {
+  color: #F3F4F6 !important;
+}
+.theme-dark .text-gray-800, .dark .text-gray-800 {
+  color: #F9FAFB !important;
+}
+.theme-dark .text-gray-900, .dark .text-gray-900 {
+  color: #FFFFFF !important;
+}
+
+/* Button dark mode overrides for accessibility */
+.theme-dark button.border,
+.dark button.border,
+.theme-dark button[layout="outline"],
+.dark button[layout="outline"] {
+  background-color: #1E293B !important;
+  border-color: #334155 !important;
+  color: #E5E7EB !important;
+}
+
+.theme-dark button.border:hover,
+.dark button.border:hover,
+.theme-dark button[layout="outline"]:hover,
+.dark button[layout="outline"]:hover {
+  background-color: #334155 !important;
+  color: #FFFFFF !important;
+}
+
+/* Disabled buttons */
+.theme-dark button:disabled,
+.dark button:disabled,
+.theme-dark button[disabled],
+.dark button[disabled] {
+  background-color: #334155 !important;
+  color: #9CA3AF !important;
+  border-color: #475569 !important;
+  cursor: not-allowed !important;
+  opacity: 0.6 !important;
+}
+
+/* General border color overrides in dark theme */
+.theme-dark .border,
+.dark .border,
+.theme-dark .border-gray-100,
+.dark .border-gray-100,
+.theme-dark .border-gray-150,
+.dark .border-gray-150,
+.theme-dark .border-gray-200,
+.dark .border-gray-200,
+.theme-dark .border-gray-250,
+.dark .border-gray-250,
+.theme-dark .border-gray-300,
+.dark .border-gray-300,
+.theme-dark .border-gray-600,
+.dark .border-gray-600,
+.theme-dark .border-gray-650,
+.dark .border-gray-650 {
+  border-color: #334155 !important;
+}
+
+/* Hover border color overrides */
+.theme-dark .border:hover,
+.dark .border:hover {
+  border-color: #475569 !important;
+}
+
+/* Card dark theme overrides */
+.theme-dark .bg-white,
+.dark .bg-white {
+  background-color: #1E293B !important;
+}
+
+.theme-dark .bg-gray-50,
+.dark .bg-gray-50 {
+  background-color: #0F172A !important;
+}
+
+/* Pagination buttons dark mode override */
+.theme-dark .pagination button,
+.dark .pagination button,
+.theme-dark [label="Table navigation"] button,
+.dark [label="Table navigation"] button {
+  background-color: #1E293B !important;
+  color: #D1D5DB !important;
+  border-color: #334155 !important;
+}
+
+.theme-dark .pagination button:hover,
+.dark .pagination button:hover,
+.theme-dark [label="Table navigation"] button:hover,
+.dark [label="Table navigation"] button:hover {
+  background-color: #334155 !important;
+  color: #FFFFFF !important;
+}
+
+.theme-dark .pagination button[active="true"],
+.dark .pagination button[active="true"],
+.theme-dark [label="Table navigation"] button[active="true"],
+.dark [label="Table navigation"] button[active="true"],
+.theme-dark .pagination button.bg-blue-600,
+.dark .pagination button.bg-blue-600,
+.theme-dark [label="Table navigation"] button.bg-blue-600,
+.dark [label="Table navigation"] button.bg-blue-600 {
+  background-color: #3B82F6 !important;
+  color: #FFFFFF !important;
+}
+
+/* Eye/View icon button enhancements */
+button[title="View"],
+button[title="View Details"],
+button[title="View details"],
+.text-blue-500,
+.text-blue-400 {
+  cursor: pointer !important;
+}
+
+.theme-dark button[title="View"]:hover,
+.dark button[title="View"]:hover,
+.theme-dark button[title="View Details"]:hover,
+.dark button[title="View Details"]:hover,
+.theme-dark button[title="View details"]:hover,
+.dark button[title="View details"]:hover {
+  background-color: rgba(59, 130, 246, 0.15) !important;
+  color: #3B82F6 !important;
+  transform: scale(1.05);
+  transition: all 0.2s ease-in-out;
+}
+
+/* General Table layout tweaks for dark mode */
+.theme-dark table th,
+.dark table th {
+  background-color: #1E293B !important;
+  color: #D1D5DB !important;
+  border-bottom: 2px solid #334155 !important;
+}
+
+.theme-dark table td,
+.dark table td {
+  background-color: #1E293B !important;
+  color: #E5E7EB !important;
+  border-bottom: 1px solid #334155 !important;
+}
+
+.theme-dark table tr:hover td,
+.dark table tr:hover td {
+  background-color: #334155 !important;
+  color: #FFFFFF !important;
+}
+
+/* Badges readability in dark mode */
+.theme-dark .bg-green-100, .dark .bg-green-100 {
+  background-color: rgba(16, 185, 129, 0.2) !important;
+  color: #34D399 !important;
+}
+.theme-dark .bg-red-100, .dark .bg-red-100 {
+  background-color: rgba(239, 68, 68, 0.2) !important;
+  color: #F87171 !important;
+}
+.theme-dark .bg-yellow-100, .dark .bg-yellow-100 {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+  color: #FBBF24 !important;
+}
+.theme-dark .bg-blue-100, .dark .bg-blue-100 {
+  background-color: rgba(59, 130, 246, 0.2) !important;
+  color: #60A5FA !important;
+}
+

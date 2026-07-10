@@ -3,11 +3,11 @@ const mongoose = require("mongoose");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 const Setting = require("../models/Setting");
-const kureHomepageDefaults = require("../utils/kureHomepageDefaults");
+const ilmicHomepageDefaults = require("../utils/ilmicHomepageDefaults");
 const {
-  kureTherapeuticCategories,
+  ilmicTherapeuticCategories,
   categoryRenameMap,
-} = require("../utils/kureTherapeuticCategories");
+} = require("../utils/ilmicTherapeuticCategories");
 
 const getCategoryName = (category) => {
   if (!category?.name) return "";
@@ -36,7 +36,7 @@ const syncCategories = async () => {
     if (nextName && nextName !== currentName) {
       setCategoryName(category, nextName);
       if (!category.slug) {
-        const match = kureTherapeuticCategories.find((item) => item.name === nextName);
+        const match = ilmicTherapeuticCategories.find((item) => item.name === nextName);
         if (match) category.slug = match.slug;
       }
       await category.save();
@@ -45,7 +45,7 @@ const syncCategories = async () => {
     idByName.set(getCategoryName(category), category._id);
   }
 
-  for (const item of kureTherapeuticCategories) {
+  for (const item of ilmicTherapeuticCategories) {
     let category = categories.find((entry) => getCategoryName(entry) === item.name);
 
     if (!category) {
@@ -110,11 +110,11 @@ const syncCategories = async () => {
   }
 
   await Setting.findOneAndUpdate(
-    { name: "kureHomepageSetting" },
+    { name: "ilmicHomepageSetting" },
     {
       $set: {
-        setting: kureHomepageDefaults,
-        name: "kureHomepageSetting",
+        setting: ilmicHomepageDefaults,
+        name: "ilmicHomepageSetting",
       },
     },
     { upsert: true },

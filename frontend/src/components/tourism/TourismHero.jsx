@@ -12,9 +12,9 @@ import {
 } from "react-icons/fi";
 
 const HERO_IMAGES = [
-  "https://images.unsplash.com/photo-1576086213369-97a3b6096d16?auto=format&fit=crop&w=1600&q=90",
-  "https://images.unsplash.com/photo-1587854692152-cf240469e97e?auto=format&fit=crop&w=1600&q=90",
-  "https://images.unsplash.com/photo-1532187863486-abf9db3851ee?auto=format&fit=crop&w=1600&q=90",
+  "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1607619275066-c5e7e89e4ee6?auto=format&fit=crop&w=1200&q=85",
 ];
 
 const TourismHero = ({ slide, ctaPrimary, ctaSecondary, onEnquiry, phone }) => {

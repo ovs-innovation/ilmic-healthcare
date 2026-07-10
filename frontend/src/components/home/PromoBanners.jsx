@@ -31,20 +31,20 @@ const PromoBanners = ({ items = [] }) => {
   if (!items.length) return null;
 
   return (
-    <section className="kure-section kure-section-white kure-promo-section">
-      <div className="kure-container">
-        <div className="kure-promo-grid">
+    <section className="ilmic-section ilmic-section-white ilmic-promo-section">
+      <div className="ilmic-container">
+        <div className="ilmic-promo-grid">
           {items.map((banner, idx) => {
             const accent = getAccent(banner, idx);
             return (
               <Link
                 key={idx}
                 href={banner.linkUrl || "/products"}
-                className={`kure-promo-banner kure-promo-banner--${accent}`}
+                className={`ilmic-promo-banner ilmic-promo-banner--${accent}`}
               >
-                <div className="kure-promo-banner__body">
-                  <p className="kure-promo-banner__label">{banner.label}</p>
-                  <h3 className="kure-promo-banner__title">
+                <div className="ilmic-promo-banner__body">
+                  <p className="ilmic-promo-banner__label">{banner.label}</p>
+                  <h3 className="ilmic-promo-banner__title">
                     {banner.title}
                     {banner.titleLine2 ? (
                       <>
@@ -53,16 +53,16 @@ const PromoBanners = ({ items = [] }) => {
                       </>
                     ) : null}
                   </h3>
-                  <span className="kure-promo-banner__link">
+                  <span className="ilmic-promo-banner__link">
                     {banner.linkText || "View products"}
                     <FiArrowRight className="w-4 h-4" />
                   </span>
                 </div>
-                <div className="kure-promo-banner__media">
+                <div className="ilmic-promo-banner__media">
                   <img
                     src={getBannerImage(banner, idx)}
                     alt=""
-                    className="kure-promo-banner__img"
+                    className="ilmic-promo-banner__img"
                   />
                 </div>
               </Link>

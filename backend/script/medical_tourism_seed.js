@@ -177,12 +177,12 @@ async function seed() {
     await Service.insertMany(services);
     console.log(`Seeded ${services.length} services`);
 
-    const existing = await Setting.findOne({ name: "kureHomepageSetting" });
+    const existing = await Setting.findOne({ name: "ilmicHomepageSetting" });
     if (existing) {
       existing.setting = { ...existing.setting, ...ilmicHomepageDefaults };
       await existing.save();
     } else {
-      await Setting.create({ name: "kureHomepageSetting", setting: ilmicHomepageDefaults });
+      await Setting.create({ name: "ilmicHomepageSetting", setting: ilmicHomepageDefaults });
     }
     console.log("Homepage settings updated for ILMIC");
 

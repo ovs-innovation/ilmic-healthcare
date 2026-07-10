@@ -268,32 +268,48 @@ const Uploader = ({
   return (
     <div className="w-full text-center">
       <div
-        className={`border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md px-6 pt-5 pb-6 ${
-          loading ? "opacity-60 cursor-not-allowed" : "cursor-pointer"
-        }`}
         {...getRootProps()}
+        className={`premium-upload-area relative overflow-hidden rounded-xl p-8 transition-all duration-300 ${
+          isDragActive
+            ? "border-blue-500 bg-blue-50/20 dark:bg-blue-950/10 shadow-inner scale-[0.99]"
+            : "border-slate-300 dark:border-slate-700 bg-slate-50/40 hover:bg-slate-50 dark:bg-slate-800/20 dark:hover:bg-slate-800/40 hover:border-slate-400 dark:hover:border-slate-600"
+        } ${loading ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
       >
         <input {...getInputProps()} />
-        <span className="mx-auto flex justify-center">
-          <FiUploadCloud className="text-3xl text-green-500" />
-        </span>
-        <p className="text-sm mt-2">{t("DragYourImage")}</p>
-        <em className="text-xs text-gray-400">
-          {t("imageFormat")}
-          {` (${targetWidth}x${targetHeight})`}
-        </em>
-        {isDragActive && (
-          <p className="text-xs text-green-500 mt-2">Drop images here...</p>
-        )}
+        <div className="flex flex-col items-center justify-center space-y-3">
+          <div className={`p-4 rounded-full transition-transform duration-300 ${isDragActive ? "bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-400 scale-110" : "bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500"}`}>
+            <FiUploadCloud className="text-3xl" />
+          </div>
+          <div>
+            <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+              Click or Drag Images Here
+            </p>
+            <p className="text-xs text-slate-400 dark:text-slate-400 mt-1">
+              Only JPG, PNG, and WebP images accepted (Max 5MB)
+            </p>
+            <p className="text-[11px] text-slate-400 dark:text-slate-400 mt-0.5">
+              Ideal resolution: {targetWidth}x{targetHeight}
+            </p>
+          </div>
+        </div>
       </div>
 
       {loading && (
-        <div className="text-green-500 text-sm mt-2">
-          {statusMessage} {uploadProgress > 0 ? `(${uploadProgress}%)` : ""}
+        <div className="mt-4 p-4 bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-700 rounded-xl space-y-2">
+          <div className="flex justify-between text-xs font-semibold text-slate-600 dark:text-slate-300">
+            <span>{statusMessage}</span>
+            <span>{uploadProgress}%</span>
+          </div>
+          <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+            <div
+              className="bg-blue-500 h-full rounded-full transition-all duration-300"
+              style={{ width: `${uploadProgress}%` }}
+            />
+          </div>
         </div>
       )}
 
-      <aside className="flex flex-row flex-wrap mt-4">
+      <aside className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6">
         {product ? (
           <DndProvider backend={HTML5Backend}>
             <Container
@@ -303,18 +319,18 @@ const Uploader = ({
             />
           </DndProvider>
         ) : !product && imageUrl ? (
-          <div className="relative">
+          <div className="group relative aspect-square w-24 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden shadow-sm">
             <img
-              className="inline-flex border rounded-md border-gray-100 dark:border-gray-600 w-24 max-h-24 p-2"
+              className="w-full h-full object-cover"
               src={imageUrl}
               alt="product"
             />
             <button
               type="button"
-              className="absolute top-0 right-0 text-red-500 focus:outline-none"
+              className="absolute top-2 right-2 text-white bg-red-600 hover:bg-red-700 p-1.5 rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-200 focus:outline-none"
               onClick={() => handleRemoveImage(imageUrl)}
             >
-              <FiXCircle />
+              <FiXCircle className="text-base" />
             </button>
           </div>
         ) : null}

@@ -23,7 +23,7 @@ const BrandLogo = ({ logo, name }) => {
 };
 
 const BrandCard = ({ brand }) => (
-  <div className="kure-brands-marquee-item kure-card flex flex-col items-center justify-center p-3">
+  <div className="ilmic-brands-marquee-item ilmic-card flex flex-col items-center justify-center p-3">
     <BrandLogo logo={brand.logo} name={brand.name} />
   </div>
 );
@@ -36,10 +36,10 @@ const FeaturedBrands = ({ brands }) => {
   return (
     <>
       {/* Mobile & tablet — auto scroll */}
-      <div className="kure-brands-marquee lg:hidden" aria-label="Featured brands">
-        <div className="kure-brands-marquee-fade kure-brands-marquee-fade--left" />
-        <div className="kure-brands-marquee-fade kure-brands-marquee-fade--right" />
-        <div className="kure-brands-marquee-track">
+      <div className="ilmic-brands-marquee lg:hidden" aria-label="Featured brands">
+        <div className="ilmic-brands-marquee-fade ilmic-brands-marquee-fade--left" />
+        <div className="ilmic-brands-marquee-fade ilmic-brands-marquee-fade--right" />
+        <div className="ilmic-brands-marquee-track">
           {loopBrands.map((brand, idx) => (
             <BrandCard key={`${brand._id || brand.name}-${idx}`} brand={brand} />
           ))}
@@ -51,7 +51,7 @@ const FeaturedBrands = ({ brands }) => {
         {brands.map((brand, idx) => (
           <div
             key={brand._id || idx}
-            className="kure-card w-32 h-32 flex flex-col items-center justify-center p-4 flex-shrink-0"
+            className="ilmic-card w-32 h-32 flex flex-col items-center justify-center p-4 flex-shrink-0"
           >
             <BrandLogo logo={brand.logo} name={brand.name} />
           </div>

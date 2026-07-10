@@ -22,8 +22,8 @@ const SettingServices = {
     return requests.get("/setting/global/all");
   },
 
-  getKureHomepageSetting: async () => {
-    return requests.get("/setting/kure-homepage/all");
+  getIlmicHomepageSetting: async () => {
+    return requests.get("/setting/ilmic-homepage/all");
   },
 };
 

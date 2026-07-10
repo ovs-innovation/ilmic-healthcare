@@ -59,7 +59,7 @@ export const storeCustomization = {
       en: "Checkout",
       de: "Kasse",
     },
-    phone: "+91 9717372217",
+    phone: "+91 9217174829",
     logo: "https://res.cloudinary.com/dkuwefj17/image/upload/v1697687802/settings/logo-light_hls14v.svg",
   },
   home: {
@@ -118,8 +118,8 @@ export const storeCustomization = {
       de: "Schnelle Lieferung zu Ihnen nach Hause",
     },
     quick_delivery_description: {
-      en: "There are many products you will find in our shop. Choose your daily essentials from Kure Pharma and enjoy special offers and fast delivery.",
-      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihren täglichen Bedarf bei Kure Pharma und profitieren Sie von Sonderangeboten und schneller Lieferung.",
+      en: "There are many products you will find in our shop. Choose your daily essentials from ILMIC Health Care and enjoy special offers and fast delivery.",
+      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihren täglichen Bedarf bei ILMIC Health Care und profitieren Sie von Sonderangeboten und schneller Lieferung.",
     },
     quick_delivery_button: {
       en: "Download App",
@@ -138,12 +138,12 @@ export const storeCustomization = {
     },
     latest_discount_product_limit: 18,
     daily_need_title: {
-      en: "Get Your Daily Needs From Kure Pharma",
-      de: "Holen Sie sich Ihren täglichen Bedarf bei Kure Pharma",
+      en: "Get Your Daily Needs From ILMIC Health Care",
+      de: "Holen Sie sich Ihren täglichen Bedarf bei ILMIC Health Care",
     },
     daily_need_description: {
-      en: "There are many products you will find in our shop. Choose your daily essentials from Kure Pharma and enjoy special offers.",
-      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihren täglichen Bedarf bei Kure Pharma und profitieren Sie von Sonderangeboten.",
+      en: "There are many products you will find in our shop. Choose your daily essentials from ILMIC Health Care and enjoy special offers.",
+      de: "Es gibt viele Produkte, die Sie in unserem Shop finden. Wählen Sie Ihren täglichen Bedarf bei ILMIC Health Care und profitieren Sie von Sonderangeboten.",
     },
     daily_need_app_link: "https://www.apple.com/app-store/",
     daily_need_google_link:
@@ -185,8 +185,8 @@ export const storeCustomization = {
       de: "Über uns",
     },
     top_title: {
-      en: "Welcome to Kure Pharma",
-      de: "Willkommen bei Kure Pharma",
+      en: "Welcome to ILMIC Health Care",
+      de: "Willkommen bei ILMIC Health Care",
     },
     top_description: {
       en: "Holisticly seize parallel metrics and functional ROI.Seamlessly revolutionize error-free internal or organic sources before effective scenarios. Progressively incentivize state of the art applications for efficient intellectual capital. Credibly leverage existing distinctive mindshare through cutting-edge schemas. Proactively procrastinate team building paradigms coordinate client-centric total transparent internal.\n\nDynamically embrace diverse customer service and installed base paradigms. Credibly seize enterprise-wide experiences for end-to-end data. Professionally brand flexible alignments and cost effective architectures. Enthusiastically incentivize seamless communities with seamlessly facilitate revolutionary metrics with strategic theme areas.",
@@ -300,8 +300,8 @@ export const storeCustomization = {
       de: "Schreiben Sie uns eine E-Mail",
     },
     email_box_email: {
-      en: "hello@kurepharma.com",
-      de: "hello@kurepharma.com",
+      en: "hello@ilmichealthcare.com",
+      de: "hello@ilmichealthcare.com",
     },
     email_box_text: {
       en: "Interactively grow empowered for process-centric total linkage. ",
@@ -312,8 +312,8 @@ export const storeCustomization = {
       de: "Rufen Sie uns an",
     },
     call_box_phone: {
-      en: "+91 9717372217",
-      de: "+91 9717372217",
+      en: "+91 9217174829",
+      de: "+91 9217174829",
     },
     call_box_text: {
       en: "Distinctively disseminate focused solutions clicks-and-mortar ministate. ",
@@ -413,8 +413,8 @@ export const storeCustomization = {
       de: "Häufig gestellte Fragen",
     },
     faq_one: {
-      en: "How does the Kure Pharma work?",
-      de: "Wie funktioniert der Kure Pharma?",
+      en: "How does the ILMIC Health Care work?",
+      de: "Wie funktioniert der ILMIC Health Care?",
     },
     description_one: {
       en: "Yes. You can cancel your subscription anytime. Your subscription will continue to be active until the end of your current term (month or year) but it will not auto-renew. Unless you delete your account manually, your account and all data will be deleted 60 days from the day your subscription becomes inactive.",
@@ -445,15 +445,15 @@ export const storeCustomization = {
       de: "Continually impact seamless imperatives for best-of-breed\nbest practices. Phosfluorescently facilitate parallel\n                      applications with unique imperatives. Proactively\n                      plagiarize functionalized deliverables via inexpensive\n                      solutions. Collaboratively embrace web-enabled\n                      infomediaries rather than diverse testing procedures.",
     },
     faq_five: {
-      en: "What is Kure Pharma EC2 auto scaling?",
-      de: "Was ist die automatische Skalierung von Kure Pharma EC2?",
+      en: "What is ILMIC Health Care EC2 auto scaling?",
+      de: "Was ist die automatische Skalierung von ILMIC Health Care EC2?",
     },
     description_five: {
       en: "Continually impact seamless imperatives for best-of-breed best practices. Phosfluorescently facilitate parallel applications with unique imperatives. Proactively plagiarize functionalized deliverables via inexpensive solutions. Collaboratively embrace web-enabled infomediaries rather than diverse testing procedures.",
       de: "Kontinuierliche Umsetzung nahtloser Anforderungen für Best-of-Breed-Best Practices. Phosfluoreszierend erleichtert parallele Anwendungen mit einzigartigen Anforderungen. Plagiieren Sie proaktiv funktionalisierte Ergebnisse mit kostengünstigen Lösungen. Nutzen Sie gemeinsam webbasierte Infomediaries anstelle verschiedener Testverfahren.",
     },
     faq_six: {
-      en: "What are the benefits of using Kure Pharma affliate?",
+      en: "What are the benefits of using ILMIC Health Care affliate?",
       de: "Welche Vorteile bietet die Nutzung eines Cloud Clever-Partners?",
     },
     description_six: {
@@ -788,8 +788,8 @@ export const storeCustomization = {
       en: "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN",
       de: "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN",
     },
-    block4_phone: "+91 9717372217",
-    block4_email: "hello@kurepharma.com",
+    block4_phone: "+91 9217174829",
+    block4_email: "hello@ilmichealthcare.com",
     social_facebook: "https://www.facebook.com/",
     social_twitter: "https://twitter.com/",
     social_pinterest: "https://www.pinterest.com/",
@@ -797,7 +797,7 @@ export const storeCustomization = {
     social_whatsapp: "https://web.whatsapp.com/",
     payment_method_img:
       "https://res.cloudinary.com/dkuwefj17/image/upload/v1697688607/settings/payment-logo_qhslgz.webp",
-    bottom_contact: "+91 9717372217",
+    bottom_contact: "+91 9217174829",
   },
   slug: {
     right_box_status: true,
@@ -833,11 +833,11 @@ export const storeCustomization = {
   seo: {
     favicon: "/favicon.png",
     meta_description:
-      "Kure Pharma online store for daily essentials and wellness products",
+      "ILMIC Health Care online store for daily essentials and wellness products",
     meta_img:
       "https://res.cloudinary.com/dkuwefj17/image/upload/v1636729752/facebook-page_j7alju.png",
     meta_keywords: "e-commerce, online store",
-    meta_title: "Kure Pharma - Online Store",
-    meta_url: "https://kurepharma.com/",
+    meta_title: "ILMIC Health Care - Online Store",
+    meta_url: "https://ilmichealthcare.com/",
   },
 };

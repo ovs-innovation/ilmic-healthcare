@@ -9,6 +9,7 @@ const Products = lazy(() => import("@/pages/Products"));
 const Brands = lazy(() => import("@/pages/Brands"));
 const FaqSettings = lazy(() => import("@/pages/FaqSettings"));
 const Leads = lazy(() => import("@/pages/Leads"));
+const LeadDetails = lazy(() => import("@/pages/LeadDetails"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const Homepage = lazy(() => import("@/pages/Homepage"));
 
@@ -21,6 +22,11 @@ const routes = [
   { path: "/brands", component: Brands },
   { path: "/faq", component: FaqSettings },
   { path: "/edit-profile", component: EditProfile },
+  { path: "/leads/general", component: Leads },
+  { path: "/leads/product", component: Leads },
+  { path: "/leads/quote", component: Leads },
+  { path: "/leads/service", component: Leads },
+  { path: "/leads/:id", component: LeadDetails },
   { path: "/leads", component: Leads },
   { path: "/settings", component: Homepage },
   { path: "/404", component: Page404 },

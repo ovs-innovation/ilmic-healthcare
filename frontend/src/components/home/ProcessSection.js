@@ -104,7 +104,7 @@ const ProcessSection = () => {
           </h2>
 
           <p className="text-sm sm:text-base text-white/60 leading-relaxed max-w-xl mx-auto">
-            From selecting the right BMS to receiving pan-India delivery — Kure Pharma makes
+            From selecting the right BMS to receiving pan-India delivery — ILMIC Health Care makes
             battery sourcing fast, reliable and hassle-free.
           </p>
         </div>

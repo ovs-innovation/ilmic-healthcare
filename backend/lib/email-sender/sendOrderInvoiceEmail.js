@@ -11,7 +11,7 @@ const formatOrderDate = (date) => {
 
 const buildCompanyInfo = (globalSetting = {}) => ({
   currency: globalSetting.default_currency || "₹",
-  company: globalSetting.company_name || "Kure Pharma",
+  company: globalSetting.company_name || "ILMIC Health Care",
   address: globalSetting.address || "",
   phone: globalSetting.contact || "",
   email: globalSetting.email || "",
@@ -21,7 +21,7 @@ const buildCompanyInfo = (globalSetting = {}) => ({
     globalSetting.from_email ||
     globalSetting.email ||
     process.env.EMAIL_USER ||
-    "info@kurepharma.com",
+    "info@ilmichealthcare.com",
 });
 
 const buildInvoicePayload = (order, globalSetting = {}) => {

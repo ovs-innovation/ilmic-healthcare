@@ -5,10 +5,10 @@ const Category = require("../models/Category");
 const Product = require("../models/Product");
 
 const {
-  kureTherapeuticCategories,
-} = require("../utils/kureTherapeuticCategories");
+  ilmicTherapeuticCategories,
+} = require("../utils/ilmicTherapeuticCategories");
 
-const categoriesData = kureTherapeuticCategories.map(
+const categoriesData = ilmicTherapeuticCategories.map(
   ({ name, slug, image, status }) => ({
     name,
     slug,

@@ -10,7 +10,7 @@ import {
 import dayjs from "dayjs";
 import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import kureLogo from "@/assets/img/logo/logo.png";
+import ilmicLogo from "@/assets/img/logo/logo.png";
 
 import Barcode from 'react-barcode';
 
@@ -77,7 +77,7 @@ const InvoiceForPrint = ({ data, printRef, globalSetting }) => {
           <tbody>
             <tr>
               <td style={{ width: "60%", textAlign: "left", verticalAlign: "top" }}>
-                <img src={globalSetting?.logo || kureLogo} alt="Logo" style={{ width: "220px", objectFit: "contain", marginBottom: "15px" }} />
+                <img src={globalSetting?.logo || ilmicLogo} alt="Logo" style={{ width: "220px", objectFit: "contain", marginBottom: "15px" }} />
                 <div style={{ fontWeight: "700", fontSize: "17px", marginBottom: "5px" }}>
                   {globalSetting?.company_name || "ECOMPASS LLP"}
                 </div>

@@ -59,10 +59,10 @@ export default defineConfig({
         scope: ".",
         start_url: ".",
         id: ".",
-        short_name: "Kure Pharma - E-Commerce Website",
-        name: "Kure Pharma | React eCommerce Admin Dashboard",
+        short_name: "ILMIC Health Care - E-Commerce Website",
+        name: "ILMIC Health Care | React eCommerce Admin Dashboard",
         description:
-          "Kure Pharma : React Grocery & Organic Food Store e-commerce Admin Dashboard",
+          "ILMIC Health Care : React Grocery & Organic Food Store e-commerce Admin Dashboard",
         icons: [
           {
             src: "favicon.ico",

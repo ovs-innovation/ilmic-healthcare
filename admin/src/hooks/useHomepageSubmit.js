@@ -11,7 +11,7 @@ const useHomepageSubmit = () => {
   useEffect(() => {
     (async () => {
       try {
-        const res = await SettingServices.getKureHomepageSetting();
+        const res = await SettingServices.getIlmicHomepageSetting();
         setSettings(res);
       } catch (err) {
         notifyError(err?.response?.data?.message || err?.message);
@@ -141,7 +141,7 @@ const useHomepageSubmit = () => {
     e.preventDefault();
     try {
       setIsSubmitting(true);
-      const res = await SettingServices.updateKureHomepageSetting({
+      const res = await SettingServices.updateIlmicHomepageSetting({
         setting: settings,
       });
       notifySuccess(res.message);

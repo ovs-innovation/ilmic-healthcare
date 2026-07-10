@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FiMail, FiLock, FiEye, FiEyeOff, FiShield } from "react-icons/fi";
 import useLoginSubmit from "@/hooks/useLoginSubmit";
-import kureLogo from "@/assets/img/logo/logo.png";
+import ilmicLogo from "@/assets/img/logo/logo.png";
 
 const Login = () => {
   const { onSubmit, register, handleSubmit, errors, loading } = useLoginSubmit();
@@ -30,7 +30,7 @@ const Login = () => {
         {/* Top: Logo */}
         <div className="relative z-10 px-10 pt-10">
           <div className="bg-white/10 backdrop-blur-sm rounded-2xl px-5 py-4 inline-block border border-white/20">
-            <img src={kureLogo} alt="Kure Pharma" className="h-12 w-auto object-contain" />
+            <img src={ilmicLogo} alt="ILMIC Health Care" className="h-12 w-auto object-contain" />
           </div>
         </div>
 
@@ -48,7 +48,7 @@ const Login = () => {
             </span>
           </h1>
           <p className="text-blue-200 text-sm leading-relaxed font-medium max-w-xs">
-            Kure Pharma's centralised admin panel for managing enquiries, products, orders, and business operations.
+            ILMIC Health Care's centralised admin panel for managing enquiries, products, orders, and business operations.
           </p>
 
           {/* Trust badges */}
@@ -71,7 +71,7 @@ const Login = () => {
         {/* Bottom: Footer text */}
         <div className="relative z-10 px-10 pb-8">
           <p className="text-blue-300/60 text-[11px] font-medium">
-            © {new Date().getFullYear()} Kure Pharma · All Rights Reserved
+            © {new Date().getFullYear()} ILMIC Health Care · All Rights Reserved
           </p>
         </div>
       </div>
@@ -80,7 +80,7 @@ const Login = () => {
       <div className="flex-1 flex flex-col justify-center items-center bg-gray-50 px-6 py-12">
         {/* Mobile logo */}
         <div className="lg:hidden mb-8">
-          <img src={kureLogo} alt="Kure Pharma" className="h-12 w-auto object-contain mx-auto" />
+          <img src={ilmicLogo} alt="ILMIC Health Care" className="h-12 w-auto object-contain mx-auto" />
         </div>
 
         <div className="w-full max-w-md">
@@ -189,7 +189,7 @@ const Login = () => {
             {/* Trust note */}
             <div className="mt-6 flex items-center justify-center gap-2 text-[11px] text-gray-400 font-medium">
               <FiShield className="w-3.5 h-3.5 text-[#0F4C81]" />
-              Secure admin access · Kure Pharma
+              Secure admin access · ILMIC Health Care
             </div>
           </div>
         </div>

@@ -177,7 +177,7 @@ const indianProducts = [
       {
         title: "Sourcing & Dispatch",
         content:
-          "Kure Pharma supports hospital, clinic, and institutional sourcing. Share your required quantity, destination, and preferred delivery timeline to receive a quotation.",
+          "ILMIC Health Care supports hospital, clinic, and institutional sourcing. Share your required quantity, destination, and preferred delivery timeline to receive a quotation.",
       },
       {
         title: "Compliance Note",

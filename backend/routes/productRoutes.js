@@ -16,6 +16,7 @@ const {
   getProductsByTag,
   getProductsByType,
   getProductsByService,
+  uploadProductImage,
 } = require("../controller/productController");
 const { adminOnly } = require("../config/auth");
 
@@ -28,6 +29,7 @@ router.get("/service", getProductsByService);
 router.get("/product/:slug", getProductBySlug);
 
 // Admin-only product management
+router.post("/upload-image", adminOnly, uploadProductImage);
 router.post("/add", adminOnly, addProduct);
 router.post("/all", adminOnly, addAllProducts);
 router.post("/:id", adminOnly, getProductById);

@@ -83,7 +83,7 @@ const Products = ({ initialProducts, categories }) => {
       const found = categories.find(
         (c) =>
           getTitleString(c.name).toLowerCase() ===
-            router.query.category.toLowerCase() ||
+          router.query.category.toLowerCase() ||
           c._id === router.query.category,
       );
       setSelectedCategory(found ? found._id : "");
@@ -221,23 +221,15 @@ const Products = ({ initialProducts, categories }) => {
       description="Browse ILMIC Health Care products — QLQ 10, IMIC ENERGY, CTUXIL 500, ABIRAMIC 250, PACMIC 300 and more. Oncology, General Pharma & Surgical."
     >
       <PageHero
+        productsHero={true}
         breadcrumb="Products"
         title="Our"
         highlight="Products"
         subtitle="Oncology, General Pharma & Surgical products — in our own brands. Exporting globally from Delhi, India."
         bgImage="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80"
       />
-      <div className="min-h-screen bg-slate-50">
-        <div className="llmic-container py-10">
-          {/* ── Breadcrumb ── */}
-          <nav className="flex items-center gap-1.5 text-[12px] font-medium text-slate-500 mb-6">
-            <Link href="/" className="hover:text-ilmic-blue-dark transition-colors">
-              Home
-            </Link>
-            <FiChevronRight className="w-3.5 h-3.5" />
-            <span className="text-slate-900 font-semibold">Products</span>
-          </nav>
-
+      <div className="min-h-screen bg-slate-50 pt-10 sm:pt-14">
+        <div className="llmic-container pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* ══════════════════════════════
                 SIDEBAR (Desktop Only)
@@ -252,11 +244,10 @@ const Products = ({ initialProducts, categories }) => {
                   {/* All Categories */}
                   <label className="flex items-center gap-3 cursor-pointer group">
                     <div
-                      className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${
-                        selectedCategory === ""
+                      className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors ${selectedCategory === ""
                           ? "bg-ilmic-blue border-ilmic-blue"
                           : "border-gray-300 group-hover:border-ilmic-blue"
-                      }`}
+                        }`}
                     >
                       {selectedCategory === "" && (
                         <svg
@@ -275,11 +266,10 @@ const Products = ({ initialProducts, categories }) => {
                       )}
                     </div>
                     <span
-                      className={`text-[13px] font-semibold transition-colors ${
-                        selectedCategory === ""
+                      className={`text-[13px] font-semibold transition-colors ${selectedCategory === ""
                           ? "text-ilmic-blue-dark font-bold"
                           : "text-gray-600 group-hover:text-gray-800"
-                      }`}
+                        }`}
                     >
                       All Categories
                     </span>
@@ -301,11 +291,10 @@ const Products = ({ initialProducts, categories }) => {
                             selectedCategory === cat._id ? "" : cat._id,
                           )
                         }
-                        className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
-                          selectedCategory === cat._id
+                        className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${selectedCategory === cat._id
                             ? "bg-ilmic-blue border-ilmic-blue"
                             : "border-gray-300 group-hover:border-ilmic-blue"
-                        }`}
+                          }`}
                       >
                         {selectedCategory === cat._id && (
                           <svg
@@ -329,11 +318,10 @@ const Products = ({ initialProducts, categories }) => {
                             selectedCategory === cat._id ? "" : cat._id,
                           )
                         }
-                        className={`text-[13px] font-semibold cursor-pointer transition-colors ${
-                        selectedCategory === cat._id
+                        className={`text-[13px] font-semibold cursor-pointer transition-colors ${selectedCategory === cat._id
                             ? "text-ilmic-blue-dark font-bold"
                             : "text-gray-600 group-hover:text-gray-800"
-                        }`}
+                          }`}
                       >
                         {getTitleString(cat.name)}
                       </span>
@@ -359,11 +347,10 @@ const Products = ({ initialProducts, categories }) => {
                             selectedDosage === dosage ? "" : dosage,
                           )
                         }
-                        className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${
-                          selectedDosage === dosage
+                        className={`w-4 h-4 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors cursor-pointer ${selectedDosage === dosage
                             ? "bg-ilmic-blue border-ilmic-blue"
                             : "border-gray-300 group-hover:border-ilmic-blue"
-                        }`}
+                          }`}
                       >
                         {selectedDosage === dosage && (
                           <svg
@@ -387,11 +374,10 @@ const Products = ({ initialProducts, categories }) => {
                             selectedDosage === dosage ? "" : dosage,
                           )
                         }
-                        className={`text-[13px] font-semibold cursor-pointer transition-colors ${
-                        selectedDosage === dosage
+                        className={`text-[13px] font-semibold cursor-pointer transition-colors ${selectedDosage === dosage
                             ? "text-ilmic-blue-dark font-bold"
                             : "text-gray-600 group-hover:text-gray-800"
-                        }`}
+                          }`}
                       >
                         {dosage}
                       </span>
@@ -459,11 +445,10 @@ const Products = ({ initialProducts, categories }) => {
                   <div className="flex gap-2 overflow-x-auto pb-1.5 scrollbar-hide snap-x">
                     <button
                       onClick={() => handleCategoryChange("")}
-                      className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${
-                        selectedCategory === ""
+                      className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${selectedCategory === ""
                           ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                           : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-                      }`}
+                        }`}
                     >
                       All Categories
                     </button>
@@ -474,11 +459,10 @@ const Products = ({ initialProducts, categories }) => {
                         <button
                           key={cat._id}
                           onClick={() => handleCategoryChange(isActive ? "" : cat._id)}
-                          className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${
-                            isActive
+                          className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${isActive
                               ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                               : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-                          }`}
+                            }`}
                         >
                           {title}
                         </button>
@@ -493,11 +477,10 @@ const Products = ({ initialProducts, categories }) => {
                   <div className="flex gap-2 overflow-x-auto pb-1.5 scrollbar-hide snap-x">
                     <button
                       onClick={() => setSelectedDosage("")}
-                      className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${
-                        selectedDosage === ""
+                      className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${selectedDosage === ""
                           ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                           : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-                      }`}
+                        }`}
                     >
                       All Dosages
                     </button>
@@ -507,11 +490,10 @@ const Products = ({ initialProducts, categories }) => {
                         <button
                           key={dosage}
                           onClick={() => setSelectedDosage(isActive ? "" : dosage)}
-                          className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${
-                            isActive
+                          className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${isActive
                               ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                               : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
-                          }`}
+                            }`}
                         >
                           {dosage}
                         </button>
@@ -562,11 +544,10 @@ const Products = ({ initialProducts, categories }) => {
                       <button
                         key={page}
                         onClick={() => setCurrentPage(page)}
-                        className={`w-8 h-8 rounded border text-[13px] font-bold transition-colors ${
-                          currentPage === page
+                        className={`w-8 h-8 rounded border text-[13px] font-bold transition-colors ${currentPage === page
                             ? "bg-ilmic-blue border-ilmic-blue text-white"
                             : "border-gray-200 bg-white text-gray-600 hover:bg-gray-50"
-                        }`}
+                          }`}
                       >
                         {page}
                       </button>
@@ -669,11 +650,7 @@ export const getServerSideProps = async (context) => {
 
     // /products/store returns { products: [...], ... } in all cases
     const dbProducts = filterStorefrontProducts(productsRes?.products || []);
-
-    // Always show ILMIC products (fallback) even if DB is empty/blocked.
-    const dbSlugs = new Set(dbProducts.map((p) => p.slug).filter(Boolean));
-    const fallback = (ilmicHeroProducts || []).filter((p) => !dbSlugs.has(p.slug));
-    const initialProducts = [...dbProducts, ...fallback];
+    const initialProducts = dbProducts;
 
     // /categories/show returns a direct array
     const categories = Array.isArray(categoriesRes)

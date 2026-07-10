@@ -31,11 +31,11 @@ import { IMAGE_PLACEHOLDER, isCloudinaryUrl } from "@utils/cloudinaryImage";
 import CatalogProductImage from "@components/ui/CatalogProductImage";
 import CatalogReadMore from "@components/ui/CatalogReadMore";
 
-const ProductCard = ({ 
-  product, 
-  onEnquire, 
-  overrideCategoryName, 
-  hideHoverActions = false, 
+const ProductCard = ({
+  product,
+  onEnquire,
+  overrideCategoryName,
+  hideHoverActions = false,
   hideAddToCart = true,
   hideBuyNow = true,
   forceEnquiry = true,
@@ -255,7 +255,7 @@ const ProductCard = ({
 
   return (
     <>
-      <div className="group kure-product-tile flex flex-col h-full min-w-0 w-full"
+      <div className="group flex flex-col h-full min-w-0 w-full bg-white rounded-2xl border border-[#E2E8F0] overflow-hidden shadow-sm hover:shadow-[0_15px_35px_rgba(15,58,102,0.12)] hover:-translate-y-1.5 hover:border-ilmic-blue/40 transition-all duration-300"
         onMouseEnter={prefetchProduct}
         onTouchStart={prefetchProduct}
       >
@@ -266,11 +266,10 @@ const ProductCard = ({
           className="relative w-full flex-shrink-0 cursor-pointer bg-slate-50/50 border-b border-slate-100/40 overflow-hidden"
         >
           <div
-            className={`relative w-full ${
-              largeImage
+            className={`relative w-full ${largeImage
                 ? "aspect-[16/10] sm:aspect-[2/1]"
-                : "aspect-[4/3] sm:aspect-[16/10]"
-            }`}
+                : "aspect-[16/10]"
+              }`}
           >
             <div className="absolute top-2 left-2 right-2 z-10 flex flex-wrap gap-1 pointer-events-none max-w-full">
               {showOriginalPrice && (
@@ -321,9 +320,8 @@ const ProductCard = ({
                       ? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 360px"
                       : "(max-width: 400px) 100vw, (max-width: 640px) 50vw, (max-width: 1024px) 33vw, 230px"
                   }
-                  className={`object-contain group-hover:scale-[1.06] transition-transform duration-500 ${
-                    largeImage ? "p-1 sm:p-2" : "p-2 sm:p-3"
-                  }`}
+                  className={`object-contain group-hover:scale-[1.04] transition-transform duration-500 ${largeImage ? "p-1 sm:p-2" : "p-2 sm:p-3"
+                    }`}
                   unoptimized={isCloudinaryUrl(productImageSrc)}
                   onError={() => setImgError(true)}
                 />
@@ -337,22 +335,22 @@ const ProductCard = ({
         </div>
 
         {/* Product Info */}
-        <div className="px-3 pt-3.5 pb-3.5 sm:px-4 sm:pt-4 sm:pb-4 flex flex-col flex-grow min-w-0 text-left">
+        <div className="px-4 py-4 sm:p-5 flex flex-col flex-grow min-w-0 text-left">
           {/* Category Tag */}
-          <span className="inline-block text-[8px] sm:text-[9px] text-[#8B1A2E] font-bold bg-[#8B1A2E]/5 border border-[#8B1A2E]/10 rounded-md px-2 py-0.5 mb-2.5 w-max uppercase tracking-wider">
+          <span className="inline-block text-[8px] sm:text-[9px] text-ilmic-blue font-bold bg-ilmic-blue-light border border-ilmic-border rounded-md px-2.5 py-0.5 mb-2.5 w-max uppercase tracking-wider">
             {categoryName}
           </span>
 
           {/* Brand Name */}
           <h2
-            className="text-xs sm:text-sm font-extrabold text-slate-800 hover:text-[#1A2E5B] transition-colors line-clamp-2 min-h-[2rem] sm:min-h-[2.5rem] leading-snug cursor-pointer mb-1 break-words"
+            className="text-sm sm:text-base font-black text-slate-800 hover:text-ilmic-blue transition-colors line-clamp-2 min-h-[2.25rem] sm:min-h-[2.5rem] leading-snug cursor-pointer mb-1.5 break-words"
             onClick={navigateToProduct}
           >
             {showingTranslateValue(product.title)}
           </h2>
 
           {/* Generic Name */}
-          <div className="text-[10px] sm:text-xs text-slate-400 font-semibold mb-3.5 truncate" title={product.composition}>
+          <div className="text-[10px] sm:text-xs text-slate-400 font-bold uppercase tracking-wider mb-2.5 mt-0.5 truncate" title={product.composition}>
             {product.composition || "Specialty Formulation"}
           </div>
 
@@ -373,7 +371,7 @@ const ProductCard = ({
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col gap-2 w-full mt-auto">
+          <div className="flex flex-col gap-2 w-full mt-auto pt-4 border-t border-slate-50">
             <button
               onClick={(e) => {
                 e.stopPropagation();
@@ -381,7 +379,7 @@ const ProductCard = ({
                   router.push(productPath);
                 }
               }}
-              className="w-full flex items-center justify-center gap-1.5 bg-[#1A2E5B] hover:bg-[#162542] text-white py-2.5 px-3 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all duration-300 shadow-sm shadow-[#1A2E5B]/15 hover:shadow-md hover:scale-[1.01]"
+              className="w-full flex items-center justify-center gap-1.5 bg-[#0F3A66] hover:bg-[#0b294a] text-white py-2 px-3 rounded-xl text-[10px] sm:text-[11px] font-black uppercase tracking-widest transition-all duration-300 shadow-sm shadow-[#0F3A66]/15 hover:shadow-md hover:scale-[1.01] h-10 cursor-pointer"
             >
               View Details
             </button>
@@ -395,98 +393,98 @@ const ProductCard = ({
           <div className="flex flex-col md:flex-row">
             {/* Image Side */}
             <div className="w-full md:w-1/2 p-8 bg-gray-50 flex items-center justify-center relative min-h-[380px]">
-               {showProductImage ? (
-                  <Image
-                    src={productImageSrc}
-                    alt={showingTranslateValue(product.title)}
-                    width={500}
-                    height={500}
-                    className="object-contain max-h-[380px] drop-shadow-md"
-                    unoptimized={isCloudinaryUrl(productImageSrc)}
-                  />
-                ) : (
-                  <FiShoppingBag className="w-16 h-16 text-gray-200" aria-hidden />
-                )}
-                <div className="absolute top-4 left-4">
-                   <span className="bg-[#1A2E5B] text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-sm uppercase tracking-widest">
-                    Quick View
-                  </span>
-                </div>
+              {showProductImage ? (
+                <Image
+                  src={productImageSrc}
+                  alt={showingTranslateValue(product.title)}
+                  width={500}
+                  height={500}
+                  className="object-contain max-h-[380px] drop-shadow-md"
+                  unoptimized={isCloudinaryUrl(productImageSrc)}
+                />
+              ) : (
+                <FiShoppingBag className="w-16 h-16 text-gray-200" aria-hidden />
+              )}
+              <div className="absolute top-4 left-4">
+                <span className="bg-[#1A2E5B] text-white text-[10px] font-black px-3 py-1.5 rounded-full shadow-sm uppercase tracking-widest">
+                  Quick View
+                </span>
+              </div>
             </div>
 
             {/* Content Side */}
             <div className="w-full md:w-1/2 p-8 flex flex-col">
-               <div className="mb-2 uppercase text-[9px] font-black text-[#8B1A2E] tracking-[0.2em]">
-                 {categoryName}
-               </div>
-               <h2 className="text-2xl font-black text-gray-900 mb-6 leading-tight">
-                 {showingTranslateValue(product.title)}
-               </h2>
+              <div className="mb-2 uppercase text-[9px] font-black text-[#8B1A2E] tracking-[0.2em]">
+                {categoryName}
+              </div>
+              <h2 className="text-2xl font-black text-gray-900 mb-6 leading-tight">
+                {showingTranslateValue(product.title)}
+              </h2>
 
-               <div className="space-y-1 mb-8">
-                  <div className="grid grid-cols-1 gap-0 border border-gray-100 rounded-2xl overflow-hidden">
-                    <div className="flex justify-between items-center px-5 py-3.5 bg-gray-50 border-b border-gray-100">
-                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Product SKU</span>
-                       <span className="text-sm font-mono font-bold text-gray-700">{product.sku || 'N/A'}</span>
-                    </div>
-                    <div className="flex justify-between items-start px-5 py-3.5 border-b border-gray-100">
-                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider pt-1">Price</span>
-                       <div className="flex flex-col items-end">
-                          <span className="text-2xl font-black text-[#1A2E5B]">{currency}{getNumberTwo(price)}</span>
-                          <span className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Inclusive of GST</span>
-                          {(product?.price - (product?.basePrice || product?.price)) > 0 && (
-                            <span className="text-[9px] text-green-600 font-bold mt-1 uppercase tracking-tighter text-right">
-                              Incl. {currency}{getNumberTwo(product.price - product.basePrice)} GST ({product.gstPercentage}%)
-                            </span>
-                          )}
-                       </div>
-                    </div>
-                    <div className="flex justify-between items-center px-5 py-3.5 bg-gray-50">
-                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Min. Order Qty</span>
-                       <span className="text-sm font-bold text-gray-700">{product.minOrderQuantity || 1} {product.minOrderQuantity > 1 ? 'Units' : 'Unit'}</span>
+              <div className="space-y-1 mb-8">
+                <div className="grid grid-cols-1 gap-0 border border-gray-100 rounded-2xl overflow-hidden">
+                  <div className="flex justify-between items-center px-5 py-3.5 bg-gray-50 border-b border-gray-100">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Product SKU</span>
+                    <span className="text-sm font-mono font-bold text-gray-700">{product.sku || 'N/A'}</span>
+                  </div>
+                  <div className="flex justify-between items-start px-5 py-3.5 border-b border-gray-100">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider pt-1">Price</span>
+                    <div className="flex flex-col items-end">
+                      <span className="text-2xl font-black text-[#1A2E5B]">{currency}{getNumberTwo(price)}</span>
+                      <span className="text-[9px] text-gray-400 font-bold uppercase tracking-tighter">Inclusive of GST</span>
+                      {(product?.price - (product?.basePrice || product?.price)) > 0 && (
+                        <span className="text-[9px] text-green-600 font-bold mt-1 uppercase tracking-tighter text-right">
+                          Incl. {currency}{getNumberTwo(product.price - product.basePrice)} GST ({product.gstPercentage}%)
+                        </span>
+                      )}
                     </div>
                   </div>
-
-                  <div className="text-sm text-gray-500 leading-relaxed pt-3 px-1">
-                    {product.description ? showingTranslateValue(product.description).slice(0, 150) : "No description available"}...
+                  <div className="flex justify-between items-center px-5 py-3.5 bg-gray-50">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Min. Order Qty</span>
+                    <span className="text-sm font-bold text-gray-700">{product.minOrderQuantity || 1} {product.minOrderQuantity > 1 ? 'Units' : 'Unit'}</span>
                   </div>
-               </div>
+                </div>
 
-               <div className="mt-auto space-y-3">
-                  {!hideBuyNow && (
-                    <button
-                      onClick={() => {
-                        handleBuyNow();
-                        setIsModalOpen(false);
-                      }}
-                      className="w-full bg-[#8B1A2E] hover:bg-red-700 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 active:scale-[0.98]"
-                    >
-                      <FiZap className="w-4 h-4" />
-                      Buy Now
-                    </button>
-                  )}
-                  {!hideAddToCart && (
-                    <button
-                      onClick={() => {
-                        handleAddToCart();
-                        setIsModalOpen(false);
-                      }}
-                      className="w-full bg-[#1A2E5B] hover:bg-[#162542] text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-[#1A2E5B]/10 flex items-center justify-center gap-2 active:scale-[0.98]"
-                    >
-                      <FiShoppingBag className="w-4 h-4" />
-                      Add To Cart
-                    </button>
-                  )}
+                <div className="text-sm text-gray-500 leading-relaxed pt-3 px-1">
+                  {product.description ? showingTranslateValue(product.description).slice(0, 150) : "No description available"}...
+                </div>
+              </div>
+
+              <div className="mt-auto space-y-3">
+                {!hideBuyNow && (
                   <button
                     onClick={() => {
+                      handleBuyNow();
                       setIsModalOpen(false);
-                      navigateToProduct();
                     }}
-                    className="w-full text-gray-400 hover:text-[#1A2E5B] py-2 rounded-2xl font-bold text-[10px] transition-all uppercase tracking-widest hover:bg-gray-50"
+                    className="w-full bg-[#8B1A2E] hover:bg-red-700 text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg flex items-center justify-center gap-2 active:scale-[0.98]"
                   >
-                    View Full Details →
+                    <FiZap className="w-4 h-4" />
+                    Buy Now
                   </button>
-               </div>
+                )}
+                {!hideAddToCart && (
+                  <button
+                    onClick={() => {
+                      handleAddToCart();
+                      setIsModalOpen(false);
+                    }}
+                    className="w-full bg-[#1A2E5B] hover:bg-[#162542] text-white py-4 rounded-2xl font-bold text-sm transition-all shadow-lg shadow-[#1A2E5B]/10 flex items-center justify-center gap-2 active:scale-[0.98]"
+                  >
+                    <FiShoppingBag className="w-4 h-4" />
+                    Add To Cart
+                  </button>
+                )}
+                <button
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    navigateToProduct();
+                  }}
+                  className="w-full text-gray-400 hover:text-[#1A2E5B] py-2 rounded-2xl font-bold text-[10px] transition-all uppercase tracking-widest hover:bg-gray-50"
+                >
+                  View Full Details →
+                </button>
+              </div>
             </div>
           </div>
         </div>

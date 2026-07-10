@@ -22,15 +22,15 @@ const BreakthroughDrugs = ({ products = [], onEnquire }) => {
   if (!items.length) return null;
 
   return (
-    <section className="kure-section kure-section-white kure-breakthrough">
-      <div className="kure-container">
+    <section className="ilmic-section ilmic-section-white ilmic-breakthrough">
+      <div className="ilmic-container">
         <SectionHeader
           eyebrow="Breakthrough Therapies"
           title="Breakthrough Drugs Available In India"
           subtitle="Indian branded specialty medicines from trusted manufacturers — oncology, hematology, critical care and more."
         />
 
-        <div className="kure-catalog-grid grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
+        <div className="ilmic-catalog-grid grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:gap-6">
           {items.map((product) => {
             const title = getTitle(product);
             const href = product.slug
@@ -48,10 +48,10 @@ const BreakthroughDrugs = ({ products = [], onEnquire }) => {
                   src={getProductImageSrc(product)}
                   alt={title}
                 />
-                <div className="kure-catalog-card-body">
-                  <h3 className="kure-catalog-card-title">{title}</h3>
+                <div className="ilmic-catalog-card-body">
+                  <h3 className="ilmic-catalog-card-title">{title}</h3>
                   {subtitle ? (
-                    <p className="kure-breakthrough__composition">{subtitle}</p>
+                    <p className="ilmic-breakthrough__composition">{subtitle}</p>
                   ) : null}
                   <CatalogReadMore href={href} />
                 </div>
@@ -60,19 +60,19 @@ const BreakthroughDrugs = ({ products = [], onEnquire }) => {
           })}
         </div>
 
-        <div className="kure-breakthrough__footer">
-          <p className="kure-breakthrough__note">
+        <div className="ilmic-breakthrough__footer">
+          <p className="ilmic-breakthrough__note">
             More breakthrough drugs available across oncology, HIV, nephrology & imported specialty range.
           </p>
-          <div className="kure-breakthrough__actions">
-            <Link href="/products" className="kure-btn kure-btn-primary !text-sm">
+          <div className="ilmic-breakthrough__actions">
+            <Link href="/products" className="ilmic-btn ilmic-btn-primary !text-sm">
               View Full Product Range
             </Link>
             {onEnquire ? (
               <button
                 type="button"
                 onClick={onEnquire}
-                className="kure-btn kure-btn-outline !text-sm cursor-pointer"
+                className="ilmic-btn ilmic-btn-outline !text-sm cursor-pointer"
               >
                 Enquire Now
               </button>

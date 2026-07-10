@@ -3,7 +3,7 @@ const { connectDB } = require("../config/db");
 const Category = require("../models/Category");
 const Product = require("../models/Product");
 
-// Categories to KEEP (Kure Pharma-relevant only)
+// Categories to KEEP (ILMIC Health Care-relevant only)
 const KEEP_IDS = [
   "69afca65973569345c419afe", // BATTERY BALANCERS
   "69aff18fc39dd734e46b2fca", // BATTERY POWER PACKS

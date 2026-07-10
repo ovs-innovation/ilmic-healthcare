@@ -5,7 +5,7 @@ import useGetSetting from "@hooks/useGetSetting";
 import {
   getFaqItemsFromSettings,
   getFaqPageTitle,
-} from "@utils/kureFaqDefaults";
+} from "@utils/ilmicFaqDefaults";
 import { FiChevronDown } from "react-icons/fi";
 
 const FAQ = () => {
@@ -75,14 +75,14 @@ const FAQ = () => {
               Still have questions? Our team is here to help with product availability, pricing, and bulk supply.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="tel:+919911972234" className="kure-btn kure-btn-primary !text-sm">
-                Call +91 99119 72234
+              <a href="tel:+9188102 72080" className="ilmic-btn ilmic-btn-primary !text-sm">
+                Call +91 88102 72080
               </a>
               <a
-                href="mailto:Kure.export@gmail.com"
-                className="kure-btn kure-btn-outline !text-sm"
+                href="mailto:ilmic.healthcare@gmail.com"
+                className="ilmic-btn ilmic-btn-outline !text-sm"
               >
-                Email Kure.export@gmail.com
+                Email ilmic.healthcare@gmail.com
               </a>
             </div>
           </div>

@@ -8,6 +8,7 @@ const PageHero = ({
   breadcrumb = "Page",
   bgImage = "https://images.unsplash.com/photo-1587854692152-cf240469e97e?w=1600&q=80",
   children,
+  productsHero = false,
 }) => {
   return (
     <section className="relative overflow-hidden bg-[#0F3A66]">
@@ -22,7 +23,7 @@ const PageHero = ({
       />
 
       <div className="llmic-container py-16 sm:py-20 relative">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-blue-100 text-xs font-bold uppercase tracking-widest mb-6">
+        <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 text-blue-100 text-xs font-bold uppercase tracking-widest mb-6 ${productsHero ? "mt-5" : ""}`}>
           ILMIC Health Care
         </div>
 

@@ -136,7 +136,7 @@ const myTheme = {
     disabled:
       "border border-gray-400 cursor-not-allowed opacity-50 bg-gray-300 dark:bg-gray-800",
     valid:
-      "border-red-600 dark:bg-gray-700 focus:border-red-400 dark:focus:border-red-400",
+      "border-green-600 dark:bg-gray-700 focus:border-green-400 dark:focus:border-green-400",
     invalid:
       "border-red-600 dark:bg-gray-700 focus:border-red-400 dark:focus:border-red-400",
     radio:

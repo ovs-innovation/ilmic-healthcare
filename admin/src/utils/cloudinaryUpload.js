@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 
 export const UPLOAD_TIMEOUT_MS = 90000;
 export const MAX_IMAGE_SIZE_BYTES = 5242880;
@@ -184,6 +185,14 @@ export const getCloudinaryErrorMessage = (error) => {
   return error?.message || "Image upload failed. Please try again.";
 };
 
+const fileToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (error) => reject(error);
+  });
+
 const postToCloudinary = async ({
   file,
   folder,
@@ -191,35 +200,39 @@ const postToCloudinary = async ({
   onProgress,
   signal,
 }) => {
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("upload_preset", config.uploadPreset);
-  formData.append("cloud_name", config.cloudName);
-  formData.append("public_id", generateUniquePublicId(file.name));
-
-  if (folder) {
-    formData.append("folder", folder);
+  const base64Data = await fileToBase64(file);
+  let adminInfo;
+  if (Cookies.get("adminInfo")) {
+    adminInfo = JSON.parse(Cookies.get("adminInfo"));
   }
+  const token = adminInfo?.token;
 
-  const response = await axios.post(config.uploadUrl, formData, {
-    timeout: UPLOAD_TIMEOUT_MS,
-    signal,
-    onUploadProgress: (progressEvent) => {
-      if (!onProgress || !progressEvent.total) return;
-      const percent = Math.round(
-        (progressEvent.loaded * 100) / progressEvent.total
-      );
-      onProgress(percent);
+  const apiBaseUrl = import.meta.env.VITE_APP_API_BASE_URL || "http://localhost:5058/api";
+  const response = await axios.post(
+    `${apiBaseUrl}/products/upload-image`,
+    {
+      image: base64Data,
+      folder: folder || "product",
     },
-  });
+    {
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+      },
+      timeout: UPLOAD_TIMEOUT_MS,
+      signal,
+      onUploadProgress: (progressEvent) => {
+        if (!onProgress || !progressEvent.total) return;
+        const percent = Math.round(
+          (progressEvent.loaded * 100) / progressEvent.total
+        );
+        onProgress(percent);
+      },
+    }
+  );
 
-  const secureUrl = response?.data?.secure_url;
+  const secureUrl = response?.data?.secureUrl;
   if (!secureUrl) {
-    throw new Error("Cloudinary did not return a valid image URL.");
-  }
-
-  if (!secureUrl.includes(`res.cloudinary.com/${config.cloudName}/`)) {
-    throw new Error("Cloudinary response cloud name does not match configuration.");
+    throw new Error("Backend did not return a valid image URL.");
   }
 
   return secureUrl;

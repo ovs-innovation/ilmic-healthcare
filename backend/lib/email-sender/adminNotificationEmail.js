@@ -48,7 +48,7 @@ const sendAdminNotification = async ({
   subtitle,
   rows,
   replyTo,
-  fromName = "Kure Pharma",
+  fromName = "ILMIC Health Care",
 }) => {
   const adminEmail = getAdminEmail();
 
@@ -97,9 +97,9 @@ const queueLeadNotificationEmail = (lead) => {
   queueAdminNotification({
     subject: `New Lead: ${data.name} - ${productSummary}`,
     title: "New Lead Received",
-    subtitle: "A new enquiry was submitted on Kure Pharma.",
+    subtitle: "A new enquiry was submitted on ILMIC Health Care.",
     replyTo: data.email,
-    fromName: "Kure Pharma Leads",
+    fromName: "ILMIC Health Care Leads",
     rows: [
       ["Name", data.name],
       ["Email", data.email],
@@ -126,7 +126,7 @@ const queueBatteryServiceNotificationEmail = (request) => {
     title: "New Battery Service Request",
     subtitle: "A customer submitted a battery service request.",
     replyTo: data.email,
-    fromName: "Kure Pharma Battery Service",
+    fromName: "ILMIC Health Care Battery Service",
     rows: [
       ["Name", data.name],
       ["Email", data.email],
@@ -161,9 +161,9 @@ const queueOrderNotificationEmail = (order) => {
   queueAdminNotification({
     subject: `New Order: ${data.orderId || data._id} - ${user.name || "Customer"}`,
     title: "New Order Received",
-    subtitle: "A customer placed a new order on Kure Pharma.",
+    subtitle: "A customer placed a new order on ILMIC Health Care.",
     replyTo: user.email,
-    fromName: "Kure Pharma Orders",
+    fromName: "ILMIC Health Care Orders",
     rows: [
       ["Order ID", data.orderId || data._id],
       ["Invoice", data.invoice],
@@ -194,7 +194,7 @@ const queueReviewNotificationEmail = (review, productTitle) => {
     title: "New Product Review",
     subtitle: "A customer submitted a new product review.",
     replyTo: undefined,
-    fromName: "Kure Pharma Reviews",
+    fromName: "ILMIC Health Care Reviews",
     rows: [
       ["Reviewer", data.name],
       ["Rating", `${data.rating}/5`],
@@ -214,7 +214,7 @@ const queueCommentNotificationEmail = (comment, blogTitle) => {
     title: "New Blog Comment",
     subtitle: "A reader commented on your blog.",
     replyTo: data.email,
-    fromName: "Kure Pharma Blog",
+    fromName: "ILMIC Health Care Blog",
     rows: [
       ["Name", data.name],
       ["Email", data.email],
@@ -233,9 +233,9 @@ const queueCustomerSignupNotificationEmail = (customer, signupMethod = "Email") 
   queueAdminNotification({
     subject: `New Customer Signup: ${data.name || data.email}`,
     title: "New Customer Registered",
-    subtitle: "A new customer created an account on Kure Pharma.",
+    subtitle: "A new customer created an account on ILMIC Health Care.",
     replyTo: data.email,
-    fromName: "Kure Pharma Accounts",
+    fromName: "ILMIC Health Care Accounts",
     rows: [
       ["Name", data.name],
       ["Email", data.email],

@@ -462,7 +462,7 @@ const BatteryServiceSection = () => {
                     <IconPowerBadge className="w-3.5 h-3.5" />
                   </WhyIconTile>
                   <span className="text-[11px] font-black uppercase tracking-[0.2em] text-[#0088FF]">
-                    Why Choose Kure Pharma
+                    Why Choose ILMIC Health Care
                   </span>
                 </div>
 

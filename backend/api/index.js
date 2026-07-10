@@ -49,8 +49,8 @@ app.use(async (req, res, next) => {
 
 app.set("trust proxy", 1);
 
-app.use(express.json({ limit: "4mb" }));
-app.use(helmet());
+app.use(express.json({ limit: "10mb" }));
+app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 
 app.use(
   cors({
@@ -110,7 +110,7 @@ app.use((err, req, res, next) => {
 });
 
 // Serve static files from the "dist" directory
-app.use("/static", express.static("public"));
+app.use("/static", express.static(path.join(__dirname, "../public")));
 
 // Serve the index.html file for all routes
 // app.get("*", (req, res) => {
@@ -121,6 +121,11 @@ const PORT = process.env.PORT || 5058;
 
 connectDB()
   .then(() => {
+    // Run Cloudinary setup check asynchronously on startup
+    const { run: runCloudinarySetup } = require("../script/verify_and_fix_cloudinary");
+    runCloudinarySetup().catch((err) => {
+      console.error("Failed to check/create Cloudinary presets:", err.message);
+    });
 
     const server = app.listen(PORT, () =>
       console.log(`server running on port ${PORT}`)

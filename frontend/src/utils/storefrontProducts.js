@@ -1,4 +1,4 @@
-import { breakthroughDrugs } from "@utils/kureHomepageRichContent";
+import { breakthroughDrugs } from "@utils/ilmicHomepageRichContent";
 import { ilmicCategories } from "@utils/ilmicDefaults";
 
 const STATIC_CATALOG_SLUGS = new Set(

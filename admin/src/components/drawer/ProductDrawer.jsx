@@ -1,4 +1,4 @@
-﻿import { Input, Textarea } from "@windmill/react-ui";
+import { Input, Textarea } from "@windmill/react-ui";
 import React, { useEffect, useState } from "react";
 import { Scrollbars } from "react-custom-scrollbars-2";
 import { Modal } from "react-responsive-modal";
@@ -507,7 +507,7 @@ const ProductDrawer = ({ id }) => {
               {productFaqs && productFaqs.length > 0 ? (
                 <div className="space-y-4 border border-gray-200 rounded-xl p-4 bg-gray-50/50">
                   {productFaqs.map((faq, idx) => (
-                    <div key={idx} className="border border-gray-200 rounded-lg p-3 bg-white space-y-3 relative">
+                    <div key={idx} className="faq-card space-y-3 relative">
                       <button
                         type="button"
                         onClick={() => handleRemoveProductFaq(idx)}

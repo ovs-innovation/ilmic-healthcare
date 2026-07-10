@@ -185,7 +185,7 @@ const contactData = [
     title: "contact-page-box1-title",
     info: "contact-page-box1-info",
     icon: FiMail,
-    contact: "hello@kurepharma.com",
+    contact: "hello@ilmichealthcare.com",
     className: "bg-green-100",
   },
   {
@@ -193,7 +193,7 @@ const contactData = [
     title: "contact-page-box2-title",
     info: "contact-page-box2-info",
     icon: FiPhoneCall,
-    contact: "+91 9717372217",
+    contact: "+91 9217174829",
     className: "bg-yellow-100",
   },
   {

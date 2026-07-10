@@ -22,7 +22,7 @@ import PageTitle from "@/components/Typography/PageTitle";
 import InvoiceForDownload from "@/components/invoice/InvoiceForDownload";
 import InvoiceForPrint from "@/components/invoice/InvoiceForPrint";
 import SettingServices from "@/services/SettingServices";
-import kureLogo from "@/assets/img/logo/logo.png";
+import ilmicLogo from "@/assets/img/logo/logo.png";
 
 import Barcode from 'react-barcode';
 
@@ -99,7 +99,7 @@ const OrderInvoice = () => {
             {/* Header Section */}
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "40px", width: "100%" }}>
               <div style={{ width: "55%" }}>
-                <img src={kureLogo} alt="Logo" style={{ width: "220px", objectFit: "contain", marginBottom: "15px" }} />
+                <img src={ilmicLogo} alt="Logo" style={{ width: "220px", objectFit: "contain", marginBottom: "15px" }} />
                 <div style={{ fontWeight: "700", fontSize: "16px", marginBottom: "5px" }}>
                   {globalSetting?.company_name || "ECOMPASS LLP"}
                 </div>

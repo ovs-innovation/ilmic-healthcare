@@ -302,7 +302,7 @@ const InvoiceForDownload = ({
               >
                 <Image
                   src="/logo/logo.png"
-                  alt="Kure Pharma"
+                  alt="ILMIC Health Care"
                   style={{ width: 80, textAlign: "right" }}
                 />
               </Text>

@@ -7,7 +7,7 @@ const forgetPasswordEmailBody = (option) => {
 >
 
   <head>
-    <title>Kure Pharma</title>
+    <title>ILMIC Health Care</title>
     <!--[if !mso]><!-->
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <!--<![endif]-->
@@ -105,7 +105,7 @@ const forgetPasswordEmailBody = (option) => {
                                           <img
                                             alt
                                             height="auto"
-                                            src="https://kurepharma.com/kure-logo.png"
+                                            src="https://ilmichealthcare.com/ilmic-logo.png"
                                             style="border:0;display:block;outline:none;text-decoration:none;height:auto;width:80px;font-size:13px;padding-bottom:30px;"
                                             width="80"
                                             height="80"
@@ -206,7 +206,7 @@ const forgetPasswordEmailBody = (option) => {
                             <h2>Hello ${option.email}</h2>
                             <p>A request has been received to change the
                               password for your
-                              <strong>Kure Pharma</strong>
+                              <strong>ILMIC Health Care</strong>
                               account.
                             </p>
 
@@ -223,14 +223,14 @@ const forgetPasswordEmailBody = (option) => {
 
                             <p style="margin-top: 50px;">If you did not initiate
                               this request, please contact us immediately at
-                              hello@kurepharma.com</p>
+                              hello@ilmichealthcare.com</p>
 
                             <p
                               style="margin:0px auto; padding-bottom:0px; text-align:center;"
                             >Thank you
                               <h4
                                 style="margin:1px; text-align:center;padding-bottom:0px;"
-                              >Kure Pharma Team</h4></p>
+                              >ILMIC Health Care Team</h4></p>
 
                             <!--end email_template -->
                           </div>
@@ -354,7 +354,7 @@ const forgetPasswordEmailBody = (option) => {
                                                       >
                                                         You are receiving this
                                                         email because you
-                                                        registered with Kure Pharma
+                                                        registered with ILMIC Health Care
                                                         and agreed to receive
                                                         emails from us regarding
                                                         new features, events and
@@ -362,7 +362,7 @@ const forgetPasswordEmailBody = (option) => {
                                                         <p
                                                           style="font-family:'Helvetica Neue', Helvetica, Arial, sans-serif;font-size:11px;font-weight:400;line-height:16px;text-align:center;color:#303030;"
                                                         >
-                                                          &copy; Kure Pharma, All
+                                                          &copy; ILMIC Health Care, All
                                                           Rights Reserved.</p></div>
                                                     </td>
                                                   </tr>

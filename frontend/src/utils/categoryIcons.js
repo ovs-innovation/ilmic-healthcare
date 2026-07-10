@@ -70,7 +70,7 @@ export const getCategoryTherapyIcon = (category) => {
 
 export const renderCategoryTherapyIcon = (
   category,
-  className = "kure-cat-circle__icon",
+  className = "ilmic-cat-circle__icon",
 ) => {
   const Icon = getCategoryTherapyIcon(category);
   return <Icon className={className} aria-hidden />;

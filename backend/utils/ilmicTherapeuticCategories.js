@@ -1,4 +1,4 @@
-const kureTherapeuticCategories = [
+const ilmicTherapeuticCategories = [
   {
     name: "Anti-Cancer Medicines",
     slug: "anti-cancer-medicines",
@@ -75,7 +75,7 @@ const categoryRenameMap = {
   "Nephrology Medicines": "Nephrology Medicine",
 };
 
-const popularCategoryItems = kureTherapeuticCategories.map(
+const popularCategoryItems = ilmicTherapeuticCategories.map(
   ({ name, bgColor, textColor, icon }) => ({
     name,
     category: name,
@@ -86,7 +86,7 @@ const popularCategoryItems = kureTherapeuticCategories.map(
 );
 
 module.exports = {
-  kureTherapeuticCategories,
+  ilmicTherapeuticCategories,
   popularCategoryItems,
   categoryRenameMap,
 };

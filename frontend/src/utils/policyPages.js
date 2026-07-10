@@ -6,13 +6,13 @@ export const POLICY_LINKS = [
   { id: "legal-disclaimer", href: "/legal-disclaimer", label: "Legal Disclaimer" },
 ];
 
-export const KURE_POLICY_CONTACT = {
-  company: "Kure Pharma",
-  website: "kurepharma.com",
-  phone: "+91 99119 72234",
-  email: "Kure.export@gmail.com",
+export const ILMIC_POLICY_CONTACT = {
+  company: "ILMIC Health Care",
+  website: "ilmichealthcare.com",
+  phone: "+91 88102 72080",
+  email: "ilmic.healthcare@gmail.com",
   address:
-    "B-1/D, Saurav Vihar, Jaitpur, Badarpur, New Delhi – 110044, India",
+    "Delhi, India, India",
   cities:
     "Noida, Delhi NCR, Mumbai, Lucknow, Kolkata, Patna, Chandigarh & Pan-India",
 };

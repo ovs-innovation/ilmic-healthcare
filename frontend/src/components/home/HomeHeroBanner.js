@@ -81,7 +81,7 @@ const parseHeadlineLines = (title) => {
   return DEFAULT_HEADLINE.split("\n");
 };
 
-const KurePharmaHeroLogo = () => (
+const IlmicHealthCareHeroLogo = () => (
   <div className="text-right select-none">
     <div className="inline-flex items-center gap-2.5">
       <span
@@ -97,7 +97,7 @@ const KurePharmaHeroLogo = () => (
         </svg>
       </span>
       <span className="text-[1.65rem] sm:text-[1.85rem] font-black tracking-[-0.02em] text-[#111] leading-none">
-        Kure Pharma
+        ILMIC Health Care
       </span>
     </div>
     <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.32em] text-[#222] mt-1.5 pr-0.5">
@@ -130,7 +130,7 @@ const HeroImagePanel = ({ slide, priority }) => (
       {slide.image ? (
         <Image
           src={slide.image}
-          alt={slide.title || "Kure Pharma battery and BMS products"}
+          alt={slide.title || "ILMIC Health Care battery and BMS products"}
           fill
           priority={priority}
           loading={priority ? "eager" : "lazy"}
@@ -339,7 +339,7 @@ const HomeHeroBanner = () => {
                       />
 
                       <div className="absolute top-6 sm:top-8 lg:top-10 right-6 sm:right-8 lg:right-10 xl:right-12 z-20">
-                        <KurePharmaHeroLogo />
+                        <IlmicHealthCareHeroLogo />
                       </div>
 
                       <HeroImagePanel slide={slide} priority={idx === 0} />

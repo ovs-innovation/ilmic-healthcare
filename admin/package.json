@@ -1,7 +1,7 @@
 {
-  "name": "kure-pharma-admin",
+  "name": "ilmic-pharma-admin",
   "version": "0.1.0",
-  "description": "Kure Pharma admin panel built with React and Tailwind CSS",
+  "description": "ILMIC Health Care admin panel built with React and Tailwind CSS",
   "private": true,
   "type": "module",
   "dependencies": {

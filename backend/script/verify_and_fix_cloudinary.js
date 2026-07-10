@@ -1,11 +1,11 @@
 /**
- * Verify Kure Pharma Cloudinary account and ensure upload preset exists.
+ * Verify ILMIC Health Care Cloudinary account and ensure upload preset exists.
  */
 
 require("dotenv").config();
 const cloudinary = require("cloudinary").v2;
 
-const PRESET_NAME = "kure_pharma_upload";
+const PRESET_NAME = "ilmic_healthcare_upload";
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -14,7 +14,7 @@ cloudinary.config({
 });
 
 const run = async () => {
-  console.log("=== KURE PHARMA CLOUDINARY SETUP ===");
+  console.log("=== ILMIC HEALTH CARE CLOUDINARY SETUP ===");
   console.log("Account:", process.env.CLOUDINARY_CLOUD_NAME);
 
   try {
@@ -41,7 +41,7 @@ const run = async () => {
       await cloudinary.api.create_upload_preset({
         name: PRESET_NAME,
         unsigned: true,
-        folder: process.env.CLOUDINARY_FOLDER || "kure-pharma",
+        folder: process.env.CLOUDINARY_FOLDER || "ilmic-pharma",
         allowed_formats: "jpg,jpeg,png,webp,gif,avif,pdf",
         quality: "auto",
         fetch_format: "auto",
@@ -53,10 +53,17 @@ const run = async () => {
   }
 
   console.log("=== SETUP COMPLETE ===");
-  process.exit(0);
+  if (require.main === module) {
+    process.exit(0);
+  }
 };
 
-run().catch((e) => {
-  console.error(e);
-  process.exit(1);
-});
+if (require.main === module) {
+  run().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}
+
+module.exports = { run };
+

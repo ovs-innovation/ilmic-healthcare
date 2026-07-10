@@ -40,12 +40,12 @@ const SettingServices = {
     return requests.put(`/setting/store/customization/update`, body);
   },
 
-  getKureHomepageSetting: async () => {
-    return requests.get("/setting/kure-homepage/all");
+  getIlmicHomepageSetting: async () => {
+    return requests.get("/setting/ilmic-homepage/all");
   },
 
-  updateKureHomepageSetting: async (body) => {
-    return requests.put("/setting/kure-homepage/update", body);
+  updateIlmicHomepageSetting: async (body) => {
+    return requests.put("/setting/ilmic-homepage/update", body);
   },
 };
 
