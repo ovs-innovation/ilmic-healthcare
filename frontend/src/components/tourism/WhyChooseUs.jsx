@@ -15,15 +15,15 @@ const WhyChooseUs = () => (
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
         {whyChooseUs.map((item) => (
           <div
             key={item.title}
-            className="p-6 rounded-2xl bg-white border border-ilmic-border hover:border-ilmic-blue/40 hover:shadow-[0_18px_50px_rgba(15,58,102,0.08)] transition-all duration-300"
+            className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-ilmic-border hover:border-ilmic-blue/40 hover:shadow-[0_18px_50px_rgba(15,58,102,0.08)] transition-all duration-300"
           >
-            <div className="text-4xl mb-4">{item.icon}</div>
-            <h3 className="font-black text-lg mb-2 text-ilmic-text">{item.title}</h3>
-            <p className="text-sm text-ilmic-muted leading-relaxed">{item.desc}</p>
+            <div className="text-2xl sm:text-4xl mb-2 sm:mb-4">{item.icon}</div>
+            <h3 className="font-black text-sm sm:text-lg mb-1 sm:mb-2 text-ilmic-text leading-snug line-clamp-2">{item.title}</h3>
+            <p className="text-[11px] sm:text-sm text-ilmic-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{item.desc}</p>
           </div>
         ))}
       </div>

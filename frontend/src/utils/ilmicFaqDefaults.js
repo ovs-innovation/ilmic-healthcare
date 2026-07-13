@@ -7,7 +7,7 @@ export const ilmicDefaultFaqItems = [
   {
     question: "How do I place an order with ILMIC Health Care?",
     answer:
-      "Call us at +91 88102 72080, email ilmic.healthcare@gmail.com, use the website enquiry form, or WhatsApp us with your product requirement, prescription details (where applicable), and delivery location.",
+      "Call us at +91 88102 72080, email info.ilmichealthcare@gmail.com, use the website enquiry form, or WhatsApp us with your product requirement, prescription details (where applicable), and delivery location.",
   },
   {
     question: "Do you deliver medicines in emergency situations?",
@@ -37,7 +37,7 @@ export const ilmicDefaultFaqItems = [
   {
     question: "How can I contact ILMIC Health Care for support?",
     answer:
-      "Phone: +91 88102 72080 | Email: ilmic.healthcare@gmail.com | Address: Delhi, India, India.",
+      "Phone: +91 88102 72080 | Email: info.ilmichealthcare@gmail.com | Address: Delhi, India, India.",
   },
 ];
 

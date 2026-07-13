@@ -197,17 +197,17 @@ const ProductScreen = ({ product, relatedProducts }) => {
         )}
       </Head>
 
-      <div className="py-12 bg-[#F8FBFF] min-h-screen">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-6 sm:py-12 bg-[#F8FBFF] min-h-screen ilmic-product-detail">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
           
           {/* Breadcrumbs & Back */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-[#0F4C81] overflow-hidden whitespace-nowrap">
-              <Link href="/" className="hover:text-orange-500 transition-colors">Home</Link>
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
+            <div className="flex flex-wrap items-center gap-1.5 text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-[#0F4C81] min-w-0">
+              <Link href="/" className="hover:text-orange-500 transition-colors shrink-0">Home</Link>
               <FiChevronRight className="shrink-0 text-slate-400" />
-              <Link href="/products" className="hover:text-orange-500 transition-colors">Products</Link>
+              <Link href="/products" className="hover:text-orange-500 transition-colors shrink-0">Products</Link>
               <FiChevronRight className="shrink-0 text-slate-400" />
-              <span className="text-slate-800 truncate font-extrabold">{productName}</span>
+              <span className="text-slate-800 font-extrabold break-words min-w-0">{productName}</span>
             </div>
             <Link href="/products" className="inline-flex items-center gap-1.5 text-[10px] font-bold text-slate-500 hover:text-slate-900 uppercase tracking-widest transition-colors">
               <FiArrowLeft className="w-3.5 h-3.5" /> Back to List
@@ -221,7 +221,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
             <div className="lg:col-span-8 space-y-8">
               
               {/* Section 1: Hero Section Card */}
-              <div className="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+              <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-8 items-start">
                 {/* Left: Product Image */}
                 <div className="md:col-span-6 flex flex-col items-stretch justify-center ilmic-product-gallery">
                   <div className="ilmic-product-gallery__main relative w-full rounded-2xl border border-slate-100 overflow-hidden bg-white shadow-sm">
@@ -277,28 +277,28 @@ const ProductScreen = ({ product, relatedProducts }) => {
                 </div>
 
                 {/* Right: Spec Details & Sourcing CTA */}
-                <div className="md:col-span-6 space-y-6">
+                <div className="md:col-span-6 space-y-4 sm:space-y-6 min-w-0">
                   <div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#0F4C81] bg-[#0F4C81]/10 px-2.5 py-1 rounded-md border border-[#0F4C81]/15">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#0F4C81] bg-[#0F4C81]/10 px-2.5 py-1 rounded-md border border-[#0F4C81]/15 inline-block">
                       {catName} Category
                     </span>
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-800 tracking-tight leading-tight mt-3">
+                    <h1 className="text-xl sm:text-3xl font-extrabold text-slate-800 tracking-tight leading-tight mt-3 break-words">
                       {productName}
                     </h1>
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 border-t border-b border-slate-100 py-5">
-                    <div className="space-y-1">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5 border-t border-b border-slate-100 py-4 sm:py-5">
+                    <div className="space-y-1 min-w-0">
                       <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider block">Manufacturer</span>
-                      <span className="text-sm font-bold text-slate-700">{product.manufacturer || "N/A"}</span>
+                      <span className="text-sm font-bold text-slate-700 break-words">{product.manufacturer || "N/A"}</span>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-1 min-w-0 sm:col-span-2">
                       <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider block">Composition</span>
-                      <span className="text-sm font-bold text-slate-750 line-clamp-1">{product.composition || "N/A"}</span>
+                      <span className="text-sm font-bold text-slate-750 break-words leading-relaxed">{product.composition || "N/A"}</span>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-1 min-w-0">
                       <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider block">Strength</span>
-                      <span className="text-sm font-bold text-slate-700">{product.strength || "N/A"}</span>
+                      <span className="text-sm font-bold text-slate-700 break-words">{product.strength || "N/A"}</span>
                     </div>
                     <div className="space-y-1">
                       <span className="text-[10px] font-bold text-slate-450 uppercase tracking-wider block">Availability</span>
@@ -327,18 +327,18 @@ const ProductScreen = ({ product, relatedProducts }) => {
                     )}
                   </div>
 
-                  <div className="flex flex-col sm:flex-row gap-3 pt-1">
+                  <div className="flex flex-col gap-2.5 sm:flex-row sm:gap-3 pt-1">
                     <button
                       onClick={focusEnquiryForm}
-                      className="bg-[#0F4C81] hover:bg-[#0c3d67] text-white font-bold text-xs py-3 px-6 rounded-xl transition-all shadow-sm hover:shadow uppercase tracking-wider cursor-pointer text-center"
+                      className="w-full sm:w-auto bg-[#0F4C81] hover:bg-[#0c3d67] text-white font-bold text-xs py-3 px-6 rounded-xl transition-all shadow-sm hover:shadow uppercase tracking-wider cursor-pointer text-center"
                     >
                       Send Enquiry
                     </button>
                     <a
-                      href={`https://wa.me/9188102 72080?text=Hello%20ILMIC%20Health%20Care%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
+                      href={`https://wa.me/918810272080?text=Hello%20ILMIC%20Health%20Care%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[11px] py-3 px-6 rounded-xl transition-all shadow-sm uppercase tracking-wider text-center"
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-[11px] py-3 px-6 rounded-xl transition-all shadow-sm uppercase tracking-wider text-center"
                     >
                       <FaWhatsapp className="w-4.5 h-4.5" /> WhatsApp Sourcing
                     </a>
@@ -347,7 +347,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
               </div>
 
               {/* Section 2: Product Facts Card */}
-              <div className="bg-white rounded-2xl border border-slate-100 p-6 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+              <div className="bg-white rounded-2xl border border-slate-100 p-4 sm:p-8 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
                 <div className="border-b border-slate-100 pb-3 mb-6">
                   <h2 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
                     <FiTrendingUp className="text-[#0F4C81] w-4 h-4" /> Technical Specifications
@@ -355,27 +355,27 @@ const ProductScreen = ({ product, relatedProducts }) => {
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
+                  <div className="bg-slate-50/50 p-3.5 sm:p-4 rounded-xl border border-slate-100/50 min-w-0">
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Product Name</span>
-                    <span className="text-xs font-bold text-slate-700 mt-1 block">{productName}</span>
+                    <span className="text-xs font-bold text-slate-700 mt-1 block break-words">{productName}</span>
                   </div>
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
+                  <div className="bg-slate-50/50 p-3.5 sm:p-4 rounded-xl border border-slate-100/50 min-w-0 sm:col-span-2 md:col-span-1">
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Composition</span>
-                    <span className="text-xs font-bold text-slate-700 mt-1 block">{product.composition || "N/A"}</span>
+                    <span className="text-xs font-bold text-slate-700 mt-1 block break-words leading-relaxed">{product.composition || "N/A"}</span>
                   </div>
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
+                  <div className="bg-slate-50/50 p-3.5 sm:p-4 rounded-xl border border-slate-100/50 min-w-0">
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Strength</span>
-                    <span className="text-xs font-bold text-slate-700 mt-1 block">{product.strength || "N/A"}</span>
+                    <span className="text-xs font-bold text-slate-700 mt-1 block break-words">{product.strength || "N/A"}</span>
                   </div>
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
+                  <div className="bg-slate-50/50 p-3.5 sm:p-4 rounded-xl border border-slate-100/50 min-w-0">
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Manufacturer</span>
-                    <span className="text-xs font-bold text-slate-700 mt-1 block">{product.manufacturer || "N/A"}</span>
+                    <span className="text-xs font-bold text-slate-700 mt-1 block break-words">{product.manufacturer || "N/A"}</span>
                   </div>
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
+                  <div className="bg-slate-50/50 p-3.5 sm:p-4 rounded-xl border border-slate-100/50 min-w-0">
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Category</span>
-                    <span className="text-xs font-bold text-slate-700 mt-1 block">{catName}</span>
+                    <span className="text-xs font-bold text-slate-700 mt-1 block break-words">{catName}</span>
                   </div>
-                  <div className="bg-slate-50/50 p-4 rounded-xl border border-slate-100/50">
+                  <div className="bg-slate-50/50 p-3.5 sm:p-4 rounded-xl border border-slate-100/50 min-w-0">
                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wider block">Sourcing Availability</span>
                     <span className="text-xs font-bold text-emerald-600 mt-1 block">{product.availability || "Global Distribution"}</span>
                   </div>
@@ -404,14 +404,14 @@ const ProductScreen = ({ product, relatedProducts }) => {
 
               {/* Section 3: Tabbed Technical Information */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] overflow-hidden">
-                <div className="flex flex-wrap border-b border-slate-100 bg-slate-50/60 scrollbar-thin overflow-x-auto">
+                <div className="ilmic-product-detail__tabs flex border-b border-slate-100 bg-slate-50/60 overflow-x-auto scrollbar-hide snap-x snap-mandatory">
                   {infoTabs.map((tab) => {
                     const TabIcon = tab.icon;
                     return (
                       <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`flex items-center gap-2 px-5 py-4 text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap ${
+                        className={`flex items-center gap-1.5 sm:gap-2 px-3.5 sm:px-5 py-3.5 sm:py-4 text-[9px] sm:text-[10px] font-bold uppercase tracking-wider border-b-2 transition-all cursor-pointer whitespace-nowrap snap-start shrink-0 ${
                           activeTab === tab.id
                             ? "border-[#0F4C81] text-[#0F4C81] bg-white font-extrabold"
                             : "border-transparent text-slate-400 hover:text-slate-700"
@@ -424,7 +424,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   })}
                 </div>
 
-                <div className="p-6 sm:p-8 text-[13px] font-medium text-slate-600 leading-relaxed min-h-[160px] whitespace-pre-line">
+                <div className="p-4 sm:p-8 text-[13px] font-medium text-slate-600 leading-relaxed min-h-[120px] sm:min-h-[160px] whitespace-pre-line break-words">
                   {activeTab === "description" && (
                     <div>
                       <h4 className="text-xs font-black text-slate-800 uppercase tracking-wider mb-3">About {productName}</h4>
@@ -485,7 +485,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
             </div>
 
             {/* Right Side Column (col-span-4): Sourcing Enquiry Card Form */}
-            <div className="lg:col-span-4 lg:sticky lg:top-24 bg-white border border-slate-100 rounded-2xl p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-5">
+            <div className="lg:col-span-4 lg:sticky lg:top-24 bg-white border border-slate-100 rounded-2xl p-4 sm:p-6 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)] space-y-4 sm:space-y-5">
               <div className="border-b border-slate-100 pb-4">
                 <h3 className="text-xs font-black text-slate-800 uppercase tracking-wider flex items-center gap-2">
                   <FiShield className="text-[#0F4C81] w-4 h-4" /> Sourcing Desk
@@ -625,7 +625,7 @@ const ProductScreen = ({ product, relatedProducts }) => {
 
               <div className="border-t border-slate-100 pt-4">
                 <a
-                  href={`https://wa.me/9188102 72080?text=Hello%20ILMIC%20Health%20Care%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
+                  href={`https://wa.me/918810272080?text=Hello%20ILMIC%20Health%20Care%2C%20I%20am%20inquiring%20about%20${encodeURIComponent(productName)}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full bg-[#25D366] hover:bg-[#20ba5a] text-white font-bold text-xs py-3.5 rounded-xl transition-all duration-300 shadow-sm uppercase tracking-widest flex items-center justify-center gap-2 text-center"
@@ -656,23 +656,24 @@ const ProductScreen = ({ product, relatedProducts }) => {
                   View All Products →
                 </Link>
               </div>
-              <div className="ilmic-catalog-grid grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="ilmic-catalog-grid grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                 {relatedProducts.map((p) => {
                   const pCatName = getTitleString(p.category?.name || p.category) || catName;
                   const pColors = catColorMap[pCatName] || colors;
                   const pImg = getDetailProductImage(p);
                   const pTitle = getTitleString(p.title) || p.name || "";
                   return (
-                    <div 
-                      key={p._id} 
+                    <Link
+                      key={p._id}
+                      href={`/product/${p.slug}`}
                       className="flex flex-col group border-2 border-[#c9a066]/55 rounded-sm bg-white overflow-hidden hover:border-[#b8860b]/80 transition-all duration-300 text-center"
                     >
                       <CatalogProductImage src={pImg} alt={pTitle} />
                       <div className="ilmic-catalog-card-body">
                         <h4 className="ilmic-catalog-card-title">{pTitle}</h4>
-                        <CatalogReadMore href={`/product/${p.slug}`} />
+                        <CatalogReadMore decorative />
                       </div>
-                    </div>
+                    </Link>
                   );
                 })}
               </div>

@@ -54,7 +54,7 @@ const ilmicHomepageDefaults = {
     phone: "+91 88102 72080",
     phone2: "+91 92171 74829",
     phoneHref: "tel:+918810272080",
-    email: "ilmic.healthcare@gmail.com",
+    email: "info.ilmichealthcare@gmail.com",
     address: "New Delhi, India & Luanda, Republic of Angola",
     hours: "Mon – Sat: 9am – 7pm IST",
     whatsappUrl: "https://wa.me/918810272080",
@@ -147,7 +147,7 @@ const heroProducts = [
 ];
 
 const services = [
-  { name: { en: "Pharmaceutical Export" }, slug: "pharmaceutical-export", description: { en: "Export of oncology and general pharma to Dubai, Africa, Bangladesh, CIS." }, icon: "🌍", group: "Export", status: "show" },
+  { name: { en: "Pharmaceutical Export" }, slug: "pharmaceutical-export", description: { en: "Export of oncology and general pharma to Dubai, Africa, CIS." }, icon: "🌍", group: "Export", status: "show" },
   { name: { en: "Hospital Management" }, slug: "hospital-management", description: { en: "Managing 50+ hospitals abroad with effective on-ground support." }, icon: "🏥", group: "Hospital", status: "show" },
   { name: { en: "Medical Tourism" }, slug: "medical-tourism", description: { en: "Complete medical tourism services for international patients in India." }, icon: "✈️", group: "Medical Tourism", status: "show" },
   { name: { en: "Doctors on Call" }, slug: "doctors-on-call", description: { en: "Specialist doctors on call for critical surgeries worldwide." }, icon: "👨‍⚕️", group: "Medical", status: "show" },
@@ -195,6 +195,18 @@ async function seed() {
         phone: "+918810272080",
         role: "Admin",
         joiningDate: new Date(),
+        access_list: [
+          "dashboard",
+          "products",
+          "categories",
+          "sub-categories",
+          "brands",
+          "services",
+          "faq",
+          "leads",
+          "settings",
+          "edit-profile",
+        ],
       });
       console.log("Admin: admin@ilmic.com / admin123");
     }

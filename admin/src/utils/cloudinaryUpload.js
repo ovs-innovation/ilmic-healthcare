@@ -92,6 +92,17 @@ export const getAdminCloudinaryConfig = () => {
   });
 
   if (validationError) {
+    const apiBaseUrl = import.meta.env.VITE_APP_API_BASE_URL;
+    if (apiBaseUrl) {
+      return {
+        valid: true,
+        backendOnly: true,
+        uploadUrl: "",
+        uploadPreset: "",
+        cloudName: "",
+      };
+    }
+
     return {
       valid: false,
       error: validationError,
@@ -100,6 +111,7 @@ export const getAdminCloudinaryConfig = () => {
 
   return {
     valid: true,
+    backendOnly: false,
     uploadUrl: normalizeEnvValue(uploadUrl),
     uploadPreset: normalizeEnvValue(uploadPreset),
     cloudName: normalizeEnvValue(cloudName),

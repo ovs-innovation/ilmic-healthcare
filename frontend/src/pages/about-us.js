@@ -409,7 +409,7 @@ const AboutUs = () => {
                   <div className="flex flex-wrap gap-2">
                     {[
                       "Dubai", "Angola", "Cameroon", "Namibia", "Ethiopia", 
-                      "Bangladesh", "Uzbekistan", "CIS Countries"
+                      "Uzbekistan", "CIS Countries"
                     ].map((market) => (
                       <span 
                         key={market} 
@@ -638,7 +638,6 @@ const AboutUs = () => {
                 { name: "Cameroon", role: "Supply Route" },
                 { name: "Namibia", role: "Supply Route" },
                 { name: "Ethiopia", role: "Supply Route" },
-                { name: "Bangladesh", role: "Supply Route" },
                 { name: "Uzbekistan", role: "Supply Route" },
                 { name: "CIS Countries", role: "Regional Reach" }
               ].map((c) => (

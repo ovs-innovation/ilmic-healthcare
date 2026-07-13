@@ -172,7 +172,7 @@ const ilmicHomepageDefaults = {
     badges: ["Quality Assured", "Pan-India"],
     phone: "+91 88102 72080",
     phoneHref: "tel:+9188102 72080",
-    email: "ilmic.healthcare@gmail.com",
+    email: "info.ilmichealthcare@gmail.com",
     address:
       "B-1/D, Saurav Vihar, Jaitpur,\nBadarpur, New Delhi – 110044",
     hours: "Mon–Sat: 10 AM – 7 PM IST",

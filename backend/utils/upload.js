@@ -30,8 +30,10 @@ const uploadImage = async (base64Data, folder = "product", req) => {
   if (isCloudinaryConfigured()) {
     try {
       const result = await cloudinary.uploader.upload(base64Data, {
-        folder: folder,
+        folder: process.env.CLOUDINARY_FOLDER || folder || "ilmic-pharma",
         resource_type: "image",
+        quality: "auto",
+        fetch_format: "auto",
       });
       if (result.secure_url) {
         return result.secure_url;

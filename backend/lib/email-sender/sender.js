@@ -1,26 +1,23 @@
 const nodemailer = require("nodemailer");
 const rateLimit = require("express-rate-limit");
+const {
+  getSmtpConfig,
+  withDeliverabilityHeaders,
+} = require("./emailConfig");
 
-const createTransporter = () =>
-  nodemailer.createTransport({
-    host: process.env.HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true,
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+const createTransporter = () => nodemailer.createTransport(getSmtpConfig());
 
 const sendMailPromise = (body) =>
   new Promise((resolve, reject) => {
     const transporter = createTransporter();
+    const mailOptions = withDeliverabilityHeaders(body);
+
     transporter.verify((err) => {
       if (err) {
         console.error("Email verification error:", err);
         return reject(err);
       }
-      transporter.sendMail(body, (sendErr, data) => {
+      transporter.sendMail(mailOptions, (sendErr, data) => {
         if (sendErr) {
           console.error("Error sending email:", sendErr);
           return reject(sendErr);
@@ -32,31 +29,29 @@ const sendMailPromise = (body) =>
 
 const sendEmail = (body, res, message) => {
   const transporter = createTransporter();
+  const mailOptions = withDeliverabilityHeaders(body);
 
-  transporter.verify((err, success) => {
+  transporter.verify((err) => {
     if (err) {
       console.error("Verification error:", err);
       res.status(403).send({
         message: `Error during verification: ${err.message}`,
       });
     } else {
-      console.log("Server is ready to take our messages");
-      transporter.sendMail(body, (err, data) => {
-        if (err) {
-          console.error("Error sending email:", err);
+      transporter.sendMail(mailOptions, (sendErr) => {
+        if (sendErr) {
+          console.error("Error sending email:", sendErr);
           res.status(403).send({
-            message: `Error sending email: ${err.message}`,
+            message: `Error sending email: ${sendErr.message}`,
           });
         } else {
-          res.send({
-            message: message,
-          });
+          res.send({ message });
         }
       });
     }
   });
 };
-//limit email verification and forget password
+
 const minutes = 30;
 const emailVerificationLimit = rateLimit({
   windowMs: minutes * 60 * 1000,

@@ -82,11 +82,6 @@ const Uploader = ({
 
   const uploadFiles = useCallback(
     async (rawFiles) => {
-      if (!cloudinaryConfig.valid) {
-        notifyError(cloudinaryConfig.error);
-        return;
-      }
-
       if (!tryBeginUpload()) {
         notifyError("Please wait for the current upload to finish.");
         return;

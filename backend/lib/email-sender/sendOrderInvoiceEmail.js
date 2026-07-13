@@ -21,7 +21,7 @@ const buildCompanyInfo = (globalSetting = {}) => ({
     globalSetting.from_email ||
     globalSetting.email ||
     process.env.EMAIL_USER ||
-    "info@ilmichealthcare.com",
+    "info.ilmichealthcare@gmail.com",
 });
 
 const buildInvoicePayload = (order, globalSetting = {}) => {

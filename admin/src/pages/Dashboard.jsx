@@ -18,7 +18,6 @@ import {
   FiShoppingBag,
   FiCalendar,
   FiTrendingUp,
-  FiActivity,
   FiClock,
   FiEye,
 } from "react-icons/fi";
@@ -30,7 +29,6 @@ import NotFound from "@/components/table/NotFound";
 import LeadServices from "@/services/LeadServices";
 import ProductServices from "@/services/ProductServices";
 import AnimatedContent from "@/components/common/AnimatedContent";
-import { LeadsBarChart, LeadsDoughnutChart } from "@/components/chart/LeadsChart";
 import { SidebarContext } from "@/context/SidebarContext";
 import { notifySuccess, notifyError } from "@/utils/toast";
 
@@ -261,50 +259,9 @@ const Dashboard = () => {
             loading={loadingLeadData}
           />
         </div>
-
-        {/* Row 3: Lead Charts Section */}
-        <div className="grid gap-6 md:grid-cols-2 mb-8">
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-xs">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-sm font-black text-gray-800 dark:text-gray-200 uppercase tracking-widest">Enquiry Trend</h3>
-                <p className="text-[10px] text-gray-400">Total inquiries received daily (Last 7 Days)</p>
-              </div>
-              <div className="p-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
-                <FiActivity className="w-4 h-4 text-blue-500" />
-              </div>
-            </div>
-            {loadingLeadData ? (
-              <div className="h-64 flex items-center justify-center text-gray-450">Loading Chart...</div>
-            ) : (
-              <div className="relative h-64">
-                <LeadsBarChart leadsByDate={dashboardLeadData?.leadsByDate} />
-              </div>
-            )}
-          </div>
-
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-3xl border border-gray-150 dark:border-gray-700/80 shadow-xs">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h3 className="text-sm font-black text-gray-800 dark:text-gray-200 uppercase tracking-widest">Status Distribution</h3>
-                <p className="text-[10px] text-gray-400">Breakdown of active/completed enquiries</p>
-              </div>
-              <div className="p-2 bg-indigo-50 dark:bg-indigo-900/20 rounded-xl">
-                <FiTrendingUp className="w-4 h-4 text-indigo-500" />
-              </div>
-            </div>
-            {loadingLeadData ? (
-              <div className="h-64 flex items-center justify-center text-gray-450">Loading Chart...</div>
-            ) : (
-              <div className="relative h-64 flex items-center justify-center">
-                <LeadsDoughnutChart leadsByStatus={dashboardLeadData?.leadsByStatus} />
-              </div>
-            )}
-          </div>
-        </div>
       </AnimatedContent>
 
-      {/* Row 4: Recent Leads Section */}
+      {/* Row 3: Recent Leads Section */}
       <div className="bg-white dark:bg-gray-800 rounded-3xl border border-gray-150 dark:border-gray-700/80 p-6 mb-8 shadow-xs">
         <div className="flex items-center justify-between mb-6">
           <div>

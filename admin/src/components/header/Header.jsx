@@ -9,6 +9,7 @@ import { useTranslation } from "react-i18next";
 import { AdminContext } from "@/context/AdminContext";
 import { SidebarContext } from "@/context/SidebarContext";
 import SelectLanguage from "@/components/form/selectOption/SelectLanguage";
+import { getAdminLoginUrl } from "@/utils/adminUrl";
 
 const Header = () => {
   const { toggleSidebar, handleLanguageChange, setNavBar, navBar, currLang } =
@@ -24,7 +25,7 @@ const Header = () => {
   const handleLogOut = () => {
     dispatch({ type: "USER_LOGOUT" });
     Cookies.remove("adminInfo");
-    window.location.replace(`${import.meta.env.VITE_APP_ADMIN_DOMAIN}/login`);
+    window.location.replace(getAdminLoginUrl());
   };
 
   const handleProfileOpen = () => {

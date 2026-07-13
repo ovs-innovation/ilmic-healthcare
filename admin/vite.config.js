@@ -59,10 +59,9 @@ export default defineConfig({
         scope: ".",
         start_url: ".",
         id: ".",
-        short_name: "ILMIC Health Care - E-Commerce Website",
-        name: "ILMIC Health Care | React eCommerce Admin Dashboard",
-        description:
-          "ILMIC Health Care : React Grocery & Organic Food Store e-commerce Admin Dashboard",
+        short_name: "ILMIC Admin",
+        name: "ILMIC Health Care | Admin Dashboard",
+        description: "ILMIC Health Care pharma enquiry admin panel",
         icons: [
           {
             src: "favicon.ico",
@@ -101,9 +100,13 @@ export default defineConfig({
   ],
 
   server: {
+    host: true,
+    port: 3000,
+    strictPort: true,
+    allowedHosts: true,
     proxy: {
       "/api/": {
-        target: "http://localhost:5065",
+        target: "http://localhost:5058",
         changeOrigin: true,
       },
     },

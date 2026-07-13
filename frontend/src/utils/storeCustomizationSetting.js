@@ -300,8 +300,8 @@ export const storeCustomization = {
       de: "Schreiben Sie uns eine E-Mail",
     },
     email_box_email: {
-      en: "hello@ilmichealthcare.com",
-      de: "hello@ilmichealthcare.com",
+      en: "info.ilmichealthcare@gmail.com",
+      de: "info.ilmichealthcare@gmail.com",
     },
     email_box_text: {
       en: "Interactively grow empowered for process-centric total linkage. ",
@@ -789,7 +789,7 @@ export const storeCustomization = {
       de: "B-1/D GROUND FLOOR SAURAV VIHAR, JAITPUR NEAR CHOKAN MANDIR, BADARPUR, DELHI 110044, NEW DELHI, DELHI, 110044, IN",
     },
     block4_phone: "+91 9217174829",
-    block4_email: "hello@ilmichealthcare.com",
+    block4_email: "info.ilmichealthcare@gmail.com",
     social_facebook: "https://www.facebook.com/",
     social_twitter: "https://twitter.com/",
     social_pinterest: "https://www.pinterest.com/",

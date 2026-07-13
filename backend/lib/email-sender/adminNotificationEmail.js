@@ -1,9 +1,7 @@
 const { sendMailPromise } = require("./sender");
+const { getNotificationEmail, buildFromAddress } = require("./emailConfig");
 
-const getAdminEmail = () =>
-  process.env.ADMIN_NOTIFICATION_EMAIL ||
-  process.env.LEAD_NOTIFICATION_EMAIL ||
-  process.env.EMAIL_USER;
+const getAdminEmail = () => getNotificationEmail();
 
 const getDisplayValue = (value) => {
   if (value === undefined || value === null || value === "") return "N/A";
@@ -58,11 +56,12 @@ const sendAdminNotification = async ({
   }
 
   await sendMailPromise({
-    from: `"${fromName}" <${process.env.EMAIL_USER}>`,
+    from: buildFromAddress(fromName),
     to: adminEmail,
     replyTo: replyTo || process.env.EMAIL_USER,
     subject,
     html: buildNotificationHtml({ title, subtitle, rows }),
+    text: `${title}\n\n${subtitle}\n\n${rows.map(([label, value]) => `${label}: ${getDisplayValue(value)}`).join("\n")}`,
   });
 
   console.log(`Admin notification sent: ${subject}`);

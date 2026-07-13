@@ -592,7 +592,7 @@ const ServiceDetails = () => {
                       </div>
                       <div>
                         <p className="text-[10px] font-black uppercase text-white/40 tracking-wider">Email Support</p>
-                        <p className="text-sm font-bold">ilmic.healthcare@gmail.com</p>
+                        <p className="text-sm font-bold">info.ilmichealthcare@gmail.com</p>
                       </div>
                     </div>
                   </div>

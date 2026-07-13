@@ -1,5 +1,11 @@
 const Enquiry = require("../models/Enquiry");
 const nodemailer = require("nodemailer");
+const {
+  getSmtpConfig,
+  getNotificationEmail,
+  buildFromAddress,
+  ILMIC_EMAIL,
+} = require("../lib/email-sender/emailConfig");
 
 // Create an Enquiry
 const createEnquiry = async (req, res) => {
@@ -28,23 +34,13 @@ const createEnquiry = async (req, res) => {
     await newEnquiry.save();
 
     // ── Nodemailer Email Notification ──────────────────────────────
-    const mailHost = process.env.HOST || process.env.SMTP_HOST;
-    const mailUser = process.env.EMAIL_USER || process.env.SMTP_USER;
+    const mailUser = process.env.EMAIL_USER || ILMIC_EMAIL;
     const mailPass = process.env.EMAIL_PASS || process.env.SMTP_PASS;
-    const mailPort = process.env.EMAIL_PORT || process.env.SMTP_PORT || 465;
-    const adminEmail = process.env.ADMIN_EMAIL || mailUser; // fallback to sender
+    const adminEmail = getNotificationEmail();
 
-    if (mailHost && mailUser && mailPass) {
+    if (mailPass) {
       try {
-        const transporter = nodemailer.createTransport({
-          host: mailHost,
-          port: parseInt(mailPort),
-          secure: parseInt(mailPort) === 465,
-          auth: {
-            user: mailUser,
-            pass: mailPass,
-          },
-        });
+        const transporter = nodemailer.createTransport(getSmtpConfig());
 
         const htmlBody = `
           <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden">
@@ -69,18 +65,19 @@ const createEnquiry = async (req, res) => {
 
         // 1. Notify admin
         await transporter.sendMail({
-          from: `"ILMIC Health Care Enquiries" <${mailUser}>`,
+          from: buildFromAddress("ILMIC Health Care Enquiries"),
           to: adminEmail,
-          subject: `🔔 New Enquiry from ${name} – ${productName || "General"}`,
+          replyTo: email,
+          subject: `New Enquiry from ${name} - ${productName || "General"}`,
           html: htmlBody,
-          text: `New Enquiry\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nCompany: ${companyName || 'N/A'}\nProduct: ${productName || 'General Enquiry'}\nMessage: ${message}`,
+          text: `New Enquiry\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone}\nCompany: ${companyName || "N/A"}\nProduct: ${productName || "General Enquiry"}\nMessage: ${message}`,
         });
 
-        // 2. Send confirmation to customer
         await transporter.sendMail({
-          from: `"ILMIC Health Care" <${mailUser}>`,
+          from: buildFromAddress("ILMIC Health Care"),
           to: email,
-          subject: `We received your enquiry – ILMIC Health Care`,
+          replyTo: ILMIC_EMAIL,
+          subject: "We received your enquiry - ILMIC Health Care",
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;border:1px solid #e5e7eb;border-radius:10px;overflow:hidden">
               <div style="background:#0F4C81;padding:24px;text-align:center">
@@ -88,13 +85,14 @@ const createEnquiry = async (req, res) => {
               </div>
               <div style="padding:24px;background:#f9fafb">
                 <p style="color:#374151">We have received your enquiry regarding <strong>${productName || "our products"}</strong> and our team will get back to you within <strong>24 hours</strong>.</p>
-                <p style="color:#374151">📞 You can also reach us at: <a href="tel:+9188102 72080" style="color:#0F4C81;font-weight:bold">+91 88102 72080</a></p>
+                <p style="color:#374151">You can also reach us at <a href="tel:+918810272080" style="color:#0F4C81;font-weight:bold">+91 88102 72080</a> or <a href="mailto:${ILMIC_EMAIL}" style="color:#0F4C81;font-weight:bold">${ILMIC_EMAIL}</a>.</p>
               </div>
               <div style="padding:16px 24px;background:#0F4C81;text-align:center">
-                <p style="color:#bfdbfe;margin:0;font-size:12px">ILMIC Health Care – Trusted Pharmaceutical Distributor</p>
+                <p style="color:#bfdbfe;margin:0;font-size:12px">ILMIC Health Care - Trusted Pharmaceutical Exporter</p>
               </div>
             </div>
           `,
+          text: `Thank you, ${name}!\n\nWe have received your enquiry regarding ${productName || "our products"} and our team will get back to you within 24 hours.\n\nContact: +91 88102 72080 | ${ILMIC_EMAIL}`,
         });
 
       } catch (emailErr) {
