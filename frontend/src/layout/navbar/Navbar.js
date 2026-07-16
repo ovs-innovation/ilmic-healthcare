@@ -15,6 +15,7 @@ import {
 import dynamic from "next/dynamic";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
 import { ILMIC_LOGO, ilmicCategories } from "@utils/ilmicDefaults";
+import { DesktopMegaMenu, MobileMegaMenu } from "./ServicesMegaMenu";
 
 const servicesList = [
   { name: "Medical Tourism", icon: "✈️", slug: "medical-tourism" },
@@ -162,36 +163,22 @@ const Navbar = () => {
                 )}
               </div>
 
+              {/* SERVICES — Mega Menu */}
               <div className="relative" ref={servicesDropdownRef}>
                 <button
                   type="button"
                   onClick={() => setServicesOpen((o) => !o)}
                   className={`flex items-center gap-0.5 ${navLinkClass(servicesActive)}`}
+                  aria-expanded={servicesOpen}
+                  aria-haspopup="true"
                 >
                   Services
                   <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
                 </button>
-                {servicesOpen && (
-                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl border border-[#e2edf5] shadow-xl py-1.5 z-50">
-                    <Link href="/services" className="block px-4 py-2 text-sm font-semibold hover:bg-[#f0f7fc] text-[#1a3a52]" onClick={() => setServicesOpen(false)}>All Services</Link>
-                    {servicesList.map((service) => {
-                      const serviceHref = `/services/${service.slug}`;
-                      const isCurrentService = router.asPath === serviceHref || router.pathname === `/services/${service.slug}`;
-                      return (
-                        <Link
-                          key={service.slug}
-                          href={serviceHref}
-                          className={`block px-4 py-2 text-sm hover:bg-[#f0f7fc] ${
-                            isCurrentService ? "text-ilmic-blue font-semibold bg-[#f0f7fc]" : "text-[#5a7394]"
-                          }`}
-                          onClick={() => setServicesOpen(false)}
-                        >
-                          {service.icon} {service.name}
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
+                <DesktopMegaMenu
+                  isOpen={servicesOpen}
+                  onClose={() => setServicesOpen(false)}
+                />
               </div>
 
               {navLinks.map((item) => (
@@ -290,16 +277,7 @@ const Navbar = () => {
               ))}
 
               <Link href="/services" onClick={closeMobileMenu} className="llmic-mobile-menu__link">Services</Link>
-              {servicesList.map((service) => (
-                <Link
-                  key={service.slug}
-                  href={`/services/${service.slug}`}
-                  onClick={closeMobileMenu}
-                  className="llmic-mobile-menu__link !text-sm !font-medium !text-ilmic-muted"
-                >
-                  {service.icon} {service.name}
-                </Link>
-              ))}
+              <MobileMegaMenu onClose={closeMobileMenu} />
 
               {navLinks.map((item) => (
                 <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="llmic-mobile-menu__link">{item.name}</Link>
