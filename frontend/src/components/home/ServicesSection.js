@@ -136,7 +136,7 @@ const ServicesSection = () => {
                 {activeService && products.length > SERVICE_ROW_LIMIT && !loading && (
                     <div className="flex justify-center mt-8">
                         <Link
-                            href={`/service/${activeService.slug}`}
+                            href={`/services/${activeService.slug}`}
                             className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white text-white hover:text-[#0b1d3d] border border-white/20 rounded-full font-black text-xs uppercase tracking-widest transition-all"
                         >
                             View All {showingTranslateValue(activeService?.name)} Products

@@ -94,11 +94,7 @@ const Footer = () => {
                 <span className="text-ilmic-muted">{footer.hours}</span>
               </div>
             </div>
-            {footer.whatsappUrl && (
-              <a href={footer.whatsappUrl} target="_blank" rel="noopener noreferrer" className="inline-flex mt-4 w-10 h-10 rounded-full bg-ilmic-blue items-center justify-center hover:bg-ilmic-blue-dark transition-colors shadow-sm" aria-label="WhatsApp">
-                <FaWhatsapp className="w-5 h-5 text-white" />
-              </a>
-            )}
+
           </div>
         </div>
 

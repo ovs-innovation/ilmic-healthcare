@@ -7,7 +7,7 @@ const FeatureCategory = () => {
   const services = tourismServicesFallback.slice(0, 4).map((s) => ({
     name: s.name?.en || s.name,
     icon: s.icon || "🏥",
-    slug: `/service/${s.slug}`,
+    slug: `/services/${s.slug}`,
   }));
 
   const iconBgColors = ["bg-ilmic-blue-light", "bg-blue-50", "bg-ilmic-blue-light", "bg-purple-50"];

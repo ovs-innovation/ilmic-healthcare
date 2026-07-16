@@ -23,7 +23,7 @@ const TourismServices = ({ services, title = "Our Medical Tourism Services" }) =
           {services.map((service) => (
             <Link
               key={service.slug || service._id}
-              href={`/service/${service.slug}`}
+              href={`/services/${service.slug}`}
               className="llmic-service-card group"
             >
               <div className="llmic-service-card__icon group-hover:scale-110 transition-transform">

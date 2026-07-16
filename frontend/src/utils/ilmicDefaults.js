@@ -20,7 +20,7 @@ const ilmicDefaults = {
         titleHighlight: "Exporter & Supplier",
         titleLine2: "Since 2021.",
         subtitle:
-          "Oncology, General Pharma & Surgical products — exporting to Dubai, Africa, Bangladesh, CIS countries and beyond.",
+          "Oncology, General Pharma & Surgical products — exporting to Dubai, Africa, CIS countries and beyond.",
         cities: "Delhi (India) · Luanda (Angola) · Global Export Markets",
         bgImage:
           "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85",
@@ -184,7 +184,7 @@ export const tourismServicesFallback = [
   {
     slug: "pharmaceutical-export",
     name: { en: "Pharmaceutical Export" },
-    description: { en: "Export of oncology and general pharma medicines to Dubai, Africa, Bangladesh, CIS countries." },
+    description: { en: "Export of oncology and general pharma medicines to Dubai, Africa, CIS countries." },
     icon: "🌍",
     group: "Export",
   },
@@ -199,7 +199,7 @@ export const tourismServicesFallback = [
 
 export const whyChooseUs = [
   { icon: "🔬", title: "Oncology Specialist", desc: "Strong portfolio in anti-cancer medicines — Abiraterone, Paclitaxel, and more in our own brands." },
-  { icon: "🌍", title: "Global Export Network", desc: "Exporting to Dubai, Angola, Cameroon, Namibia, Ethiopia, Bangladesh, Uzbekistan & CIS countries." },
+  { icon: "🌍", title: "Global Export Network", desc: "Exporting to Dubai, Angola, Cameroon, Namibia, Ethiopia, Uzbekistan & CIS countries." },
   { icon: "🏥", title: "50+ Hospitals Managed", desc: "Hospital management services across international markets with effective on-ground support." },
   { icon: "🤝", title: "Since 2021", desc: "Incorporated under Companies Act 2013. Focused exclusively on health sector from day one." },
 ];
@@ -218,7 +218,7 @@ export const companyProfile = {
   registrar: "Registrar of Companies, Delhi & NCR",
   md: "Mr. Maroof Reza",
   offices: ["New Delhi, India", "Luanda, Republic of Angola"],
-  markets: ["Dubai", "Angola", "Cameroon", "Namibia", "Ethiopia", "Bangladesh", "Uzbekistan", "CIS Countries"],
+  markets: ["Dubai", "Angola", "Cameroon", "Namibia", "Ethiopia", "Uzbekistan", "CIS Countries"],
 };
 
 export default ilmicDefaults;

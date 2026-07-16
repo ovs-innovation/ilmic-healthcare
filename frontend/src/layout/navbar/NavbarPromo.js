@@ -9,7 +9,7 @@ const productCategories = ilmicCategories.map((c) => ({
 
 const services = tourismServicesFallback.slice(0, 6).map((s) => ({
   label: s.name?.en || s.name,
-  href: `/service/${s.slug}`,
+  href: `/services/${s.slug}`,
 }));
 
 const NavbarPromo = () => {

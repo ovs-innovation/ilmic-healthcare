@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { 
-  FiChevronRight, 
-  FiShield, 
-  FiTarget, 
-  FiEye, 
-  FiGlobe, 
-  FiAward, 
-  FiUsers, 
-  FiHeart, 
-  FiMaximize2, 
-  FiZoomIn, 
-  FiZoomOut, 
-  FiX, 
-  FiCompass, 
-  FiTrendingUp, 
-  FiMail, 
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
+import {
+  FiChevronRight,
+  FiShield,
+  FiTarget,
+  FiEye,
+  FiGlobe,
+  FiAward,
+  FiUsers,
+  FiHeart,
+  FiMaximize2,
+  FiZoomIn,
+  FiZoomOut,
+  FiX,
+  FiCompass,
+  FiTrendingUp,
+  FiMail,
   FiExternalLink,
   FiBookOpen,
   FiBriefcase
@@ -67,6 +67,16 @@ const Counter = ({ value }) => {
 const AboutUs = () => {
   const [selectedCert, setSelectedCert] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(1);
+  const timelineRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: timelineRef,
+    offset: ["start center", "end center"]
+  });
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -101,7 +111,6 @@ const AboutUs = () => {
     { title: "Hospital Management", icon: FiUsers, desc: "Consulting and managing clinical operations, medical infrastructure, and logistics for international hospitals." },
     { title: "Medical Tourism", icon: FiCompass, desc: "Guiding global patients to accredited Indian hospitals for low-cost, high-quality operations and treatment packages." },
     { title: "International Conferences", icon: FiAward, desc: "Organizing global medical training, doctor roundtables, and clinical skill development events." },
-    { title: "Critical Surgery Support", icon: FiTarget, desc: "Arranging specialized board-certified Indian doctors on-call to perform complex surgeries abroad." },
     { title: "Hospital Accessories Supply", icon: FiBriefcase, desc: "Sourcing premium surgical tools, disposable hospital wear, clinical machinery, and critical care units." }
   ];
 
@@ -142,9 +151,9 @@ const AboutUs = () => {
     >
       {/* ── SECTION 1: HERO BANNER ── */}
       <section className="relative min-h-[70vh] flex items-center overflow-hidden bg-[#0F3A66]">
-        <div 
-          className="absolute inset-0 bg-cover bg-center opacity-25" 
-          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80)" }} 
+        <div
+          className="absolute inset-0 bg-cover bg-center opacity-25"
+          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80)" }}
           aria-hidden
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0E2E52]/95 via-[#0F3A66]/85 to-[#1A5288]/75" aria-hidden />
@@ -181,24 +190,24 @@ const AboutUs = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column: Image */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: -40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
               transition={{ duration: 0.8 }}
               className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 aspect-[4/3] w-full group"
             >
-              <Image 
-                src="/img1.jpeg" 
-                alt="ILMIC Team Award Ceremony" 
-                fill 
-                className="object-cover group-hover:scale-[1.03] transition-transform duration-500" 
+              <Image
+                src="/img1.jpeg"
+                alt="ILMIC Team Award Ceremony"
+                fill
+                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
             </motion.div>
 
             {/* Right Column: Content */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, x: 40 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true, margin: "-100px" }}
@@ -288,9 +297,14 @@ const AboutUs = () => {
             <p className="text-slate-500 text-sm">How we evolved from a startup to a trusted global medical network.</p>
           </div>
 
-          <div className="relative max-w-5xl mx-auto pl-10 md:pl-0">
+          <div className="relative max-w-5xl mx-auto pl-10 md:pl-0" ref={timelineRef}>
             {/* Central Line */}
             <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 -translate-x-1/2" aria-hidden />
+            <motion.div 
+              style={{ scaleY, originY: 0 }}
+              className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-ilmic-blue -translate-x-1/2" 
+              aria-hidden 
+            />
 
             <div className="space-y-12">
               {timelineEvents.map((ev, i) => {
@@ -298,16 +312,31 @@ const AboutUs = () => {
                 return (
                   <div key={i} className="relative flex flex-col md:flex-row items-stretch md:justify-between w-full">
                     {/* Timeline dot */}
-                    <div className="absolute left-4 md:left-1/2 -translate-x-1/2 top-6 z-10 w-4 h-4 rounded-full bg-slate-900 border-4 border-slate-50 shadow-md ring-2 ring-ilmic-blue" />
-                    
+                    <motion.div 
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 200, 
+                        damping: 10,
+                        duration: 0.6 
+                      }}
+                      className="absolute left-4 md:left-1/2 -translate-x-1/2 top-6 z-10 w-4 h-4 rounded-full bg-slate-900 border-4 border-slate-50 shadow-md ring-2 ring-ilmic-blue" 
+                    />
+
                     {/* Left Panel */}
                     <div className={`w-full md:w-[45%] flex justify-end text-right ${isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
-                      <motion.div 
-                        initial={{ opacity: 0, x: -30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center"
+                      <motion.div
+                        initial={{ opacity: 0, y: 60, scale: 0.96 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        whileHover={{
+                          y: -5,
+                          boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
+                        }}
+                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
                       >
                         <span className="text-[#ED1C24] text-xs font-black uppercase tracking-wider">{ev.year}</span>
                         <h4 className="font-extrabold text-slate-800 text-base mt-1 mb-2">{ev.title}</h4>
@@ -316,18 +345,34 @@ const AboutUs = () => {
                     </div>
 
                     {/* Center Year Badge (desktop only) */}
-                    <div className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-ilmic-blue text-white font-black text-xs shadow-md z-10 absolute left-1/2 -translate-x-1/2 top-2">
+                    <motion.div 
+                      initial={{ scale: 0, opacity: 0 }}
+                      whileInView={{ scale: 1, opacity: 1 }}
+                      viewport={{ once: true, amount: 0.2 }}
+                      transition={{ 
+                        type: "spring", 
+                        stiffness: 150, 
+                        damping: 10,
+                        duration: 0.8 
+                      }}
+                      className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-ilmic-blue text-white font-black text-xs shadow-md z-10 absolute left-1/2 -translate-x-1/2 top-2"
+                      style={{ boxShadow: "0 0 15px rgba(11, 94, 215, 0.4)" }}
+                    >
                       {ev.year}
-                    </div>
+                    </motion.div>
 
                     {/* Right Panel */}
                     <div className={`w-full md:w-[45%] flex justify-start text-left ${!isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
-                      <motion.div 
-                        initial={{ opacity: 0, x: 30 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.6 }}
-                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center"
+                      <motion.div
+                        initial={{ opacity: 0, y: 60, scale: 0.96 }}
+                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                        viewport={{ once: true, amount: 0.2 }}
+                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        whileHover={{
+                          y: -5,
+                          boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
+                        }}
+                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
                       >
                         <span className="text-[#ED1C24] text-xs font-black uppercase tracking-wider">{ev.year}</span>
                         <h4 className="font-extrabold text-slate-800 text-base mt-1 mb-2">{ev.title}</h4>
@@ -354,11 +399,11 @@ const AboutUs = () => {
               transition={{ duration: 0.7 }}
               className="lg:col-span-5 relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-slate-100 group"
             >
-              <Image 
-                src="/about-pharma.png" 
-                alt="WHO-GMP Laboratory Testing" 
-                fill 
-                className="object-cover group-hover:scale-[1.03] transition-transform duration-500" 
+              <Image
+                src="/about-pharma.png"
+                alt="WHO-GMP Laboratory Testing"
+                fill
+                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
               />
               <div className="absolute inset-0 bg-[#0F3A66]/10 mix-blend-overlay" />
             </motion.div>
@@ -408,11 +453,11 @@ const AboutUs = () => {
                   <p className="font-semibold text-slate-900 mb-3">We currently serve clients across:</p>
                   <div className="flex flex-wrap gap-2">
                     {[
-                      "Dubai", "Angola", "Cameroon", "Namibia", "Ethiopia", 
-                      "Bangladesh", "Uzbekistan", "CIS Countries"
+                      "Dubai", "Angola", "Cameroon", "Namibia", "Ethiopia",
+                      "Uzbekistan", "CIS Countries"
                     ].map((market) => (
-                      <span 
-                        key={market} 
+                      <span
+                        key={market}
                         className="px-3.5 py-1.5 rounded-full text-xs font-extrabold tracking-wide bg-ilmic-blue-soft border border-ilmic-border text-ilmic-blue-dark"
                       >
                         {market}
@@ -435,7 +480,7 @@ const AboutUs = () => {
             <p className="text-slate-500 text-sm">Providing complete, reliable healthcare and surgical operations internationally.</p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 items-stretch">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[repeat(24,minmax(0,1fr))] gap-6 items-stretch">
             {services.map((item, i) => (
               <motion.div
                 key={i}
@@ -443,7 +488,12 @@ const AboutUs = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
-                className="bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-lg hover:border-ilmic-blue/30 hover:-translate-y-1 transition-all duration-300 flex flex-col group h-full"
+                className={`bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-lg hover:border-ilmic-blue/30 hover:-translate-y-1 transition-all duration-300 flex flex-col group h-full ${i < 4
+                  ? "lg:col-span-6"
+                  : i === 4
+                    ? "lg:col-span-6 lg:col-start-4"
+                    : "lg:col-span-6"
+                  }`}
               >
                 <div className="w-12 h-12 rounded-xl bg-ilmic-blue-light text-ilmic-blue flex items-center justify-center mb-5 group-hover:scale-110 transition-transform duration-300 flex-shrink-0">
                   <item.icon className="w-6 h-6" />
@@ -568,15 +618,15 @@ const AboutUs = () => {
                 transition={{ duration: 0.6 }}
                 className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow group flex flex-col h-full"
               >
-                <div 
+                <div
                   onClick={() => handleOpenCert(cert)}
                   className="relative aspect-[4/3] bg-slate-50 rounded-xl overflow-hidden border border-slate-200 cursor-pointer mb-5 group-hover:border-ilmic-blue/40 transition-colors flex-shrink-0"
                 >
-                  <Image 
-                    src={cert.image} 
-                    alt={cert.title} 
-                    fill 
-                    className="object-contain p-4 group-hover:scale-[1.02] transition-transform duration-500" 
+                  <Image
+                    src={cert.image}
+                    alt={cert.title}
+                    fill
+                    className="object-contain p-4 group-hover:scale-[1.02] transition-transform duration-500"
                   />
                   <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/5 transition-colors flex items-center justify-center">
                     <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform scale-90 group-hover:scale-100 duration-300">
@@ -638,7 +688,6 @@ const AboutUs = () => {
                 { name: "Cameroon", role: "Supply Route" },
                 { name: "Namibia", role: "Supply Route" },
                 { name: "Ethiopia", role: "Supply Route" },
-                { name: "Bangladesh", role: "Supply Route" },
                 { name: "Uzbekistan", role: "Supply Route" },
                 { name: "CIS Countries", role: "Regional Reach" }
               ].map((c) => (
@@ -757,7 +806,7 @@ const AboutUs = () => {
       {/* ── SECTION 12: CALL TO ACTION ── */}
       <section className="llmic-section bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
@@ -786,14 +835,14 @@ const AboutUs = () => {
       {/* ── CERTIFICATE LIGHTBOX MODAL ── */}
       <AnimatePresence>
         {selectedCert && (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setSelectedCert(null)}
             className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md flex items-center justify-center p-4 overflow-hidden cursor-zoom-out"
           >
-            <div 
+            <div
               onClick={(e) => e.stopPropagation()}
               className="bg-white rounded-3xl shadow-2xl w-full max-w-4xl h-[90vh] flex flex-col relative overflow-hidden cursor-default"
             >
@@ -808,21 +857,21 @@ const AboutUs = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <button 
+                  <button
                     onClick={handleZoomOut}
                     className="w-9 h-9 rounded-full bg-white hover:bg-slate-100 flex items-center justify-center text-slate-500 shadow-sm border border-slate-200 transition-colors"
                     title="Zoom Out"
                   >
                     <FiZoomOut className="w-4 h-4" />
                   </button>
-                  <button 
+                  <button
                     onClick={handleZoomIn}
                     className="w-9 h-9 rounded-full bg-white hover:bg-slate-100 flex items-center justify-center text-slate-500 shadow-sm border border-slate-200 transition-colors"
                     title="Zoom In"
                   >
                     <FiZoomIn className="w-4 h-4" />
                   </button>
-                  <button 
+                  <button
                     onClick={() => setSelectedCert(null)}
                     className="w-9 h-9 rounded-full bg-red-50 hover:bg-red-100 flex items-center justify-center text-red-600 shadow-sm border border-red-100 transition-colors ml-2"
                     title="Close"
@@ -834,13 +883,13 @@ const AboutUs = () => {
 
               {/* Modal Body / Image Viewer */}
               <div className="flex-grow overflow-auto bg-slate-100 flex items-center justify-center p-6 relative">
-                <div 
+                <div
                   className="relative transition-transform duration-200 origin-center"
                   style={{ transform: `scale(${zoomLevel})`, minWidth: "300px", minHeight: "400px" }}
                 >
-                  <img 
-                    src={selectedCert.image} 
-                    alt={selectedCert.title} 
+                  <img
+                    src={selectedCert.image}
+                    alt={selectedCert.title}
                     className="max-w-full max-h-[70vh] object-contain shadow-lg bg-white rounded-lg"
                   />
                 </div>

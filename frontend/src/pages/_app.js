@@ -1,3 +1,5 @@
+import "swiper/css";
+import "swiper/css/autoplay";
 import "@styles/custom.css";
 import "@styles/medical-tourism.css";
 import { CartProvider } from "react-use-cart";

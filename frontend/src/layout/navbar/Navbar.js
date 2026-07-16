@@ -16,13 +16,23 @@ import dynamic from "next/dynamic";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
 import { ILMIC_LOGO, ilmicCategories } from "@utils/ilmicDefaults";
 
+const servicesList = [
+  { name: "Medical Tourism", icon: "✈️", slug: "medical-tourism" },
+  { name: "Hospital Management", icon: "🏥", slug: "hospital-management" },
+  { name: "Pharmaceutical Export", icon: "🌍", slug: "pharmaceutical-export" },
+  { name: "Hospital Accessories Supply", icon: "🩺", slug: "hospital-accessories-supply" },
+  { name: "International Medical Conferences", icon: "🎓", slug: "international-medical-conferences" },
+];
+
 const Navbar = () => {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
   const [genericEnquiryOpen, setGenericEnquiryOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const dropdownRef = useRef(null);
+  const productsDropdownRef = useRef(null);
+  const servicesDropdownRef = useRef(null);
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
@@ -34,7 +44,11 @@ const Navbar = () => {
     closeMobileMenu();
   };
 
-  useEffect(() => { setMobileMenuOpen(false); setProductsOpen(false); }, [router.asPath]);
+  useEffect(() => {
+    setMobileMenuOpen(false);
+    setProductsOpen(false);
+    setServicesOpen(false);
+  }, [router.asPath]);
 
   useEffect(() => {
     if (typeof document === "undefined") return undefined;
@@ -44,14 +58,18 @@ const Navbar = () => {
 
   useEffect(() => {
     const onClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) setProductsOpen(false);
+      if (productsDropdownRef.current && !productsDropdownRef.current.contains(e.target)) {
+        setProductsOpen(false);
+      }
+      if (servicesDropdownRef.current && !servicesDropdownRef.current.contains(e.target)) {
+        setServicesOpen(false);
+      }
     };
     document.addEventListener("mousedown", onClickOutside);
     return () => document.removeEventListener("mousedown", onClickOutside);
   }, []);
 
   const navLinks = [
-    { name: "Services", href: "/services" },
     { name: "About Us", href: "/about-us" },
     { name: "Contact Us", href: "/contact-us" },
   ];
@@ -71,6 +89,10 @@ const Navbar = () => {
     router.pathname.startsWith("/products") ||
     router.pathname.startsWith("/product") ||
     router.pathname.startsWith("/category");
+
+  const servicesActive =
+    router.pathname.startsWith("/services") ||
+    router.pathname.startsWith("/service");
 
   const navLinkClass = (active) =>
     `px-3 py-2 text-[13px] font-bold transition-colors relative ${
@@ -109,7 +131,7 @@ const Navbar = () => {
           <div className="hidden lg:grid lg:grid-cols-[200px_1fr_auto] lg:items-center lg:gap-4 h-[72px]">
             {/* Logo */}
             <Link href="/" className="flex items-center flex-shrink-0">
-              <img src={ILMIC_LOGO} alt="ILMIC Health Care" className="h-[52px] w-auto max-w-[180px] object-contain" />
+              <img src={ILMIC_LOGO} alt="ILMIC Health Care" className="h-[60px] w-auto max-w-[200px] object-contain" />
             </Link>
 
             {/* Center nav */}
@@ -119,7 +141,7 @@ const Navbar = () => {
                 {isActive("/") && <span className="absolute -bottom-[13px] left-3 right-3 h-[2px] bg-ilmic-blue rounded-full" />}
               </Link>
 
-              <div className="relative" ref={dropdownRef}>
+              <div className="relative" ref={productsDropdownRef}>
                 <button
                   type="button"
                   onClick={() => setProductsOpen((o) => !o)}
@@ -136,6 +158,38 @@ const Navbar = () => {
                         {cat.icon} {cat.name}
                       </Link>
                     ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="relative" ref={servicesDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => setServicesOpen((o) => !o)}
+                  className={`flex items-center gap-0.5 ${navLinkClass(servicesActive)}`}
+                >
+                  Services
+                  <FiChevronDown className={`w-3.5 h-3.5 transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
+                </button>
+                {servicesOpen && (
+                  <div className="absolute top-full left-0 mt-2 w-64 bg-white rounded-xl border border-[#e2edf5] shadow-xl py-1.5 z-50">
+                    <Link href="/services" className="block px-4 py-2 text-sm font-semibold hover:bg-[#f0f7fc] text-[#1a3a52]" onClick={() => setServicesOpen(false)}>All Services</Link>
+                    {servicesList.map((service) => {
+                      const serviceHref = `/services/${service.slug}`;
+                      const isCurrentService = router.asPath === serviceHref || router.pathname === `/services/${service.slug}`;
+                      return (
+                        <Link
+                          key={service.slug}
+                          href={serviceHref}
+                          className={`block px-4 py-2 text-sm hover:bg-[#f0f7fc] ${
+                            isCurrentService ? "text-ilmic-blue font-semibold bg-[#f0f7fc]" : "text-[#5a7394]"
+                          }`}
+                          onClick={() => setServicesOpen(false)}
+                        >
+                          {service.icon} {service.name}
+                        </Link>
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -188,7 +242,7 @@ const Navbar = () => {
 
           {/* Mobile row */}
           <div className="flex lg:hidden items-center justify-between h-16 gap-2">
-            <Link href="/"><img src={ILMIC_LOGO} alt="ILMIC" className="h-10 w-auto max-w-[130px] object-contain" /></Link>
+            <Link href="/"><img src={ILMIC_LOGO} alt="ILMIC" className="h-12 w-auto max-w-[150px] object-contain" /></Link>
             <div className="flex items-center gap-2">
               <button type="button" onClick={() => setGenericEnquiryOpen(true)} className="text-[11px] font-bold px-3 py-2 rounded-lg bg-ilmic-blue text-white">Enquiry</button>
               <button type="button" onClick={() => setMobileMenuOpen((o) => !o)} className="p-2 rounded-lg border border-[#e2edf5]" aria-label="Menu">
@@ -204,7 +258,7 @@ const Navbar = () => {
           <button type="button" className="llmic-mobile-menu__overlay" onClick={closeMobileMenu} aria-label="Close" />
           <div className="llmic-mobile-menu__panel">
             <div className="llmic-mobile-menu__header">
-              <Link href="/" onClick={closeMobileMenu}><img src={ILMIC_LOGO} alt="ILMIC" className="h-10 w-auto" /></Link>
+              <Link href="/" onClick={closeMobileMenu}><img src={ILMIC_LOGO} alt="ILMIC" className="h-12 w-auto" /></Link>
               <button type="button" className="llmic-mobile-menu__close" onClick={closeMobileMenu}><FiX className="w-6 h-6" /></button>
             </div>
             <nav className="llmic-mobile-menu__nav">
@@ -234,6 +288,19 @@ const Navbar = () => {
                   {cat.icon} {cat.name}
                 </Link>
               ))}
+
+              <Link href="/services" onClick={closeMobileMenu} className="llmic-mobile-menu__link">Services</Link>
+              {servicesList.map((service) => (
+                <Link
+                  key={service.slug}
+                  href={`/services/${service.slug}`}
+                  onClick={closeMobileMenu}
+                  className="llmic-mobile-menu__link !text-sm !font-medium !text-ilmic-muted"
+                >
+                  {service.icon} {service.name}
+                </Link>
+              ))}
+
               {navLinks.map((item) => (
                 <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="llmic-mobile-menu__link">{item.name}</Link>
               ))}
