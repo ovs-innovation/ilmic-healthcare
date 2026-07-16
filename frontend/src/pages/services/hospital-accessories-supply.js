@@ -645,8 +645,7 @@ const HospitalAccessoriesSupply = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 max-w-6xl mx-auto">
               {industriesServed.map((ind, index) => (
-                <div key={index} className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center space-y-2 hover:-translate-y-1 transform transition-all shadow-sm">
-                  <span className="text-2xl">🏥</span>
+                <div key={index} className="bg-slate-50 p-6 rounded-2xl border border-slate-200 text-center hover:-translate-y-1 transform transition-all shadow-sm flex flex-col justify-center min-h-[115px] space-y-1.5">
                   <h4 className="font-bold text-ilmic-text text-xs leading-snug">{ind.name}</h4>
                   <p className="text-[10px] text-ilmic-muted font-semibold">{ind.desc}</p>
                 </div>
