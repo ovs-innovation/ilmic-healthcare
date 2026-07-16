@@ -1,6 +1,44 @@
 import Link from "next/link";
 import { FiArrowRight } from "react-icons/fi";
 
+const HOME_SERVICES = [
+  {
+    slug: "medical-tourism",
+    name: "Medical Tourism",
+    description: "Complete medical tourism services for international patients in India.",
+    icon: "✈️",
+    group: "Medical Tourism",
+  },
+  {
+    slug: "hospital-management",
+    name: "Hospital Management",
+    description: "Managing 50+ hospitals abroad with effective on-ground support.",
+    icon: "🏥",
+    group: "Hospital",
+  },
+  {
+    slug: "pharmaceutical-export",
+    name: "Pharmaceutical Export",
+    description: "Export of oncology and general pharma medicines to Dubai, Africa, Bangladesh, CIS, and other international markets.",
+    icon: "🌍",
+    group: "Export",
+  },
+  {
+    slug: "hospital-accessories-supply",
+    name: "Hospital Accessories Supply",
+    description: "Supplier of all types of hospital accessories, surgical instruments, and medical products.",
+    icon: "🔧",
+    group: "Surgical",
+  },
+  {
+    slug: "international-medical-conferences",
+    name: "International Medical Conferences",
+    description: "Conducting international medical conferences, workshops, and professional training programs.",
+    icon: "🎓",
+    group: "Training",
+  },
+];
+
 const TourismServices = ({ services, title = "Our Medical Tourism Services" }) => {
   const getTitle = (obj) => {
     if (!obj) return "";
@@ -19,12 +57,16 @@ const TourismServices = ({ services, title = "Our Medical Tourism Services" }) =
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5">
-          {services.map((service) => (
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-6xl mx-auto">
+          {HOME_SERVICES.map((service, index) => (
             <Link
-              key={service.slug || service._id}
+              key={service.slug}
               href={`/service/${service.slug}`}
-              className="llmic-service-card group !p-4 sm:!p-7"
+              className={`llmic-service-card group !p-4 sm:!p-7 ${
+                index < 4
+                  ? "lg:col-span-2"
+                  : "lg:col-span-2 lg:col-start-2"
+              }`}
             >
               <div className="llmic-service-card__icon group-hover:scale-110 transition-transform !w-10 !h-10 sm:!w-14 sm:!h-14 !text-xl sm:!text-2xl !mb-3 sm:!mb-5">
                 {service.icon || "🏥"}
