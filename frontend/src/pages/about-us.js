@@ -315,7 +315,7 @@ const AboutUs = () => {
                     <motion.div 
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: false, amount: 0.25 }}
+                      viewport={{ once: false, margin: "0px 0px -50% 0px" }}
                       transition={{ 
                         type: "spring", 
                         stiffness: 200, 
@@ -330,7 +330,7 @@ const AboutUs = () => {
                       <motion.div
                         initial={{ opacity: 0, x: -60, scale: 0.95 }}
                         whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        viewport={{ once: false, amount: 0.25 }}
+                        viewport={{ once: false, margin: "0px 0px -50% 0px" }}
                         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                         whileHover={{
                           y: -5,
@@ -348,7 +348,7 @@ const AboutUs = () => {
                     <motion.div 
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: false, amount: 0.25 }}
+                      viewport={{ once: false, margin: "0px 0px -50% 0px" }}
                       transition={{ 
                         type: "spring", 
                         stiffness: 150, 
@@ -366,7 +366,7 @@ const AboutUs = () => {
                       <motion.div
                         initial={{ opacity: 0, x: 60, scale: 0.95 }}
                         whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        viewport={{ once: false, amount: 0.25 }}
+                        viewport={{ once: false, margin: "0px 0px -50% 0px" }}
                         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                         whileHover={{
                           y: -5,
