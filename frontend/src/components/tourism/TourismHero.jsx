@@ -32,6 +32,17 @@ const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
 ];
 
+const BUBBLES = Array.from({ length: 22 }, (_, idx) => {
+  const sizes = [18, 24, 32, 40, 60, 80];
+  const size = sizes[idx % sizes.length];
+  const left = (idx * 4.3 + 5) % 95;
+  const duration = 16 + (idx % 8) * 3;
+  const delay = idx * 0.5;
+  const driftX = (idx % 2 === 0 ? 35 : -35) + (idx % 4) * 6;
+  const hasIcon = idx % 5 === 0 ? 'cross' : idx % 7 === 0 ? 'shield' : null;
+  return { idx, size, left, duration, delay, driftX, hasIcon };
+});
+
 const getHeadline = (slide) => {
   if (slide?.titleLine1 && slide?.titleHighlight) {
     return `${slide.titleLine1} ${slide.titleHighlight}${
@@ -231,6 +242,17 @@ const TourismHero = ({
         .animate-glass-panels {
           animation: glassPanelsFloat 20s ease-in-out infinite alternate;
         }
+        @keyframes bubbleFloat {
+          0% { transform: translateY(115vh) translateX(0); opacity: 0; }
+          10% { opacity: 0.85; }
+          90% { opacity: 0.85; }
+          100% { transform: translateY(-15vh) translateX(var(--bubble-drift-x, 25px)); opacity: 0; }
+        }
+        @keyframes bubbleWobble {
+          0%, 100% { transform: scale(1) rotate(0deg); }
+          33% { transform: scale(1.08, 0.92) rotate(2deg); }
+          66% { transform: scale(0.92, 1.08) rotate(-2deg); }
+        }
         .swiper {
           width: 100%;
           height: 100%;
@@ -342,6 +364,55 @@ const TourismHero = ({
 
       {/* Layer 12: Super subtle paper/noise overlay texture to give depth */}
       <div className="absolute inset-0 hero-noise-texture z-0 pointer-events-none" />
+
+      {/* Layer 13: Floating Glass Bubbles with High Gloss Glares (z-index 4 - in front) */}
+      <div className="absolute inset-0 z-[4] pointer-events-none overflow-hidden">
+        {BUBBLES.map((b) => (
+          <div
+            key={b.idx}
+            className="absolute pointer-events-none"
+            style={{
+              width: `${b.size}px`,
+              height: `${b.size}px`,
+              left: `${b.left}%`,
+              bottom: '-10%',
+              animation: `bubbleFloat ${b.duration}s linear infinite`,
+              animationDelay: `${b.delay}s`,
+              '--bubble-drift-x': `${b.driftX}px`,
+              opacity: 0,
+            }}
+          >
+            <div 
+              className="relative w-full h-full rounded-full border border-white/60 backdrop-blur-[12px] flex items-center justify-center"
+              style={{
+                background: "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(255, 255, 255, 0) 80%)",
+                boxShadow: "inset 0 0 15px rgba(255, 255, 255, 0.7), inset 0 4px 8px rgba(255, 255, 255, 0.35), 0 4px 20px rgba(255, 255, 255, 0.15)",
+                animation: "bubbleWobble 4s ease-in-out infinite",
+              }}
+            >
+              {/* Highlight Glare - High Opacity Crescent top-left reflection */}
+              <div className="absolute top-[10%] left-[10%] w-[28%] h-[28%] rounded-full bg-gradient-to-br from-white to-white/0 pointer-events-none" />
+              
+              {/* Highlight Glare - Specular dot glare */}
+              <div className="absolute top-[18%] left-[18%] w-[12%] h-[12%] rounded-full bg-white opacity-[0.95] pointer-events-none" />
+
+              {/* Highlight Glare - Subtle bottom reflection */}
+              <div className="absolute bottom-[10%] right-[10%] w-[20%] h-[20%] rounded-full bg-white/30 blur-[0.5px] pointer-events-none" />
+
+              {b.hasIcon === 'cross' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF7AB8" strokeWidth="3.5" className="w-[35%] h-[35%] opacity-80 relative z-10">
+                  <path d="M19 12H5M12 19V5" />
+                </svg>
+              )}
+              {b.hasIcon === 'shield' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" strokeWidth="2.5" className="w-[35%] h-[35%] opacity-80 relative z-10">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
 
       <div className="max-w-[1320px] mx-auto px-4 sm:px-6 relative z-10 pt-8 sm:pt-10 pb-24 sm:pb-28 lg:pt-12 lg:pb-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center">
