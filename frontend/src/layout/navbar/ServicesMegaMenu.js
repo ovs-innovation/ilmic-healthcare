@@ -125,14 +125,10 @@ const SERVICES = [
 
 // ─── Right Panel ──────────────────────────────────────────────────────────────
 
-function MegaMenuRightPanel({ service, onClose }) {
+function MegaMenuRightPanel({ service, onClose, onOpenConsultation }) {
   const [visible, setVisible] = useState(false);
   const [imgLoaded, setImgLoaded] = useState(false);
-  const prevId = useRef(null);
-
   useEffect(() => {
-    if (prevId.current === service.id) return;
-    prevId.current = service.id;
     setVisible(false);
     setImgLoaded(false);
     const t = setTimeout(() => setVisible(true), 40);
@@ -172,13 +168,16 @@ function MegaMenuRightPanel({ service, onClose }) {
             {service.primaryCTA.label}
             <FiArrowRight size={14} className="ilmic-mega-right__btn-arrow" />
           </Link>
-          <Link
-            href={service.secondaryCTA.href}
-            onClick={onClose}
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              onOpenConsultation(service.id);
+            }}
             className="ilmic-mega-right__btn-secondary"
           >
             {service.secondaryCTA.label}
-          </Link>
+          </button>
         </div>
       </div>
 
@@ -203,7 +202,7 @@ function MegaMenuRightPanel({ service, onClose }) {
 
 // ─── Desktop Mega Menu ────────────────────────────────────────────────────────
 
-export function DesktopMegaMenu({ isOpen, onClose }) {
+export function DesktopMegaMenu({ isOpen, onClose, onOpenConsultation }) {
   const router = useRouter();
   const [activeId, setActiveId] = useState(SERVICES[0].id);
   const [menuTop, setMenuTop] = useState(82);
@@ -297,14 +296,14 @@ export function DesktopMegaMenu({ isOpen, onClose }) {
       </div>
 
       {/* RIGHT PANEL */}
-      <MegaMenuRightPanel service={activeService} onClose={onClose} />
+      <MegaMenuRightPanel service={activeService} onClose={onClose} onOpenConsultation={onOpenConsultation} />
     </div>
   );
 }
 
 // ─── Mobile Accordion ─────────────────────────────────────────────────────────
 
-export function MobileMegaMenu({ onClose }) {
+export function MobileMegaMenu({ onClose, onOpenConsultation }) {
   const [expandedId, setExpandedId] = useState(null);
 
   return (
@@ -337,14 +336,26 @@ export function MobileMegaMenu({ onClose }) {
             {isExpanded && (
               <div className="ilmic-mega-mobile__content">
                 <p className="ilmic-mega-mobile__desc">{service.description}</p>
-                <Link
-                  href={service.primaryCTA.href}
-                  onClick={onClose}
-                  className="ilmic-mega-mobile__cta"
-                >
-                  {service.primaryCTA.label}
-                  <FiArrowRight size={12} />
-                </Link>
+                <div className="flex flex-col gap-2 mt-3 w-full">
+                  <Link
+                    href={service.primaryCTA.href}
+                    onClick={onClose}
+                    className="ilmic-mega-mobile__cta"
+                  >
+                    {service.primaryCTA.label}
+                    <FiArrowRight size={12} />
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onOpenConsultation(service.id);
+                    }}
+                    className="text-xs font-bold text-ilmic-blue px-3 py-2 border border-ilmic-blue/30 rounded-lg hover:bg-ilmic-blue-soft transition-colors text-center w-full"
+                  >
+                    {service.secondaryCTA.label}
+                  </button>
+                </div>
               </div>
             )}
           </div>

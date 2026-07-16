@@ -16,6 +16,7 @@ import dynamic from "next/dynamic";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
 import { ILMIC_LOGO, ilmicCategories } from "@utils/ilmicDefaults";
 import { DesktopMegaMenu, MobileMegaMenu } from "./ServicesMegaMenu";
+import ConsultationModal from "@components/tourism/ConsultationModal";
 
 const servicesList = [
   { name: "Medical Tourism", icon: "✈️", slug: "medical-tourism" },
@@ -31,9 +32,18 @@ const Navbar = () => {
   const [productsOpen, setProductsOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [genericEnquiryOpen, setGenericEnquiryOpen] = useState(false);
+  const [consultationModalOpen, setConsultationModalOpen] = useState(false);
+  const [consultationPageType, setConsultationPageType] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const productsDropdownRef = useRef(null);
   const servicesDropdownRef = useRef(null);
+
+  const handleOpenConsultation = (pageType) => {
+    setConsultationPageType(pageType);
+    setConsultationModalOpen(true);
+    setServicesOpen(false);
+    setMobileMenuOpen(false);
+  };
 
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
@@ -178,6 +188,7 @@ const Navbar = () => {
                 <DesktopMegaMenu
                   isOpen={servicesOpen}
                   onClose={() => setServicesOpen(false)}
+                  onOpenConsultation={handleOpenConsultation}
                 />
               </div>
 
@@ -277,7 +288,7 @@ const Navbar = () => {
               ))}
 
               <Link href="/services" onClick={closeMobileMenu} className="llmic-mobile-menu__link">Services</Link>
-              <MobileMegaMenu onClose={closeMobileMenu} />
+              <MobileMegaMenu onClose={closeMobileMenu} onOpenConsultation={handleOpenConsultation} />
 
               {navLinks.map((item) => (
                 <Link key={item.href} href={item.href} onClick={closeMobileMenu} className="llmic-mobile-menu__link">{item.name}</Link>
@@ -293,6 +304,7 @@ const Navbar = () => {
       )}
 
       <ProductEnquiryModal modalOpen={genericEnquiryOpen} setModalOpen={setGenericEnquiryOpen} product={generalPlaceholder} />
+      <ConsultationModal isOpen={consultationModalOpen} onClose={() => setConsultationModalOpen(false)} pageType={consultationPageType} />
     </>
   );
 };
