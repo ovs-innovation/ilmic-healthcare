@@ -266,10 +266,15 @@ const TourismHero = ({
           50% { transform: translate(calc(50px + var(--mouse-x) * -30px), calc(-60px + var(--mouse-y) * -30px)) scale(1.2); }
         }
         @keyframes bubbleFloat {
-          0% { transform: translateY(115vh) translateX(0) scale(0.85); opacity: 0; }
-          10% { opacity: 0.75; }
-          90% { opacity: 0.75; }
-          100% { transform: translateY(-15vh) translateX(var(--bubble-drift-x, 25px)) scale(1.15); opacity: 0; }
+          0% { transform: translateY(115vh) translateX(0); opacity: 0; }
+          10% { opacity: 0.8; }
+          90% { opacity: 0.8; }
+          100% { transform: translateY(-15vh) translateX(var(--bubble-drift-x, 25px)); opacity: 0; }
+        }
+        @keyframes bubbleWobble {
+          0%, 100% { transform: scale(1) rotate(0deg); }
+          33% { transform: scale(1.08, 0.92) rotate(2deg); }
+          66% { transform: scale(0.92, 1.08) rotate(-2deg); }
         }
         @keyframes shapeFloat {
           0%, 100% { transform: translateY(0px) rotate(0deg) translate(calc(var(--mouse-x) * -12px), calc(var(--mouse-y) * -12px)); }
@@ -361,11 +366,9 @@ const TourismHero = ({
       <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
         {SHAPES.map((shape) => {
           let shapeClasses = "absolute flex items-center justify-center pointer-events-none transition-all ";
-          if (shape.type === "square") shapeClasses += "rounded-3xl ";
-          else if (shape.type === "hexagon") shapeClasses += "rounded-2xl ";
-          else if (shape.type === "rect") shapeClasses += "rounded-[24px] ";
-          else if (shape.type === "card") shapeClasses += "rounded-[32px] ";
-          else shapeClasses += "rounded-[36px] ";
+          if (shape.type === "capsule" || shape.type === "pill") shapeClasses += "rounded-full ";
+          else if (shape.type === "ring" || shape.type === "lens") shapeClasses += "rounded-full ";
+          else shapeClasses += "rounded-[40px] ";
 
           if (shape.isFilled) {
             shapeClasses += "bg-white/12 border border-white/35 backdrop-blur-[12px] shadow-sm shadow-white/10";
@@ -373,12 +376,14 @@ const TourismHero = ({
             shapeClasses += "border border-white/20 bg-transparent";
           }
 
+          const width = shape.type === "capsule" || shape.type === "pill" ? `${shape.size * 2}px` : `${shape.size}px`;
+
           return (
             <div
               key={shape.idx}
               className={shapeClasses}
               style={{
-                width: shape.type === "rect" || shape.type === "panel" ? `${shape.size * 1.5}px` : `${shape.size}px`,
+                width: width,
                 height: `${shape.size}px`,
                 left: `${shape.left}%`,
                 top: `${shape.top}%`,
@@ -455,12 +460,12 @@ const TourismHero = ({
         ))}
       </div>
 
-      {/* LAYER 2: Floating Glass Bubbles (z-index 4 - in front) */}
+      {/* LAYER 2: Floating Glass Bubbles with High Gloss Glares (z-index 4 - in front) */}
       <div className="absolute inset-0 z-[4] pointer-events-none overflow-hidden">
         {BUBBLES.map((b) => (
           <div
             key={b.idx}
-            className="absolute flex items-center justify-center border border-white/45 bg-white/15 backdrop-blur-[12px] shadow-sm shadow-white/20 pointer-events-none rounded-full"
+            className="absolute pointer-events-none"
             style={{
               width: `${b.size}px`,
               height: `${b.size}px`,
@@ -470,19 +475,34 @@ const TourismHero = ({
               animationDelay: `${b.delay}s`,
               '--bubble-drift-x': `${b.driftX}px`,
               opacity: 0,
-              transform: `translate(calc(var(--mouse-x) * 22px), calc(var(--mouse-y) * 22px))`
             }}
           >
-            {b.hasIcon === 'cross' && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="#FF7AB8" strokeWidth="3.5" className="w-[40%] h-[40%] opacity-80">
-                <path d="M19 12H5M12 19V5" />
-              </svg>
-            )}
-            {b.hasIcon === 'shield' && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" strokeWidth="2.5" className="w-[40%] h-[40%] opacity-80">
-                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-              </svg>
-            )}
+            <div 
+              className="relative w-full h-full rounded-full border border-white/50 backdrop-blur-[12px] flex items-center justify-center"
+              style={{
+                background: "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 80%)",
+                boxShadow: "inset 0 0 12px rgba(255, 255, 255, 0.5), inset 0 4px 8px rgba(255, 255, 255, 0.25), 0 4px 15px rgba(255, 255, 255, 0.15)",
+                animation: "bubbleWobble 4s ease-in-out infinite",
+                transform: `translate(calc(var(--mouse-x) * 22px), calc(var(--mouse-y) * 22px))`
+              }}
+            >
+              {/* Highlight Glare - Crescent top-left reflection */}
+              <div className="absolute top-[12%] left-[12%] w-[25%] h-[25%] rounded-full bg-gradient-to-br from-white/90 to-white/0 pointer-events-none" />
+              
+              {/* Highlight Glare - Subtle bottom reflection */}
+              <div className="absolute bottom-[12%] right-[12%] w-[20%] h-[20%] rounded-full bg-white/20 blur-[0.5px] pointer-events-none" />
+
+              {b.hasIcon === 'cross' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="#FF7AB8" strokeWidth="3.5" className="w-[35%] h-[35%] opacity-80 relative z-10">
+                  <path d="M19 12H5M12 19V5" />
+                </svg>
+              )}
+              {b.hasIcon === 'shield' && (
+                <svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" strokeWidth="2.5" className="w-[35%] h-[35%] opacity-80 relative z-10">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              )}
+            </div>
           </div>
         ))}
       </div>
