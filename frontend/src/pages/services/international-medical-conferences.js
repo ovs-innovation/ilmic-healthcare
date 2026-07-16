@@ -96,19 +96,6 @@ const InternationalMedicalConferences = () => {
     { title: "Global Networking", desc: "Social delegate dinners, regional trade tables, and partnership agreements for international buyers.", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&q=80" }
   ];
 
-  // 3. Event Experience (10 Steps)
-  const eventExperience = [
-    { step: "Registration", desc: "Submit doctor credentials, verify L/C delegate vouchers, and download the digital summit badges." },
-    { step: "Welcome", desc: "Receive welcoming packages, local transport shuttle cards, and digital guides of the exhibition hall." },
-    { step: "Opening Ceremony", desc: "Welcome address led by ILMIC directors and national health ministers, establishing the event goals." },
-    { step: "Keynote Sessions", desc: "Senior surgeons present peer-reviewed research papers and clinical trial results on oncology and cardiology." },
-    { step: "Panel Discussions", desc: "Multi-national roundtables debating telemedicine logistics, hospital capex planning, and WHO-GMP guidelines." },
-    { step: "Hands-on Workshops", desc: "Interactive surgical simulators, ventilator calibrations, and diagnostic report checkups in clinical labs." },
-    { step: "Networking Lounge", desc: "Connect with hospital owners, importers, and biomedical engineers during designated coffee and dinner slots." },
-    { step: "Exhibition Area", desc: "Walk through medical hardware displays showing modern ICU beds, shadowless lamps, and EMR software." },
-    { step: "Awards Ceremony", desc: "Recognizing outstanding academic posters, innovative medical designs, and regional hospital operations." },
-    { step: "Closing Session", desc: "Concluding remarks, distribution of accredited CME point certificates, and scheduling of next assemblies." }
-  ];
 
   // 4. Featured Topics (12 Topics)
   const featuredTopics = [
@@ -430,38 +417,7 @@ const InternationalMedicalConferences = () => {
           </div>
         </section>
 
-        {/* SECTION 4: EVENT EXPERIENCE (Horizontal Timeline Infographic) */}
-        <section className="py-24 bg-white border-y border-slate-100 overflow-x-auto select-none">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
-              <span className="text-xs font-black uppercase tracking-widest text-ilmic-blue">DELEGATE EXPERIENCE</span>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-ilmic-text">The Scientific Assembly Experience</h2>
-              <p className="text-ilmic-muted font-medium text-sm sm:text-base leading-relaxed">
-                Review the structured itinerary configured to optimize delegate learning, network roundtables, and workshop hours.
-              </p>
-            </div>
 
-            {/* Horizontal Timeline Wrapper */}
-            <div className="flex gap-6 pb-6 min-w-[1200px]">
-              {eventExperience.map((exp, idx) => (
-                <div key={idx} className="w-[280px] bg-slate-50 p-6 rounded-2xl border border-slate-150 relative flex flex-col justify-between shadow-sm hover:border-ilmic-blue-light transition-all">
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-slate-200/50 pb-3">
-                      <span className="text-[10px] font-black text-ilmic-blue uppercase tracking-widest">Phase 0{idx + 1}</span>
-                      <span className="w-6 h-6 rounded-full bg-ilmic-blue/10 text-ilmic-blue font-bold text-[10px] flex items-center justify-center">
-                        ✔
-                      </span>
-                    </div>
-                    <h4 className="font-extrabold text-ilmic-text text-sm leading-tight">{exp.step}</h4>
-                    <p className="text-ilmic-muted text-[11px] leading-relaxed font-semibold">
-                      {exp.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* SECTION 5: FEATURED TOPICS */}
         <section className="py-24 bg-slate-50">
