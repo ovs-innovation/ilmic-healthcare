@@ -333,7 +333,13 @@ const ServicesPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {whyChooseUs.map((item) => (
               <div key={item.title} className="p-6 rounded-2xl bg-white/5 border border-white/10">
-                <div className="text-4xl mb-4">{item.icon}</div>
+                <div className="w-16 h-16 rounded-xl bg-white/10 flex items-center justify-center p-1.5 border border-white/25 mb-4 shadow-sm">
+                  <img
+                    src={item.visualSrc}
+                    alt={item.title}
+                    className="w-full h-full object-contain filter brightness-[1.15]"
+                  />
+                </div>
                 <h3 className="font-bold text-lg mb-2">{item.title}</h3>
                 <p className="text-sm text-slate-400 leading-relaxed">{item.desc}</p>
               </div>

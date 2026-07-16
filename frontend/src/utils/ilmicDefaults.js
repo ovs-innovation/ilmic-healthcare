@@ -227,10 +227,10 @@ export const tourismServicesFallback = [
 ];
 
 export const whyChooseUs = [
-  { icon: "🔬", title: "Oncology Specialist", desc: "Strong portfolio in anti-cancer medicines — Abiraterone, Paclitaxel, and more in our own brands." },
-  { icon: "🌍", title: "Global Export Network", desc: "Exporting to Dubai, Angola, Cameroon, Namibia, Ethiopia, Uzbekistan & CIS countries." },
-  { icon: "🏥", title: "50+ Hospitals Managed", desc: "Hospital management services across international markets with effective on-ground support." },
-  { icon: "🤝", title: "Since 2021", desc: "Incorporated under Companies Act 2013. Focused exclusively on health sector from day one." },
+  { visualSrc: "/visuals/oncology.png", title: "Oncology Specialist", desc: "Strong portfolio in anti-cancer medicines — Abiraterone, Paclitaxel, and more in our own brands." },
+  { visualSrc: "/visuals/pharmaceutical_export.png", title: "Global Export Network", desc: "Exporting to Dubai, Angola, Cameroon, Namibia, Ethiopia, Uzbekistan & CIS countries." },
+  { visualSrc: "/visuals/hospital_management.png", title: "50+ Hospitals Managed", desc: "Hospital management services across international markets with effective on-ground support." },
+  { visualSrc: "/visuals/partnership_handshake.png", title: "Since 2021", desc: "Incorporated under Companies Act 2013. Focused exclusively on health sector from day one." },
 ];
 
 export const patientJourneySteps = [

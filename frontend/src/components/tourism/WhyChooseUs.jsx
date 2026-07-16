@@ -19,9 +19,15 @@ const WhyChooseUs = () => (
         {whyChooseUs.map((item) => (
           <div
             key={item.title}
-            className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-ilmic-border hover:border-ilmic-blue/40 hover:shadow-[0_18px_50px_rgba(15,58,102,0.08)] transition-all duration-300"
+            className="group p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-white border border-ilmic-border hover:border-ilmic-blue/40 hover:shadow-[0_18px_50px_rgba(15,58,102,0.08)] transition-all duration-300"
           >
-            <div className="text-2xl sm:text-4xl mb-2 sm:mb-4">{item.icon}</div>
+            <div className="w-16 h-16 rounded-xl bg-slate-50 flex items-center justify-center p-1.5 border border-slate-100 mb-3 shadow-sm group-hover:border-ilmic-blue/20 transition-all duration-300">
+              <img
+                src={item.visualSrc}
+                alt={item.title}
+                className="w-full h-full object-contain transition-all duration-[0.4s] group-hover:scale-[1.08] group-hover:drop-shadow-[0_8px_16px_rgba(15,58,102,0.18)]"
+              />
+            </div>
             <h3 className="font-black text-sm sm:text-lg mb-1 sm:mb-2 text-ilmic-text leading-snug line-clamp-2">{item.title}</h3>
             <p className="text-[11px] sm:text-sm text-ilmic-muted leading-relaxed line-clamp-3 sm:line-clamp-none">{item.desc}</p>
           </div>
