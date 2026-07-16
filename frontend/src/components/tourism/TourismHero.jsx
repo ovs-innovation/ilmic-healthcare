@@ -171,7 +171,7 @@ const TourismHero = ({
           50% { transform: translateY(-15px) rotate(8deg); }
         }
         .hero-aurora-bg {
-          background: linear-gradient(135deg, #FFFFFF 30%, #F3E8FF 55%, #E0F2FE 75%, #FFFFFF 100%);
+          background: linear-gradient(135deg, #FFFFFF 65%, #FAF7FF 80%, #F5FAFF 90%, #FFFFFF 100%);
           background-size: 400% 400%;
           animation: auroraFlow 32s ease-in-out infinite;
         }
@@ -249,15 +249,15 @@ const TourismHero = ({
 
       {/* Layer 2: Large blurred colorful blobs (Drifting at independent speeds/angles) */}
       {/* Blue Blob - Top Left */}
-      <div className="absolute top-[-15%] left-[-15%] w-[45vw] h-[45vw] rounded-full bg-[#2563EB]/[0.22] blur-[140px] animate-blob-1-fast pointer-events-none z-0" />
+      <div className="absolute top-[-15%] left-[-15%] w-[45vw] h-[45vw] rounded-full bg-[#2563EB]/[0.08] blur-[140px] animate-blob-1-fast pointer-events-none z-0" />
       {/* Purple Blob - Top Right */}
-      <div className="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#8B5CF6]/[0.20] blur-[150px] animate-blob-2-med pointer-events-none z-0" />
+      <div className="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#8B5CF6]/[0.07] blur-[150px] animate-blob-2-med pointer-events-none z-0" />
       {/* Cyan Blob - Bottom Left */}
-      <div className="absolute bottom-[-15%] left-[-15%] w-[45vw] h-[45vw] rounded-full bg-[#06B6D4]/[0.22] blur-[130px] animate-blob-3-slow pointer-events-none z-0" />
+      <div className="absolute bottom-[-15%] left-[-15%] w-[45vw] h-[45vw] rounded-full bg-[#06B6D4]/[0.08] blur-[130px] animate-blob-3-slow pointer-events-none z-0" />
       {/* Gold Blob - Bottom Right */}
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#FBBF24]/[0.18] blur-[150px] animate-blob-4-extraslow pointer-events-none z-0" />
+      <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#FBBF24]/[0.06] blur-[150px] animate-blob-4-extraslow pointer-events-none z-0" />
       {/* Soft Pink Blob - Center Right */}
-      <div className="absolute top-[20%] right-[5%] w-[40vw] h-[40vw] rounded-full bg-[#EC4899]/[0.18] blur-[140px] animate-blob-3-slow pointer-events-none z-0" />
+      <div className="absolute top-[20%] right-[5%] w-[40vw] h-[40vw] rounded-full bg-[#EC4899]/[0.06] blur-[140px] animate-blob-3-slow pointer-events-none z-0" />
 
       {/* Layer 3: Floating glowing particles (Drifting & Staggered) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
