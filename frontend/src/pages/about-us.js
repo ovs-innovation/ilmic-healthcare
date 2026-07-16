@@ -78,6 +78,20 @@ const AboutUs = () => {
     restDelta: 0.001
   });
 
+  const [visibleTimelineIndices, setVisibleTimelineIndices] = useState([]);
+
+  useEffect(() => {
+    return scaleY.onChange((latest) => {
+      const active = [];
+      if (latest >= 0.01) active.push(0);
+      if (latest >= 0.24) active.push(1);
+      if (latest >= 0.49) active.push(2);
+      if (latest >= 0.74) active.push(3);
+      if (latest >= 0.98) active.push(4);
+      setVisibleTimelineIndices(active);
+    });
+  }, [scaleY]);
+
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
@@ -314,8 +328,7 @@ const AboutUs = () => {
                     {/* Timeline dot */}
                     <motion.div 
                       initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: false, margin: "0px 0px -50% 0px" }}
+                      animate={visibleTimelineIndices.includes(i) ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
                       transition={{ 
                         type: "spring", 
                         stiffness: 200, 
@@ -329,8 +342,7 @@ const AboutUs = () => {
                     <div className={`w-full md:w-[45%] flex justify-end text-right ${isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
                       <motion.div
                         initial={{ opacity: 0, x: -60, scale: 0.95 }}
-                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        viewport={{ once: false, margin: "0px 0px -50% 0px" }}
+                        animate={visibleTimelineIndices.includes(i) ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: -60, scale: 0.95 }}
                         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                         whileHover={{
                           y: -5,
@@ -347,8 +359,7 @@ const AboutUs = () => {
                     {/* Center Year Badge (desktop only) */}
                     <motion.div 
                       initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: false, margin: "0px 0px -50% 0px" }}
+                      animate={visibleTimelineIndices.includes(i) ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
                       transition={{ 
                         type: "spring", 
                         stiffness: 150, 
@@ -365,8 +376,7 @@ const AboutUs = () => {
                     <div className={`w-full md:w-[45%] flex justify-start text-left ${!isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
                       <motion.div
                         initial={{ opacity: 0, x: 60, scale: 0.95 }}
-                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        viewport={{ once: false, margin: "0px 0px -50% 0px" }}
+                        animate={visibleTimelineIndices.includes(i) ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 60, scale: 0.95 }}
                         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                         whileHover={{
                           y: -5,
