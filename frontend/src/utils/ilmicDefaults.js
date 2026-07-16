@@ -195,13 +195,7 @@ export const tourismServicesFallback = [
     icon: "🏨",
     group: "Hospital",
   },
-  {
-    slug: "doctors-on-call",
-    name: { en: "Doctors on Call" },
-    description: { en: "Providing specialist doctors on call for critical surgeries worldwide." },
-    icon: "👨‍⚕️",
-    group: "Medical",
-  },
+
   {
     slug: "international-medical-conferences",
     name: { en: "International Medical Conferences" },
@@ -219,7 +213,7 @@ export const tourismServicesFallback = [
   {
     slug: "pharmaceutical-export",
     name: { en: "Pharmaceutical Export" },
-    description: { en: "Export of oncology and general pharma medicines to Dubai, Africa, CIS countries." },
+    description: { en: "Export of oncology and general pharma medicines to Dubai, Africa, Bangladesh, CIS, and other international markets." },
     icon: "🌍",
     group: "Export",
   },
