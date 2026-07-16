@@ -303,16 +303,7 @@ const MedicalTourism = () => {
     }
   ];
 
-  const partnerHospitals = [
-    { name: "Fortis Healthcare Group", location: "Delhi NCR, Mumbai, Bengaluru", accreditation: "JCI & NABH Accredited" },
-    { name: "Apollo Hospitals", location: "Chennai, Delhi, Hyderabad", accreditation: "JCI & NABH Accredited" },
-    { name: "Medanta - The Medicity", location: "Gurugram, Lucknow", accreditation: "JCI & NABH Accredited" },
-    { name: "Max Super Specialty Hospital", location: "Delhi NCR, Mohali", accreditation: "JCI & NABH Accredited" },
-    { name: "Artemis Hospital", location: "Gurugram", accreditation: "JCI & NABH Accredited" },
-    { name: "Manipal Hospitals", location: "Bengaluru, Delhi, Goa", accreditation: "NABH & ISO Accredited" },
-    { name: "Kokilaben Dhirubhai Ambani Hospital", location: "Mumbai", accreditation: "JCI & NABH Accredited" },
-    { name: "Gleneagles Global Health City", location: "Chennai, Hyderabad", accreditation: "NABH Accredited" }
-  ];
+
 
   const journeyFlow = [
     { title: "Patient Contacts ILMIC", desc: "Submit reports via online form or WhatsApp helpline" },
@@ -875,48 +866,7 @@ const MedicalTourism = () => {
         </div>
       </section>
 
-      {/* ── SECTION 8: PARTNER HOSPITALS (Logo grid & accreditations) ── */}
-      <section className="py-24 sm:py-32 bg-ilmic-blue-soft/60 border-b border-ilmic-border/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          
-          <div className="text-center max-w-3xl mx-auto mb-20 space-y-4">
-            <span className="text-xs font-black uppercase tracking-widest text-ilmic-blue">Premier Networks</span>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-ilmic-text tracking-tight">Our JCI & NABH Accredited Partner Hospitals</h2>
-            <p className="text-ilmic-muted text-base sm:text-lg font-medium leading-relaxed">
-              We coordinate clinical admissions across the top healthcare brands in India, housing modern medical technology.
-            </p>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {partnerHospitals.map((hospital, idx) => (
-              <div 
-                key={idx} 
-                className="bg-white border border-ilmic-border/40 p-6 rounded-2xl flex flex-col justify-between gap-4 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-              >
-                <div className="space-y-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                    <span className="text-[10px] text-[#1E5A9E] font-black uppercase tracking-widest">
-                      {hospital.accreditation}
-                    </span>
-                  </div>
-                  <h3 className="text-sm sm:text-base font-bold text-ilmic-text leading-snug">
-                    {hospital.name}
-                  </h3>
-                  <p className="text-[11px] text-ilmic-muted font-bold flex items-center gap-1">
-                    <FiMapPin className="w-3 h-3 text-ilmic-blue flex-shrink-0" />
-                    {hospital.location}
-                  </p>
-                </div>
-                <div className="text-[10px] text-ilmic-blue font-bold px-3 py-1 bg-ilmic-blue-light/50 border border-ilmic-border/20 rounded-md text-center">
-                  Corporate Tariff Partner
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
 
       {/* ── SECTION 9: PATIENT JOURNEY ILLUSTRATION (Flowchart stepper) ── */}
       <section className="py-24 sm:py-32 bg-white border-b border-ilmic-border/20">
