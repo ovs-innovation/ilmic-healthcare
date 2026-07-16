@@ -607,7 +607,7 @@ const HospitalManagement = () => {
             <div className="lg:col-span-5 relative order-last lg:order-first">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.unsplash.com/photo-1587351021355-a479a299d2f9?auto=format&fit=crop&w=800&q=80"
+                  src="/visuals/hospital_architecture.png"
                   alt="Modern Hospital Architecture Planning"
                   width={800}
                   height={600}
