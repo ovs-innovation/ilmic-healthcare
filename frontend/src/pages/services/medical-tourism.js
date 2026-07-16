@@ -128,77 +128,78 @@ const MedicalTourism = () => {
   const treatments = [
     {
       title: "Cancer Treatment (Oncology)",
-      image: "https://images.unsplash.com/photo-1579154204601-01588f351167?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/3844581/pexels-photo-3844581.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Advanced radiation (CyberKnife), targeted chemotherapy, immunotherapy, and precision tumor surgeries guided by top oncologists.",
       features: ["CyberKnife Radiotherapy", "Precision Chemotherapy", "Robotic Tumor Resections"]
     },
     {
       title: "Cardiology & Heart Care",
-      image: "https://images.unsplash.com/photo-1530026405186-ed1ea0ac7a63?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/7089401/pexels-photo-7089401.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Comprehensive heart bypass surgery (CABG), valve replacements, pediatric cardiology, and minimally invasive angioplasties.",
       features: ["CABG Surgery", "Heart Valve Replacements", "Pediatric Cardiac Care"]
     },
     {
       title: "Orthopedics & Spine",
-      image: "https://images.unsplash.com/photo-1581594693702-fbdc51b2763b?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/7446990/pexels-photo-7446990.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Computer-assisted total knee and hip replacements, complex spine fusions, arthroscopic surgeries, and rehabilitation.",
       features: ["Total Knee & Hip Replacement", "Minimal Access Spine Fusion", "Sports Medicine & Rehab"]
     },
     {
       title: "Neurology",
-      image: "https://images.unsplash.com/photo-1559757175-5700def83abb?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/5863388/pexels-photo-5863388.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Advanced therapeutic treatments for stroke, Parkinson's disease, epilepsy, neurodegenerative diseases, and brain disorders.",
       features: ["Epilepsy Monitoring", "Parkinson's Deep Brain Therapy", "Stroke Neuro-rehabilitation"]
     },
     {
       title: "Neurosurgery",
-      image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Microsurgical treatment for brain tumors, spinal trauma, brain aneurysms, and pediatric neurosurgical anomalies.",
       features: ["Micro-neurosurgery", "Brain Aneurysm Coiling", "Pediatric Spine Surgery"]
     },
     {
       title: "Kidney Care & Urology",
-      image: "https://images.unsplash.com/photo-1504813184591-01557010c223?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/3825586/pexels-photo-3825586.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Laparoscopic donor nephrectomy, renal transplants, high-flux dialysis facilities, and treatment for kidney stones.",
       features: ["Renal Transplant Coordination", "Laparoscopic Nephrectomy", "Lithotripsy Stone Treatment"]
     },
     {
       title: "Liver & Biliary Care",
-      image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Living donor liver transplants, cirrhosis treatment, gallbladder surgeries, and specialized hepatobiliary interventions.",
       features: ["Liver Transplant Programs", "Hepatitis & Cirrhosis Care", "Whipple Resections"]
     },
     {
       title: "Ophthalmology (Eye)",
-      image: "https://images.unsplash.com/photo-1581594693175-5cc710cc52f6?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/5752263/pexels-photo-5752263.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "State-of-the-art laser vision corrections (LASIK, Contoura), corneal transplants, robotic cataract surgeries, and glaucoma care.",
       features: ["Contoura Vision LASIK", "Corneal Graft Transplants", "Micro-incision Cataract Care"]
     },
     {
       title: "Plastic & Reconstructive",
-      image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/8376232/pexels-photo-8376232.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Advanced reconstructive surgeries following trauma or oncology, cleft lip restoration, and high-end aesthetic clinical procedures.",
       features: ["Trauma Micro-reconstruction", "Cleft Lip & Palate Repair", "Aesthetic Body Contouring"]
     },
     {
       title: "IVF & Fertility Care",
-      image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/7584492/pexels-photo-7584492.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Premium reproductive therapies including IVF, ICSI, egg freezing, and advanced genetic screenings under expert embryologists.",
       features: ["IVF & ICSI Treatments", "Blastocyst Culture Stays", "Preimplantation Genetics (PGT)"]
     },
     {
       title: "Dental Rehabilitation",
-      image: "https://images.unsplash.com/photo-1629909613654-28e377c37b09?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/3845806/pexels-photo-3845806.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Full-mouth implants, digital smile designs, complex maxillofacial surgeries, and aesthetic dental crowns using global materials.",
       features: ["All-on-4 Dental Implants", "Digital Smile Architecture", "Maxillofacial Trauma Repair"]
     },
     {
       title: "General & Laparoscopic",
-      image: "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=600&q=80",
+      image: "https://images.pexels.com/photos/4173251/pexels-photo-4173251.jpeg?auto=compress&cs=tinysrgb&w=600",
       desc: "Minimally invasive keyhole surgeries for hernias, appendectomy, weight-loss bariatric surgeries, and abdominal diagnostics.",
       features: ["Laparoscopic Cholecystectomy", "Bariatric Gastric Sleeve", "Laser Hernia Repair"]
     }
   ];
+
 
   const supportServices = [
     {
@@ -325,7 +326,7 @@ const MedicalTourism = () => {
       flag: "🇴🇲",
       treatment: "Cardiac Bypass (CABG)",
       rating: 5,
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80",
+      avatar: "https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=150",
       text: "The coordination by ILMIC was outstanding. The medical invitation was processed within 2 days, and a private host met us at Delhi airport. The surgery at Fortis was highly successful, and the pricing was completely transparent."
     },
     {
@@ -334,7 +335,7 @@ const MedicalTourism = () => {
       flag: "🇰🇪",
       treatment: "Bilateral Knee Replacement",
       rating: 5,
-      avatar: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=150&q=80",
+      avatar: "https://images.pexels.com/photos/3807571/pexels-photo-3807571.jpeg?auto=compress&cs=tinysrgb&w=150",
       text: "I was suffering from severe arthritis. ILMIC helped me connect with a top orthopedics specialist in India. The package was 60% cheaper than treatments in London. The hotel arranged was neat and they provided custom Swahili guides."
     },
     {
@@ -343,7 +344,7 @@ const MedicalTourism = () => {
       flag: "🇳🇬",
       treatment: "Oncology CyberKnife Care",
       rating: 5,
-      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80",
+      avatar: "https://images.pexels.com/photos/2379005/pexels-photo-2379005.jpeg?auto=compress&cs=tinysrgb&w=150",
       text: "Finding correct cancer therapy is hard. ILMIC organized a rapid oncology board review. We traveled within a week. The hospital was highly advanced with state-of-the-art scanners. Exceptional support team."
     }
   ];
@@ -464,7 +465,7 @@ const MedicalTourism = () => {
                 {/* Main Image Card */}
                 <div className="absolute top-4 left-4 w-[85%] h-[75%] rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white bg-slate-100 transform -rotate-3 hover:rotate-0 transition-transform duration-500 z-20">
                   <Image 
-                    src="https://images.unsplash.com/photo-1579684389782-64d84b5e901a?auto=format&fit=crop&w=800&q=80" 
+                    src="https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=800" 
                     alt="Doctor consultation with international patient" 
                     fill 
                     className="object-cover"
@@ -476,7 +477,7 @@ const MedicalTourism = () => {
                 {/* Secondary Image Card */}
                 <div className="absolute bottom-4 right-4 w-[60%] h-[45%] rounded-[2rem] overflow-hidden shadow-2xl border-4 border-white bg-slate-100 transform rotate-6 hover:rotate-0 transition-transform duration-500 z-30">
                   <Image 
-                    src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=600&q=80" 
+                    src="https://images.pexels.com/photos/247786/pexels-photo-247786.jpeg?auto=compress&cs=tinysrgb&w=600" 
                     alt="Luxury hospital lobby environment" 
                     fill 
                     className="object-cover"
@@ -778,7 +779,7 @@ const MedicalTourism = () => {
             <div className="lg:col-span-5 relative flex justify-center">
               <div className="relative w-full max-w-sm aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-slate-100">
                 <Image 
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80" 
+                  src="https://images.pexels.com/photos/5452268/pexels-photo-5452268.jpeg?auto=compress&cs=tinysrgb&w=800" 
                   alt="Personal medical coordinator helper" 
                   fill 
                   className="object-cover"

@@ -213,7 +213,7 @@ const HospitalManagement = () => {
         after: "18-minute admission wait time, 0.8% inventory variance.",
         improvement: "40% Emergency Queue reduction, 98% billing capture."
       },
-      image: "https://images.unsplash.com/photo-1582213782179-e0d53f98f2ca?auto=format&fit=crop&w=800&q=80"
+      image: "https://images.pexels.com/photos/3844811/pexels-photo-3844811.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     {
       name: "Luanda Specialty Clinic Chain Digital Transformation",
@@ -224,7 +224,7 @@ const HospitalManagement = () => {
         after: "Centralized EHR cloud database, automated insurance pre-authorization.",
         improvement: "95% insurance claim approval rate, zero database sync delays."
       },
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=800&q=80"
+      image: "https://images.pexels.com/photos/7176026/pexels-photo-7176026.jpeg?auto=compress&cs=tinysrgb&w=800"
     },
     {
       name: "Mumbai Multispecialty NABH Certification Preparedness",
@@ -235,7 +235,7 @@ const HospitalManagement = () => {
         after: "Successfully passed final inspection with zero major non-conformances.",
         improvement: "NABH accreditation achieved in 6 months, 99.2% sterilization audit score."
       },
-      image: "https://images.unsplash.com/photo-1540317580384-e5d43616b9aa?auto=format&fit=crop&w=800&q=80"
+      image: "https://images.pexels.com/photos/3182781/pexels-photo-3182781.jpeg?auto=compress&cs=tinysrgb&w=800"
     }
   ];
 
@@ -321,7 +321,7 @@ const HospitalManagement = () => {
                 className="relative mx-auto max-w-[450px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white bg-slate-200"
               >
                 <Image
-                  src="https://images.unsplash.com/photo-1557804506-669a67965ba0?auto=format&fit=crop&w=800&q=80"
+                  src="https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=800"
                   alt="Hospital boardroom meeting planning"
                   fill
                   className="object-cover"
@@ -371,7 +371,7 @@ const HospitalManagement = () => {
               <div className="absolute -inset-4 bg-ilmic-blue-light/40 rounded-[40px] -z-10" />
               <div className="relative aspect-[3/4] rounded-[30px] overflow-hidden shadow-xl border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80"
+                  src="https://images.pexels.com/photos/8376266/pexels-photo-8376266.jpeg?auto=compress&cs=tinysrgb&w=800"
                   alt="Hospital leadership planning operational optimization"
                   fill
                   className="object-cover"
@@ -678,7 +678,7 @@ const HospitalManagement = () => {
             <div className="lg:col-span-5 relative">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80"
+                  src="https://images.pexels.com/photos/4021773/pexels-photo-4021773.jpeg?auto=compress&cs=tinysrgb&w=800"
                   alt="Healthcare Information Systems Integration"
                   width={800}
                   height={600}
@@ -693,7 +693,7 @@ const HospitalManagement = () => {
             <div className="lg:col-span-5 relative order-last lg:order-first">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=800&q=80"
+                  src="https://images.pexels.com/photos/7089401/pexels-photo-7089401.jpeg?auto=compress&cs=tinysrgb&w=800"
                   alt="Medical Accreditation Auditing"
                   width={800}
                   height={600}
