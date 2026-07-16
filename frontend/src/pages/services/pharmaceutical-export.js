@@ -33,7 +33,10 @@ const Counter = ({ value, suffix = "" }) => {
   return <span>{count}{suffix}</span>;
 };
 
+import ConsultationModal from "@components/tourism/ConsultationModal";
+
 const PharmaceuticalExport = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", designation: "", companyName: "", targetPort: "", incoterms: "" });
   const [submitting, setSubmitting] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
@@ -342,12 +345,13 @@ const PharmaceuticalExport = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="flex flex-wrap gap-4 pt-2"
               >
-                <a
-                  href="#export-quote-form"
-                  className="px-6 py-4 bg-ilmic-blue hover:bg-ilmic-blue-dark text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:-translate-y-0.5 transform"
+                <button 
+                  type="button"
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-6 py-4 bg-ilmic-blue hover:bg-ilmic-blue-dark text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:-translate-y-0.5 transform cursor-pointer"
                 >
                   Export Enquiry <FiArrowRight />
-                </a>
+                </button>
                 <a
                   href="#export-quote-form"
                   className="px-6 py-4 bg-white border border-ilmic-border hover:bg-ilmic-blue-soft text-ilmic-text font-bold rounded-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 transform"
@@ -1176,6 +1180,12 @@ const PharmaceuticalExport = () => {
           </div>
         </div>
       </section>
+      {/* Consultation Modal */}
+      <ConsultationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        pageType="pharmaceutical-export" 
+      />
     </Layout>
   );
 };

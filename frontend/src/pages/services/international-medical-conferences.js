@@ -13,6 +13,8 @@ import {
   FiTruck, FiNavigation, FiAnchor, FiSearch, FiSliders, FiGrid,
   FiTool, FiCheckCircle, FiVolume2, FiBookOpen, FiMapPin, FiCalendar, FiStar, FiSmile
 } from "react-icons/fi";
+import { FaPlane } from "react-icons/fa";
+import ConsultationModal from "@components/tourism/ConsultationModal";
 
 // Client-side animated counter component
 const Counter = ({ value, suffix = "" }) => {
@@ -35,6 +37,7 @@ const Counter = ({ value, suffix = "" }) => {
 };
 
 const InternationalMedicalConferences = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", designation: "", organization: "", attendanceMode: "", cmeRequired: "" });
   const [submitting, setSubmitting] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
@@ -261,12 +264,13 @@ const InternationalMedicalConferences = () => {
                   transition={{ duration: 0.6, delay: 0.3 }}
                   className="flex flex-wrap gap-4 pt-2"
                 >
-                  <a
-                    href="#registration-form"
-                    className="px-6 py-4 bg-ilmic-blue hover:bg-ilmic-blue-dark text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:-translate-y-0.5 transform"
+                  <button 
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="px-6 py-4 bg-ilmic-blue hover:bg-ilmic-blue-dark text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:-translate-y-0.5 transform cursor-pointer"
                   >
                     Register Interest <FiArrowRight />
-                  </a>
+                  </button>
                   <a
                     href="#categories"
                     className="px-6 py-4 bg-white border border-ilmic-border hover:bg-ilmic-blue-soft text-ilmic-text font-bold rounded-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 transform"
@@ -1029,6 +1033,12 @@ const InternationalMedicalConferences = () => {
         </section>
 
       </div>
+      {/* Consultation Modal */}
+      <ConsultationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        pageType="international-medical-conferences" 
+      />
     </Layout>
   );
 };

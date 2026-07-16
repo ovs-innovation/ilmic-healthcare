@@ -13,8 +13,10 @@ import {
   FiHome, FiChevronRight
 } from "react-icons/fi";
 import { FaPlane } from "react-icons/fa";
+import ConsultationModal from "@components/tourism/ConsultationModal";
 
 const MedicalTourism = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", country: "", specialty: "" });
   const [submitting, setSubmitting] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
@@ -429,12 +431,13 @@ const MedicalTourism = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap gap-4 pt-4">
-                <a 
-                  href="#quote-form" 
+                <button 
+                  type="button"
+                  onClick={() => setIsModalOpen(true)}
                   className="inline-flex items-center justify-center bg-ilmic-blue hover:bg-ilmic-blue-dark text-white px-8 py-4 rounded-xl font-bold uppercase tracking-wider text-xs sm:text-sm shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300 cursor-pointer"
                 >
                   Book Consultation
-                </a>
+                </button>
                 <a 
                   href="https://wa.me/919999999999" 
                   target="_blank" 
@@ -720,13 +723,16 @@ const MedicalTourism = () => {
                     </div>
                   </div>
 
-                  <a 
-                    href="#quote-form" 
-                    onClick={() => setForm(f => ({ ...f, specialty: specialtiesList[idx] || specialtiesList[0] }))}
-                    className="inline-flex items-center justify-center w-full py-3.5 bg-ilmic-blue-soft hover:bg-ilmic-blue text-ilmic-blue hover:text-white rounded-xl text-xs font-bold transition-colors duration-300 shadow-inner group-hover:shadow-md"
+                  <button 
+                    type="button"
+                    onClick={() => {
+                      setForm(f => ({ ...f, specialty: specialtiesList[idx] || specialtiesList[0] }));
+                      setIsModalOpen(true);
+                    }}
+                    className="inline-flex items-center justify-center w-full py-3.5 bg-ilmic-blue-soft hover:bg-ilmic-blue text-ilmic-blue hover:text-white rounded-xl text-xs font-bold transition-colors duration-300 shadow-inner group-hover:shadow-md cursor-pointer"
                   >
                     Request Medical Plan
-                  </a>
+                  </button>
                 </div>
               </div>
             ))}
@@ -1173,6 +1179,12 @@ const MedicalTourism = () => {
         </div>
       </section>
 
+      {/* Consultation Modal */}
+      <ConsultationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        pageType="medical-tourism" 
+      />
     </Layout>
   );
 };

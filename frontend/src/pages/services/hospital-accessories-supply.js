@@ -34,7 +34,10 @@ const Counter = ({ value, suffix = "" }) => {
   return <span>{count}{suffix}</span>;
 };
 
+import ConsultationModal from "@components/tourism/ConsultationModal";
+
 const HospitalAccessoriesSupply = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", designation: "", facilityName: "", targetLocation: "", budgetRange: "" });
   const [submitting, setSubmitting] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
@@ -352,12 +355,13 @@ const HospitalAccessoriesSupply = () => {
                   >
                     Browse Product Range <FiArrowRight />
                   </a>
-                  <a
-                    href="#procurement-form"
-                    className="px-6 py-4 bg-white border border-ilmic-border hover:bg-ilmic-blue-soft text-ilmic-text font-bold rounded-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 transform"
+                  <button 
+                    type="button"
+                    onClick={() => setIsModalOpen(true)}
+                    className="px-6 py-4 bg-white border border-ilmic-border hover:bg-ilmic-blue-soft text-ilmic-text font-bold rounded-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 transform cursor-pointer"
                   >
                     Request Quotation
-                  </a>
+                  </button>
                   <a
                     href="tel:+91800000000"
                     className="px-6 py-4 bg-ilmic-blue-soft hover:bg-ilmic-blue-light text-ilmic-blue font-bold rounded-xl transition-all flex items-center gap-2"
@@ -1124,6 +1128,12 @@ const HospitalAccessoriesSupply = () => {
         </section>
 
       </div>
+      {/* Consultation Modal */}
+      <ConsultationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        pageType="hospital-accessories-supply" 
+      />
     </Layout>
   );
 };

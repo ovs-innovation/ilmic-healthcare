@@ -32,7 +32,10 @@ const Counter = ({ value, suffix = "" }) => {
   return <span>{count}{suffix}</span>;
 };
 
+import ConsultationModal from "@components/tourism/ConsultationModal";
+
 const HospitalManagement = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "", designation: "", facilityType: "" });
   const [submitting, setSubmitting] = useState(false);
   const [activeFaq, setActiveFaq] = useState(null);
@@ -287,12 +290,13 @@ const HospitalManagement = () => {
                 transition={{ duration: 0.6, delay: 0.3 }}
                 className="flex flex-wrap gap-4 pt-2"
               >
-                <a
-                  href="#consultation-form"
-                  className="px-6 py-4 bg-ilmic-blue hover:bg-ilmic-blue-dark text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:-translate-y-0.5 transform"
+                <button 
+                  type="button"
+                  onClick={() => setIsModalOpen(true)}
+                  className="px-6 py-4 bg-ilmic-blue hover:bg-ilmic-blue-dark text-white font-bold rounded-xl transition-all shadow-md hover:shadow-lg flex items-center gap-2 hover:-translate-y-0.5 transform cursor-pointer"
                 >
                   Request Consultation <FiArrowRight />
-                </a>
+                </button>
                 <a
                   href="tel:+91800000000" // Replace with direct contact number or action
                   className="px-6 py-4 bg-white border border-ilmic-border hover:bg-ilmic-blue-soft text-ilmic-text font-bold rounded-xl transition-all flex items-center gap-2 hover:-translate-y-0.5 transform"
@@ -1118,6 +1122,12 @@ const HospitalManagement = () => {
           </div>
         </div>
       </section>
+      {/* Consultation Modal */}
+      <ConsultationModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+        pageType="hospital-management" 
+      />
     </Layout>
   );
 };
