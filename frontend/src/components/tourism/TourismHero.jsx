@@ -31,49 +31,43 @@ const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
 ];
 
-const BUBBLES = Array.from({ length: 24 }, (_, idx) => {
-  const sizes = [18, 24, 32, 40, 60, 80];
+const GLASS_ORBS = Array.from({ length: 24 }, (_, idx) => {
+  const sizes = [25, 40, 60, 90];
   const size = sizes[idx % sizes.length];
   const left = (idx * 4.1 + 4) % 95;
-  const duration = 15 + (idx % 8) * 3;
-  const delay = idx * 0.45;
-  const driftX = (idx % 2 === 0 ? 30 : -30) + (idx % 4) * 5;
-  const hasIcon = idx % 6 === 0 ? 'cross' : idx % 8 === 0 ? 'shield' : null;
-  const bubbleColors = [
-    "rgba(90, 169, 255, 0.18)", // Blue
-    "rgba(67, 217, 255, 0.18)", // Cyan
-    "rgba(139, 124, 255, 0.18)", // Purple
-    "rgba(91, 231, 196, 0.18)",  // Mint
-    "rgba(255, 122, 184, 0.18)"  // Pink
-  ];
-  const bubbleColor = bubbleColors[idx % bubbleColors.length];
-  return { idx, size, left, duration, delay, driftX, hasIcon, bubbleColor };
+  const bottom = (idx * 3.8 + 8) % 92;
+  const duration = 25 + (idx % 6) * 4;
+  const delay = idx * 0.3;
+  const glowColors = ["#5AA9FF", "#43D9FF", "#8B7CFF", "#5BE7C4"];
+  const glowColor = glowColors[idx % glowColors.length];
+  const driftX = (idx % 2 === 0 ? 20 : -20) + (idx % 3) * 4;
+  const driftY = (idx % 2 === 0 ? -30 : -60) - (idx % 4) * 5;
+  return { idx, size, left, bottom, duration, delay, glowColor, driftX, driftY };
 });
 
-const SHAPES = Array.from({ length: 10 }, (_, idx) => {
-  const types = ["capsule", "ring", "pod", "pill", "lens"];
-  const type = types[idx % types.length];
-  const size = 60 + (idx % 5) * 40;
-  const left = (idx * 9 + 8) % 85;
-  const top = (idx * 8 + 12) % 75;
-  const duration = 20 + (idx % 4) * 5;
-  const isFilled = idx % 3 === 0;
-  const icon = idx === 1 ? 'dna' : idx === 3 ? 'capsule' : idx === 5 ? 'shield' : idx === 7 ? 'cross' : idx === 9 ? 'heartbeat' : null;
-  return { idx, type, size, left, top, duration, isFilled, icon };
+const GLASS_PANELS = Array.from({ length: 8 }, (_, idx) => {
+  const icons = ['dna', 'capsule', 'cross', 'heartbeat', 'shield', 'microscope'];
+  const icon = icons[idx % icons.length];
+  const size = 70 + (idx % 3) * 15;
+  const left = (idx * 13 + 8) % 85;
+  const top = (idx * 11 + 12) % 70;
+  const duration = 30 + idx * 5;
+  return { idx, icon, size, left, top, duration };
 });
 
-const COLORED_PARTICLES = Array.from({ length: 48 }, (_, idx) => {
-  const colors = ["#5AA9FF", "#43D9FF", "#8B7CFF", "#5BE7C4", "#FF7AB8"];
+const MICRO_PARTICLES = Array.from({ length: 80 }, (_, idx) => {
+  const colors = ["#5AA9FF", "#8B7CFF", "#5BE7C4", "#43D9FF", "#FFFFFF"];
   const color = colors[idx % colors.length];
-  const size = 3 + (idx % 3) * 2;
-  const left = (idx * 2.1 + 4) % 95;
-  const bottom = (idx * 1.9 + 5) % 95;
-  const duration = 15 + (idx % 12) * 3;
-  const delay = idx * 0.25;
-  const driftX = (idx % 2 === 0 ? 40 : -40) + (idx % 4) * 8;
-  const driftY = (idx % 3 === 0 ? -40 : -80) - (idx % 5) * 5;
-  const maxOpacity = 0.2 + (idx % 3) * 0.12;
-  return { idx, color, size, left, bottom, duration, delay, driftX, driftY, maxOpacity };
+  const size = 1.5 + (idx % 3) * 1.5;
+  const left = (idx * 1.27 + 2) % 96;
+  const bottom = (idx * 1.13 + 3) % 94;
+  const duration = 20 + (idx % 15) * 2.5;
+  const delay = idx * 0.2;
+  const driftX = (idx % 2 === 0 ? 25 : -25) + (idx % 3) * 5;
+  const driftY = (idx % 3 === 0 ? -30 : -60) - (idx % 4) * 6;
+  const maxOpacity = 0.25 + (idx % 4) * 0.12;
+  const pulseSpeed = 2 + (idx % 4) * 1.5;
+  return { idx, color, size, left, bottom, duration, delay, driftX, driftY, maxOpacity, pulseSpeed };
 });
 
 const renderShapeIcon = (icon) => {
@@ -110,6 +104,13 @@ const renderShapeIcon = (icon) => {
     return (
       <svg viewBox="0 0 24 24" fill="none" stroke="#43D9FF" strokeWidth="2.5" className="w-[30%] h-[30%] opacity-[0.18] animate-pulse">
         <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+      </svg>
+    );
+  }
+  if (icon === 'microscope') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" strokeWidth="2.2" className="w-[30%] h-[30%] opacity-[0.18] animate-pulse">
+        <path d="M6 18h8M3 22h14M12 18a4 4 0 0 0 4-4V7M9 3h3M9 3v11a3 3 0 0 0 3 3M16 7h2M16 11h1" />
       </svg>
     );
   }
@@ -224,77 +225,35 @@ const TourismHero = ({
           0%, 100% { transform: scale(1); opacity: 0.35; }
           50% { transform: scale(1.5); opacity: 0.85; }
         }
-        @keyframes dnaRotation {
-          0% { transform: rotate(0deg) scale(1); }
-          50% { transform: rotate(180deg) scale(1.05); }
-          100% { transform: rotate(360deg) scale(1); }
+        @keyframes auroraSilkFlow {
+          0% { transform: translateY(0) scale(1) rotate(5deg) translate(calc(var(--mouse-x) * -8px), calc(var(--mouse-y) * -8px)); }
+          50% { transform: translateY(-20px) scale(1.08) rotate(12deg) translate(calc(var(--mouse-x) * -8px), calc(var(--mouse-y) * -8px)); }
+          100% { transform: translateY(15px) scale(0.95) rotate(-3deg) translate(calc(var(--mouse-x) * -8px), calc(var(--mouse-y) * -8px)); }
         }
-        @keyframes hexGridScroll {
-          0% { background-position: 0 0; }
-          100% { background-position: 80px 40px; }
+        @keyframes waterFloat {
+          0%, 100% { transform: translate(0, 0); }
+          50% { transform: translate(var(--drift-x, 20px), var(--drift-y, -40px)); }
         }
-        @keyframes iconFloatSlow {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(15deg); }
+        @keyframes ringPulseSlow {
+          0% { transform: scale(0.95) rotate(0deg); opacity: 0.03; }
+          50% { transform: scale(1.03) rotate(180deg); opacity: 0.06; }
+          100% { transform: scale(0.98) rotate(360deg); opacity: 0.04; }
         }
-        @keyframes moleculeRotateFloat {
-          0%, 100% { transform: translate(0, 0) rotate(0deg); }
-          50% { transform: translate(-15px, 20px) rotate(10deg); }
-        }
-        @keyframes ecgPulseLine {
-          0% { stroke-dashoffset: 1200; }
-          100% { stroke-dashoffset: 0; }
-        }
-        @keyframes raysMovement {
-          0% { background-position: 0% 0%; }
-          100% { background-position: 200px 100px; }
-        }
-        @keyframes glassPanelsFloat {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(8deg); }
-        }
-        @keyframes blobFloat1 {
-          0%, 100% { transform: translate(calc(var(--mouse-x) * -25px), calc(var(--mouse-y) * -25px)) scale(1); }
-          50% { transform: translate(calc(80px + var(--mouse-x) * -25px), calc(-50px + var(--mouse-y) * -25px)) scale(1.15); }
-        }
-        @keyframes blobFloat2 {
-          0%, 100% { transform: translate(calc(var(--mouse-x) * -15px), calc(var(--mouse-y) * -15px)) scale(1.1); }
-          50% { transform: translate(calc(-90px + var(--mouse-x) * -15px), calc(70px + var(--mouse-y) * -15px)) scale(0.9); }
-        }
-        @keyframes blobFloat3 {
-          0%, 100% { transform: translate(calc(var(--mouse-x) * -20px), calc(var(--mouse-y) * -20px)) scale(0.95); }
-          50% { transform: translate(calc(60px + var(--mouse-x) * -20px), calc(90px + var(--mouse-y) * -20px)) scale(1.1); }
-        }
-        @keyframes blobFloat4 {
-          0%, 100% { transform: translate(calc(var(--mouse-x) * -10px), calc(var(--mouse-y) * -10px)) scale(1.05); }
-          50% { transform: translate(calc(-70px + var(--mouse-x) * -10px), calc(-80px + var(--mouse-y) * -10px)) scale(0.9); }
-        }
-        @keyframes blobFloat5 {
-          0%, 100% { transform: translate(calc(var(--mouse-x) * -30px), calc(var(--mouse-y) * -30px)) scale(1.0); }
-          50% { transform: translate(calc(50px + var(--mouse-x) * -30px), calc(-60px + var(--mouse-y) * -30px)) scale(1.2); }
-        }
-        @keyframes bubbleFloat {
-          0% { transform: translateY(115vh) translateX(0); opacity: 0; }
-          10% { opacity: 0.8; }
-          90% { opacity: 0.8; }
-          100% { transform: translateY(-15vh) translateX(var(--bubble-drift-x, 25px)); opacity: 0; }
-        }
-        @keyframes bubbleWobble {
-          0%, 100% { transform: scale(1) rotate(0deg); }
-          33% { transform: scale(1.08, 0.92) rotate(2deg); }
-          66% { transform: scale(0.92, 1.08) rotate(-2deg); }
+        @keyframes microPulse {
+          0%, 100% { opacity: 0.15; transform: scale(0.85); }
+          50% { opacity: var(--max-opacity, 0.6); transform: scale(1.15); }
         }
         @keyframes shapeFloat {
-          0%, 100% { transform: translateY(0px) rotate(0deg) translate(calc(var(--mouse-x) * -12px), calc(var(--mouse-y) * -12px)); }
-          50% { transform: translateY(-25px) rotate(8deg) translate(calc(var(--mouse-x) * -12px + 5px), calc(var(--mouse-y) * -12px - 5px)); }
+          0%, 100% { transform: translateY(0px) rotate(0deg) translate(calc(var(--mouse-x) * 10px), calc(var(--mouse-y) * 10px)); }
+          50% { transform: translateY(-25px) rotate(8deg) translate(calc(var(--mouse-x) * 10px + 3px), calc(var(--mouse-y) * 10px - 3px)); }
         }
         @keyframes randomDrift {
-          0%, 100% { transform: translate(0, 0) scale(1) translate(calc(var(--mouse-x) * -20px), calc(var(--mouse-y) * -20px)); opacity: 0.15; }
-          50% { transform: translate(var(--drift-x, 30px), var(--drift-y, -60px)) scale(1.2) translate(calc(var(--mouse-x) * -20px), calc(var(--mouse-y) * -20px)); opacity: var(--max-opacity, 0.4); }
+          0%, 100% { transform: translate(0, 0) translate(calc(var(--mouse-x) * -14px), calc(var(--mouse-y) * -14px)); }
+          50% { transform: translate(var(--drift-x, 25px), var(--drift-y, -50px)) translate(calc(var(--mouse-x) * -14px), calc(var(--mouse-y) * -14px)); }
         }
         @keyframes gridPulse {
-          0%, 100% { opacity: 0.04; }
-          50% { opacity: 0.08; }
+          0%, 100% { opacity: 0.03; }
+          50% { opacity: 0.06; }
         }
         @keyframes hexGridScroll {
           0% { background-position: 0 0; }
@@ -306,7 +265,7 @@ const TourismHero = ({
         }
         @keyframes glassShimmer {
           0% { transform: translateX(-150%) skewX(-15deg); opacity: 0; }
-          15% { opacity: 0.15; }
+          15% { opacity: 0.08; }
           30% { transform: translateX(250%) skewX(-15deg); opacity: 0; }
           100% { transform: translateX(250%) skewX(-15deg); opacity: 0; }
         }
@@ -315,32 +274,20 @@ const TourismHero = ({
         }
         .hero-hex-grid {
           background-image: 
-            linear-gradient(30deg, rgba(37, 99, 235, 0.4) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.4) 87.5%, rgba(37, 99, 235, 0.4)),
-            linear-gradient(150deg, rgba(37, 99, 235, 0.4) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.4) 87.5%, rgba(37, 99, 235, 0.4)),
-            linear-gradient(270deg, rgba(37, 99, 235, 0.4) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.4) 87.5%, rgba(37, 99, 235, 0.4));
+            linear-gradient(30deg, rgba(37, 99, 235, 0.3) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.3) 87.5%, rgba(37, 99, 235, 0.3)),
+            linear-gradient(150deg, rgba(37, 99, 235, 0.3) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.3) 87.5%, rgba(37, 99, 235, 0.3)),
+            linear-gradient(270deg, rgba(37, 99, 235, 0.3) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.3) 87.5%, rgba(37, 99, 235, 0.3));
           background-size: 40px 70px;
-          animation: hexGridScroll 50s linear infinite, gridPulse 6s ease-in-out infinite;
+          animation: hexGridScroll 60s linear infinite, gridPulse 8s ease-in-out infinite;
         }
         .hero-noise-texture {
-          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
-          opacity: 0.015;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+          opacity: 0.012;
         }
         .hero-light-rays {
-          background: repeating-linear-gradient(60deg, transparent, transparent 80px, rgba(90, 169, 255, 0.1) 80px, rgba(90, 169, 255, 0.1) 160px);
+          background: repeating-linear-gradient(60deg, transparent, transparent 80px, rgba(90, 169, 255, 0.08) 80px, rgba(90, 169, 255, 0.08) 160px);
           animation: raysMovement 45s linear infinite;
-          opacity: 0.06;
-        }
-        .animate-blob-1-fast {
-          animation: blobFloat1 18s ease-in-out infinite alternate;
-        }
-        .animate-blob-2-med {
-          animation: blobFloat2 24s ease-in-out infinite alternate;
-        }
-        .animate-blob-3-slow {
-          animation: blobFloat3 30s ease-in-out infinite alternate;
-        }
-        .animate-blob-4-extraslow {
-          animation: blobFloat4 36s ease-in-out infinite alternate;
+          opacity: 0.05;
         }
         .swiper {
           width: 100%;
@@ -355,20 +302,27 @@ const TourismHero = ({
         }
       `}</style>
 
-      {/* LAYER 1: Aurora Gradient & Moving Colorful Glow Blobs (White Base) */}
+      {/* LAYER 1: Pure White Base */}
       <div className="absolute inset-0 hero-aurora-bg z-0 pointer-events-none" />
-      {/* Soft Blue */}
-      <div className="absolute top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#5AA9FF]/[0.15] blur-[130px] animate-blob-1-fast pointer-events-none z-0" />
-      {/* Purple */}
-      <div className="absolute top-[-15%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-[#8B7CFF]/[0.12] blur-[150px] animate-blob-2-med pointer-events-none z-0" />
-      {/* Cyan */}
-      <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#43D9FF]/[0.15] blur-[130px] animate-blob-3-slow pointer-events-none z-0" />
-      {/* Mint */}
-      <div className="absolute bottom-[-15%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-[#5BE7C4]/[0.10] blur-[150px] animate-blob-4-extraslow pointer-events-none z-0" />
-      {/* Pink Accent */}
-      <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-[#FF7AB8]/[0.10] blur-[140px] animate-blob-2-med pointer-events-none z-0" />
-      {/* Very Light Indigo */}
-      <div className="absolute top-[35%] left-[15%] w-[42vw] h-[42vw] rounded-full bg-[#DDE8FF]/[0.18] blur-[120px] animate-blob-3-slow pointer-events-none z-0" />
+
+      {/* LAYER 2: Giant Aurora Flowing Ribbons (Silk-like, extremely slow) */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden opacity-[0.85]">
+        {/* Blue/Indigo Ribbon */}
+        <div 
+          className="absolute w-[90vw] h-[25vw] top-[5%] left-[-20%] rounded-[100%_80%_60%_70%_/_80%_60%_80%_60%] blur-[150px] bg-gradient-to-r from-[#5AA9FF]/12 via-[#8B7CFF]/10 to-transparent"
+          style={{ animation: 'auroraSilkFlow 35s ease-in-out infinite alternate' }}
+        />
+        {/* Cyan/Mint Ribbon */}
+        <div 
+          className="absolute w-[80vw] h-[20vw] bottom-[10%] right-[-10%] rounded-[90%_70%_80%_60%_/_70%_80%_60%_80%] blur-[130px] bg-gradient-to-r from-[#43D9FF]/10 via-[#5BE7C4]/12 to-transparent"
+          style={{ animation: 'auroraSilkFlow 30s ease-in-out infinite alternate-reverse' }}
+        />
+        {/* Purple/Pink Ribbon */}
+        <div 
+          className="absolute w-[75vw] h-[22vw] top-[30%] left-[10%] rounded-[80%_90%_70%_85%_/_90%_70%_95%_80%] blur-[140px] bg-gradient-to-r from-[#8B7CFF]/8 via-[#FF7AB8]/10 to-transparent"
+          style={{ animation: 'auroraSilkFlow 38s ease-in-out infinite alternate' }}
+        />
+      </div>
 
       {/* Interactive mouse spotlight glow */}
       <div 
@@ -378,132 +332,146 @@ const TourismHero = ({
         }}
       />
 
-      {/* High-tech Radar concentric circle systems */}
-      <div className="absolute top-[12%] right-[32%] w-[280px] h-[280px] opacity-[0.06] pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_55s_linear_infinite]">
-          <circle cx="50" cy="50" r="45" stroke="#5AA9FF" strokeWidth="0.5" strokeDasharray="3 3" fill="none" />
-          <circle cx="50" cy="50" r="35" stroke="#8B7CFF" strokeWidth="0.8" fill="none" />
-          <circle cx="50" cy="50" r="25" stroke="#5BE7C4" strokeWidth="0.5" strokeDasharray="5 2" fill="none" />
-          <line x1="50" y1="5" x2="50" y2="95" stroke="#5AA9FF" strokeWidth="0.2" />
-          <line x1="5" y1="50" x2="95" y2="50" stroke="#5AA9FF" strokeWidth="0.2" />
-        </svg>
+      {/* LAYER 4: Huge Glowing Energy Rings (Outline only, z-index 0) */}
+      <div className="absolute top-[15%] left-[-10%] w-[1000px] h-[1000px] pointer-events-none z-0 overflow-hidden flex items-center justify-center">
+        {/* Ring 900px */}
+        <div 
+          className="absolute rounded-full border border-[#5AA9FF]/20"
+          style={{
+            width: '900px',
+            height: '900px',
+            opacity: 0.04,
+            animation: 'ringPulseSlow 40s ease-in-out infinite alternate',
+          }}
+        />
+        {/* Ring 700px */}
+        <div 
+          className="absolute rounded-full border border-dashed border-[#8B7CFF]/25"
+          style={{
+            width: '700px',
+            height: '700px',
+            opacity: 0.05,
+            animation: 'ringPulseSlow 32s ease-in-out infinite alternate-reverse',
+          }}
+        />
+        {/* Ring 500px */}
+        <div 
+          className="absolute rounded-full border border-[#5BE7C4]/25"
+          style={{
+            width: '500px',
+            height: '500px',
+            opacity: 0.04,
+            animation: 'ringPulseSlow 25s ease-in-out infinite alternate',
+          }}
+        />
       </div>
 
-      <div className="absolute bottom-[20%] left-[8%] w-[220px] h-[220px] opacity-[0.05] pointer-events-none z-0">
-        <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_70s_linear_infinite_reverse]">
-          <circle cx="50" cy="50" r="40" stroke="#43D9FF" strokeWidth="0.6" strokeDasharray="4 4" fill="none" />
-          <circle cx="50" cy="50" r="20" stroke="#FF7AB8" strokeWidth="0.8" fill="none" />
-          <line x1="50" y1="50" x2="90" y2="90" stroke="#43D9FF" strokeWidth="0.5" />
-        </svg>
-      </div>
-
-      {/* LAYER 3: Premium Floating Geometric Glass Boxes/Panels (z-index 1 - behind bubbles) */}
+      {/* LAYER 7: Floating Glass Panels with icons (z-index 1 - behind bubbles) */}
       <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
-        {SHAPES.map((shape) => {
-          let shapeClasses = "absolute flex items-center justify-center pointer-events-none transition-all ";
-          if (shape.type === "capsule" || shape.type === "pill") shapeClasses += "rounded-full ";
-          else if (shape.type === "ring" || shape.type === "lens") shapeClasses += "rounded-full ";
-          else shapeClasses += "rounded-[40px] ";
-
-          if (shape.isFilled) {
-            shapeClasses += "bg-white/12 border border-white/35 backdrop-blur-[12px] shadow-sm shadow-white/10";
-          } else {
-            shapeClasses += "border border-white/20 bg-transparent";
-          }
-
-          const width = shape.type === "capsule" || shape.type === "pill" ? `${shape.size * 2}px` : `${shape.size}px`;
-
-          return (
-            <div
-              key={shape.idx}
-              className={shapeClasses}
-              style={{
-                width: width,
-                height: `${shape.size}px`,
-                left: `${shape.left}%`,
-                top: `${shape.top}%`,
-                opacity: 0.12,
-                animation: `shapeFloat ${shape.duration}s ease-in-out infinite alternate`,
-                animationDelay: `${shape.idx * 0.4}s`
-              }}
-            >
-              {shape.icon && renderShapeIcon(shape.icon)}
-            </div>
-          );
-        })}
+        {GLASS_PANELS.map((panel) => (
+          <div
+            key={panel.idx}
+            className="absolute rounded-2xl border border-white/40 bg-white/8 backdrop-blur-[12px] shadow-sm flex items-center justify-center transition-transform duration-500 ease-out"
+            style={{
+              width: `${panel.size}px`,
+              height: `${panel.size}px`,
+              left: `${panel.left}%`,
+              top: `${panel.top}%`,
+              opacity: 0.14,
+              animation: `shapeFloat ${panel.duration}s ease-in-out infinite alternate`,
+              animationDelay: `${panel.idx * 0.6}s`,
+              transform: `translate(calc(var(--mouse-x) * 10px), calc(var(--mouse-y) * 10px))`
+            }}
+          >
+            {renderShapeIcon(panel.icon)}
+          </div>
+        ))}
       </div>
 
       {/* LAYER 5: Softly Glowing Technology Connection Network Lines (z-index 2) */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-none z-[2]" viewBox="0 0 1000 700" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M -50 150 Q 150 120 280 250" stroke="rgba(90, 169, 255, 0.22)" strokeWidth="1" fill="none" />
-        <circle r="2.5" fill="#43D9FF" opacity="0.95">
+      <svg 
+        className="absolute inset-0 w-full h-full pointer-events-none z-[2] transition-transform duration-500 ease-out" 
+        viewBox="0 0 1000 700" 
+        preserveAspectRatio="none" 
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ transform: `translate(calc(var(--mouse-x) * 6px), calc(var(--mouse-y) * 6px))` }}
+      >
+        {/* Line 1 */}
+        <path d="M -50 150 Q 150 120 280 250" stroke="rgba(90, 169, 255, 0.2)" strokeWidth="1" fill="none" />
+        <circle r="2" fill="#43D9FF" opacity="0.95">
           <animateMotion dur="12s" repeatCount="indefinite" path="M -50 150 Q 150 120 280 250" />
         </circle>
 
-        <path d="M 280 250 L 150 450" stroke="rgba(139, 124, 255, 0.22)" strokeWidth="1" fill="none" />
-        <circle r="2.5" fill="#8B7CFF" opacity="0.95">
-          <animateMotion dur="10s" repeatCount="indefinite" path="M 280 250 L 150 450" />
+        {/* Line 2 (reversed direction) */}
+        <path d="M 150 450 L 280 250" stroke="rgba(139, 124, 255, 0.2)" strokeWidth="1" fill="none" />
+        <circle r="2" fill="#8B7CFF" opacity="0.95">
+          <animateMotion dur="10s" repeatCount="indefinite" path="M 150 450 L 280 250" />
         </circle>
 
-        <path d="M 150 450 Q 400 480 650 350" stroke="rgba(91, 231, 196, 0.22)" strokeWidth="1" fill="none" />
-        <circle r="2.5" fill="#5BE7C4" opacity="0.95">
-          <animateMotion dur="15s" repeatCount="indefinite" path="M 150 450 Q 400 480 650 350" />
+        {/* Line 3 (reversed direction) */}
+        <path d="M 650 350 Q 400 480 150 450" stroke="rgba(91, 231, 196, 0.2)" strokeWidth="1" fill="none" />
+        <circle r="2" fill="#5BE7C4" opacity="0.95">
+          <animateMotion dur="15s" repeatCount="indefinite" path="M 650 350 Q 400 480 150 450" />
         </circle>
 
-        <path d="M 850 100 Q 750 300 900 420" stroke="rgba(255, 122, 184, 0.22)" strokeWidth="1" fill="none" />
-        <circle r="2.5" fill="#FF7AB8" opacity="0.95">
+        {/* Line 4 */}
+        <path d="M 850 100 Q 750 300 900 420" stroke="rgba(255, 122, 184, 0.2)" strokeWidth="1" fill="none" />
+        <circle r="2" fill="#FF7AB8" opacity="0.95">
           <animateMotion dur="14s" repeatCount="indefinite" path="M 850 100 Q 750 300 900 420" />
         </circle>
 
-        <path d="M 900 420 L 700 600" stroke="rgba(90, 169, 255, 0.22)" strokeWidth="1" fill="none" />
-        <circle r="2.5" fill="#5AA9FF" opacity="0.95">
-          <animateMotion dur="9s" repeatCount="indefinite" path="M 900 420 L 700 600" />
+        {/* Line 5 (reversed direction) */}
+        <path d="M 700 600 L 900 420" stroke="rgba(90, 169, 255, 0.2)" strokeWidth="1" fill="none" />
+        <circle r="2" fill="#5AA9FF" opacity="0.95">
+          <animateMotion dur="9s" repeatCount="indefinite" path="M 700 600 L 900 420" />
         </circle>
 
-        <path d="M 400 80 L 550 200" stroke="rgba(139, 124, 255, 0.18)" strokeWidth="1" fill="none" />
-        <circle r="2" fill="#8B7CFF" opacity="0.9">
+        {/* Line 6 */}
+        <path d="M 400 80 L 550 200" stroke="rgba(139, 124, 255, 0.15)" strokeWidth="1" fill="none" />
+        <circle r="1.5" fill="#8B7CFF" opacity="0.9">
           <animateMotion dur="11s" repeatCount="indefinite" path="M 400 80 L 550 200" />
         </circle>
 
-        <path d="M 50 550 Q 300 650 500 500" stroke="rgba(91, 231, 196, 0.22)" strokeWidth="1" fill="none" />
-        <circle r="2.5" fill="#5BE7C4" opacity="0.95">
-          <animateMotion dur="16s" repeatCount="indefinite" path="M 50 550 Q 300 650 500 500" />
+        {/* Line 7 (reversed direction) */}
+        <path d="M 500 500 Q 300 650 50 550" stroke="rgba(91, 231, 196, 0.2)" strokeWidth="1" fill="none" />
+        <circle r="2" fill="#5BE7C4" opacity="0.95">
+          <animateMotion dur="16s" repeatCount="indefinite" path="M 500 500 Q 300 650 50 550" />
         </circle>
       </svg>
 
       {/* LAYER 5.2: Pulse ECG/DNA wave path */}
-      <svg className="absolute bottom-[10%] left-0 right-0 h-[80px] w-full pointer-events-none opacity-[0.07] z-0" preserveAspectRatio="none" viewBox="0 0 1000 100">
+      <svg className="absolute bottom-[10%] left-0 right-0 h-[80px] w-full pointer-events-none opacity-[0.06] z-0" preserveAspectRatio="none" viewBox="0 0 1000 100">
         <path d="M 0 50 C 150 20, 150 80, 300 50 C 450 20, 450 80, 600 50 C 750 20, 750 80, 900 50 C 950 35, 980 65, 1000 50" stroke="#5BE7C4" strokeWidth="2.2" fill="none" strokeDasharray="6 6" />
         <path d="M 0 50 C 150 80, 150 20, 300 50 C 450 80, 450 20, 600 50 C 750 80, 750 20, 900 50 C 950 65, 980 35, 1000 50" stroke="#8B7CFF" strokeWidth="1.8" fill="none" />
       </svg>
 
-      {/* LAYER 6: Tiny Glowing Particles in Blue, Cyan, Purple, Mint, Pink (z-index 3) */}
-      <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
-        {COLORED_PARTICLES.map((p) => (
+      {/* LAYER 6: 80 Glowing Micro Particles (Drifting, pulsing, rotating) */}
+      <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+        {MICRO_PARTICLES.map((p) => (
           <div
             key={p.idx}
-            className="absolute pointer-events-none rounded-full"
+            className="absolute rounded-full pointer-events-none"
             style={{
               width: `${p.size}px`,
               height: `${p.size}px`,
               left: `${p.left}%`,
               bottom: `${p.bottom}%`,
               backgroundColor: p.color,
-              filter: 'blur-[0.5px]',
-              animation: `randomDrift ${p.duration}s ease-in-out infinite`,
+              boxShadow: p.color === "#FFFFFF" ? "0 0 6px #FFFFFF" : `0 0 6px ${p.color}`,
+              animation: `randomDrift ${p.duration}s ease-in-out infinite, microPulse ${p.pulseSpeed}s ease-in-out infinite alternate`,
               animationDelay: `${p.delay}s`,
               '--drift-x': `${p.driftX}px`,
               '--drift-y': `${p.driftY}px`,
               '--max-opacity': p.maxOpacity,
-              opacity: 0
+              opacity: 0,
             }}
           />
         ))}
       </div>
 
-      {/* LAYER 2: Floating Glass Bubbles with High Gloss Glares (z-index 4 - in front) */}
-      <div className="absolute inset-0 z-[4] pointer-events-none overflow-hidden">
-        {BUBBLES.map((b) => (
+      {/* LAYER 3: Floating Premium Glass Orbs with High Gloss reflections (z-index 3 - Foreground) */}
+      <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
+        {GLASS_ORBS.map((b) => (
           <div
             key={b.idx}
             className="absolute pointer-events-none"
@@ -511,38 +479,26 @@ const TourismHero = ({
               width: `${b.size}px`,
               height: `${b.size}px`,
               left: `${b.left}%`,
-              bottom: '-10%',
-              animation: `bubbleFloat ${b.duration}s linear infinite`,
+              bottom: `${b.bottom}%`,
+              animation: `waterFloat ${b.duration}s ease-in-out infinite alternate`,
               animationDelay: `${b.delay}s`,
-              '--bubble-drift-x': `${b.driftX}px`,
-              opacity: 0,
+              '--drift-x': `${b.driftX}px`,
+              '--drift-y': `${b.driftY}px`,
             }}
           >
             <div 
-              className="relative w-full h-full rounded-full border border-white/50 backdrop-blur-[12px] flex items-center justify-center"
+              className="relative w-full h-full rounded-full border border-white/50 backdrop-blur-[15px] flex items-center justify-center transition-transform duration-500 ease-out"
               style={{
-                background: `radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.6) 0%, ${b.bubbleColor} 45%, rgba(255, 255, 255, 0) 85%)`,
-                boxShadow: "inset 0 0 12px rgba(255, 255, 255, 0.5), inset 0 4px 8px rgba(255, 255, 255, 0.25), 0 4px 15px rgba(255, 255, 255, 0.15)",
-                animation: "bubbleWobble 4s ease-in-out infinite",
-                transform: `translate(calc(var(--mouse-x) * 22px), calc(var(--mouse-y) * 22px))`
+                background: `radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.1) 40%, transparent 80%)`,
+                boxShadow: `0 0 20px ${b.glowColor}1a, inset 0 0 12px rgba(255, 255, 255, 0.4), 0 4px 15px rgba(255, 255, 255, 0.1)`,
+                transform: `translate(calc(var(--mouse-x) * 18px), calc(var(--mouse-y) * 18px))`
               }}
             >
-              {/* Highlight Glare - Crescent top-left reflection */}
-              <div className="absolute top-[12%] left-[12%] w-[25%] h-[25%] rounded-full bg-gradient-to-br from-white/90 to-white/0 pointer-events-none" />
+              {/* Specular White glare crescent highlight */}
+              <div className="absolute top-[12%] left-[12%] w-[25%] h-[25%] rounded-full bg-gradient-to-br from-white/95 to-white/0 pointer-events-none" />
               
-              {/* Highlight Glare - Subtle bottom reflection */}
-              <div className="absolute bottom-[12%] right-[12%] w-[20%] h-[20%] rounded-full bg-white/20 blur-[0.5px] pointer-events-none" />
-
-              {b.hasIcon === 'cross' && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="#FF7AB8" strokeWidth="3.5" className="w-[35%] h-[35%] opacity-80 relative z-10">
-                  <path d="M19 12H5M12 19V5" />
-                </svg>
-              )}
-              {b.hasIcon === 'shield' && (
-                <svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" strokeWidth="2.5" className="w-[35%] h-[35%] opacity-80 relative z-10">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-                </svg>
-              )}
+              {/* Reflection sheen bottom highlight */}
+              <div className="absolute bottom-[12%] right-[12%] w-[18%] h-[18%] rounded-full bg-white/30 blur-[0.5px] pointer-events-none" />
             </div>
           </div>
         ))}
@@ -563,7 +519,7 @@ const TourismHero = ({
 
       {/* Soft Glass Shimmer Sweep Layer */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 bottom-0 w-[50%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" style={{ animation: "glassShimmer 10s ease-in-out infinite" }} />
+        <div className="absolute top-0 bottom-0 w-[50%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" style={{ animation: "glassShimmer 9s ease-in-out infinite" }} />
       </div>
 
       {/* Super subtle paper/noise overlay texture to give depth */}
