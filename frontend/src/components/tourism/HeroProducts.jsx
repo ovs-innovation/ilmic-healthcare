@@ -3,17 +3,17 @@ import { FiArrowRight } from "react-icons/fi";
 import IlmicProductCard from "@components/product/IlmicProductCard";
 
 const HeroProducts = ({ products, onEnquire }) => (
-  <section className="llmic-section bg-gradient-to-b from-white to-ilmic-blue-soft" id="hero-products">
+  <section className="llmic-section ilmic-hero-products bg-gradient-to-b from-white to-ilmic-blue-soft" id="hero-products">
     <div className="llmic-container">
-      <div className="text-center max-w-3xl mx-auto mb-12">
+      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-12 px-1">
         <p className="llmic-eyebrow">Featured Products</p>
         <h2 className="llmic-heading">Our Hero Products</h2>
-        <p className="llmic-subheading">
+        <p className="llmic-subheading text-sm sm:text-base leading-relaxed">
           Quality pharmaceutical products in our own brands — oncology, general pharma & health supplements.
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
         {products.map((prod) => (
           <IlmicProductCard
             key={prod._id || prod.slug}

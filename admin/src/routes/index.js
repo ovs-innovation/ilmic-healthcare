@@ -7,6 +7,7 @@ const SubCategories = lazy(() => import("@/pages/SubCategories"));
 const ChildCategory = lazy(() => import("@/pages/ChildCategory"));
 const Products = lazy(() => import("@/pages/Products"));
 const Brands = lazy(() => import("@/pages/Brands"));
+const Services = lazy(() => import("@/pages/Services"));
 const FaqSettings = lazy(() => import("@/pages/FaqSettings"));
 const Leads = lazy(() => import("@/pages/Leads"));
 const LeadDetails = lazy(() => import("@/pages/LeadDetails"));
@@ -20,6 +21,7 @@ const routes = [
   { path: "/sub-categories", component: SubCategories },
   { path: "/categories/:id", component: ChildCategory },
   { path: "/brands", component: Brands },
+  { path: "/services", component: Services },
   { path: "/faq", component: FaqSettings },
   { path: "/edit-profile", component: EditProfile },
   { path: "/leads/general", component: Leads },
@@ -38,8 +40,10 @@ const routeAccessList = [
   { label: "Categories", value: "categories" },
   { label: "Sub Categories", value: "sub-categories" },
   { label: "Brands", value: "brands" },
+  { label: "Services", value: "services" },
   { label: "FAQ", value: "faq" },
   { label: "Enquiries", value: "leads" },
+  { label: "Homepage & Footer", value: "settings" },
   { label: "Edit Profile", value: "edit-profile" },
 ];
 

@@ -3,12 +3,15 @@ import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import { FiPhoneCall, FiMail, FiMapPin, FiClock, FiShield, FiGlobe } from "react-icons/fi";
 
+import { useIlmicSettings } from "@context/IlmicSettingsContext";
 import ilmicDefaults, { ilmicCategories, ILMIC_LOGO } from "@utils/ilmicDefaults";
 
 const BADGE_ICONS = [FiShield, FiGlobe];
 
 const Footer = () => {
-  const footer = ilmicDefaults.footer;
+  const { settings } = useIlmicSettings();
+  const footer = settings?.footer || ilmicDefaults.footer;
+  const logo = footer.logo || ILMIC_LOGO;
   const badges = (footer.badges || ilmicDefaults.footer.badges).filter(Boolean);
 
   return (
@@ -20,7 +23,7 @@ const Footer = () => {
           <div className="lg:col-span-4 space-y-4">
             <Link href="/" className="inline-flex items-center flex-shrink-0 rounded-xl overflow-hidden">
               <img
-                src={ILMIC_LOGO}
+                src={logo}
                 alt="ILMIC Health Care Pvt. Ltd."
                 className="h-[62px] sm:h-[66px] w-auto max-w-[210px] object-contain"
               />
@@ -73,14 +76,16 @@ const Footer = () => {
           <div className="lg:col-span-3">
             <h4 className="text-sm font-bold text-ilmic-text uppercase tracking-wide mb-4">Contact Us</h4>
             <div className="space-y-3 text-sm">
-              <a href="tel:+918810272080" className="flex items-center gap-3 text-ilmic-text hover:text-ilmic-blue transition-colors">
+              <a href={footer.phoneHref || "tel:+918810272080"} className="flex items-center gap-3 text-ilmic-text hover:text-ilmic-blue transition-colors">
                 <span className="w-8 h-8 rounded-lg bg-white border border-ilmic-border text-ilmic-blue flex items-center justify-center flex-shrink-0 shadow-sm"><FiPhoneCall className="w-4 h-4" /></span>
-                <span>+91 88102 72080</span>
+                <span>{footer.phone}</span>
               </a>
-              <a href="tel:+919217174829" className="flex items-center gap-3 text-ilmic-text hover:text-ilmic-blue transition-colors">
-                <span className="w-8 h-8 rounded-lg bg-white border border-ilmic-border text-ilmic-blue flex items-center justify-center flex-shrink-0 shadow-sm"><FiPhoneCall className="w-4 h-4" /></span>
-                <span>+91 92171 74829</span>
-              </a>
+              {footer.phone2 && (
+                <a href="tel:+919217174829" className="flex items-center gap-3 text-ilmic-text hover:text-ilmic-blue transition-colors">
+                  <span className="w-8 h-8 rounded-lg bg-white border border-ilmic-border text-ilmic-blue flex items-center justify-center flex-shrink-0 shadow-sm"><FiPhoneCall className="w-4 h-4" /></span>
+                  <span>{footer.phone2}</span>
+                </a>
+              )}
               <a href={`mailto:${footer.email}`} className="flex items-center gap-3 text-ilmic-text hover:text-ilmic-blue transition-colors">
                 <span className="w-8 h-8 rounded-lg bg-white border border-ilmic-border text-ilmic-blue flex items-center justify-center flex-shrink-0 shadow-sm"><FiMail className="w-4 h-4" /></span>
                 <span>{footer.email}</span>
@@ -99,7 +104,7 @@ const Footer = () => {
         </div>
 
         <div className="pt-5 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-ilmic-muted">
-          <p>© {new Date().getFullYear()} ILMIC Health Care Pvt. Ltd. All rights reserved.</p>
+          <p>{footer.copyright || `© ${new Date().getFullYear()} ILMIC Health Care Pvt. Ltd. All rights reserved.`}</p>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <Link href="/privacy-policy" className="hover:text-ilmic-blue transition-colors">Privacy</Link>
             <span className="text-ilmic-border">|</span>

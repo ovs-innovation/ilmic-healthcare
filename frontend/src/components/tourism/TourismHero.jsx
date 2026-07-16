@@ -1,8 +1,5 @@
+import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay } from "swiper/modules";
-
 import {
   FiSend,
   FiPhoneCall,
@@ -12,94 +9,96 @@ import {
   FiPackage,
   FiFileText,
   FiArrowRight,
+  FiChevronLeft,
+  FiChevronRight,
+  FiHeart,
 } from "react-icons/fi";
+import { FaHandshake } from "react-icons/fa";
 
-const SLIDER_IMAGES = [
-  "/im1.jpg",
-  "/im2.jpg",
-  "/im3.jpg",
-  "/im4.jpg"
+const FALLBACK_IMAGES = [
+  "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=85",
+  "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
 ];
 
-const TourismHero = ({ slide, ctaPrimary, ctaSecondary, onEnquiry, phone }) => {
-  if (!slide) return null;
+const getHeadline = (slide) => {
+  if (slide?.titleLine1 && slide?.titleHighlight) {
+    return `${slide.titleLine1} ${slide.titleHighlight}${
+      slide.titleLine2 ? ` ${slide.titleLine2}` : "."
+    }`;
+  }
+  return slide?.titleText || "Trusted Pharmaceutical Exporter & Supplier Since 2021.";
+};
+
+const BadgeIcon = ({ type }) => {
+  if (type === "handshake") {
+    return <FaHandshake className="w-[18px] h-[18px] text-ilmic-blue" />;
+  }
+  if (type === "service") {
+    return <FiHeart className="w-[18px] h-[18px] text-ilmic-blue" />;
+  }
+  return <FiShield className="w-[18px] h-[18px] text-ilmic-blue" />;
+};
+
+const TourismHero = ({
+  slides = [],
+  slide,
+  ctaPrimary,
+  ctaSecondary,
+  onEnquiry,
+  phone,
+}) => {
+  const heroSlides = slides.length ? slides : slide ? [slide] : [];
+  const [current, setCurrent] = useState(0);
+  const [imgFallback, setImgFallback] = useState({});
+
+  const slideCount = heroSlides.length;
+  const activeSlide = heroSlides[current] || heroSlides[0];
+
+  const goTo = useCallback(
+    (index) => {
+      if (!slideCount) return;
+      setCurrent((index + slideCount) % slideCount);
+    },
+    [slideCount],
+  );
+
+  const next = useCallback(() => goTo(current + 1), [current, goTo]);
+  const prev = useCallback(() => goTo(current - 1), [current, goTo]);
+
+  useEffect(() => {
+    if (slideCount <= 1) return undefined;
+    const timer = setInterval(() => {
+      setCurrent((prev) => (prev + 1) % slideCount);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [slideCount]);
+
+  if (!activeSlide) return null;
 
   const tel = (phone || "+91 88102 72080").replace(/\s/g, "");
+  const headline = getHeadline(activeSlide);
+  const badge = activeSlide.badge || {
+    icon: "shield",
+    title: "Quality You Can Trust",
+    desc: "We ensure GMP-certified products with global quality standards.",
+  };
+
+  const getImageSrc = (item, idx) => {
+    if (imgFallback[idx] != null) return FALLBACK_IMAGES[imgFallback[idx]] || FALLBACK_IMAGES[0];
+    return item.bgImage || FALLBACK_IMAGES[idx % FALLBACK_IMAGES.length];
+  };
+
+  const handleImgError = (idx) => {
+    setImgFallback((prev) => ({
+      ...prev,
+      [idx]: Math.min((prev[idx] ?? -1) + 1, FALLBACK_IMAGES.length - 1),
+    }));
+  };
 
   return (
     <section className="ilmic-ref-hero relative overflow-hidden bg-white">
       <style>{`
-        @keyframes diagonalGrid {
-          0% { background-position: 0 0; }
-          100% { background-position: 40px 40px; }
-        }
-        @keyframes floatSlow1 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-15px) rotate(6deg); }
-        }
-        @keyframes floatSlow2 {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(20px) rotate(-8deg); }
-        }
-        @keyframes floatSlow3 {
-          0%, 100% { transform: translateY(0px) translate(0px) rotate(0deg); }
-          50% { transform: translateY(-10px) translateX(10px) rotate(12deg); }
-        }
-        @keyframes mapDrift {
-          0%, 100% { transform: translateX(-3%) scale(1.02); }
-          50% { transform: translateX(3%) scale(0.98); }
-        }
-        @keyframes pulseGlow {
-          0%, 100% { opacity: 0.15; transform: scale(0.97); }
-          50% { opacity: 0.45; transform: scale(1.03); }
-        }
-        @keyframes beamSweep {
-          0% { transform: translateX(-100%) skewX(-15deg); }
-          30%, 100% { transform: translateX(300%) skewX(-15deg); }
-        }
-        @keyframes blobFloat {
-          0%, 100% { transform: translate(0px, 0px) scale(1); }
-          33% { transform: translate(40px, -60px) scale(1.1); }
-          66% { transform: translate(-30px, 30px) scale(0.95); }
-        }
-        .bg-grid-animate {
-          animation: diagonalGrid 20s linear infinite;
-        }
-        .animate-float-1 {
-          animation: floatSlow1 12s ease-in-out infinite;
-        }
-        .animate-float-2 {
-          animation: floatSlow2 16s ease-in-out infinite;
-        }
-        .animate-float-3 {
-          animation: floatSlow3 20s ease-in-out infinite;
-        }
-        .animate-map-drift {
-          animation: mapDrift 40s ease-in-out infinite;
-        }
-        .animate-pulse-glow {
-          animation: pulseGlow 5s ease-in-out infinite;
-        }
-        .animate-beam {
-          animation: beamSweep 10s cubic-bezier(0.25, 1, 0.5, 1) infinite;
-        }
-        .animate-blob-1 {
-          animation: blobFloat 25s ease-in-out infinite;
-        }
-        .animate-blob-2 {
-          animation: blobFloat 30s ease-in-out infinite-reverse;
-        }
-        .swiper {
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          inset: 0;
-        }
-        .swiper-slide {
-          width: 100%;
-          height: 100%;
-          position: relative;
-        }
         @keyframes auroraFlow {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
@@ -221,6 +220,17 @@ const TourismHero = ({ slide, ctaPrimary, ctaSecondary, onEnquiry, phone }) => {
         .animate-glass-panels {
           animation: glassPanelsFloat 20s ease-in-out infinite alternate;
         }
+        .swiper {
+          width: 100%;
+          height: 100%;
+          position: absolute;
+          inset: 0;
+        }
+        .swiper-slide {
+          width: 100%;
+          height: 100%;
+          position: relative;
+        }
       `}</style>
 
       {/* Layer 1: Large animated Aurora Gradient background */}
@@ -241,7 +251,7 @@ const TourismHero = ({ slide, ctaPrimary, ctaSecondary, onEnquiry, phone }) => {
       {/* Layer 3: Floating glowing particles (Drifting & Staggered) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute w-2.5 h-2.5 rounded-full bg-[#2563EB]/40 blur-[0.5px] left-[15%] bottom-[10%] animate-particle-1" />
-        <div className="absolute w-2 h-2 rounded-full bg-[#8B5CF6]/50 blur-[0.5px] left-[45%] bottom-[30%] animate-particle-2" />
+        <div className="absolute w-2.5 h-2.5 rounded-full bg-[#8B5CF6]/50 blur-[0.5px] left-[45%] bottom-[30%] animate-particle-2" />
         <div className="absolute w-3 h-3 rounded-full bg-[#06B6D4]/40 left-[75%] bottom-[20%] animate-particle-3" />
         <div className="absolute w-2 h-2 rounded-full bg-[#EC4899]/50 blur-[0.5px] left-[30%] top-[25%] animate-particle-4" />
         <div className="absolute w-2.5 h-2.5 rounded-full bg-[#FBBF24]/40 left-[85%] top-[15%] animate-particle-5" />
@@ -324,51 +334,60 @@ const TourismHero = ({ slide, ctaPrimary, ctaSecondary, onEnquiry, phone }) => {
 
       <div className="max-w-[1320px] mx-auto px-4 sm:px-6 relative z-10 pt-8 sm:pt-10 pb-24 sm:pb-28 lg:pt-12 lg:pb-32">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-8 items-center">
-          {/* LEFT — text */}
           <div className="max-w-[560px] w-full order-2 lg:order-1">
-            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-ilmic-blue mb-3">
-              ILMIC HEALTH CARE PVT. LTD.
-            </p>
+            <div className="ilmic-hero-carousel__copy" key={`copy-${current}`}>
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-ilmic-blue mb-3">
+                {activeSlide.tagline || "ILMIC HEALTH CARE PVT. LTD."}
+              </p>
 
-            <h1 className="text-[1.65rem] sm:text-[2.5rem] lg:text-[2.75rem] font-extrabold text-[#0c2d4a] leading-[1.18] tracking-tight mb-4">
-              Trusted Pharmaceutical Exporter &amp; Supplier Since 2021.
-            </h1>
+              <h1 className="text-[1.65rem] sm:text-[2.5rem] lg:text-[2.75rem] font-extrabold text-[#0c2d4a] leading-[1.18] tracking-tight mb-4">
+                {headline}
+              </h1>
 
-            <p className="text-[14px] sm:text-[15px] text-[#5a7285] leading-relaxed mb-5 max-w-[500px]">
-              {slide.subtitle}
-            </p>
+              <p className="text-[14px] sm:text-[15px] text-[#5a7285] leading-relaxed mb-5 max-w-[500px]">
+                {activeSlide.subtitle}
+              </p>
+            </div>
 
             <div className="flex flex-wrap gap-x-5 gap-y-2 text-[13px] font-semibold text-[#1a3a52] mb-7">
-              {[
-                { icon: FiMapPin, label: "Delhi (India)" },
-                { icon: FiMapPin, label: "Luanda (Angola)" },
-                { icon: FiGlobe, label: "Global Export Markets" },
-              ].map(({ icon: Icon, label }) => (
-                <span key={label} className="inline-flex items-center gap-1.5">
-                  <Icon className="w-3.5 h-3.5 text-ilmic-blue" />
-                  {label}
-                </span>
-              ))}
+              {(activeSlide.cities || "Delhi (India) · Luanda (Angola) · Global Export Markets")
+                .split("·")
+                .map((label) => label.trim())
+                .filter(Boolean)
+                .map((label) => (
+                  <span key={label} className="inline-flex items-center gap-1.5">
+                    {label.toLowerCase().includes("global") ? (
+                      <FiGlobe className="w-3.5 h-3.5 text-ilmic-blue" />
+                    ) : (
+                      <FiMapPin className="w-3.5 h-3.5 text-ilmic-blue" />
+                    )}
+                    {label}
+                  </span>
+                ))}
             </div>
 
             <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2.5 mb-7">
-              {ctaPrimary?.link && (
-                <Link
-                  href={ctaPrimary.link}
-                  className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-ilmic-blue text-white text-[13px] font-bold hover:bg-ilmic-blue-dark shadow-[0_4px_14px_rgba(30,90,158,0.35)] w-full sm:w-auto"
+              {ctaPrimary && (
+                <button
+                  type="button"
+                  onClick={onEnquiry}
+                  className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-ilmic-blue text-white text-[13px] font-bold hover:bg-ilmic-blue/90 w-full sm:w-auto shadow-md"
                 >
-                  <FiPackage className="w-4 h-4" />
+                  <FiSend className="w-4 h-4" />
                   {ctaPrimary.text}
-                  <FiArrowRight className="w-3.5 h-3.5 opacity-80" />
-                </Link>
+                </button>
               )}
-              {ctaSecondary?.action === "enquiry" && (
+              {ctaSecondary && (
                 <button
                   type="button"
                   onClick={onEnquiry}
                   className="inline-flex items-center justify-center gap-2 h-11 px-5 rounded-lg bg-white border border-[#b8d4e8] text-ilmic-blue text-[13px] font-bold hover:bg-[#f0f7fc] w-full sm:w-auto"
                 >
-                  <FiSend className="w-4 h-4" />
+                  {activeSlide.theme === "handshake" ? (
+                    <FaHandshake className="w-4 h-4" />
+                  ) : (
+                    <FiSend className="w-4 h-4" />
+                  )}
                   {ctaSecondary.text}
                 </button>
               )}
@@ -389,59 +408,96 @@ const TourismHero = ({ slide, ctaPrimary, ctaSecondary, onEnquiry, phone }) => {
               ].map(({ icon: Icon, text }, i) => (
                 <span key={text} className="inline-flex items-center gap-1">
                   {i > 0 && <span className="text-[#c5d9e8]">|</span>}
-                  <Icon className="w-3 h-3 text-ilmic-blue" />
+                  <Icon className="w-3.5 h-3.5 text-ilmic-blue" />
                   {text}
                 </span>
               ))}
             </div>
+
+            {slideCount > 1 && (
+              <div className="ilmic-hero-carousel__dots mt-6">
+                {heroSlides.map((item, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    onClick={() => goTo(idx)}
+                    className={`ilmic-hero-carousel__dot ${
+                      current === idx ? "ilmic-hero-carousel__dot--active" : ""
+                    }`}
+                    aria-label={`Banner ${idx + 1}: ${item.tagline || "slide"}`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          {/* RIGHT — image frame */}
           <div className="flex justify-center lg:justify-end order-1 lg:order-2 w-full">
             <div className="relative w-full max-w-[540px] mx-auto lg:mx-0">
-              {/* light blue outer frame */}
               <div className="ilmic-ref-hero__frame relative">
-                {/* teal left accent curve */}
                 <div className="ilmic-ref-hero__accent" aria-hidden />
 
-                <div className="ilmic-ref-hero__image-wrap">
-                  <Swiper
-                    modules={[Autoplay]}
-                    autoplay={{
-                      delay: 3000,
-                      disableOnInteraction: false,
-                      pauseOnMouseEnter: true,
-                    }}
-                    loop={true}
-                    speed={600}
-                    className="w-full h-full"
-                  >
-                    {SLIDER_IMAGES.map((src, idx) => (
-                      <SwiperSlide key={src} className="relative w-full h-full">
-                        <Image
-                          src={src}
-                          alt={`Pharmaceutical slide ${idx + 1}`}
-                          fill
-                          priority={idx === 0}
-                          loading={idx === 0 ? undefined : "lazy"}
-                          className="object-cover w-full h-full"
-                          sizes="(max-w-7xl) 50vw, 100vw"
-                        />
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
+                <div className="ilmic-ref-hero__image-wrap ilmic-hero-carousel__images">
+                  {heroSlides.map((item, idx) => (
+                    <img
+                      key={idx}
+                      src={getImageSrc(item, idx)}
+                      alt=""
+                      role="presentation"
+                      className={`ilmic-hero-carousel__img ${
+                        idx === current ? "ilmic-hero-carousel__img--active" : ""
+                      }`}
+                      onError={() => handleImgError(idx)}
+                    />
+                  ))}
                 </div>
 
-                {/* Quality badge — bottom left like reference */}
-                <div className="absolute bottom-3 left-3 right-3 sm:bottom-5 sm:left-6 sm:right-auto z-20 bg-white rounded-xl shadow-[0_8px_30px_rgba(15,58,102,0.15)] border border-[#e8f0f6] px-4 py-3 sm:max-w-[230px]">
+                {activeSlide.theme === "handshake" && (
+                  <div className="ilmic-hero-carousel__handshake-float" aria-hidden>
+                    <FaHandshake />
+                  </div>
+                )}
+
+                {slideCount > 1 && (
+                  <>
+                    <button
+                      type="button"
+                      onClick={prev}
+                      className="ilmic-hero-carousel__nav ilmic-hero-carousel__nav--prev"
+                      aria-label="Previous banner"
+                    >
+                      <FiChevronLeft className="w-5 h-5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={next}
+                      className="ilmic-hero-carousel__nav ilmic-hero-carousel__nav--next"
+                      aria-label="Next banner"
+                    >
+                      <FiChevronRight className="w-5 h-5" />
+                    </button>
+                  </>
+                )}
+
+                <div
+                  className="absolute bottom-3 left-3 right-3 sm:bottom-5 sm:left-6 sm:right-auto z-20 bg-white rounded-xl shadow-[0_8px_30px_rgba(15,58,102,0.15)] border border-[#e8f0f6] px-4 py-3 sm:max-w-[240px] ilmic-hero-carousel__badge"
+                  key={`badge-${current}`}
+                >
                   <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-lg bg-[#e8f4fa] flex items-center justify-center flex-shrink-0">
-                      <FiShield className="w-[18px] h-[18px] text-ilmic-blue" />
+                    <div
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
+                        activeSlide.theme === "handshake"
+                          ? "bg-[#e8f4fa] ilmic-hero-carousel__badge-icon--shake"
+                          : "bg-[#e8f4fa]"
+                      }`}
+                    >
+                      <BadgeIcon type={badge.icon} />
                     </div>
                     <div>
-                      <p className="text-[13px] font-extrabold text-[#0c2d4a] leading-tight">Quality You Can Trust</p>
+                      <p className="text-[13px] font-extrabold text-[#0c2d4a] leading-tight">
+                        {badge.title}
+                      </p>
                       <p className="text-[10.5px] text-[#6b8499] mt-0.5 leading-snug">
-                        We ensure GMP-certified products with global quality standards.
+                        {badge.desc}
                       </p>
                     </div>
                   </div>

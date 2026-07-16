@@ -21,6 +21,7 @@ import DefaultSeo from "@components/common/DefaultSeo";
 import SessionSync from "@components/common/SessionSync";
 import { SidebarProvider } from "@context/SidebarContext";
 import { WishlistProvider } from "@context/WishlistContext";
+import { IlmicSettingsProvider } from "@context/IlmicSettingsContext";
 import SettingServices from "@services/SettingServices";
 import SplashLoader from "@components/preloader/SplashLoader";
 
@@ -97,12 +98,14 @@ function MyApp({ Component, pageProps }) {
               <PersistGate loading={null} persistor={persistor}>
                 <SidebarProvider>
                   <WishlistProvider>
-                    <AppCartProvider>
+                    <IlmicSettingsProvider>
+                      <AppCartProvider>
                       <SplashLoader />
                       <SessionSync />
                       <DefaultSeo />
                       <Component {...pageProps} />
-                    </AppCartProvider>
+                      </AppCartProvider>
+                    </IlmicSettingsProvider>
                   </WishlistProvider>
                 </SidebarProvider>
               </PersistGate>

@@ -53,7 +53,7 @@ const BreakthroughDrugs = ({ products = [], onEnquire }) => {
                   {subtitle ? (
                     <p className="ilmic-breakthrough__composition">{subtitle}</p>
                   ) : null}
-                  <CatalogReadMore href={href} />
+                  <CatalogReadMore decorative />
                 </div>
               </Link>
             );

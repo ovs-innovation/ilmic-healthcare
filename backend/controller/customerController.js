@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 const Customer = require("../models/Customer");
 const { signInToken, tokenForVerify } = require("../config/auth");
 const { sendEmail } = require("../lib/email-sender/sender");
+const { buildFromAddress } = require("../lib/email-sender/emailConfig");
 const {
   customerRegisterBody,
 } = require("../lib/email-sender/templates/register");
@@ -228,9 +229,9 @@ const forgetPassword = async (req, res) => {
     };
 
     const body = {
-      from: process.env.EMAIL_USER,
+      from: buildFromAddress("ILMIC Health Care"),
       to: `${req.body.email}`,
-      subject: "Password Reset",
+      subject: "Password Reset - ILMIC Health Care",
       html: forgetPasswordEmailBody(option),
     };
 

@@ -32,34 +32,50 @@ const ilmicHomepageDefaults = {
     whatsapp: "9188102 72080",
     slides: [
       {
-        tagline: "Prescription Medicines · Specialty Pharma",
-        titleLine1: "Leading Pharmaceutical Wholesale",
-        titleHighlight: "Distributors",
-        titleLine2: "in India.",
+        tagline: "ILMIC Health Care Pvt. Ltd.",
+        titleLine1: "Trusted Pharmaceutical",
+        titleHighlight: "Exporter & Supplier",
+        titleLine2: "Since 2021.",
         subtitle:
-          "Government-approved pharmaceutical wholesaler supplying hospitals, pharmacies and clinics across India.",
-        cities: "Delhi NCR · Mumbai · Lucknow · Kolkata · Chandigarh · Pan-India",
-        bgImage: "/hero-indian-pharma.png",
+          "Oncology, General Pharma & Surgical products — exporting to Dubai, Africa, CIS countries and beyond.",
+        cities: "Delhi (India) · Luanda (Angola) · Global Export Markets",
+        bgImage:
+          "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85",
+        badge: {
+          icon: "shield",
+          title: "Quality You Can Trust",
+          desc: "GMP-certified products with global quality standards.",
+        },
       },
       {
-        tagline: "Oncology & Critical Care",
-        titleLine1: "Cold Chain",
-        titleHighlight: "Assured Supply",
-        titleLine2: "Across India.",
+        tagline: "Global Partnerships",
+        titleText: "Building Trusted Healthcare Partnerships Worldwide.",
         subtitle:
-          "Temperature-controlled logistics for injectable and lifesaving medicines — reliable pan-India distribution.",
-        cities: "Delhi NCR · Mumbai · Lucknow · Kolkata · Pan-India",
-        bgImage: "/hero-indian-distribution.png",
+          "Long-term hospital supply, distributor partnerships, and collaborative healthcare solutions across international markets.",
+        cities: "Dubai · Angola · Africa · CIS Countries",
+        bgImage:
+          "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=85",
+        badge: {
+          icon: "handshake",
+          title: "Partnership You Can Rely On",
+          desc: "Handshake-ready support for hospitals, pharmacies & distributors.",
+        },
+        theme: "handshake",
       },
       {
-        tagline: "HIV · Nephrology · Imported Medicines",
-        titleLine1: "Trusted Healthcare",
-        titleHighlight: "Supply Partner",
-        titleLine2: "Since 2016.",
+        tagline: "Complete Healthcare Services",
+        titleText: "Pharma Export · Medical Tourism · Hospital Management.",
         subtitle:
-          "Ethical wholesale distribution with GDP practices — serving patients, doctors and hospitals nationwide.",
-        cities: "Delhi NCR · Mumbai · Lucknow · Kolkata · Pan-India",
-        bgImage: "/about-indian-healthcare.png",
+          "From oncology medicines to medical visa assistance and 50+ hospital management projects — one partner for your healthcare needs.",
+        cities: "India HQ · Angola Branch · Worldwide Service Network",
+        bgImage:
+          "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
+        badge: {
+          icon: "service",
+          title: "End-to-End Service",
+          desc: "Export documentation, cold chain, and post-treatment follow-up.",
+        },
+        theme: "service",
       },
     ],
   },
@@ -172,7 +188,7 @@ const ilmicHomepageDefaults = {
     badges: ["Quality Assured", "Pan-India"],
     phone: "+91 88102 72080",
     phoneHref: "tel:+9188102 72080",
-    email: "ilmic.healthcare@gmail.com",
+    email: "info.ilmichealthcare@gmail.com",
     address:
       "B-1/D, Saurav Vihar, Jaitpur,\nBadarpur, New Delhi – 110044",
     hours: "Mon–Sat: 10 AM – 7 PM IST",

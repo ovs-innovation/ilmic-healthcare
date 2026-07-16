@@ -1089,6 +1089,119 @@
   transform: translateY(-3px);
 }
 
+/* ── IlmicProductCard — mobile-first responsive ── */
+.ilmic-product-card__media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 14.5rem;
+  min-height: 14.5rem;
+  padding: 0.75rem 1rem;
+  background: #ffffff;
+}
+
+.ilmic-product-card__img {
+  max-height: 100%;
+  width: auto;
+  max-width: 100%;
+}
+
+.ilmic-product-card__composition {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 640px) {
+  .ilmic-product-card__media {
+    height: 16rem;
+    min-height: 16rem;
+    padding: 1rem 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .ilmic-product-card__media {
+    height: 17.5rem;
+    min-height: 17.5rem;
+  }
+}
+
+@media (max-width: 639px) {
+  .ilmic-hero-products .llmic-container,
+  .ilmic-products-page .llmic-container {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .ilmic-product-card {
+    border-radius: 1rem;
+  }
+
+  .ilmic-product-card:hover {
+    transform: none;
+  }
+
+  .ilmic-product-card__composition {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+  }
+
+  .ilmic-product-detail .ilmic-product-gallery__main-frame {
+    height: 16rem !important;
+    min-height: 16rem !important;
+    padding: 0.5rem 0.625rem !important;
+  }
+
+  .ilmic-product-detail .ilmic-product-gallery__thumbs {
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+  }
+
+  .ilmic-product-detail .ilmic-product-gallery__thumb {
+    border-radius: 0.65rem;
+    padding: 0.3rem;
+  }
+
+  .ilmic-product-detail__tabs {
+    -webkit-overflow-scrolling: touch;
+    scroll-padding-inline: 0.75rem;
+  }
+
+  .ilmic-product-detail .ilmic-catalog-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 1rem;
+  }
+
+  .llmic-service-card {
+    padding: 1rem;
+    border-radius: 1rem;
+  }
+
+  .llmic-service-card__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1.125rem;
+    margin-bottom: 0.75rem;
+    border-radius: 0.75rem;
+  }
+
+  .llmic-service-card h3 {
+    font-size: 0.8125rem;
+    margin-bottom: 0.375rem;
+    line-height: 1.3;
+  }
+
+  .llmic-service-card p {
+    font-size: 0.6875rem;
+    line-height: 1.4;
+  }
+
+  .llmic-service-card .inline-flex {
+    font-size: 0.6875rem;
+    margin-top: 0.625rem;
+  }
+}
+
 /* ── Catalog product image (fills frame, portrait packs visible) ── */
 .ilmic-catalog-img-frame {
   display: flex;
@@ -1365,7 +1478,7 @@
   background: linear-gradient(to left, #ffffff 15%, transparent);
 }
 
-/* Mobile & tablet — one full card per row on products + breakthrough (desktop lg+ unchanged) */
+/* Mobile & tablet — one full product card per row (desktop lg+ unchanged) */
 @media (max-width: 1023px) {
   .ilmic-products-page .ilmic-catalog-grid,
   .ilmic-breakthrough .ilmic-catalog-grid {

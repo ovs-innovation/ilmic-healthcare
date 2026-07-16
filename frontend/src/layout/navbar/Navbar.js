@@ -113,9 +113,9 @@ const Navbar = () => {
             International Export Markets
           </span>
           <div className="flex items-center gap-5">
-            <a href="mailto:ilmic.healthcare@gmail.com" className="flex items-center gap-1.5 hover:text-white transition-colors opacity-95">
+            <a href="mailto:info.ilmichealthcare@gmail.com" className="flex items-center gap-1.5 hover:text-white transition-colors opacity-95">
               <FiMail className="w-3 h-3 text-[#7ec8e3]" />
-              ilmic.healthcare@gmail.com
+              info.ilmichealthcare@gmail.com
             </a>
             <a href="tel:+918810272080" className="flex items-center gap-1.5 hover:text-white transition-colors opacity-95">
               <FiPhoneCall className="w-3 h-3 text-[#7ec8e3]" />

@@ -68,6 +68,19 @@ const normalizeLeadInput = (body = {}) => {
   }
   payload.enquiryType = type;
 
+  if (!payload.product && (payload.productId || payload.productName)) {
+    payload.product = {
+      title: { en: payload.productName || "Product Enquiry" },
+      id: payload.productId || null,
+    };
+  }
+
+  if (!payload.message) {
+    payload.message = payload.companyName
+      ? `Company: ${payload.companyName}`
+      : "Enquiry submitted via website";
+  }
+
   return payload;
 };
 

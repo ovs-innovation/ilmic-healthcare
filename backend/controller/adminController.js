@@ -9,6 +9,7 @@ const {
   handleEncryptData,
 } = require("../config/auth");
 const { sendEmail } = require("../lib/email-sender/sender");
+const { buildFromAddress, ILMIC_EMAIL } = require("../lib/email-sender/emailConfig");
 const Admin = require("../models/Admin");
 
 const registerAdmin = async (req, res) => {
@@ -90,9 +91,9 @@ const forgetPassword = async (req, res) => {
   } else {
     const token = tokenForVerify(isAdded);
     const body = {
-      from: process.env.EMAIL_USER,
+      from: buildFromAddress("ILMIC Health Care Admin"),
       to: `${req.body.verifyEmail}`,
-      subject: "Password Reset",
+      subject: "Password Reset - ILMIC Health Care",
       html: `<h2>Hello ${req.body.verifyEmail}</h2>
       <p>A request has been received to change the password for your <strong>ILMIC Health Care</strong> account </p>
 
@@ -103,7 +104,7 @@ const forgetPassword = async (req, res) => {
         <a href=${process.env.ADMIN_URL}/auth/reset-password/${token}  style="background:#22c55e;color:white;border:1px solid #22c55e; padding: 10px 15px; border-radius: 4px; text-decoration:none;">Reset Password </a>
 
         
-        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at hello@ilmichealthcare.com</p>
+        <p style="margin-top: 35px;">If you did not initiate this request, please contact us immediately at ${ILMIC_EMAIL}</p>
 
         <p style="margin-bottom:0px;">Thank you</p>
         <strong>ILMIC Health Care Team</strong>

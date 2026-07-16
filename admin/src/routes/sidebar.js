@@ -1,4 +1,4 @@
-import { FiSlack, FiMail, FiGrid, FiSettings } from "react-icons/fi";
+import { FiSlack, FiMail, FiSettings, FiGrid, FiLayers, FiHelpCircle } from "react-icons/fi";
 
 const sidebar = [
   {
@@ -10,23 +10,16 @@ const sidebar = [
     icon: FiSlack,
     name: "Catalog",
     routes: [
-      {
-        path: "/products",
-        name: "Products",
-      },
-      {
-        path: "/categories",
-        name: "Parent Categories",
-      },
-      {
-        path: "/sub-categories",
-        name: "Sub Categories",
-      },
-      {
-        path: "/brands",
-        name: "Brands",
-      },
+      { path: "/products", name: "Products" },
+      { path: "/categories", name: "Parent Categories" },
+      { path: "/sub-categories", name: "Sub Categories" },
+      { path: "/brands", name: "Brands" },
     ],
+  },
+  {
+    path: "/services",
+    icon: FiLayers,
+    name: "Services",
   },
   {
     path: "/leads",
@@ -37,6 +30,11 @@ const sidebar = [
     path: "/settings",
     icon: FiSettings,
     name: "Homepage & Footer",
+  },
+  {
+    path: "/faq",
+    icon: FiHelpCircle,
+    name: "FAQ",
   },
 ];
 

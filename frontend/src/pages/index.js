@@ -4,7 +4,6 @@ import Head from "next/head";
 import Layout from "@layout/Layout";
 import ProductServices from "@services/ProductServices";
 import ServiceServices from "@services/ServiceServices";
-import SettingServices from "@services/SettingServices";
 import ProductEnquiryModal from "@components/modal/ProductEnquiryModal";
 import TourismHero from "@components/tourism/TourismHero";
 import HeroFeatureBar from "@components/tourism/HeroFeatureBar";
@@ -13,7 +12,8 @@ import TourismServices from "@components/tourism/TourismServices";
 import TreatmentCategories from "@components/tourism/TreatmentCategories";
 import TreatmentPackages from "@components/tourism/TreatmentPackages";
 import WhyChooseUs from "@components/tourism/WhyChooseUs";
-import ilmicDefaults, { tourismServicesFallback, heroProducts } from "@utils/ilmicDefaults";
+import ilmicDefaults, { tourismServicesFallback } from "@utils/ilmicDefaults";
+import { useIlmicSettings } from "@context/IlmicSettingsContext";
 import { FiSend } from "react-icons/fi";
 
 const getTitle = (obj) => {
@@ -22,11 +22,12 @@ const getTitle = (obj) => {
   return obj.en || Object.values(obj)[0] || "";
 };
 
-const Home = ({ products, services, homepageSettings }) => {
-  // IMPORTANT: Do not use remote homepage settings to avoid legacy/incorrect branding.
-  // Keep ILMIC content source-of-truth in `ilmicDefaults` unless explicitly managed later.
-  const settings = ilmicDefaults;
-  const heroSlide = settings?.hero?.slides?.[0] || ilmicDefaults.hero.slides[0];
+const Home = ({ products, services }) => {
+  const { settings } = useIlmicSettings();
+  const heroSlides =
+    settings?.hero?.slides?.length > 0
+      ? settings.hero.slides
+      : ilmicDefaults.hero.slides;
   const heroFeatures = settings?.hero?.features || ilmicDefaults.hero.features;
   const categories = settings?.popularCategories?.items || ilmicDefaults.popularCategories.items;
   const displayServices = services?.length ? services : tourismServicesFallback;
@@ -58,7 +59,7 @@ const Home = ({ products, services, homepageSettings }) => {
   return (
     <Layout title={settings?.seo?.title} description={settings?.seo?.description}>
       <TourismHero
-        slide={heroSlide}
+        slides={heroSlides}
         ctaPrimary={settings?.hero?.ctaPrimary}
         ctaSecondary={settings?.hero?.ctaSecondary}
         onEnquiry={() => setGenericEnquiryOpen(true)}
@@ -93,22 +94,18 @@ const Home = ({ products, services, homepageSettings }) => {
 };
 
 export const getServerSideProps = async () => {
-  const [productsResult, servicesResult, homepageResult] = await Promise.allSettled([
+  const [productsResult, servicesResult] = await Promise.allSettled([
     ProductServices.getAllProducts({ limit: 20 }),
     ServiceServices.getShowingServices(),
-    SettingServices.getIlmicHomepageSetting(),
   ]);
 
   const productsRes = productsResult.status === "fulfilled" ? productsResult.value : null;
   const servicesRes = servicesResult.status === "fulfilled" ? servicesResult.value : null;
-  const homepageSettings =
-    homepageResult.status === "fulfilled" && homepageResult.value ? homepageResult.value : ilmicDefaults;
 
   return {
     props: {
       products: productsRes?.products || [],
       services: Array.isArray(servicesRes) ? servicesRes : [],
-      homepageSettings,
     },
   };
 };

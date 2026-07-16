@@ -21,7 +21,7 @@ const contactCards = [
   { icon: FiClock, title: "Business Hours", lines: ["Mon – Sat: 9am – 7pm IST", "Sunday: Closed"], bg: "bg-ilmic-blue-light", color: "text-ilmic-blue" },
   { icon: FiMapPin, title: "Our Offices", lines: ["New Delhi, India", "Luanda, Republic of Angola"], bg: "bg-ilmic-blue-light", color: "text-ilmic-blue" },
   { icon: FiPhoneCall, title: "Call Us", lines: ["+91 88102 72080", "+91 92171 74829"], href: "tel:+918810272080", bg: "bg-blue-50", color: "text-blue-600" },
-  { icon: FiMail, title: "Email Us", lines: ["ilmic.healthcare@gmail.com"], href: "mailto:ilmic.healthcare@gmail.com", bg: "bg-purple-50", color: "text-purple-600" },
+  { icon: FiMail, title: "Email Us", lines: ["info.ilmichealthcare@gmail.com"], href: "mailto:info.ilmichealthcare@gmail.com", bg: "bg-purple-50", color: "text-purple-600" },
 ];
 
 const ContactUs = () => {

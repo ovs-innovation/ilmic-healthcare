@@ -79,10 +79,10 @@ const FAQ = () => {
                 Call +91 88102 72080
               </a>
               <a
-                href="mailto:ilmic.healthcare@gmail.com"
+                href="mailto:info.ilmichealthcare@gmail.com"
                 className="ilmic-btn ilmic-btn-outline !text-sm"
               >
-                Email ilmic.healthcare@gmail.com
+                Email info.ilmichealthcare@gmail.com
               </a>
             </div>
           </div>

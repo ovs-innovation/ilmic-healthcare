@@ -15,6 +15,7 @@
     "homepage:import": "node script/homepage_seed.js",
     "tourism:seed": "node script/medical_tourism_seed.js",
     "ilmic:seed": "node script/medical_tourism_seed.js",
+    "hero:seed": "node script/ilmic_seed_hero_products.js",
     "product": "node script/product.js",
     "generate-password": "node script/script.js"
   },

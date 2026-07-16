@@ -24,6 +24,41 @@ const ilmicDefaults = {
         cities: "Delhi (India) · Luanda (Angola) · Global Export Markets",
         bgImage:
           "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85",
+        badge: {
+          icon: "shield",
+          title: "Quality You Can Trust",
+          desc: "GMP-certified products with global quality standards.",
+        },
+      },
+      {
+        tagline: "Global Partnerships",
+        titleText: "Building Trusted Healthcare Partnerships Worldwide.",
+        subtitle:
+          "Long-term hospital supply, distributor partnerships, and collaborative healthcare solutions across international markets.",
+        cities: "Dubai · Angola · Africa · CIS Countries",
+        bgImage:
+          "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=85",
+        badge: {
+          icon: "handshake",
+          title: "Partnership You Can Rely On",
+          desc: "Handshake-ready support for hospitals, pharmacies & distributors.",
+        },
+        theme: "handshake",
+      },
+      {
+        tagline: "Complete Healthcare Services",
+        titleText: "Pharma Export · Medical Tourism · Hospital Management.",
+        subtitle:
+          "From oncology medicines to medical visa assistance and 50+ hospital management projects — one partner for your healthcare needs.",
+        cities: "India HQ · Angola Branch · Worldwide Service Network",
+        bgImage:
+          "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
+        badge: {
+          icon: "service",
+          title: "End-to-End Service",
+          desc: "Export documentation, cold chain, and post-treatment follow-up.",
+        },
+        theme: "service",
       },
     ],
     features: [
@@ -60,7 +95,7 @@ const ilmicDefaults = {
     phone: "+91 88102 72080",
     phone2: "+91 92171 74829",
     phoneHref: "tel:+918810272080",
-    email: "ilmic.healthcare@gmail.com",
+    email: "info.ilmichealthcare@gmail.com",
     address: "New Delhi, India & Luanda, Republic of Angola",
     hours: "Mon – Sat: 9am – 7pm IST",
     whatsappUrl: "https://wa.me/918810272080",

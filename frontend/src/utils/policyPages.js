@@ -10,7 +10,7 @@ export const ILMIC_POLICY_CONTACT = {
   company: "ILMIC Health Care",
   website: "ilmichealthcare.com",
   phone: "+91 88102 72080",
-  email: "ilmic.healthcare@gmail.com",
+  email: "info.ilmichealthcare@gmail.com",
   address:
     "Delhi, India, India",
   cities:

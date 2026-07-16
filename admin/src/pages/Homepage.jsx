@@ -181,6 +181,16 @@ const Homepage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="md:col-span-2">
+                <Field label="Footer Logo (optional)">
+                  <Uploader
+                    imageUrl={settings.footer?.logo}
+                    setImageUrl={(val) => updateNested("footer", "logo", val)}
+                    folder="homepage"
+                  />
+                </Field>
+              </div>
+
+              <div className="md:col-span-2">
                 <Field label="About Text">
                   <Textarea
                     className="border text-sm block w-full"
@@ -226,7 +236,7 @@ const Homepage = () => {
                 <TextInput
                   value={settings.footer?.email}
                   onChange={(e) => updateNested("footer", "email", e.target.value)}
-                  placeholder="ilmic.healthcare@gmail.com"
+                  placeholder="info.ilmichealthcare@gmail.com"
                 />
               </Field>
               <Field label="Working Hours">

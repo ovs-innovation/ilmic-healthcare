@@ -228,8 +228,8 @@ const Products = ({ initialProducts, categories }) => {
         subtitle="Oncology, General Pharma & Surgical products — in our own brands. Exporting globally from Delhi, India."
         bgImage="https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80"
       />
-      <div className="min-h-screen bg-slate-50 pt-10 sm:pt-14">
-        <div className="llmic-container pb-16">
+      <div className="min-h-screen bg-slate-50 pt-6 sm:pt-14 ilmic-products-page">
+        <div className="llmic-container pb-12 sm:pb-16">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
             {/* ══════════════════════════════
                 SIDEBAR (Desktop Only)
@@ -392,8 +392,8 @@ const Products = ({ initialProducts, categories }) => {
             ══════════════════════════════ */}
             <main className="lg:col-span-9 space-y-5">
               {/* Page heading + search */}
-              <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="bg-white rounded-2xl border border-slate-200 p-4 sm:p-6 shadow-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                   <div>
                     <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
                       Our Products
@@ -416,20 +416,20 @@ const Products = ({ initialProducts, categories }) => {
               </div>
 
               {/* Toolbar */}
-              <div className="flex items-center justify-between">
-                <span className="text-[12px] font-semibold text-gray-500">
+              <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+                <span className="text-[11px] sm:text-[12px] font-semibold text-gray-500">
                   Showing {sortedProducts.length > 0 ? indexOfFirst + 1 : 0} -{" "}
                   {Math.min(indexOfLast, sortedProducts.length)} of{" "}
                   {sortedProducts.length} products
                 </span>
-                <div className="flex items-center gap-2">
-                  <span className="text-[12px] font-semibold text-gray-500">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <span className="text-[11px] sm:text-[12px] font-semibold text-gray-500 shrink-0">
                     Sort by:
                   </span>
                   <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="border border-slate-200 rounded-xl text-[12px] font-semibold text-slate-700 py-2 px-3 bg-white focus:outline-none focus:ring-2 focus:ring-ilmic-blue/15 focus:border-ilmic-blue cursor-pointer"
+                    className="flex-1 sm:flex-none border border-slate-200 rounded-xl text-[12px] font-semibold text-slate-700 py-2 px-3 bg-white focus:outline-none focus:ring-2 focus:ring-ilmic-blue/15 focus:border-ilmic-blue cursor-pointer"
                   >
                     <option value="A-Z">A - Z</option>
                     <option value="Z-A">Z - A</option>
@@ -438,14 +438,14 @@ const Products = ({ initialProducts, categories }) => {
               </div>
 
               {/* Mobile & Tablet Horizontal Filters (Hidden on Desktop) */}
-              <div className="lg:hidden space-y-4 mb-6">
+              <div className="lg:hidden space-y-3 sm:space-y-4 mb-4 sm:mb-6">
                 {/* Therapeutic Areas */}
                 <div>
                   <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-2 px-1">Therapeutic Areas</span>
-                  <div className="flex gap-2 overflow-x-auto pb-1.5 scrollbar-hide snap-x">
+                  <div className="flex gap-2 overflow-x-auto pb-1.5 scrollbar-hide snap-x -mx-0.5 px-0.5">
                     <button
                       onClick={() => handleCategoryChange("")}
-                      className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${selectedCategory === ""
+                      className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wide transition-all border max-w-[85vw] whitespace-normal text-center leading-tight ${selectedCategory === ""
                           ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                           : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
                         }`}
@@ -459,7 +459,7 @@ const Products = ({ initialProducts, categories }) => {
                         <button
                           key={cat._id}
                           onClick={() => handleCategoryChange(isActive ? "" : cat._id)}
-                          className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${isActive
+                          className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wide transition-all border max-w-[85vw] whitespace-normal text-center leading-tight ${isActive
                               ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                               : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
                             }`}
@@ -477,7 +477,7 @@ const Products = ({ initialProducts, categories }) => {
                   <div className="flex gap-2 overflow-x-auto pb-1.5 scrollbar-hide snap-x">
                     <button
                       onClick={() => setSelectedDosage("")}
-                      className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${selectedDosage === ""
+                      className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wide transition-all border whitespace-nowrap ${selectedDosage === ""
                           ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                           : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
                         }`}
@@ -490,7 +490,7 @@ const Products = ({ initialProducts, categories }) => {
                         <button
                           key={dosage}
                           onClick={() => setSelectedDosage(isActive ? "" : dosage)}
-                          className={`flex-shrink-0 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider transition-all border whitespace-nowrap ${isActive
+                          className={`flex-shrink-0 px-3.5 py-2 rounded-full text-[11px] font-bold uppercase tracking-wide transition-all border max-w-[85vw] whitespace-normal text-center leading-tight ${isActive
                               ? "bg-[#0F4C81] text-white border-[#0F4C81]"
                               : "bg-white text-gray-600 border-gray-200 hover:border-gray-300"
                             }`}
@@ -504,7 +504,7 @@ const Products = ({ initialProducts, categories }) => {
               </div>
 
               {/* Ecommerce-style grid cards (enquiry based) */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
                 {currentItems.length > 0 ? (
                   currentItems.map((prod) => (
                     <IlmicProductCard
