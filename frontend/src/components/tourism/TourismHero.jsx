@@ -1,5 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Autoplay } from "swiper/modules";
 import {
   FiSend,
   FiPhoneCall,
@@ -15,17 +18,100 @@ import {
 } from "react-icons/fi";
 import { FaHandshake } from "react-icons/fa";
 
+const SLIDER_IMAGES = [
+  "/im1.jpg",
+  "/im2.jpg",
+  "/im3.jpg",
+  "/im4.jpg"
+];
+
 const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=1200&q=85",
   "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=1200&q=85",
   "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
 ];
 
+const BUBBLES = Array.from({ length: 22 }, (_, idx) => {
+  const sizes = [18, 24, 32, 40, 60, 80];
+  const size = sizes[idx % sizes.length];
+  const left = (idx * 4.5 + 5) % 95;
+  const duration = 16 + (idx % 10) * 3;
+  const delay = idx * 0.5;
+  const driftX = (idx % 2 === 0 ? 35 : -35) + (idx % 4) * 6;
+  const hasIcon = idx % 5 === 0 ? 'cross' : idx % 7 === 0 ? 'shield' : null;
+  return { idx, size, left, duration, delay, driftX, hasIcon };
+});
+
+const SHAPES = Array.from({ length: 10 }, (_, idx) => {
+  const types = ["square", "hexagon", "rect", "card", "panel"];
+  const type = types[idx % types.length];
+  const size = 60 + (idx % 5) * 40;
+  const left = (idx * 9 + 8) % 85;
+  const top = (idx * 8 + 12) % 75;
+  const duration = 20 + (idx % 4) * 5;
+  const isFilled = idx % 3 === 0;
+  const icon = idx === 1 ? 'dna' : idx === 3 ? 'capsule' : idx === 5 ? 'shield' : idx === 7 ? 'cross' : idx === 9 ? 'heartbeat' : null;
+  return { idx, type, size, left, top, duration, isFilled, icon };
+});
+
+const COLORED_PARTICLES = Array.from({ length: 48 }, (_, idx) => {
+  const colors = ["#5AA9FF", "#43D9FF", "#8B7CFF", "#5BE7C4", "#FF7AB8"];
+  const color = colors[idx % colors.length];
+  const size = 3 + (idx % 3) * 2;
+  const left = (idx * 2.1 + 4) % 95;
+  const bottom = (idx * 1.9 + 5) % 95;
+  const duration = 15 + (idx % 12) * 3;
+  const delay = idx * 0.25;
+  const driftX = (idx % 2 === 0 ? 40 : -40) + (idx % 4) * 8;
+  const driftY = (idx % 3 === 0 ? -40 : -80) - (idx % 5) * 5;
+  const maxOpacity = 0.2 + (idx % 3) * 0.12;
+  return { idx, color, size, left, bottom, duration, delay, driftX, driftY, maxOpacity };
+});
+
+const renderShapeIcon = (icon) => {
+  if (icon === 'dna') {
+    return (
+      <svg viewBox="0 0 50 100" fill="none" stroke="#5AA9FF" strokeWidth="2.5" className="w-[30%] h-[55%] opacity-[0.18] animate-pulse">
+        <path d="M10 10 C 25 30, 25 70, 10 90 M40 10 C 25 30, 25 70, 40 90 M10 10 L40 10 M10 30 L40 30 M15 50 L35 50 M10 70 L40 70 M10 90 L40 90" />
+      </svg>
+    );
+  }
+  if (icon === 'capsule') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="#FF7AB8" strokeWidth="2.5" className="w-[30%] h-[30%] opacity-[0.18] animate-pulse">
+        <rect x="5" y="2" width="14" height="20" rx="7" transform="rotate(45 12 12)" />
+        <line x1="7" y1="17" x2="17" y2="7" />
+      </svg>
+    );
+  }
+  if (icon === 'shield') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="#8B7CFF" strokeWidth="2.5" className="w-[30%] h-[30%] opacity-[0.18] animate-pulse">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    );
+  }
+  if (icon === 'cross') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="#5BE7C4" strokeWidth="3" className="w-[30%] h-[30%] opacity-[0.18] animate-pulse">
+        <path d="M19 12H5M12 19V5" />
+      </svg>
+    );
+  }
+  if (icon === 'heartbeat') {
+    return (
+      <svg viewBox="0 0 24 24" fill="none" stroke="#43D9FF" strokeWidth="2.5" className="w-[30%] h-[30%] opacity-[0.18] animate-pulse">
+        <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
+      </svg>
+    );
+  }
+  return null;
+};
+
 const getHeadline = (slide) => {
   if (slide?.titleLine1 && slide?.titleHighlight) {
-    return `${slide.titleLine1} ${slide.titleHighlight}${
-      slide.titleLine2 ? ` ${slide.titleLine2}` : "."
-    }`;
+    return `${slide.titleLine1} ${slide.titleHighlight}${slide.titleLine2 ? ` ${slide.titleLine2}` : "."
+      }`;
   }
   return slide?.titleText || "Trusted Pharmaceutical Exporter & Supplier Since 2021.";
 };
@@ -159,26 +245,77 @@ const TourismHero = ({
           0%, 100% { transform: translateY(0px) rotate(0deg); }
           50% { transform: translateY(-15px) rotate(8deg); }
         }
+        @keyframes blobFloat1 {
+          0%, 100% { transform: translate(calc(var(--mouse-x) * -25px), calc(var(--mouse-y) * -25px)) scale(1); }
+          50% { transform: translate(calc(80px + var(--mouse-x) * -25px), calc(-50px + var(--mouse-y) * -25px)) scale(1.15); }
+        }
+        @keyframes blobFloat2 {
+          0%, 100% { transform: translate(calc(var(--mouse-x) * -15px), calc(var(--mouse-y) * -15px)) scale(1.1); }
+          50% { transform: translate(calc(-90px + var(--mouse-x) * -15px), calc(70px + var(--mouse-y) * -15px)) scale(0.9); }
+        }
+        @keyframes blobFloat3 {
+          0%, 100% { transform: translate(calc(var(--mouse-x) * -20px), calc(var(--mouse-y) * -20px)) scale(0.95); }
+          50% { transform: translate(calc(60px + var(--mouse-x) * -20px), calc(90px + var(--mouse-y) * -20px)) scale(1.1); }
+        }
+        @keyframes blobFloat4 {
+          0%, 100% { transform: translate(calc(var(--mouse-x) * -10px), calc(var(--mouse-y) * -10px)) scale(1.05); }
+          50% { transform: translate(calc(-70px + var(--mouse-x) * -10px), calc(-80px + var(--mouse-y) * -10px)) scale(0.9); }
+        }
+        @keyframes blobFloat5 {
+          0%, 100% { transform: translate(calc(var(--mouse-x) * -30px), calc(var(--mouse-y) * -30px)) scale(1.0); }
+          50% { transform: translate(calc(50px + var(--mouse-x) * -30px), calc(-60px + var(--mouse-y) * -30px)) scale(1.2); }
+        }
+        @keyframes bubbleFloat {
+          0% { transform: translateY(115vh) translateX(0) scale(0.85); opacity: 0; }
+          10% { opacity: 0.75; }
+          90% { opacity: 0.75; }
+          100% { transform: translateY(-15vh) translateX(var(--bubble-drift-x, 25px)) scale(1.15); opacity: 0; }
+        }
+        @keyframes shapeFloat {
+          0%, 100% { transform: translateY(0px) rotate(0deg) translate(calc(var(--mouse-x) * -12px), calc(var(--mouse-y) * -12px)); }
+          50% { transform: translateY(-25px) rotate(8deg) translate(calc(var(--mouse-x) * -12px + 5px), calc(var(--mouse-y) * -12px - 5px)); }
+        }
+        @keyframes randomDrift {
+          0%, 100% { transform: translate(0, 0) scale(1) translate(calc(var(--mouse-x) * -20px), calc(var(--mouse-y) * -20px)); opacity: 0.15; }
+          50% { transform: translate(var(--drift-x, 30px), var(--drift-y, -60px)) scale(1.2) translate(calc(var(--mouse-x) * -20px), calc(var(--mouse-y) * -20px)); opacity: var(--max-opacity, 0.4); }
+        }
+        @keyframes gridPulse {
+          0%, 100% { opacity: 0.04; }
+          50% { opacity: 0.08; }
+        }
+        @keyframes hexGridScroll {
+          0% { background-position: 0 0; }
+          100% { background-position: 80px 40px; }
+        }
+        @keyframes raysMovement {
+          0% { background-position: 0% 0%; }
+          100% { background-position: 200px 100px; }
+        }
+        @keyframes glassShimmer {
+          0% { transform: translateX(-150%) skewX(-15deg); opacity: 0; }
+          15% { opacity: 0.15; }
+          30% { transform: translateX(250%) skewX(-15deg); opacity: 0; }
+          100% { transform: translateX(250%) skewX(-15deg); opacity: 0; }
+        }
         .hero-aurora-bg {
-          background: linear-gradient(135deg, #FFFFFF 30%, #F3E8FF 55%, #E0F2FE 75%, #FFFFFF 100%);
-          background-size: 400% 400%;
-          animation: auroraFlow 32s ease-in-out infinite;
+          background: #FFFFFF;
         }
         .hero-hex-grid {
           background-image: 
-            linear-gradient(30deg, rgba(37, 99, 235, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.02) 87.5%, rgba(37, 99, 235, 0.02)),
-            linear-gradient(150deg, rgba(37, 99, 235, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.02) 87.5%, rgba(37, 99, 235, 0.02)),
-            linear-gradient(270deg, rgba(37, 99, 235, 0.02) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.02) 87.5%, rgba(37, 99, 235, 0.02));
+            linear-gradient(30deg, rgba(37, 99, 235, 0.4) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.4) 87.5%, rgba(37, 99, 235, 0.4)),
+            linear-gradient(150deg, rgba(37, 99, 235, 0.4) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.4) 87.5%, rgba(37, 99, 235, 0.4)),
+            linear-gradient(270deg, rgba(37, 99, 235, 0.4) 12%, transparent 12.5%, transparent 87%, rgba(37, 99, 235, 0.4) 87.5%, rgba(37, 99, 235, 0.4));
           background-size: 40px 70px;
-          animation: hexGridScroll 50s linear infinite;
+          animation: hexGridScroll 50s linear infinite, gridPulse 6s ease-in-out infinite;
         }
         .hero-noise-texture {
           background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
           opacity: 0.015;
         }
         .hero-light-rays {
-          background: repeating-linear-gradient(60deg, transparent, transparent 60px, rgba(255, 255, 255, 0.12) 60px, rgba(255, 255, 255, 0.12) 120px);
+          background: repeating-linear-gradient(60deg, transparent, transparent 80px, rgba(90, 169, 255, 0.1) 80px, rgba(90, 169, 255, 0.1) 160px);
           animation: raysMovement 45s linear infinite;
+          opacity: 0.06;
         }
         .animate-blob-1-fast {
           animation: blobFloat1 18s ease-in-out infinite alternate;
@@ -191,34 +328,6 @@ const TourismHero = ({
         }
         .animate-blob-4-extraslow {
           animation: blobFloat4 36s ease-in-out infinite alternate;
-        }
-        .animate-particle-1 { animation: particleDrift 14s linear infinite; }
-        .animate-particle-2 { animation: particleDrift 18s linear infinite 2s; }
-        .animate-particle-3 { animation: particleDrift 22s linear infinite 4s; }
-        .animate-particle-4 { animation: particleDrift 20s linear infinite 1s; }
-        .animate-particle-5 { animation: particleDrift 26s linear infinite 5s; }
-        .animate-pulse-glow-point {
-          animation: pulseGlowPoint 3s ease-in-out infinite;
-          transform-origin: center;
-        }
-        .animate-dna-rotation {
-          animation: dnaRotation 40s linear infinite;
-        }
-        .animate-icon-float-1 {
-          animation: iconFloatSlow 12s ease-in-out infinite;
-        }
-        .animate-icon-float-2 {
-          animation: iconFloatSlow 15s ease-in-out infinite 2s;
-        }
-        .animate-molecule-float {
-          animation: moleculeRotateFloat 16s ease-in-out infinite;
-        }
-        .animate-ecg-pulse-line {
-          stroke-dasharray: 240 600;
-          animation: ecgPulseLine 12s linear infinite;
-        }
-        .animate-glass-panels {
-          animation: glassPanelsFloat 20s ease-in-out infinite alternate;
         }
         .swiper {
           width: 100%;
@@ -233,103 +342,170 @@ const TourismHero = ({
         }
       `}</style>
 
-      {/* Layer 1: Large animated Aurora Gradient background */}
+      {/* LAYER 1: Aurora Gradient & Moving Colorful Glow Blobs (White Base) */}
       <div className="absolute inset-0 hero-aurora-bg z-0 pointer-events-none" />
+      {/* Soft Blue */}
+      <div className="absolute top-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#5AA9FF]/[0.15] blur-[130px] animate-blob-1-fast pointer-events-none z-0" />
+      {/* Purple */}
+      <div className="absolute top-[-15%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-[#8B7CFF]/[0.12] blur-[150px] animate-blob-2-med pointer-events-none z-0" />
+      {/* Cyan */}
+      <div className="absolute bottom-[-10%] left-[-10%] w-[45vw] h-[45vw] rounded-full bg-[#43D9FF]/[0.15] blur-[130px] animate-blob-3-slow pointer-events-none z-0" />
+      {/* Mint */}
+      <div className="absolute bottom-[-15%] right-[-5%] w-[50vw] h-[50vw] rounded-full bg-[#5BE7C4]/[0.10] blur-[150px] animate-blob-4-extraslow pointer-events-none z-0" />
+      {/* Pink Accent */}
+      <div className="absolute top-[20%] right-[10%] w-[40vw] h-[40vw] rounded-full bg-[#FF7AB8]/[0.10] blur-[140px] animate-blob-2-med pointer-events-none z-0" />
+      {/* Very Light Indigo */}
+      <div className="absolute top-[35%] left-[15%] w-[42vw] h-[42vw] rounded-full bg-[#DDE8FF]/[0.18] blur-[120px] animate-blob-3-slow pointer-events-none z-0" />
 
-      {/* Layer 2: Large blurred colorful blobs (Drifting at independent speeds/angles) */}
-      {/* Blue Blob - Top Left */}
-      <div className="absolute top-[-15%] left-[-15%] w-[45vw] h-[45vw] rounded-full bg-[#2563EB]/[0.22] blur-[140px] animate-blob-1-fast pointer-events-none z-0" />
-      {/* Purple Blob - Top Right */}
-      <div className="absolute top-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#8B5CF6]/[0.20] blur-[150px] animate-blob-2-med pointer-events-none z-0" />
-      {/* Cyan Blob - Bottom Left */}
-      <div className="absolute bottom-[-15%] left-[-15%] w-[45vw] h-[45vw] rounded-full bg-[#06B6D4]/[0.22] blur-[130px] animate-blob-3-slow pointer-events-none z-0" />
-      {/* Gold Blob - Bottom Right */}
-      <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-[#FBBF24]/[0.18] blur-[150px] animate-blob-4-extraslow pointer-events-none z-0" />
-      {/* Soft Pink Blob - Center Right */}
-      <div className="absolute top-[20%] right-[5%] w-[40vw] h-[40vw] rounded-full bg-[#EC4899]/[0.18] blur-[140px] animate-blob-3-slow pointer-events-none z-0" />
+      {/* LAYER 3: Premium Floating Geometric Glass Boxes/Panels (z-index 1 - behind bubbles) */}
+      <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
+        {SHAPES.map((shape) => {
+          let shapeClasses = "absolute flex items-center justify-center pointer-events-none transition-all ";
+          if (shape.type === "square") shapeClasses += "rounded-3xl ";
+          else if (shape.type === "hexagon") shapeClasses += "rounded-2xl ";
+          else if (shape.type === "rect") shapeClasses += "rounded-[24px] ";
+          else if (shape.type === "card") shapeClasses += "rounded-[32px] ";
+          else shapeClasses += "rounded-[36px] ";
 
-      {/* Layer 3: Floating glowing particles (Drifting & Staggered) */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <div className="absolute w-2.5 h-2.5 rounded-full bg-[#2563EB]/40 blur-[0.5px] left-[15%] bottom-[10%] animate-particle-1" />
-        <div className="absolute w-2.5 h-2.5 rounded-full bg-[#8B5CF6]/50 blur-[0.5px] left-[45%] bottom-[30%] animate-particle-2" />
-        <div className="absolute w-3 h-3 rounded-full bg-[#06B6D4]/40 left-[75%] bottom-[20%] animate-particle-3" />
-        <div className="absolute w-2 h-2 rounded-full bg-[#EC4899]/50 blur-[0.5px] left-[30%] top-[25%] animate-particle-4" />
-        <div className="absolute w-2.5 h-2.5 rounded-full bg-[#FBBF24]/40 left-[85%] top-[15%] animate-particle-5" />
+          if (shape.isFilled) {
+            shapeClasses += "bg-white/12 border border-white/35 backdrop-blur-[12px] shadow-sm shadow-white/10";
+          } else {
+            shapeClasses += "border border-white/20 bg-transparent";
+          }
+
+          return (
+            <div
+              key={shape.idx}
+              className={shapeClasses}
+              style={{
+                width: shape.type === "rect" || shape.type === "panel" ? `${shape.size * 1.5}px` : `${shape.size}px`,
+                height: `${shape.size}px`,
+                left: `${shape.left}%`,
+                top: `${shape.top}%`,
+                opacity: 0.12,
+                animation: `shapeFloat ${shape.duration}s ease-in-out infinite alternate`,
+                animationDelay: `${shape.idx * 0.4}s`
+              }}
+            >
+              {shape.icon && renderShapeIcon(shape.icon)}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Layer 4: Medical Network Constellation Nodes */}
-      <svg className="absolute inset-0 w-full h-full opacity-[0.40] pointer-events-none z-0" xmlns="http://www.w3.org/2000/svg" aria-hidden>
-        <g stroke="rgba(37, 99, 235, 0.15)" strokeWidth="1.2">
-          <line x1="10%" y1="15%" x2="22%" y2="28%" strokeDasharray="3 3" />
-          <line x1="22%" y1="28%" x2="15%" y2="48%" />
-          <line x1="15%" y1="48%" x2="5%" y2="60%" />
-        </g>
-        <g stroke="rgba(139, 92, 246, 0.15)" strokeWidth="1.2">
-          <line x1="85%" y1="12%" x2="94%" y2="28%" />
-          <line x1="94%" y1="28%" x2="88%" y2="48%" strokeDasharray="4 4" />
-        </g>
-        <g className="animate-pulse-glow-point">
-          <circle cx="10%" cy="15%" r="4" fill="#2563EB" />
-          <circle cx="22%" cy="28%" r="6.5" fill="#8B5CF6" />
-          <circle cx="15%" cy="48%" r="4.5" fill="#06B6D4" />
-          <circle cx="5%" cy="60%" r="4" fill="#14B8A6" />
-          <circle cx="85%" cy="12%" r="4" fill="#8B5CF6" />
-          <circle cx="94%" cy="28%" r="6" fill="#FBBF24" />
-          <circle cx="88%" cy="48%" r="4.5" fill="#EC4899" />
-        </g>
+      {/* LAYER 5: Softly Glowing Technology Connection Network Lines (z-index 2) */}
+      <svg className="absolute inset-0 w-full h-full pointer-events-none z-[2]" viewBox="0 0 1000 700" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M -50 150 Q 150 120 280 250" stroke="rgba(90, 169, 255, 0.22)" strokeWidth="1" fill="none" />
+        <circle r="2.5" fill="#43D9FF" opacity="0.95">
+          <animateMotion dur="12s" repeatCount="indefinite" path="M -50 150 Q 150 120 280 250" />
+        </circle>
+
+        <path d="M 280 250 L 150 450" stroke="rgba(139, 124, 255, 0.22)" strokeWidth="1" fill="none" />
+        <circle r="2.5" fill="#8B7CFF" opacity="0.95">
+          <animateMotion dur="10s" repeatCount="indefinite" path="M 280 250 L 150 450" />
+        </circle>
+
+        <path d="M 150 450 Q 400 480 650 350" stroke="rgba(91, 231, 196, 0.22)" strokeWidth="1" fill="none" />
+        <circle r="2.5" fill="#5BE7C4" opacity="0.95">
+          <animateMotion dur="15s" repeatCount="indefinite" path="M 150 450 Q 400 480 650 350" />
+        </circle>
+
+        <path d="M 850 100 Q 750 300 900 420" stroke="rgba(255, 122, 184, 0.22)" strokeWidth="1" fill="none" />
+        <circle r="2.5" fill="#FF7AB8" opacity="0.95">
+          <animateMotion dur="14s" repeatCount="indefinite" path="M 850 100 Q 750 300 900 420" />
+        </circle>
+
+        <path d="M 900 420 L 700 600" stroke="rgba(90, 169, 255, 0.22)" strokeWidth="1" fill="none" />
+        <circle r="2.5" fill="#5AA9FF" opacity="0.95">
+          <animateMotion dur="9s" repeatCount="indefinite" path="M 900 420 L 700 600" />
+        </circle>
+
+        <path d="M 400 80 L 550 200" stroke="rgba(139, 124, 255, 0.18)" strokeWidth="1" fill="none" />
+        <circle r="2" fill="#8B7CFF" opacity="0.9">
+          <animateMotion dur="11s" repeatCount="indefinite" path="M 400 80 L 550 200" />
+        </circle>
+
+        <path d="M 50 550 Q 300 650 500 500" stroke="rgba(91, 231, 196, 0.22)" strokeWidth="1" fill="none" />
+        <circle r="2.5" fill="#5BE7C4" opacity="0.95">
+          <animateMotion dur="16s" repeatCount="indefinite" path="M 50 550 Q 300 650 500 500" />
+        </circle>
       </svg>
 
-      {/* Layer 5: Large Faint Rotating DNA Helix outline */}
-      <div className="absolute top-[10%] left-[2%] w-24 h-48 opacity-[0.035] animate-dna-rotation pointer-events-none z-0">
-        <svg viewBox="0 0 50 100" fill="none" stroke="#2563EB" strokeWidth="2.5" className="w-full h-full">
-          <path d="M10 10 C 25 30, 25 70, 10 90 M40 10 C 25 30, 25 70, 40 90 M10 10 L40 10 M10 30 L40 30 M15 50 L35 50 M10 70 L40 70 M10 90 L40 90" />
-        </svg>
+      {/* LAYER 6: Tiny Glowing Particles in Blue, Cyan, Purple, Mint, Pink (z-index 3) */}
+      <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
+        {COLORED_PARTICLES.map((p) => (
+          <div
+            key={p.idx}
+            className="absolute pointer-events-none rounded-full"
+            style={{
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              left: `${p.left}%`,
+              bottom: `${p.bottom}%`,
+              backgroundColor: p.color,
+              filter: 'blur-[0.5px]',
+              animation: `randomDrift ${p.duration}s ease-in-out infinite`,
+              animationDelay: `${p.delay}s`,
+              '--drift-x': `${p.driftX}px`,
+              '--drift-y': `${p.driftY}px`,
+              '--max-opacity': p.maxOpacity,
+              opacity: 0
+            }}
+          />
+        ))}
       </div>
 
-      {/* Layer 6: Hexagon Pattern Grid scrolling very slowly */}
-      <div className="absolute inset-0 hero-hex-grid z-0 pointer-events-none opacity-80" />
+      {/* LAYER 2: Floating Glass Bubbles (z-index 4 - in front) */}
+      <div className="absolute inset-0 z-[4] pointer-events-none overflow-hidden">
+        {BUBBLES.map((b) => (
+          <div
+            key={b.idx}
+            className="absolute flex items-center justify-center border border-white/45 bg-white/15 backdrop-blur-[12px] shadow-sm shadow-white/20 pointer-events-none rounded-full"
+            style={{
+              width: `${b.size}px`,
+              height: `${b.size}px`,
+              left: `${b.left}%`,
+              bottom: '-10%',
+              animation: `bubbleFloat ${b.duration}s linear infinite`,
+              animationDelay: `${b.delay}s`,
+              '--bubble-drift-x': `${b.driftX}px`,
+              opacity: 0,
+              transform: `translate(calc(var(--mouse-x) * 22px), calc(var(--mouse-y) * 22px))`
+            }}
+          >
+            {b.hasIcon === 'cross' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="#FF7AB8" strokeWidth="3.5" className="w-[40%] h-[40%] opacity-80">
+                <path d="M19 12H5M12 19V5" />
+              </svg>
+            )}
+            {b.hasIcon === 'shield' && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="#5AA9FF" strokeWidth="2.5" className="w-[40%] h-[40%] opacity-80">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+              </svg>
+            )}
+          </div>
+        ))}
+      </div>
 
-      {/* Layer 7: Medical Cross Icons floating */}
-      <div className="absolute top-[8%] left-[18%] w-6 h-6 opacity-[0.08] animate-icon-float-1 pointer-events-none z-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-          <path d="M19 12H5M12 19V5" />
-        </svg>
-      </div>
-      <div className="absolute bottom-[25%] right-[28%] w-8 h-8 opacity-[0.06] animate-icon-float-2 pointer-events-none z-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-full h-full">
-          <path d="M19 12H5M12 19V5" />
-        </svg>
-      </div>
+      {/* Grid Pattern Layer */}
+      <div className="absolute inset-0 hero-hex-grid z-0 pointer-events-none" />
 
-      {/* Layer 8: Molecule Structures floating */}
-      <div className="absolute top-[40%] right-[22%] w-10 h-10 opacity-[0.07] animate-molecule-float pointer-events-none z-0">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#06B6D4" strokeWidth="2" className="w-full h-full">
-          <circle cx="12" cy="12" r="3" /><circle cx="19" cy="5" r="2.5" /><circle cx="5" cy="19" r="2.5" /><circle cx="19" cy="19" r="2.5" />
-          <line x1="12" y1="12" x2="19" y2="5" /><line x1="12" y1="12" x2="5" y2="19" /><line x1="12" y1="12" x2="19" y2="19" />
-        </svg>
-      </div>
-      <div className="absolute bottom-[15%] left-[28%] w-12 h-12 opacity-[0.06] animate-molecule-float pointer-events-none z-0" style={{ animationDelay: "1.5s" }}>
-        <svg viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" className="w-full h-full">
-          <circle cx="12" cy="12" r="3" /><circle cx="19" cy="5" r="2.5" /><circle cx="5" cy="19" r="2.5" /><circle cx="19" cy="19" r="2.5" />
-          <line x1="12" y1="12" x2="19" y2="5" /><line x1="12" y1="12" x2="5" y2="19" /><line x1="12" y1="12" x2="19" y2="19" />
-        </svg>
-      </div>
-
-      {/* Layer 9: ECG Heartbeat Line running along the bottom */}
+      {/* ECG Heartbeat Line Layer */}
       <div className="absolute bottom-[8%] left-0 right-0 h-16 opacity-[0.05] pointer-events-none z-0">
         <svg viewBox="0 0 1000 100" preserveAspectRatio="none" className="w-full h-full" stroke="#2563EB" strokeWidth="2" fill="none">
-          <path d="M 0 50 L 300 50 L 310 20 L 320 80 L 330 40 L 340 55 L 350 50 L 650 50 L 660 20 L 670 80 L 680 40 L 690 55 L 700 50 L 1000 50" className="animate-ecg-pulse-line" />
+          <path d="M 0 50 L 300 50 L 310 20 L 320 80 L 330 40 L 340 55 L 350 50 L 650 50 L 660 20 L 670 80 L 680 40 L 690 55 L 700 50 L 1000 50" className="animate-ecg-pulse-line" style={{ strokeDasharray: "240 600", animation: "ecgPulseLine 12s linear infinite" }} />
         </svg>
       </div>
 
-      {/* Layer 10: Soft diagonal light rays */}
-      <div className="absolute inset-0 hero-light-rays z-0 pointer-events-none opacity-40" />
+      {/* Soft Moving Light Rays */}
+      <div className="absolute inset-0 hero-light-rays z-0 pointer-events-none" />
 
-      {/* Layer 11: Floating translucent glass panels */}
-      <div className="absolute top-[25%] left-[8%] w-32 h-32 rounded-2xl border border-white/30 bg-white/5 backdrop-blur-[6px] shadow-sm animate-glass-panels pointer-events-none z-0" />
-      <div className="absolute bottom-[20%] right-[10%] w-40 h-40 rounded-3xl border border-white/20 bg-white/3 backdrop-blur-[8px] shadow-md animate-glass-panels pointer-events-none z-0" style={{ animationDelay: "2s" }} />
+      {/* Soft Glass Shimmer Sweep Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-0 bottom-0 w-[50%] bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-12" style={{ animation: "glassShimmer 10s ease-in-out infinite" }} />
+      </div>
 
-      {/* Layer 12: Super subtle paper/noise overlay texture to give depth */}
+      {/* Super subtle paper/noise overlay texture to give depth */}
       <div className="absolute inset-0 hero-noise-texture z-0 pointer-events-none" />
 
       <div className="max-w-[1320px] mx-auto px-4 sm:px-6 relative z-10 pt-8 sm:pt-10 pb-24 sm:pb-28 lg:pt-12 lg:pb-32">
@@ -414,21 +590,7 @@ const TourismHero = ({
               ))}
             </div>
 
-            {slideCount > 1 && (
-              <div className="ilmic-hero-carousel__dots mt-6">
-                {heroSlides.map((item, idx) => (
-                  <button
-                    key={idx}
-                    type="button"
-                    onClick={() => goTo(idx)}
-                    className={`ilmic-hero-carousel__dot ${
-                      current === idx ? "ilmic-hero-carousel__dot--active" : ""
-                    }`}
-                    aria-label={`Banner ${idx + 1}: ${item.tagline || "slide"}`}
-                  />
-                ))}
-              </div>
-            )}
+
           </div>
 
           <div className="flex justify-center lg:justify-end order-1 lg:order-2 w-full">
@@ -436,19 +598,32 @@ const TourismHero = ({
               <div className="ilmic-ref-hero__frame relative">
                 <div className="ilmic-ref-hero__accent" aria-hidden />
 
-                <div className="ilmic-ref-hero__image-wrap ilmic-hero-carousel__images">
-                  {heroSlides.map((item, idx) => (
-                    <img
-                      key={idx}
-                      src={getImageSrc(item, idx)}
-                      alt=""
-                      role="presentation"
-                      className={`ilmic-hero-carousel__img ${
-                        idx === current ? "ilmic-hero-carousel__img--active" : ""
-                      }`}
-                      onError={() => handleImgError(idx)}
-                    />
-                  ))}
+                <div className="ilmic-ref-hero__image-wrap">
+                  <Swiper
+                    modules={[Autoplay]}
+                    autoplay={{
+                      delay: 4000,
+                      disableOnInteraction: false,
+                      pauseOnMouseEnter: true,
+                    }}
+                    loop={true}
+                    speed={900}
+                    className="w-full h-full"
+                  >
+                    {SLIDER_IMAGES.map((src, idx) => (
+                      <SwiperSlide key={src} className="relative w-full h-full">
+                        <Image
+                          src={src}
+                          alt={`Pharmaceutical slide ${idx + 1}`}
+                          fill
+                          priority={idx === 0}
+                          loading={idx === 0 ? undefined : "lazy"}
+                          className="object-cover w-full h-full rounded-[inherit]"
+                          sizes="(max-w-7xl) 50vw, 100vw"
+                        />
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
                 </div>
 
                 {activeSlide.theme === "handshake" && (
@@ -457,38 +632,16 @@ const TourismHero = ({
                   </div>
                 )}
 
-                {slideCount > 1 && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={prev}
-                      className="ilmic-hero-carousel__nav ilmic-hero-carousel__nav--prev"
-                      aria-label="Previous banner"
-                    >
-                      <FiChevronLeft className="w-5 h-5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={next}
-                      className="ilmic-hero-carousel__nav ilmic-hero-carousel__nav--next"
-                      aria-label="Next banner"
-                    >
-                      <FiChevronRight className="w-5 h-5" />
-                    </button>
-                  </>
-                )}
-
                 <div
                   className="absolute bottom-3 left-3 right-3 sm:bottom-5 sm:left-6 sm:right-auto z-20 bg-white rounded-xl shadow-[0_8px_30px_rgba(15,58,102,0.15)] border border-[#e8f0f6] px-4 py-3 sm:max-w-[240px] ilmic-hero-carousel__badge"
                   key={`badge-${current}`}
                 >
                   <div className="flex items-start gap-3">
                     <div
-                      className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${
-                        activeSlide.theme === "handshake"
+                      className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${activeSlide.theme === "handshake"
                           ? "bg-[#e8f4fa] ilmic-hero-carousel__badge-icon--shake"
                           : "bg-[#e8f4fa]"
-                      }`}
+                        }`}
                     >
                       <BadgeIcon type={badge.icon} />
                     </div>
