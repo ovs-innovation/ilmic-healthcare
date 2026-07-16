@@ -315,7 +315,7 @@ const AboutUs = () => {
                     <motion.div 
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true, amount: 0.2 }}
+                      viewport={{ once: false, amount: 0.25 }}
                       transition={{ 
                         type: "spring", 
                         stiffness: 200, 
@@ -328,10 +328,10 @@ const AboutUs = () => {
                     {/* Left Panel */}
                     <div className={`w-full md:w-[45%] flex justify-end text-right ${isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
                       <motion.div
-                        initial={{ opacity: 0, y: 60, scale: 0.96 }}
-                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        initial={{ opacity: 0, x: -60, scale: 0.95 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                        viewport={{ once: false, amount: 0.25 }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                         whileHover={{
                           y: -5,
                           boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
@@ -348,7 +348,7 @@ const AboutUs = () => {
                     <motion.div 
                       initial={{ scale: 0, opacity: 0 }}
                       whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: true, amount: 0.2 }}
+                      viewport={{ once: false, amount: 0.25 }}
                       transition={{ 
                         type: "spring", 
                         stiffness: 150, 
@@ -364,10 +364,10 @@ const AboutUs = () => {
                     {/* Right Panel */}
                     <div className={`w-full md:w-[45%] flex justify-start text-left ${!isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
                       <motion.div
-                        initial={{ opacity: 0, y: 60, scale: 0.96 }}
-                        whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                        viewport={{ once: true, amount: 0.2 }}
-                        transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+                        initial={{ opacity: 0, x: 60, scale: 0.95 }}
+                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
+                        viewport={{ once: false, amount: 0.25 }}
+                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
                         whileHover={{
                           y: -5,
                           boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
