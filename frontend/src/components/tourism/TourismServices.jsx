@@ -57,15 +57,17 @@ const TourismServices = ({ services, title = "Our Medical Tourism Services" }) =
           </p>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-5 max-w-6xl mx-auto">
+        <div className="grid grid-cols-2 lg:grid-cols-6 gap-3 sm:gap-5 max-w-6xl mx-auto">
           {HOME_SERVICES.map((service, index) => (
             <Link
               key={service.slug}
               href={`/service/${service.slug}`}
               className={`llmic-service-card group !p-4 sm:!p-7 ${
-                index < 4
+                index < 3
                   ? "lg:col-span-2"
-                  : "lg:col-span-2 lg:col-start-2"
+                  : index === 3
+                  ? "lg:col-span-2 lg:col-start-2"
+                  : "lg:col-span-2"
               }`}
             >
               <div className="llmic-service-card__icon group-hover:scale-110 transition-transform !w-10 !h-10 sm:!w-14 sm:!h-14 !text-xl sm:!text-2xl !mb-3 sm:!mb-5">

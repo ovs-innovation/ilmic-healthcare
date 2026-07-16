@@ -283,16 +283,18 @@ const ServicesPage = () => {
             <h2 className="llmic-heading">Everything You Need for Your Medical Journey</h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-5 max-w-6xl mx-auto">
             {displayList.map((service, index) => (
               <div
                 key={service.key}
                 className={`llmic-service-card cursor-pointer ${
                   activeCard === service.key ? "ring-2 ring-ilmic-blue" : ""
                 } ${
-                  index < 4
+                  index < 3
                     ? "lg:col-span-2"
-                    : "lg:col-span-2 lg:col-start-2"
+                    : index === 3
+                    ? "lg:col-span-2 lg:col-start-2"
+                    : "lg:col-span-2"
                 }`}
                 onClick={() => setActiveCard(activeCard === service.key ? null : service.key)}
               >
