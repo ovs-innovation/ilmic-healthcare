@@ -6,35 +6,35 @@ const HOME_SERVICES = [
     slug: "medical-tourism",
     name: "Medical Tourism",
     description: "Complete medical tourism services for international patients in India.",
-    icon: "✈️",
+    image: "/visuals/medical_tourism.png",
     group: "Medical Tourism",
   },
   {
     slug: "hospital-management",
     name: "Hospital Management",
     description: "Managing 50+ hospitals abroad with effective on-ground support.",
-    icon: "🏥",
+    image: "/visuals/hospital_management.png",
     group: "Hospital",
   },
   {
     slug: "pharmaceutical-export",
     name: "Pharmaceutical Export",
     description: "Export of oncology and general pharma medicines to Dubai, Africa, Bangladesh, CIS, and other international markets.",
-    icon: "🌍",
+    image: "/visuals/pharmaceutical_export.png",
     group: "Export",
   },
   {
     slug: "hospital-accessories-supply",
     name: "Hospital Accessories Supply",
     description: "Supplier of all types of hospital accessories, surgical instruments, and medical products.",
-    icon: "🔧",
+    image: "/visuals/hospital_accessories.png",
     group: "Surgical",
   },
   {
     slug: "international-medical-conferences",
     name: "International Medical Conferences",
     description: "Conducting international medical conferences, workshops, and professional training programs.",
-    icon: "🎓",
+    image: "/visuals/medical_conferences.png",
     group: "Training",
   },
 ];
@@ -70,8 +70,12 @@ const TourismServices = ({ services, title = "Our Medical Tourism Services" }) =
                   : "lg:col-span-2"
               }`}
             >
-              <div className="llmic-service-card__icon group-hover:scale-110 transition-transform !w-10 !h-10 sm:!w-14 sm:!h-14 !text-xl sm:!text-2xl !mb-3 sm:!mb-5">
-                {service.icon || "🏥"}
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-50/80 flex items-center justify-center p-2 border border-slate-100 mb-3 sm:mb-5 shadow-sm group-hover:border-ilmic-blue/20 transition-all duration-300">
+                <img
+                  src={service.image}
+                  alt={service.name}
+                  className="w-full h-full object-contain transition-all duration-[0.4s] group-hover:scale-[1.08] group-hover:drop-shadow-[0_8px_16px_rgba(15,58,102,0.18)]"
+                />
               </div>
               {service.group && (
                 <span className="llmic-service-card__group !text-[9px] sm:!text-[0.65rem]">{service.group}</span>

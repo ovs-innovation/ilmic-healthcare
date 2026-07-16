@@ -19,35 +19,35 @@ const servicesList = [
     slug: "medical-tourism",
     name: { en: "Medical Tourism" },
     description: { en: "Complete medical tourism services for international patients in India." },
-    icon: "✈️",
+    image: "/visuals/medical_tourism.png",
     group: "Medical Tourism",
   },
   {
     slug: "hospital-management",
     name: { en: "Hospital Management" },
     description: { en: "Managing 50+ hospitals abroad with effective on-ground support." },
-    icon: "🏥",
+    image: "/visuals/hospital_management.png",
     group: "Hospital",
   },
   {
     slug: "pharmaceutical-export",
     name: { en: "Pharmaceutical Export" },
     description: { en: "Export of oncology and general pharma medicines to Dubai, Africa, Bangladesh, CIS, and other international markets." },
-    icon: "🌍",
+    image: "/visuals/pharmaceutical_export.png",
     group: "Export",
   },
   {
     slug: "hospital-accessories-supply",
     name: { en: "Hospital Accessories Supply" },
     description: { en: "Supplier of all types of hospital accessories, surgical instruments, and medical products." },
-    icon: "🔧",
+    image: "/visuals/hospital_accessories.png",
     group: "Surgical",
   },
   {
     slug: "international-medical-conferences",
     name: { en: "International Medical Conferences" },
     description: { en: "Conducting international medical conferences, workshops, and professional training programs." },
-    icon: "🎓",
+    image: "/visuals/medical_conferences.png",
     group: "Training",
   },
 ];
@@ -80,7 +80,7 @@ const ServicesPage = () => {
   const getDisplay = (service) => ({
     title: showingTranslateValue(service.name),
     description: showingTranslateValue(service.description) || "",
-    icon: service.icon || "🏥",
+    visualSrc: service.image,
     group: service.group || "Medical",
     image: serviceImages[service.slug] || "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80",
     href: service.slug ? `/services/${service.slug}` : "",
@@ -154,7 +154,7 @@ const ServicesPage = () => {
                       }}
                     >
                       <span className="inline-flex items-center gap-2 px-4 py-2 bg-ilmic-blue/20 border border-blue-300/30 rounded-full text-blue-200 text-sm font-bold">
-                        {activeService.icon} {activeService.group}
+                        {activeService.visualSrc && <img src={activeService.visualSrc} className="w-5 h-5 object-contain inline-block mr-1.5" alt="" />} {activeService.group}
                       </span>
                     </motion.div>
 
@@ -298,7 +298,13 @@ const ServicesPage = () => {
                 }`}
                 onClick={() => setActiveCard(activeCard === service.key ? null : service.key)}
               >
-                <div className="llmic-service-card__icon">{service.icon}</div>
+                <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-50/80 flex items-center justify-center p-2 border border-slate-100 mb-3 sm:mb-5 shadow-sm group-hover:border-ilmic-blue/20 transition-all duration-300">
+                  <img
+                    src={service.visualSrc}
+                    alt={service.title}
+                    className="w-full h-full object-contain transition-all duration-[0.4s] group-hover:scale-[1.08] group-hover:drop-shadow-[0_8px_16px_rgba(15,58,102,0.18)]"
+                  />
+                </div>
                 <span className="llmic-service-card__group">{service.group}</span>
                 <h3 className="text-base font-bold text-slate-900 mb-2">{service.title}</h3>
                 <p className={`text-sm text-slate-500 leading-relaxed flex-1 ${activeCard === service.key ? "" : "line-clamp-3"}`}>

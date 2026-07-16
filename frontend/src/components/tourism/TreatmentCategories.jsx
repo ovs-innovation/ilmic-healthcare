@@ -1,11 +1,19 @@
 import Link from "next/link";
 
+const getCategoryVisual = (catName) => {
+  const name = String(catName || "").toLowerCase();
+  if (name.includes("oncology")) return "/visuals/oncology.png";
+  if (name.includes("general")) return "/visuals/general_pharma.png";
+  if (name.includes("surgical")) return "/visuals/surgical.png";
+  return "/visuals/general_pharma.png";
+};
+
 const getCatAccent = (cat) => {
   const name = String(cat?.name || cat?.category || "").toLowerCase();
   if (name.includes("oncology")) {
     return {
       ring: "hover:ring-ilmic-blue-dark/40",
-      iconBg: "bg-ilmic-blue-light",
+      iconBg: "bg-ilmic-blue-light/50",
       iconText: "text-ilmic-blue-darker",
       pill: "bg-ilmic-blue-light text-ilmic-blue-darker border-ilmic-border",
       glow: "group-hover:shadow-[0_18px_50px_rgba(15,58,102,0.14)]",
@@ -14,7 +22,7 @@ const getCatAccent = (cat) => {
   if (name.includes("general")) {
     return {
       ring: "hover:ring-ilmic-blue/30",
-      iconBg: "bg-blue-100",
+      iconBg: "bg-blue-50",
       iconText: "text-ilmic-blue",
       pill: "bg-blue-50 text-ilmic-blue border-ilmic-border",
       glow: "group-hover:shadow-[0_18px_50px_rgba(30,90,158,0.15)]",
@@ -23,7 +31,7 @@ const getCatAccent = (cat) => {
   if (name.includes("surgical")) {
     return {
       ring: "hover:ring-blue-300/50",
-      iconBg: "bg-blue-50",
+      iconBg: "bg-slate-50",
       iconText: "text-ilmic-blue-dark",
       pill: "bg-blue-50 text-ilmic-blue-dark border-ilmic-border",
       glow: "group-hover:shadow-[0_18px_50px_rgba(21,71,122,0.12)]",
@@ -53,7 +61,7 @@ const TreatmentCategories = ({ items, title = "Popular Treatments" }) => (
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-5 lg:gap-7">
         {items.map((cat) => {
           const accent = getCatAccent(cat);
-          const icon = cat.icon || "💊";
+          const visualSrc = getCategoryVisual(cat.name || cat.category);
 
           return (
             <Link
@@ -62,8 +70,12 @@ const TreatmentCategories = ({ items, title = "Popular Treatments" }) => (
               className={`group rounded-2xl sm:rounded-3xl border border-ilmic-border bg-white p-4 sm:p-7 transition-all duration-300 hover:-translate-y-1 hover:border-ilmic-border/60 ring-0 hover:ring-4 ${accent.ring} ${accent.glow}`}
             >
               <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4 text-center sm:text-left">
-                <div className={`w-11 h-11 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl mx-auto sm:mx-0 ${accent.iconBg} ${accent.iconText} flex items-center justify-center text-2xl sm:text-3xl shadow-sm shrink-0`}>
-                  <span className="leading-none">{icon}</span>
+                <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-2xl mx-auto sm:mx-0 ${accent.iconBg} flex items-center justify-center p-2 shadow-sm shrink-0 border border-slate-100/80 transition-all duration-[0.4s]`}>
+                  <img
+                    src={visualSrc}
+                    alt={cat.name}
+                    className="w-full h-full object-contain transition-all duration-[0.4s] group-hover:scale-[1.08] group-hover:drop-shadow-[0_8px_16px_rgba(15,58,102,0.18)]"
+                  />
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className={`inline-flex items-center px-2 sm:px-3 py-0.5 sm:py-1 rounded-full border text-[9px] sm:text-[11px] font-black uppercase tracking-wider ${accent.pill}`}>
