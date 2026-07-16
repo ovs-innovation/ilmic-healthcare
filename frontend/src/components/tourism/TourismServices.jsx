@@ -61,7 +61,7 @@ const TourismServices = ({ services, title = "Our Medical Tourism Services" }) =
           {HOME_SERVICES.map((service, index) => (
             <Link
               key={service.slug}
-              href={`/service/${service.slug}`}
+              href={`/services/${service.slug}`}
               className={`llmic-service-card group !p-4 sm:!p-7 ${
                 index < 3
                   ? "lg:col-span-2"
