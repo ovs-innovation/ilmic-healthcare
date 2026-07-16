@@ -302,96 +302,98 @@ const AboutUs = () => {
         </div>
       </section>
 
-      {/* ── SECTION 4: OUR JOURNEY (TIMELINE) ── */}
-      <section className="llmic-section bg-slate-50 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-            <span className="text-xs font-black text-[#ED1C24] uppercase tracking-widest">Our Milestones</span>
-            <h2 className="llmic-heading">Journey of Exponential Growth</h2>
-            <p className="text-slate-500 text-sm">How we evolved from a startup to a trusted global medical network.</p>
-          </div>
+      {/* ── SECTION 4: OUR JOURNEY (TIMELINE - STICKY SCROLL PINNED) ── */}
+      <section className="relative h-[250vh] bg-slate-50" ref={timelineRef}>
+        <div className="sticky top-0 h-screen w-full flex items-center overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full animate-fade-in">
+            <div className="text-center max-w-2xl mx-auto mb-12 space-y-3">
+              <span className="text-xs font-black text-[#ED1C24] uppercase tracking-widest">Our Milestones</span>
+              <h2 className="llmic-heading !mb-0 text-xl sm:text-3xl">Journey of Exponential Growth</h2>
+              <p className="text-slate-500 text-xs sm:text-sm">How we evolved from a startup to a trusted global medical network.</p>
+            </div>
 
-          <div className="relative max-w-5xl mx-auto pl-10 md:pl-0" ref={timelineRef}>
-            {/* Central Line */}
-            <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 -translate-x-1/2" aria-hidden />
-            <motion.div 
-              style={{ scaleY, originY: 0 }}
-              className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-ilmic-blue -translate-x-1/2" 
-              aria-hidden 
-            />
+            <div className="relative max-w-5xl mx-auto pl-10 md:pl-0 h-[60vh] flex items-center justify-center">
+              {/* Central Line */}
+              <div className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-slate-200 -translate-x-1/2" aria-hidden />
+              <motion.div 
+                style={{ scaleY, originY: 0 }}
+                className="absolute left-4 md:left-1/2 top-0 bottom-0 w-0.5 bg-ilmic-blue -translate-x-1/2" 
+                aria-hidden 
+              />
 
-            <div className="space-y-12">
-              {timelineEvents.map((ev, i) => {
-                const isEven = i % 2 === 0;
-                return (
-                  <div key={i} className="relative flex flex-col md:flex-row items-stretch md:justify-between w-full">
-                    {/* Timeline dot */}
-                    <motion.div 
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={visibleTimelineIndices.includes(i) ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-                      transition={{ 
-                        type: "spring", 
-                        stiffness: 200, 
-                        damping: 10,
-                        duration: 0.6 
-                      }}
-                      className="absolute left-4 md:left-1/2 -translate-x-1/2 top-6 z-10 w-4 h-4 rounded-full bg-slate-900 border-4 border-slate-50 shadow-md ring-2 ring-ilmic-blue" 
-                    />
-
-                    {/* Left Panel */}
-                    <div className={`w-full md:w-[45%] flex justify-end text-right ${isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
-                      <motion.div
-                        initial={{ opacity: 0, x: -60, scale: 0.95 }}
-                        animate={visibleTimelineIndices.includes(i) ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: -60, scale: 0.95 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                        whileHover={{
-                          y: -5,
-                          boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
+              <div className="space-y-4 md:space-y-6 w-full relative">
+                {timelineEvents.map((ev, i) => {
+                  const isEven = i % 2 === 0;
+                  return (
+                    <div key={i} className="relative flex flex-col md:flex-row items-center md:justify-between w-full h-[9vh] md:h-[10vh]">
+                      {/* Timeline dot */}
+                      <motion.div 
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={visibleTimelineIndices.includes(i) ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 200, 
+                          damping: 10,
+                          duration: 0.6 
                         }}
-                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
-                      >
-                        <span className="text-[#ED1C24] text-xs font-black uppercase tracking-wider">{ev.year}</span>
-                        <h4 className="font-extrabold text-slate-800 text-base mt-1 mb-2">{ev.title}</h4>
-                        <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{ev.desc}</p>
-                      </motion.div>
-                    </div>
+                        className="absolute left-4 md:left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 z-10 w-4 h-4 rounded-full bg-slate-900 border-4 border-slate-50 shadow-md ring-2 ring-ilmic-blue" 
+                      />
 
-                    {/* Center Year Badge (desktop only) */}
-                    <motion.div 
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={visibleTimelineIndices.includes(i) ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-                      transition={{ 
-                        type: "spring", 
-                        stiffness: 150, 
-                        damping: 10,
-                        duration: 0.8 
-                      }}
-                      className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-ilmic-blue text-white font-black text-xs shadow-md z-10 absolute left-1/2 -translate-x-1/2 top-2"
-                      style={{ boxShadow: "0 0 15px rgba(11, 94, 215, 0.4)" }}
-                    >
-                      {ev.year}
-                    </motion.div>
+                      {/* Left Panel */}
+                      <div className={`w-full md:w-[45%] flex justify-end text-right ${isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
+                        <motion.div
+                          initial={{ opacity: 0, x: -60, scale: 0.95 }}
+                          animate={visibleTimelineIndices.includes(i) ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: -60, scale: 0.95 }}
+                          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                          whileHover={{
+                            y: -2,
+                            boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
+                          }}
+                          className="bg-white p-3 md:p-5 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
+                        >
+                          <span className="text-[#ED1C24] text-[10px] md:text-xs font-black uppercase tracking-wider">{ev.year}</span>
+                          <h4 className="font-extrabold text-slate-800 text-xs md:text-sm mt-0.5 mb-1 truncate">{ev.title}</h4>
+                          <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed line-clamp-2">{ev.desc}</p>
+                        </motion.div>
+                      </div>
 
-                    {/* Right Panel */}
-                    <div className={`w-full md:w-[45%] flex justify-start text-left ${!isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
-                      <motion.div
-                        initial={{ opacity: 0, x: 60, scale: 0.95 }}
-                        animate={visibleTimelineIndices.includes(i) ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 60, scale: 0.95 }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                        whileHover={{
-                          y: -5,
-                          boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
+                      {/* Center Year Badge (desktop only) */}
+                      <motion.div 
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={visibleTimelineIndices.includes(i) ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+                        transition={{ 
+                          type: "spring", 
+                          stiffness: 150, 
+                          damping: 10,
+                          duration: 0.8 
                         }}
-                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
+                        className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-ilmic-blue text-white font-black text-xs shadow-md z-10 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2"
+                        style={{ boxShadow: "0 0 15px rgba(11, 94, 215, 0.4)" }}
                       >
-                        <span className="text-[#ED1C24] text-xs font-black uppercase tracking-wider">{ev.year}</span>
-                        <h4 className="font-extrabold text-slate-800 text-base mt-1 mb-2">{ev.title}</h4>
-                        <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">{ev.desc}</p>
+                        {ev.year}
                       </motion.div>
+
+                      {/* Right Panel */}
+                      <div className={`w-full md:w-[45%] flex justify-start text-left ${!isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
+                        <motion.div
+                          initial={{ opacity: 0, x: 60, scale: 0.95 }}
+                          animate={visibleTimelineIndices.includes(i) ? { opacity: 1, x: 0, scale: 1 } : { opacity: 0, x: 60, scale: 0.95 }}
+                          transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+                          whileHover={{
+                            y: -2,
+                            boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
+                          }}
+                          className="bg-white p-3 md:p-5 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
+                        >
+                          <span className="text-[#ED1C24] text-[10px] md:text-xs font-black uppercase tracking-wider">{ev.year}</span>
+                          <h4 className="font-extrabold text-slate-800 text-xs md:text-sm mt-0.5 mb-1 truncate">{ev.title}</h4>
+                          <p className="text-[10px] md:text-xs text-slate-500 leading-relaxed line-clamp-2">{ev.desc}</p>
+                        </motion.div>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
