@@ -11,7 +11,7 @@ import {
   FiSettings, FiBriefcase, FiDollarSign, FiClock, FiTarget, 
   FiSmartphone, FiAward, FiLayers, FiAlertCircle, FiGlobe, 
   FiTruck, FiNavigation, FiAnchor, FiSearch, FiSliders, FiGrid,
-  FiTool, FiCheckCircle, FiVolume2, FiBookOpen, FiMapPin, FiCalendar, FiStar
+  FiTool, FiCheckCircle, FiVolume2, FiBookOpen, FiMapPin, FiCalendar, FiStar, FiSmile
 } from "react-icons/fi";
 
 // Client-side animated counter component
@@ -40,6 +40,16 @@ const InternationalMedicalConferences = () => {
   const [activeFaq, setActiveFaq] = useState(null);
   const [selectedProcessStep, setSelectedProcessStep] = useState(0);
   const [activeRegion, setActiveRegion] = useState("India");
+  const [activeStep, setActiveStep] = useState(0);
+  const [isAutoplay, setIsAutoplay] = useState(true);
+
+  useEffect(() => {
+    if (!isAutoplay) return;
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % 10);
+    }, 4500);
+    return () => clearInterval(interval);
+  }, [isAutoplay]);
 
   const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
@@ -96,6 +106,19 @@ const InternationalMedicalConferences = () => {
     { title: "Global Networking", desc: "Social delegate dinners, regional trade tables, and partnership agreements for international buyers.", image: "https://images.unsplash.com/photo-1557804506-669a67965ba0?w=600&q=80" }
   ];
 
+  // 3. Event Experience (10 Steps)
+  const eventExperience = [
+    { step: "Registration", desc: "Submit doctor credentials, verify L/C delegate vouchers, and download the digital summit badges.", icon: FiFileText },
+    { step: "Welcome", desc: "Receive welcoming packages, local transport shuttle cards, and digital guides of the exhibition hall.", icon: FiSmile },
+    { step: "Opening Ceremony", desc: "Welcome address led by ILMIC directors and national health ministers, establishing the event goals.", icon: FiAward },
+    { step: "Keynote Sessions", desc: "Senior surgeons present peer-reviewed research papers and clinical trial results on oncology and cardiology.", icon: FiTrendingUp },
+    { step: "Panel Discussions", desc: "Multi-national roundtables debating telemedicine logistics, hospital capex planning, and WHO-GMP guidelines.", icon: FiUsers },
+    { step: "Hands-on Workshops", desc: "Interactive surgical simulators, ventilator calibrations, and diagnostic report checkups in clinical labs.", icon: FiActivity },
+    { step: "Networking Lounge", desc: "Connect with hospital owners, importers, and biomedical engineers during designated coffee and dinner slots.", icon: FiBriefcase },
+    { step: "Exhibition Area", desc: "Walk through medical hardware displays showing modern ICU beds, shadowless lamps, and EMR software.", icon: FiGlobe },
+    { step: "Awards Ceremony", desc: "Recognizing outstanding academic posters, innovative medical designs, and regional hospital operations.", icon: FiStar },
+    { step: "Closing Session", desc: "Concluding remarks, distribution of accredited CME point certificates, and scheduling of next assemblies.", icon: FiClock }
+  ];
 
   // 4. Featured Topics (12 Topics)
   const featuredTopics = [
@@ -417,6 +440,145 @@ const InternationalMedicalConferences = () => {
           </div>
         </section>
 
+        {/* SECTION 4: EVENT EXPERIENCE (Interactive Motion Stepper Timeline) */}
+        <section className="py-24 bg-white border-y border-slate-100 select-none overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+              <span className="text-xs font-black uppercase tracking-widest text-ilmic-blue">DELEGATE EXPERIENCE</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-ilmic-text">The Scientific Assembly Experience</h2>
+              <p className="text-ilmic-muted font-medium text-sm sm:text-base leading-relaxed">
+                Review the structured itinerary configured to optimize delegate learning, network roundtables, and workshop hours.
+              </p>
+            </div>
+
+            <div 
+              className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start"
+              onMouseEnter={() => setIsAutoplay(false)}
+              onMouseLeave={() => setIsAutoplay(true)}
+            >
+              {/* Left Selector Column (lg:col-span-5) */}
+              <div className="lg:col-span-5 flex lg:flex-col gap-2 overflow-x-auto lg:overflow-x-visible pb-4 lg:pb-0 scrollbar-thin">
+                {eventExperience.map((exp, idx) => {
+                  const isActive = activeStep === idx;
+                  return (
+                    <button
+                      key={idx}
+                      type="button"
+                      onClick={() => {
+                        setActiveStep(idx);
+                        setIsAutoplay(false);
+                      }}
+                      className={`relative flex items-center gap-4 p-4 rounded-xl text-left transition-all duration-300 w-[240px] sm:w-[280px] lg:w-full flex-shrink-0 border ${
+                        isActive 
+                          ? "bg-slate-50/50 border-ilmic-blue/20 shadow-sm" 
+                          : "bg-transparent border-transparent hover:bg-slate-50/40"
+                      }`}
+                    >
+                      {/* Active Indicator Slide Background */}
+                      {isActive && (
+                        <motion.div
+                          layoutId="activeStepBg"
+                          className="absolute inset-0 bg-slate-50 border border-slate-200/50 rounded-xl -z-10 shadow-[0_4px_12px_rgba(37,99,235,0.03)]"
+                          transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                        />
+                      )}
+
+                      {/* Number Bubble */}
+                      <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-xs flex-shrink-0 transition-colors ${
+                        isActive ? "bg-ilmic-blue text-white" : "bg-slate-100 text-slate-500"
+                      }`}>
+                        {idx + 1 < 10 ? `0${idx + 1}` : idx + 1}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <p className={`font-bold text-sm truncate transition-colors ${
+                          isActive ? "text-ilmic-text" : "text-slate-600"
+                        }`}>
+                          {exp.step}
+                        </p>
+                        {isActive && (
+                          <p className="text-[10px] text-ilmic-blue font-bold tracking-wider uppercase mt-0.5">
+                            Active Phase
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Progress Line Bar inside active selector */}
+                      {isActive && isAutoplay && (
+                        <div className="absolute bottom-0 left-0 right-0 h-[2.5px] bg-slate-200 overflow-hidden rounded-b-xl">
+                          <motion.div
+                            initial={{ width: 0 }}
+                            animate={{ width: "100%" }}
+                            transition={{ duration: 4.5, ease: "linear" }}
+                            key={activeStep}
+                            className="h-full bg-ilmic-blue"
+                          />
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Right Details Column (lg:col-span-7) */}
+              <div className="lg:col-span-7 h-full min-h-[380px] lg:min-h-[440px] flex items-stretch">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={activeStep}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.35, ease: "easeInOut" }}
+                    className="relative w-full rounded-3xl border border-slate-150 bg-gradient-to-br from-slate-50 to-white p-8 sm:p-12 shadow-[0_12px_40px_rgba(15,58,102,0.04)] overflow-hidden flex flex-col justify-between"
+                  >
+                    {/* Background Huge Number Watermark */}
+                    <div className="absolute right-[-5%] bottom-[-10%] text-[15rem] sm:text-[20rem] font-black text-slate-100/50 pointer-events-none select-none font-serif leading-none z-0">
+                      {activeStep + 1 < 10 ? `0${activeStep + 1}` : activeStep + 1}
+                    </div>
+
+                    <div className="relative z-10 space-y-6">
+                      <span className="inline-flex items-center gap-2 px-3 py-1.5 bg-ilmic-blue/10 border border-ilmic-blue-light/20 rounded-full text-ilmic-blue text-xs font-black uppercase tracking-wider">
+                        Phase {activeStep + 1 < 10 ? `0${activeStep + 1}` : activeStep + 1}
+                      </span>
+
+                      <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-ilmic-blue text-white flex items-center justify-center shadow-lg shadow-ilmic-blue/20">
+                          {React.createElement(eventExperience[activeStep].icon || FiCheck, { className: "w-6 h-6" })}
+                        </div>
+                        <div>
+                          <h3 className="text-xl sm:text-2xl font-black text-ilmic-text tracking-tight">
+                            {eventExperience[activeStep].step}
+                          </h3>
+                          <p className="text-xs text-slate-500 mt-0.5">Scientific Assembly Timeline</p>
+                        </div>
+                      </div>
+
+                      <div className="h-px bg-slate-200/60" />
+
+                      <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-medium">
+                        {eventExperience[activeStep].desc}
+                      </p>
+                    </div>
+
+                    <div className="relative z-10 pt-8 flex items-center justify-between text-[11px] font-bold text-slate-500 border-t border-slate-100 mt-6">
+                      <span className="flex items-center gap-1.5">
+                        <span className={`w-2 h-2 rounded-full ${isAutoplay ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
+                        {isAutoplay ? "Autoplay Active" : "Autoplay Paused"}
+                      </span>
+                      <button 
+                        type="button"
+                        onClick={() => setIsAutoplay(!isAutoplay)}
+                        className="text-ilmic-blue hover:underline cursor-pointer"
+                      >
+                        {isAutoplay ? "Click to Pause" : "Click to Resume"}
+                      </button>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        </section>
 
 
         {/* SECTION 5: FEATURED TOPICS */}
