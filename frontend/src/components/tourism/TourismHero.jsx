@@ -31,19 +31,27 @@ const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
 ];
 
-const BUBBLES = Array.from({ length: 22 }, (_, idx) => {
+const BUBBLES = Array.from({ length: 24 }, (_, idx) => {
   const sizes = [18, 24, 32, 40, 60, 80];
   const size = sizes[idx % sizes.length];
-  const left = (idx * 4.5 + 5) % 95;
-  const duration = 16 + (idx % 10) * 3;
-  const delay = idx * 0.5;
-  const driftX = (idx % 2 === 0 ? 35 : -35) + (idx % 4) * 6;
-  const hasIcon = idx % 5 === 0 ? 'cross' : idx % 7 === 0 ? 'shield' : null;
-  return { idx, size, left, duration, delay, driftX, hasIcon };
+  const left = (idx * 4.1 + 4) % 95;
+  const duration = 15 + (idx % 8) * 3;
+  const delay = idx * 0.45;
+  const driftX = (idx % 2 === 0 ? 30 : -30) + (idx % 4) * 5;
+  const hasIcon = idx % 6 === 0 ? 'cross' : idx % 8 === 0 ? 'shield' : null;
+  const bubbleColors = [
+    "rgba(90, 169, 255, 0.18)", // Blue
+    "rgba(67, 217, 255, 0.18)", // Cyan
+    "rgba(139, 124, 255, 0.18)", // Purple
+    "rgba(91, 231, 196, 0.18)",  // Mint
+    "rgba(255, 122, 184, 0.18)"  // Pink
+  ];
+  const bubbleColor = bubbleColors[idx % bubbleColors.length];
+  return { idx, size, left, duration, delay, driftX, hasIcon, bubbleColor };
 });
 
 const SHAPES = Array.from({ length: 10 }, (_, idx) => {
-  const types = ["square", "hexagon", "rect", "card", "panel"];
+  const types = ["capsule", "ring", "pod", "pill", "lens"];
   const type = types[idx % types.length];
   const size = 60 + (idx % 5) * 40;
   const left = (idx * 9 + 8) % 85;
@@ -362,6 +370,33 @@ const TourismHero = ({
       {/* Very Light Indigo */}
       <div className="absolute top-[35%] left-[15%] w-[42vw] h-[42vw] rounded-full bg-[#DDE8FF]/[0.18] blur-[120px] animate-blob-3-slow pointer-events-none z-0" />
 
+      {/* Interactive mouse spotlight glow */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-0 transition-opacity duration-300"
+        style={{
+          background: `radial-gradient(circle 350px at calc(var(--mouse-x) * 100% + 50%) calc(var(--mouse-y) * 100% + 50%), rgba(90, 169, 255, 0.12) 0%, rgba(139, 124, 255, 0.04) 50%, transparent 100%)`,
+        }}
+      />
+
+      {/* High-tech Radar concentric circle systems */}
+      <div className="absolute top-[12%] right-[32%] w-[280px] h-[280px] opacity-[0.06] pointer-events-none z-0">
+        <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_55s_linear_infinite]">
+          <circle cx="50" cy="50" r="45" stroke="#5AA9FF" strokeWidth="0.5" strokeDasharray="3 3" fill="none" />
+          <circle cx="50" cy="50" r="35" stroke="#8B7CFF" strokeWidth="0.8" fill="none" />
+          <circle cx="50" cy="50" r="25" stroke="#5BE7C4" strokeWidth="0.5" strokeDasharray="5 2" fill="none" />
+          <line x1="50" y1="5" x2="50" y2="95" stroke="#5AA9FF" strokeWidth="0.2" />
+          <line x1="5" y1="50" x2="95" y2="50" stroke="#5AA9FF" strokeWidth="0.2" />
+        </svg>
+      </div>
+
+      <div className="absolute bottom-[20%] left-[8%] w-[220px] h-[220px] opacity-[0.05] pointer-events-none z-0">
+        <svg viewBox="0 0 100 100" className="w-full h-full animate-[spin_70s_linear_infinite_reverse]">
+          <circle cx="50" cy="50" r="40" stroke="#43D9FF" strokeWidth="0.6" strokeDasharray="4 4" fill="none" />
+          <circle cx="50" cy="50" r="20" stroke="#FF7AB8" strokeWidth="0.8" fill="none" />
+          <line x1="50" y1="50" x2="90" y2="90" stroke="#43D9FF" strokeWidth="0.5" />
+        </svg>
+      </div>
+
       {/* LAYER 3: Premium Floating Geometric Glass Boxes/Panels (z-index 1 - behind bubbles) */}
       <div className="absolute inset-0 z-[1] pointer-events-none overflow-hidden">
         {SHAPES.map((shape) => {
@@ -436,6 +471,12 @@ const TourismHero = ({
         </circle>
       </svg>
 
+      {/* LAYER 5.2: Pulse ECG/DNA wave path */}
+      <svg className="absolute bottom-[10%] left-0 right-0 h-[80px] w-full pointer-events-none opacity-[0.07] z-0" preserveAspectRatio="none" viewBox="0 0 1000 100">
+        <path d="M 0 50 C 150 20, 150 80, 300 50 C 450 20, 450 80, 600 50 C 750 20, 750 80, 900 50 C 950 35, 980 65, 1000 50" stroke="#5BE7C4" strokeWidth="2.2" fill="none" strokeDasharray="6 6" />
+        <path d="M 0 50 C 150 80, 150 20, 300 50 C 450 80, 450 20, 600 50 C 750 80, 750 20, 900 50 C 950 65, 980 35, 1000 50" stroke="#8B7CFF" strokeWidth="1.8" fill="none" />
+      </svg>
+
       {/* LAYER 6: Tiny Glowing Particles in Blue, Cyan, Purple, Mint, Pink (z-index 3) */}
       <div className="absolute inset-0 z-[3] pointer-events-none overflow-hidden">
         {COLORED_PARTICLES.map((p) => (
@@ -480,7 +521,7 @@ const TourismHero = ({
             <div 
               className="relative w-full h-full rounded-full border border-white/50 backdrop-blur-[12px] flex items-center justify-center"
               style={{
-                background: "radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.08) 50%, rgba(255, 255, 255, 0) 80%)",
+                background: `radial-gradient(circle at 35% 35%, rgba(255, 255, 255, 0.6) 0%, ${b.bubbleColor} 45%, rgba(255, 255, 255, 0) 85%)`,
                 boxShadow: "inset 0 0 12px rgba(255, 255, 255, 0.5), inset 0 4px 8px rgba(255, 255, 255, 0.25), 0 4px 15px rgba(255, 255, 255, 0.15)",
                 animation: "bubbleWobble 4s ease-in-out infinite",
                 transform: `translate(calc(var(--mouse-x) * 22px), calc(var(--mouse-y) * 22px))`
