@@ -37,6 +37,60 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const productsDropdownRef = useRef(null);
   const servicesDropdownRef = useRef(null);
+  const productsTimeoutRef = useRef(null);
+  const servicesTimeoutRef = useRef(null);
+
+  const handleProductsMouseEnter = () => {
+    if (productsTimeoutRef.current) {
+      clearTimeout(productsTimeoutRef.current);
+      productsTimeoutRef.current = null;
+    }
+    if (servicesTimeoutRef.current) {
+      clearTimeout(servicesTimeoutRef.current);
+      servicesTimeoutRef.current = null;
+    }
+    setServicesOpen(false);
+    setProductsOpen(true);
+  };
+
+  const handleProductsMouseLeave = () => {
+    productsTimeoutRef.current = setTimeout(() => {
+      setProductsOpen(false);
+    }, 150);
+  };
+
+  const handleServicesMouseEnter = () => {
+    if (servicesTimeoutRef.current) {
+      clearTimeout(servicesTimeoutRef.current);
+      servicesTimeoutRef.current = null;
+    }
+    if (productsTimeoutRef.current) {
+      clearTimeout(productsTimeoutRef.current);
+      productsTimeoutRef.current = null;
+    }
+    setProductsOpen(false);
+    setServicesOpen(true);
+  };
+
+  const handleServicesMouseLeave = () => {
+    servicesTimeoutRef.current = setTimeout(() => {
+      setServicesOpen(false);
+    }, 150);
+  };
+
+  const closeDropdownsImmediately = () => {
+    if (productsTimeoutRef.current) {
+      clearTimeout(productsTimeoutRef.current);
+      productsTimeoutRef.current = null;
+    }
+    if (servicesTimeoutRef.current) {
+      clearTimeout(servicesTimeoutRef.current);
+      servicesTimeoutRef.current = null;
+    }
+    setProductsOpen(false);
+    setServicesOpen(false);
+  };
+
 
   const handleOpenConsultation = (pageType) => {
     setConsultationPageType(pageType);
@@ -77,7 +131,11 @@ const Navbar = () => {
       }
     };
     document.addEventListener("mousedown", onClickOutside);
-    return () => document.removeEventListener("mousedown", onClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", onClickOutside);
+      if (productsTimeoutRef.current) clearTimeout(productsTimeoutRef.current);
+      if (servicesTimeoutRef.current) clearTimeout(servicesTimeoutRef.current);
+    };
   }, []);
 
   const navLinks = [
@@ -141,18 +199,31 @@ const Navbar = () => {
         <div className="max-w-[1320px] mx-auto px-4 sm:px-6">
           <div className="hidden lg:grid lg:grid-cols-[200px_1fr_auto] lg:items-center lg:gap-4 h-[72px]">
             {/* Logo */}
-            <Link href="/" className="flex items-center flex-shrink-0">
+            <Link
+              href="/"
+              className="flex items-center flex-shrink-0"
+              onMouseEnter={closeDropdownsImmediately}
+            >
               <img src={ILMIC_LOGO} alt="ILMIC Health Care" className="h-[60px] w-auto max-w-[200px] object-contain" />
             </Link>
 
             {/* Center nav */}
             <nav className="flex items-center justify-center gap-0.5 flex-wrap">
-              <Link href="/" className={navLinkClass(isActive("/"))}>
+              <Link
+                href="/"
+                className={navLinkClass(isActive("/"))}
+                onMouseEnter={closeDropdownsImmediately}
+              >
                 Home
                 {isActive("/") && <span className="absolute -bottom-[13px] left-3 right-3 h-[2px] bg-ilmic-blue rounded-full" />}
               </Link>
 
-              <div className="relative" ref={productsDropdownRef}>
+              <div
+                className="relative"
+                ref={productsDropdownRef}
+                onMouseEnter={handleProductsMouseEnter}
+                onMouseLeave={handleProductsMouseLeave}
+              >
                 <button
                   type="button"
                   onClick={() => setProductsOpen((o) => !o)}
@@ -174,7 +245,12 @@ const Navbar = () => {
               </div>
 
               {/* SERVICES — Mega Menu */}
-              <div className="relative" ref={servicesDropdownRef}>
+              <div
+                className="relative"
+                ref={servicesDropdownRef}
+                onMouseEnter={handleServicesMouseEnter}
+                onMouseLeave={handleServicesMouseLeave}
+              >
                 <button
                   type="button"
                   onClick={() => setServicesOpen((o) => !o)}
@@ -193,7 +269,12 @@ const Navbar = () => {
               </div>
 
               {navLinks.map((item) => (
-                <Link key={item.href} href={item.href} className={navLinkClass(isActive(item.href))}>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={navLinkClass(isActive(item.href))}
+                  onMouseEnter={closeDropdownsImmediately}
+                >
                   {item.name}
                   {isActive(item.href) && <span className="absolute -bottom-[13px] left-3 right-3 h-[2px] bg-ilmic-blue rounded-full" />}
                 </Link>
