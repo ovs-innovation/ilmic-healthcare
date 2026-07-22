@@ -95,7 +95,7 @@ export default defineConfig({
     compression(),
     visualizer({
       filename: "statistics.html",
-      open: true,
+      open: false,
     }),
   ],
 
@@ -111,10 +111,8 @@ export default defineConfig({
       },
     },
   },
-  define: {
-    "process.env": process.env,
-    // global: {}, //enable this when running on dev/local mode
-  },
+  // Do not inject process.env — Vite uses import.meta.env / VITE_* only.
+  // Injecting process.env embeds host env into the client bundle.
 
   resolve: {
     alias: {

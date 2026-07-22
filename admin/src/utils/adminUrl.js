@@ -1,5 +1,11 @@
 export const getAdminLoginUrl = () => {
-  const domain = import.meta.env.VITE_APP_ADMIN_DOMAIN || "http://localhost:4100";
+  const configured = String(import.meta.env.VITE_APP_ADMIN_DOMAIN || "").trim();
+  const domain =
+    configured ||
+    (import.meta.env.PROD
+      ? "https://admin.ilmichealthcare.in"
+      : "http://localhost:4100");
+
   if (domain.startsWith("http://") || domain.startsWith("https://")) {
     return `${domain.replace(/\/$/, "")}/login`;
   }

@@ -1,5 +1,6 @@
 import axios from "axios";
 import Cookies from "js-cookie";
+import { getApiBaseUrl } from "@/utils/apiBaseUrl";
 
 export const UPLOAD_TIMEOUT_MS = 90000;
 export const MAX_IMAGE_SIZE_BYTES = 5242880;
@@ -92,7 +93,7 @@ export const getAdminCloudinaryConfig = () => {
   });
 
   if (validationError) {
-    const apiBaseUrl = import.meta.env.VITE_APP_API_BASE_URL;
+    const apiBaseUrl = getApiBaseUrl();
     if (apiBaseUrl) {
       return {
         valid: true,
@@ -219,7 +220,7 @@ const postToCloudinary = async ({
   }
   const token = adminInfo?.token;
 
-  const apiBaseUrl = import.meta.env.VITE_APP_API_BASE_URL || "http://localhost:5058/api";
+  const apiBaseUrl = getApiBaseUrl();
   const response = await axios.post(
     `${apiBaseUrl}/products/upload-image`,
     {

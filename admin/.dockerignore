@@ -3,3 +3,16 @@ dist
 build
 coverage
 *.log
+statistics.html
+# Never bake local/server .env into the image — use .env.production + Docker ARG
+.env
+.env.local
+.env.*.local
+.dockerignore
+Dockerfile
+.git
+.gitignore
+README*
+e2e*
+qa-*
+*.md
