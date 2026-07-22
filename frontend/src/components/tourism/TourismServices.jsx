@@ -19,7 +19,7 @@ const HOME_SERVICES = [
   {
     slug: "pharmaceutical-export",
     name: "Pharmaceutical Export",
-    description: "Export of oncology and general pharma medicines to Dubai, Africa, Bangladesh, CIS, and other international markets.",
+    description: "Export of oncology and general pharma medicines to Dubai, Africa, CIS, and other international markets.",
     image: "/visuals/pharmaceutical_export.png",
     group: "Export",
   },

@@ -213,7 +213,7 @@ export const tourismServicesFallback = [
   {
     slug: "pharmaceutical-export",
     name: { en: "Pharmaceutical Export" },
-    description: { en: "Export of oncology and general pharma medicines to Dubai, Africa, Bangladesh, CIS, and other international markets." },
+    description: { en: "Export of oncology and general pharma medicines to Dubai, Africa, CIS, and other international markets." },
     icon: "🌍",
     group: "Export",
   },

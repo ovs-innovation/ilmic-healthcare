@@ -2,7 +2,8 @@ import axios from "axios";
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
-  timeout: 50000,
+  // Fail fast — 50s hangs made the storefront feel broken
+  timeout: 8000,
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

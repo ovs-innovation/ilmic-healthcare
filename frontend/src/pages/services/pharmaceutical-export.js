@@ -205,7 +205,7 @@ const PharmaceuticalExport = () => {
     },
     "Asia": {
       desc: "Sourcing high-volume over-the-counter and prescription products to Southeast Asian healthcare partners.",
-      ports: ["Port of Singapore", "Port of Colombo (Sri Lanka)", "Port of Chittagong (Bangladesh)", "Port of Manila (Philippines)"]
+      ports: ["Port of Singapore", "Port of Colombo (Sri Lanka)", "Port of Manila (Philippines)"]
     },
     "Europe": {
       desc: "Contract export operations supplying CE-marked medical consumables and generic medical tablets.",

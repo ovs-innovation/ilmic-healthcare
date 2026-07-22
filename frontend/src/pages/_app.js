@@ -92,7 +92,7 @@ function MyApp({ Component, pageProps }) {
         />
       )} */}
       <QueryClientProvider client={queryClient}>
-        <SessionProvider>
+        <SessionProvider refetchOnWindowFocus={false} refetchInterval={0}>
           <UserProvider>
             <Provider store={store}>
               <PersistGate loading={null} persistor={persistor}>

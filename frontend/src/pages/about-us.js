@@ -24,6 +24,33 @@ import {
 } from "react-icons/fi";
 import Layout from "@layout/Layout";
 import { whyChooseUs } from "@utils/ilmicDefaults";
+import useGetSetting from "@hooks/useGetSetting";
+import useUtilsFunction from "@hooks/useUtilsFunction";
+
+const DEFAULT_PROFILE_IMG = "/maroof.jpeg";
+const DEFAULT_MD_IMG = "/maroof.jpeg";
+const DEFAULT_MIDDLE_IMG = "/about-pharma.png";
+const DEFAULT_HEADER_BG = "/about-banner.jpg";
+
+const resolveAboutImage = (value, fallback) => {
+  if (!value || typeof value !== "string") return fallback;
+  const trimmed = value.trim();
+  if (!trimmed) return fallback;
+  // Heavy legacy PNG — prefer optimized jpeg
+  if (trimmed === "/maaroof.png" || trimmed.endsWith("/maaroof.png")) {
+    return fallback || DEFAULT_PROFILE_IMG;
+  }
+  // Ignore stock demo placeholders from old store settings
+  if (
+    trimmed.includes("dkuwefj17/image/upload") ||
+    trimmed.includes("team-1_acjmv7") ||
+    trimmed.includes("v7g6gowiju0wanpwx70f") ||
+    trimmed.includes("sl8vzvzm54jgzq6sphn2")
+  ) {
+    return fallback;
+  }
+  return trimmed;
+};
 
 // Animated counter component that triggers when in view
 const Counter = ({ value }) => {
@@ -38,7 +65,7 @@ const Counter = ({ value }) => {
       setCount(value);
       return;
     }
-    const duration = 1500;
+    const duration = 900;
     let startTime = null;
 
     const animate = (timestamp) => {
@@ -68,6 +95,31 @@ const AboutUs = () => {
   const [selectedCert, setSelectedCert] = useState(null);
   const [zoomLevel, setZoomLevel] = useState(1);
   const timelineRef = useRef(null);
+  const { storeCustomizationSetting } = useGetSetting();
+  const { showingTranslateValue } = useUtilsFunction();
+
+  const aboutSettings = storeCustomizationSetting?.about_us || {};
+  const heroBgImage = resolveAboutImage(
+    aboutSettings.header_bg,
+    DEFAULT_HEADER_BG
+  );
+  const companyProfileImage = resolveAboutImage(
+    aboutSettings.content_right_img,
+    DEFAULT_PROFILE_IMG
+  );
+  const middleImage = resolveAboutImage(
+    aboutSettings.content_middle_Img,
+    DEFAULT_MIDDLE_IMG
+  );
+  const mdImage = resolveAboutImage(
+    aboutSettings.founder_one_img,
+    DEFAULT_MD_IMG
+  );
+  const mdName =
+    showingTranslateValue(aboutSettings.founder_one_name) || "Mr. Maroof Reza";
+  const mdRole =
+    showingTranslateValue(aboutSettings.founder_one_sub) || "Managing Director";
+
   const { scrollYProgress } = useScroll({
     target: timelineRef,
     offset: ["start center", "end center"]
@@ -153,15 +205,15 @@ const AboutUs = () => {
       <section className="relative min-h-[70vh] flex items-center overflow-hidden bg-[#0F3A66]">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25"
-          style={{ backgroundImage: "url(https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80)" }}
+          style={{ backgroundImage: `url(${heroBgImage})` }}
           aria-hidden
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0E2E52]/95 via-[#0F3A66]/85 to-[#1A5288]/75" aria-hidden />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-left">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.45 }}
             className="max-w-4xl space-y-6"
           >
             <span className="inline-flex px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-blue-200 text-xs font-black uppercase tracking-widest">
@@ -191,27 +243,34 @@ const AboutUs = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             {/* Left Column: Image */}
             <motion.div
-              initial={{ opacity: 0, x: -40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
               className="relative rounded-3xl overflow-hidden shadow-2xl border border-slate-100 aspect-[4/3] w-full group"
             >
               <Image
-                src="/img1.jpeg"
-                alt="ILMIC Team Award Ceremony"
+                src={companyProfileImage}
+                alt="Mr. Maroof Reza — ILMIC Health Care"
                 fill
                 className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                sizes="(max-width: 1024px) 100vw, 50vw"
+                priority
+                unoptimized={companyProfileImage?.startsWith("http")}
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 z-10">
+                <p className="text-white font-extrabold text-lg drop-shadow">{mdName}</p>
+                <p className="text-white/85 text-xs font-bold uppercase tracking-widest">{mdRole}</p>
+              </div>
             </motion.div>
 
             {/* Right Column: Content */}
             <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-100px" }}
-              transition={{ duration: 0.8 }}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4 }}
               className="space-y-6 text-left"
             >
               <div className="inline-flex items-center gap-1.5 text-xs font-black text-ilmic-blue uppercase tracking-widest">
@@ -312,31 +371,18 @@ const AboutUs = () => {
                 return (
                   <div key={i} className="relative flex flex-col md:flex-row items-stretch md:justify-between w-full">
                     {/* Timeline dot */}
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: false, margin: "0px 0px -50% 0px" }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 10,
-                        duration: 0.6
-                      }}
+                    <div
                       className="absolute left-4 md:left-1/2 -translate-x-1/2 top-6 z-10 w-4 h-4 rounded-full bg-slate-900 border-4 border-slate-50 shadow-md ring-2 ring-ilmic-blue"
                     />
 
                     {/* Left Panel */}
                     <div className={`w-full md:w-[45%] flex justify-end text-right ${isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
                       <motion.div
-                        initial={{ opacity: 0, x: -60, scale: 0.95 }}
-                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        viewport={{ once: false, margin: "0px 0px -50% 0px" }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                        whileHover={{
-                          y: -5,
-                          boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
-                        }}
-                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
+                        initial={{ opacity: 0, y: 12 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.35 }}
+                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer hover:shadow-md transition-shadow"
                       >
                         <span className="text-[#ED1C24] text-xs font-black uppercase tracking-wider">{ev.year}</span>
                         <h4 className="font-extrabold text-slate-800 text-base mt-1 mb-2">{ev.title}</h4>
@@ -345,34 +391,20 @@ const AboutUs = () => {
                     </div>
 
                     {/* Center Year Badge (desktop only) */}
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      whileInView={{ scale: 1, opacity: 1 }}
-                      viewport={{ once: false, margin: "0px 0px -50% 0px" }}
-                      transition={{
-                        type: "spring",
-                        stiffness: 150,
-                        damping: 10,
-                        duration: 0.8
-                      }}
+                    <div
                       className="hidden md:flex items-center justify-center w-12 h-12 rounded-full bg-ilmic-blue text-white font-black text-xs shadow-md z-10 absolute left-1/2 -translate-x-1/2 top-2"
-                      style={{ boxShadow: "0 0 15px rgba(11, 94, 215, 0.4)" }}
                     >
                       {ev.year}
-                    </motion.div>
+                    </div>
 
                     {/* Right Panel */}
                     <div className={`w-full md:w-[45%] flex justify-start text-left ${!isEven ? "block" : "hidden md:flex pointer-events-none opacity-0"}`}>
                       <motion.div
-                        initial={{ opacity: 0, x: 60, scale: 0.95 }}
-                        whileInView={{ opacity: 1, x: 0, scale: 1 }}
-                        viewport={{ once: false, margin: "0px 0px -50% 0px" }}
-                        transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-                        whileHover={{
-                          y: -5,
-                          boxShadow: "0 10px 25px -5px rgba(30, 90, 158, 0.12), 0 0 15px rgba(30, 90, 158, 0.08)"
-                        }}
-                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer transition-shadow"
+                        initial={{ opacity: 0, y: 12 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.35 }}
+                        className="bg-white p-6 rounded-2xl shadow-[0_2px_15px_rgba(0,0,0,0.03)] border border-slate-100 text-left w-full h-full flex flex-col justify-center cursor-pointer hover:shadow-md transition-shadow"
                       >
                         <span className="text-[#ED1C24] text-xs font-black uppercase tracking-wider">{ev.year}</span>
                         <h4 className="font-extrabold text-slate-800 text-base mt-1 mb-2">{ev.title}</h4>
@@ -400,10 +432,12 @@ const AboutUs = () => {
               className="lg:col-span-5 relative aspect-[4/3] rounded-3xl overflow-hidden shadow-xl border border-slate-100 group"
             >
               <Image
-                src="/about-pharma.png"
+                src={middleImage}
                 alt="WHO-GMP Laboratory Testing"
                 fill
                 className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                unoptimized={middleImage?.startsWith("http")}
               />
               <div className="absolute inset-0 bg-[#0F3A66]/10 mix-blend-overlay" />
             </motion.div>
@@ -510,21 +544,29 @@ const AboutUs = () => {
       <section className="llmic-section bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left side: MD image placeholder */}
+            {/* Left side: MD image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.7 }}
-              className="lg:col-span-5 relative aspect-[3/4] bg-gradient-to-tr from-[#0F3A66]/5 to-[#1A5288]/10 rounded-3xl overflow-hidden shadow-inner flex flex-col items-center justify-center p-8 border border-slate-200"
+              className="lg:col-span-5 relative aspect-[3/4] rounded-3xl overflow-hidden shadow-xl border border-slate-200 group"
             >
-              <div className="w-32 h-32 rounded-full bg-white flex items-center justify-center mb-4 border border-slate-200 shadow-sm">
-                <FiUsers className="w-16 h-16 text-ilmic-blue" />
-              </div>
-              <h4 className="font-black text-xl text-slate-800">Mr. Maroof Reza</h4>
-              <p className="text-xs font-extrabold text-ilmic-blue uppercase tracking-widest mt-1">Managing Director</p>
-              <div className="absolute inset-x-0 bottom-0 bg-slate-900/5 py-4 border-t border-slate-200/50 text-center">
-                <span className="text-[11px] font-bold text-slate-500 uppercase tracking-widest">Executive Board Portfolio</span>
+              <Image
+                src={mdImage}
+                alt={mdName}
+                fill
+                className="object-cover group-hover:scale-[1.03] transition-transform duration-500"
+                sizes="(max-width: 1024px) 100vw, 40vw"
+                unoptimized={mdImage?.startsWith("http")}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/75 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-6 text-center">
+                <h4 className="font-black text-xl text-white">{mdName}</h4>
+                <p className="text-xs font-extrabold text-blue-200 uppercase tracking-widest mt-1">{mdRole}</p>
+                <span className="inline-block mt-3 text-[11px] font-bold text-white/70 uppercase tracking-widest">
+                  Executive Board Portfolio
+                </span>
               </div>
             </motion.div>
 
@@ -544,7 +586,7 @@ const AboutUs = () => {
               </h2>
               <div className="space-y-4 text-slate-600 leading-relaxed text-sm sm:text-base">
                 <p>
-                  Our organization is led by our Managing Director, <strong>Mr. Maroof Reza</strong>, who possesses extensive experience in the healthcare sector.
+                  Our organization is led by our Managing Director, <strong>{mdName}</strong>, who possesses extensive experience in the healthcare sector.
                 </p>
                 <p>
                   Under his leadership, ILMIC Health Care continues to expand internationally while maintaining a strong commitment to quality, innovation, and patient-focused healthcare solutions.

@@ -93,10 +93,18 @@ const Home = ({ products, services }) => {
   );
 };
 
+const withTimeout = (promise, ms = 4000) =>
+  Promise.race([
+    promise,
+    new Promise((_, reject) =>
+      setTimeout(() => reject(new Error("Homepage data timeout")), ms)
+    ),
+  ]);
+
 export const getServerSideProps = async () => {
   const [productsResult, servicesResult] = await Promise.allSettled([
-    ProductServices.getAllProducts({ limit: 20 }),
-    ServiceServices.getShowingServices(),
+    withTimeout(ProductServices.getAllProducts({ limit: 20 }), 4000),
+    withTimeout(ServiceServices.getShowingServices(), 4000),
   ]);
 
   const productsRes = productsResult.status === "fulfilled" ? productsResult.value : null;

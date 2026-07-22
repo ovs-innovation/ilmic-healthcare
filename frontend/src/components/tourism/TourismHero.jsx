@@ -32,14 +32,14 @@ const FALLBACK_IMAGES = [
   "https://images.unsplash.com/photo-1628771065518-0d82f1938462?auto=format&fit=crop&w=1200&q=85",
 ];
 
-const BUBBLES = Array.from({ length: 22 }, (_, idx) => {
-  const sizes = [18, 24, 32, 40, 60, 80];
+const BUBBLES = Array.from({ length: 8 }, (_, idx) => {
+  const sizes = [18, 24, 32, 40];
   const size = sizes[idx % sizes.length];
-  const left = (idx * 4.3 + 5) % 95;
-  const duration = 16 + (idx % 8) * 3;
-  const delay = idx * 0.5;
-  const driftX = (idx % 2 === 0 ? 35 : -35) + (idx % 4) * 6;
-  const hasIcon = idx % 5 === 0 ? 'cross' : idx % 7 === 0 ? 'shield' : null;
+  const left = (idx * 11 + 8) % 90;
+  const duration = 18 + (idx % 5) * 3;
+  const delay = idx * 0.7;
+  const driftX = (idx % 2 === 0 ? 28 : -28) + (idx % 3) * 5;
+  const hasIcon = idx % 4 === 0 ? "cross" : idx % 5 === 0 ? "shield" : null;
   return { idx, size, left, duration, delay, driftX, hasIcon };
 });
 

@@ -4,7 +4,6 @@ import React, { createContext, useEffect, useReducer } from "react";
 
 //internal imports
 import { setToken } from "@services/httpServices";
-import LoadingForSession from "@components/preloader/LoadingForSession";
 
 export const UserContext = createContext();
 
@@ -44,6 +43,7 @@ export const UserProvider = ({ children }) => {
   const { data: session, status } = useSession();
 
   useEffect(() => {
+    // Never block the whole app on session — sync in background
     if (status === "authenticated" && session?.user) {
       setToken(session.user.token);
       dispatch({ type: "USER_LOGIN", payload: session.user });
@@ -54,10 +54,6 @@ export const UserProvider = ({ children }) => {
       Cookies.remove("userInfo");
     }
   }, [session, status]);
-
-  if (status === "loading") {
-    return <LoadingForSession />;
-  }
 
   const value = { state, dispatch };
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;

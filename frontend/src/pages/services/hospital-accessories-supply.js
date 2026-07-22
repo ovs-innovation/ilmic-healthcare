@@ -242,7 +242,7 @@ const HospitalAccessoriesSupply = () => {
     },
     "Asia": {
       desc: "Sourcing general hospital furniture and medical consumables to Southeast Asian distribution hubs.",
-      ports: ["Port of Singapore", "Port of Colombo (Sri Lanka)", "Chittagong Port (Bangladesh)", "Port of Jakarta (Indonesia)"]
+      ports: ["Port of Singapore", "Port of Colombo (Sri Lanka)", "Port of Jakarta (Indonesia)"]
     },
     "Europe": {
       desc: "Supplying CE-certified clinical instruments and custom steel accessories to private networks.",

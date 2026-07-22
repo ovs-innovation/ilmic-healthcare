@@ -120,7 +120,7 @@ const AboutUs = ({
             >
               <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
                 <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
-                  {t("PageHeaderBg")}
+                  About Us Hero Background
                 </label>
                 <div className="sm:col-span-4">
                   <Uploader
@@ -129,6 +129,9 @@ const AboutUs = ({
                     targetWidth={1920}
                     targetHeight={373}
                   />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Hero banner background on About Us page. Default: about-banner.jpg
+                  </p>
                 </div>
               </div>
 
@@ -358,7 +361,7 @@ const AboutUs = ({
               className="mb-height-0 grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative"
             >
               <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
-                {t("TopContentRightImage")}
+                Company Profile Image (About Us)
               </label>
               <div className="sm:col-span-4">
                 <Uploader
@@ -367,6 +370,9 @@ const AboutUs = ({
                   targetWidth={1050}
                   targetHeight={805}
                 />
+                <p className="text-xs text-gray-400 mt-1">
+                  Shown in Company Profile section. Default: maroof.jpeg
+                </p>
               </div>
             </div>
 
@@ -443,15 +449,18 @@ const AboutUs = ({
 
               <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3">
                 <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
-                  {t("MiddleContentImage")}
+                  Who We Are Image (About Us)
                 </label>
                 <div className="sm:col-span-4">
                   <Uploader
                     imageUrl={aboutMiddleContentImage}
                     setImageUrl={setAboutMiddleContentImage}
-                    targetWidth={1420}
-                    targetHeight={425}
+                    targetWidth={1050}
+                    targetHeight={805}
                   />
+                  <p className="text-xs text-gray-400 mt-1">
+                    Shown in Who We Are / Introduction section. Default: about-pharma.png
+                  </p>
                 </div>
               </div>
             </div>
@@ -537,7 +546,7 @@ const AboutUs = ({
                   <TabPanel className="mt-10">
                     <div className="grid md:grid-cols-5 sm:grid-cols-6 gap-3 md:gap-5 xl:gap-6 lg:gap-6 md:mb-6 mb-3 relative">
                       <label className="block md:text-sm md:col-span-1 sm:col-span-2 text-xs font-semibold text-gray-600 dark:text-gray-400 md:mb-1">
-                        {t("OurFounderOneImage")}
+                        MD Photo — Mr. Maroof Reza
                       </label>
                       <div className="sm:col-span-4">
                         <Uploader
@@ -546,6 +555,9 @@ const AboutUs = ({
                           targetWidth={600}
                           targetHeight={600}
                         />
+                        <p className="text-xs text-gray-400 mt-1">
+                          Shown next to Management section. Default: maroof.jpeg
+                        </p>
                       </div>
                     </div>
 

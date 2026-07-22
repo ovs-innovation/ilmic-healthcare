@@ -1,20 +1,21 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const PRELOADER_VIDEO = "/preloader/preloadervideo.mp4";
-const PLAYBACK_RATE = 2.5;
-const FADE_MS = 650;
+/** Slower playback (was 1.4) — duration/cap unchanged */
+const PLAYBACK_RATE = 1.0;
+/** Hard cap — never block the site longer than this */
+const MAX_SHOW_MS = 3500;
+const FADE_MS = 400;
 
 const SplashLoader = () => {
   const videoRef = useRef(null);
-  const fallbackRef = useRef(null);
+  const finishedRef = useRef(false);
   const [visible, setVisible] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
 
   const finish = useCallback(() => {
-    if (fallbackRef.current) {
-      clearTimeout(fallbackRef.current);
-      fallbackRef.current = null;
-    }
+    if (finishedRef.current) return;
+    finishedRef.current = true;
     setFadeOut(true);
     window.setTimeout(() => {
       setVisible(false);
@@ -24,33 +25,30 @@ const SplashLoader = () => {
 
   useEffect(() => {
     document.body.style.overflow = "hidden";
+    const hardCap = window.setTimeout(finish, MAX_SHOW_MS);
     return () => {
+      clearTimeout(hardCap);
       document.body.style.overflow = "";
-      if (fallbackRef.current) clearTimeout(fallbackRef.current);
     };
-  }, []);
+  }, [finish]);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return undefined;
 
-    const scheduleFallback = () => {
-      const durationMs =
-        Number.isFinite(video.duration) && video.duration > 0
-          ? (video.duration / PLAYBACK_RATE) * 1000 + 600
-          : 5000;
-      fallbackRef.current = window.setTimeout(finish, durationMs);
-    };
-
     const startPlayback = () => {
-      video.playbackRate = PLAYBACK_RATE;
-      scheduleFallback();
-      video.play().catch(finish);
+      try {
+        video.playbackRate = PLAYBACK_RATE;
+        video.play().catch(() => {});
+      } catch {
+        /* hard cap still finishes */
+      }
     };
 
     video.addEventListener("ended", finish);
     if (video.readyState >= 1) startPlayback();
-    else video.addEventListener("loadedmetadata", startPlayback, { once: true });
+    else
+      video.addEventListener("loadedmetadata", startPlayback, { once: true });
 
     return () => {
       video.removeEventListener("ended", finish);
@@ -73,7 +71,7 @@ const SplashLoader = () => {
         muted
         playsInline
         autoPlay
-        preload="auto"
+        preload="metadata"
         disablePictureInPicture
         aria-hidden
       />

@@ -163,13 +163,10 @@ export const storeCustomization = {
     content_right_status: true,
     content_middle_status: true,
     founder_status: true,
-    header_bg: "",
-    content_right_img:
-      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439245/settings/v7g6gowiju0wanpwx70f.jpg",
-    content_middle_Img:
-      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439195/settings/sl8vzvzm54jgzq6sphn2.jpg",
-    founder_one_img:
-      "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439688/settings/team-1_acjmv7.webp",
+    header_bg: "/about-banner.jpg",
+    content_right_img: "/maroof.jpeg",
+    content_middle_Img: "/about-pharma.png",
+    founder_one_img: "/maroof.jpeg",
     founder_two_img:
       "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439689/settings/team-2_dw7zs1.webp",
     founder_three_img:
@@ -233,12 +230,12 @@ export const storeCustomization = {
       de: "Wir sind unparteiisch und unabhängig und erstellen jeden Tag unverwechselbare, erstklassige Reintermediate-Backend-Lieferprogramme.",
     },
     founder_one_name: {
-      en: "Niamh Shea",
-      de: "Niamh Shea ",
+      en: "Mr. Maroof Reza",
+      de: "Mr. Maroof Reza",
     },
     founder_one_sub: {
-      en: "Co-founder & Executive",
-      de: "Co-founder & Executive",
+      en: "Managing Director",
+      de: "Managing Director",
     },
     founder_two_name: {
       en: "Orla Dwyer",
