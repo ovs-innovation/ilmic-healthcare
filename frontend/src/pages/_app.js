@@ -84,13 +84,8 @@ function MyApp({ Component, pageProps }) {
 
   return (
     <>
-      {/* Render TawkMessengerReact only if tawk_chat_status is enabled */}
-      {/* {storeSetting?.tawk_chat_status && (
-        <TawkMessengerReact
-          propertyId={storeSetting?.tawk_chat_property_id || ""}
-          widgetId={storeSetting?.tawk_chat_widget_id || ""}  
-        />
-      )} */}
+      {/* Splash outside PersistGate so it mounts immediately & owns bandwidth first */}
+      <SplashLoader />
       <QueryClientProvider client={queryClient}>
         <SessionProvider refetchOnWindowFocus={false} refetchInterval={0}>
           <UserProvider>
@@ -100,7 +95,6 @@ function MyApp({ Component, pageProps }) {
                   <WishlistProvider>
                     <IlmicSettingsProvider>
                       <AppCartProvider>
-                      <SplashLoader />
                       <SessionSync />
                       <DefaultSeo />
                       <Component {...pageProps} />
