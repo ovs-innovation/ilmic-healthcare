@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const PRELOADER_VIDEO = "/preloader/preloadervideo.mp4";
-/** Slower playback (was 1.4) — duration/cap unchanged */
-const PLAYBACK_RATE = 1.0;
+/** Slightly slower than original 1.4 — still snappy, not sluggish */
+const PLAYBACK_RATE = 1.25;
 /** Hard cap — never block the site longer than this */
 const MAX_SHOW_MS = 3500;
-const FADE_MS = 400;
+const FADE_MS = 350;
 
 const SplashLoader = () => {
   const videoRef = useRef(null);
@@ -36,23 +36,33 @@ const SplashLoader = () => {
     const video = videoRef.current;
     if (!video) return undefined;
 
+    video.setAttribute("playsinline", "true");
+    video.setAttribute("webkit-playsinline", "true");
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+
     const startPlayback = () => {
       try {
         video.playbackRate = PLAYBACK_RATE;
-        video.play().catch(() => {});
+        const playPromise = video.play();
+        if (playPromise?.catch) playPromise.catch(() => {});
       } catch {
         /* hard cap still finishes */
       }
     };
 
     video.addEventListener("ended", finish);
-    if (video.readyState >= 1) startPlayback();
-    else
-      video.addEventListener("loadedmetadata", startPlayback, { once: true });
+    if (video.readyState >= 2) startPlayback();
+    else {
+      video.addEventListener("canplay", startPlayback, { once: true });
+      video.addEventListener("loadeddata", startPlayback, { once: true });
+    }
 
     return () => {
       video.removeEventListener("ended", finish);
-      video.removeEventListener("loadedmetadata", startPlayback);
+      video.removeEventListener("canplay", startPlayback);
+      video.removeEventListener("loadeddata", startPlayback);
     };
   }, [finish]);
 
@@ -71,7 +81,7 @@ const SplashLoader = () => {
         muted
         playsInline
         autoPlay
-        preload="metadata"
+        preload="auto"
         disablePictureInPicture
         aria-hidden
       />

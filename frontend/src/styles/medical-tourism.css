@@ -599,6 +599,7 @@
   height: 100dvh;
   max-width: none;
   animation: none;
+  box-sizing: border-box;
 }
 
 .splash-cinema__video {
@@ -615,6 +616,19 @@
   transform: translateZ(0);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
+}
+
+/* Phone: full-bleed cover, keep subject centered (no letterbox bars) */
+@media (max-width: 768px) {
+  .splash-cinema--video {
+    height: 100dvh;
+    min-height: -webkit-fill-available;
+  }
+
+  .splash-cinema__video {
+    object-fit: cover;
+    object-position: center 40%;
+  }
 }
 
 .splash-cinema__content--brand {
