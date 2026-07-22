@@ -1,21 +1,30 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
 const PRELOADER_VIDEO = "/preloader/preloadervideo.mp4";
-/** Slightly slower than original 1.4 — still snappy, not sluggish */
-const PLAYBACK_RATE = 1.25;
-/** Hard cap — never block the site longer than this */
-const MAX_SHOW_MS = 3500;
-const FADE_MS = 350;
+/** 1x — changing playbackRate makes many devices stutter */
+const PLAYBACK_RATE = 1;
+/** Video is ~10s; exit on ended. Cap is safety only. */
+const MAX_SHOW_MS = 12000;
+const FADE_MS = 400;
 
 const SplashLoader = () => {
   const videoRef = useRef(null);
   const finishedRef = useRef(false);
+  const startedRef = useRef(false);
   const [visible, setVisible] = useState(true);
   const [fadeOut, setFadeOut] = useState(false);
 
   const finish = useCallback(() => {
     if (finishedRef.current) return;
     finishedRef.current = true;
+    const video = videoRef.current;
+    if (video) {
+      try {
+        video.pause();
+      } catch {
+        /* ignore */
+      }
+    }
     setFadeOut(true);
     window.setTimeout(() => {
       setVisible(false);
@@ -36,33 +45,43 @@ const SplashLoader = () => {
     const video = videoRef.current;
     if (!video) return undefined;
 
-    video.setAttribute("playsinline", "true");
-    video.setAttribute("webkit-playsinline", "true");
     video.muted = true;
     video.defaultMuted = true;
     video.playsInline = true;
+    video.setAttribute("playsinline", "true");
+    video.setAttribute("webkit-playsinline", "true");
 
     const startPlayback = () => {
+      if (startedRef.current || finishedRef.current) return;
+      startedRef.current = true;
       try {
         video.playbackRate = PLAYBACK_RATE;
-        const playPromise = video.play();
-        if (playPromise?.catch) playPromise.catch(() => {});
+        video.play().catch(() => finish());
       } catch {
-        /* hard cap still finishes */
+        finish();
       }
     };
 
     video.addEventListener("ended", finish);
-    if (video.readyState >= 2) startPlayback();
-    else {
-      video.addEventListener("canplay", startPlayback, { once: true });
-      video.addEventListener("loadeddata", startPlayback, { once: true });
+    video.addEventListener("error", finish);
+
+    // Prefer canplaythrough so playback doesn't stall mid-way
+    if (video.readyState >= 4) {
+      startPlayback();
+    } else {
+      video.addEventListener("canplaythrough", startPlayback, { once: true });
     }
 
+    // Mobile fallback — some browsers never fire canplaythrough
+    const fallback = window.setTimeout(() => {
+      if (!startedRef.current && video.readyState >= 2) startPlayback();
+    }, 1200);
+
     return () => {
+      clearTimeout(fallback);
       video.removeEventListener("ended", finish);
-      video.removeEventListener("canplay", startPlayback);
-      video.removeEventListener("loadeddata", startPlayback);
+      video.removeEventListener("error", finish);
+      video.removeEventListener("canplaythrough", startPlayback);
     };
   }, [finish]);
 
@@ -80,9 +99,9 @@ const SplashLoader = () => {
         src={PRELOADER_VIDEO}
         muted
         playsInline
-        autoPlay
         preload="auto"
         disablePictureInPicture
+        controls={false}
         aria-hidden
       />
     </div>
