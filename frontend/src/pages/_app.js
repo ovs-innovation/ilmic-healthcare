@@ -48,24 +48,27 @@ const AppCartProvider = ({ children }) => {
 function MyApp({ Component, pageProps }) {
   const router = useRouter();
   const [storeSetting, setStoreSetting] = useState(null);
+  // Don't hydrate heavy page under the video — main-thread jank = video pause
+  const [splashDone, setSplashDone] = useState(false);
 
   useEffect(() => {
+    if (!splashDone) return undefined;
+
     const fetchStoreSettings = async () => {
       try {
         const settings = await queryClient.fetchQuery({
           queryKey: ["storeSetting"],
           queryFn: async () => await SettingServices.getStoreSetting(),
-          staleTime: 4 * 60 * 1000, // Cache data for 4 minutes
+          staleTime: 4 * 60 * 1000,
         });
 
         setStoreSetting(settings);
 
-        // Initialize Google Analytics
         if (settings?.google_analytic_status) {
           ReactGA.initialize(settings?.google_analytic_key || "");
           handlePageView();
 
-          const handleRouteChange = (url) => {
+          const handleRouteChange = () => {
             handlePageView(`/${router.pathname}`, "ILMIC Health Care");
           };
 
@@ -80,33 +83,34 @@ function MyApp({ Component, pageProps }) {
     };
 
     fetchStoreSettings();
-  }, [router]);
+  }, [splashDone, router]);
 
   return (
     <>
-      {/* Splash outside PersistGate so it mounts immediately & owns bandwidth first */}
-      <SplashLoader />
-      <QueryClientProvider client={queryClient}>
-        <SessionProvider refetchOnWindowFocus={false} refetchInterval={0}>
-          <UserProvider>
-            <Provider store={store}>
-              <PersistGate loading={null} persistor={persistor}>
-                <SidebarProvider>
-                  <WishlistProvider>
-                    <IlmicSettingsProvider>
-                      <AppCartProvider>
-                      <SessionSync />
-                      <DefaultSeo />
-                      <Component {...pageProps} />
-                      </AppCartProvider>
-                    </IlmicSettingsProvider>
-                  </WishlistProvider>
-                </SidebarProvider>
-              </PersistGate>
-            </Provider>
-          </UserProvider>
-        </SessionProvider>
-      </QueryClientProvider>
+      <SplashLoader onDone={() => setSplashDone(true)} />
+      {splashDone ? (
+        <QueryClientProvider client={queryClient}>
+          <SessionProvider refetchOnWindowFocus={false} refetchInterval={0}>
+            <UserProvider>
+              <Provider store={store}>
+                <PersistGate loading={null} persistor={persistor}>
+                  <SidebarProvider>
+                    <WishlistProvider>
+                      <IlmicSettingsProvider>
+                        <AppCartProvider>
+                          <SessionSync />
+                          <DefaultSeo />
+                          <Component {...pageProps} />
+                        </AppCartProvider>
+                      </IlmicSettingsProvider>
+                    </WishlistProvider>
+                  </SidebarProvider>
+                </PersistGate>
+              </Provider>
+            </UserProvider>
+          </SessionProvider>
+        </QueryClientProvider>
+      ) : null}
     </>
   );
 }
