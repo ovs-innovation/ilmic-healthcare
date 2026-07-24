@@ -33,9 +33,8 @@ const SERVICES = [
     ],
     primaryCTA: { label: "Explore Service", href: "/services/medical-tourism" },
     secondaryCTA: { label: "Book Consultation", href: "/services/medical-tourism#enquiry" },
-    image:
-      "https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=800",
-    imageAlt: "International patient consultation with doctor in modern hospital",
+    image: "/visuals/service_medical_tourism.png",
+    imageAlt: "Medical Tourism in India - ILMIC Health Care",
   },
   {
     id: "hospital-management",
@@ -54,9 +53,8 @@ const SERVICES = [
     ],
     primaryCTA: { label: "Explore Service", href: "/services/hospital-management" },
     secondaryCTA: { label: "Request Consultation", href: "/services/hospital-management#enquiry" },
-    image:
-      "https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=800",
-    imageAlt: "Modern hospital operations center with doctors using digital dashboards",
+    image: "/visuals/service_hospital_management.png",
+    imageAlt: "Hospital Management Services - ILMIC Health Care",
   },
   {
     id: "pharmaceutical-export",
@@ -75,9 +73,8 @@ const SERVICES = [
     ],
     primaryCTA: { label: "Explore Service", href: "/services/pharmaceutical-export" },
     secondaryCTA: { label: "Export Enquiry", href: "/services/pharmaceutical-export#enquiry" },
-    image:
-      "https://images.pexels.com/photos/3683101/pexels-photo-3683101.jpeg?auto=compress&cs=tinysrgb&w=800",
-    imageAlt: "Modern pharmaceutical manufacturing facility and export warehouse",
+    image: "/visuals/service_pharma_export.png",
+    imageAlt: "Global Pharmaceutical Export Solutions - ILMIC Health Care",
   },
   {
     id: "hospital-accessories-supply",
@@ -96,9 +93,8 @@ const SERVICES = [
     ],
     primaryCTA: { label: "Explore Service", href: "/services/hospital-accessories-supply" },
     secondaryCTA: { label: "Request Quotation", href: "/services/hospital-accessories-supply#enquiry" },
-    image:
-      "https://images.pexels.com/photos/3845126/pexels-photo-3845126.jpeg?auto=compress&cs=tinysrgb&w=800",
-    imageAlt: "Modern hospital medical equipment devices showroom",
+    image: "/visuals/service_hospital_accessories.png",
+    imageAlt: "Hospital Accessories & Medical Equipment - ILMIC Health Care",
   },
   {
     id: "international-medical-conferences",
@@ -117,9 +113,8 @@ const SERVICES = [
     ],
     primaryCTA: { label: "Explore Service", href: "/services/international-medical-conferences" },
     secondaryCTA: { label: "Register Interest", href: "/services/international-medical-conferences#enquiry" },
-    image:
-      "https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=800",
-    imageAlt: "International healthcare conference with doctors and audience",
+    image: "/visuals/service_international_conferences.png",
+    imageAlt: "International Medical Conferences - ILMIC Health Care",
   },
 ];
 

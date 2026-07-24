@@ -7,11 +7,11 @@ import useUtilsFunction from "@hooks/useUtilsFunction";
 import { tourismServicesFallback, whyChooseUs } from "@utils/ilmicDefaults";
 
 const serviceImages = {
-  "medical-tourism": "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=1600&q=80",
-  "hospital-management": "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=1600&q=80",
-  "pharmaceutical-export": "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1600&q=80",
-  "hospital-accessories-supply": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=1600&q=80",
-  "international-medical-conferences": "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=1600&q=80",
+  "medical-tourism": "/visuals/service_medical_tourism.png",
+  "hospital-management": "/visuals/service_hospital_management.png",
+  "pharmaceutical-export": "/visuals/service_pharma_export.png",
+  "hospital-accessories-supply": "/visuals/service_hospital_accessories.png",
+  "international-medical-conferences": "/visuals/service_international_conferences.png",
 };
 
 const servicesList = [
