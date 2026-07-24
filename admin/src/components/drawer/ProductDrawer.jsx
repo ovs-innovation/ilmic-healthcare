@@ -99,20 +99,25 @@ const ProductDrawer = ({ id }) => {
     }
   }, [selectedMainCatId, allCategories]);
 
-  // Sync selectedMainCatId â†’ useProductSubmit's selectedCategory & defaultCategory
+  // Sync selectedMainCatId → useProductSubmit's selectedCategory & defaultCategory
   useEffect(() => {
     if (!selectedMainCatId) return;
     const cat = allCategories.find((c) => c._id === selectedMainCatId);
     if (!cat) return;
     const catEntry = { _id: cat._id, name: showingTranslateValue(cat.name) };
-    setDefaultCategory([catEntry]);
-    setSelectedCategory([catEntry]);
-    // Also set subCategory text in form
+    const categoryList = [catEntry];
+
     if (selectedSubCatId) {
       const sub = allCategories.find((c) => c._id === selectedSubCatId);
-      if (sub) setValue("subCategory", showingTranslateValue(sub.name));
+      if (sub) {
+        categoryList.push({ _id: sub._id, name: showingTranslateValue(sub.name) });
+        setValue("subCategory", showingTranslateValue(sub.name));
+      }
     }
-  }, [selectedMainCatId, selectedSubCatId]);
+
+    setDefaultCategory([catEntry]);
+    setSelectedCategory(categoryList);
+  }, [selectedMainCatId, selectedSubCatId, allCategories]);
 
   // When editing a product, pre-populate category dropdown
   useEffect(() => {

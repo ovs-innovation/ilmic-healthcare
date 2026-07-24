@@ -32,15 +32,15 @@ const productSchema = new mongoose.Schema(
     },
     categories: [
       {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.Mixed,
         ref: "Category",
-        required: true,
+        required: false,
       },
     ],
     category: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.Mixed,
       ref: "Category",
-      required: true,
+      required: false,
     },
     image: {
       type: Array,

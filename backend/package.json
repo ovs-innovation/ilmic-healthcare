@@ -16,6 +16,8 @@
     "tourism:seed": "node script/medical_tourism_seed.js",
     "ilmic:seed": "node script/medical_tourism_seed.js",
     "hero:seed": "node script/ilmic_seed_hero_products.js",
+    "demo:seed": "node script/demo_products_seed.js",
+    "demo:clean": "node script/demo_products_seed.js --clean",
     "product": "node script/product.js",
     "generate-password": "node script/script.js"
   },

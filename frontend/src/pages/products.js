@@ -80,13 +80,18 @@ const Products = ({ initialProducts, categories }) => {
   /* ── Sync URL query → state ── */
   useEffect(() => {
     if (router.query.category) {
-      const found = categories.find(
-        (c) =>
-          getTitleString(c.name).toLowerCase() ===
-          router.query.category.toLowerCase() ||
-          c._id === router.query.category,
-      );
-      setSelectedCategory(found ? found._id : "");
+      const q = String(router.query.category).toLowerCase().trim();
+      const found = categories.find((c) => {
+        const catName = getTitleString(c.name).toLowerCase().trim();
+        const catSlug = String(c.slug || "").toLowerCase().trim();
+        return (
+          c._id === router.query.category ||
+          catSlug === q ||
+          catName === q ||
+          catName.replace(/[^a-z0-9]+/g, "-") === q
+        );
+      });
+      setSelectedCategory(found ? found._id : router.query.category);
     } else {
       setSelectedCategory("");
     }

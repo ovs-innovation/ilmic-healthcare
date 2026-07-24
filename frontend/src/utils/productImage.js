@@ -10,25 +10,36 @@ const collectImageCandidates = (product) => {
 
   const candidates = [];
 
+  const addImage = (item) => {
+    if (!item) return;
+    if (typeof item === "string" && item.trim()) {
+      candidates.push(item.trim());
+    } else if (typeof item === "object") {
+      const url = item.secure_url || item.url || item.src;
+      if (typeof url === "string" && url.trim()) {
+        candidates.push(url.trim());
+      }
+    }
+  };
+
   if (Array.isArray(product.image)) {
-    candidates.push(...product.image.filter(Boolean));
-  } else if (typeof product.image === "string" && product.image.trim()) {
-    candidates.push(product.image.trim());
+    product.image.forEach(addImage);
+  } else {
+    addImage(product.image);
   }
 
   if (Array.isArray(product.images)) {
-    candidates.push(...product.images.filter(Boolean));
-  } else if (typeof product.images === "string" && product.images.trim()) {
-    candidates.push(product.images.trim());
+    product.images.forEach(addImage);
+  } else {
+    addImage(product.images);
   }
 
   if (Array.isArray(product.variants)) {
     for (const variant of product.variants) {
-      if (!variant?.image) continue;
-      if (Array.isArray(variant.image)) {
-        candidates.push(...variant.image.filter(Boolean));
-      } else if (typeof variant.image === "string" && variant.image.trim()) {
-        candidates.push(variant.image.trim());
+      if (Array.isArray(variant?.image)) {
+        variant.image.forEach(addImage);
+      } else {
+        addImage(variant?.image);
       }
     }
   }

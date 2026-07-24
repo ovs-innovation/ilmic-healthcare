@@ -68,6 +68,63 @@ const addAllProducts = async (req, res) => {
   }
 };
 
+const resolveCategoryIds = async (categoryParam) => {
+  if (!categoryParam) return [];
+  const input = String(categoryParam).trim();
+  if (!input) return [];
+
+  const isObjectId = /^[a-f\d]{24}$/i.test(input);
+  let matchedCategories = [];
+
+  if (isObjectId) {
+    matchedCategories = await Category.find({
+      $or: [{ _id: input }, { id: input }],
+    })
+      .select("_id")
+      .lean();
+  }
+
+  if (!matchedCategories.length) {
+    const slugInput = input
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    const escapedInput = input.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    const regexInput = new RegExp(`^${escapedInput}$`, "i");
+
+    matchedCategories = await Category.find({
+      $or: [
+        { slug: input.toLowerCase() },
+        { slug: slugInput },
+        { "name.en": regexInput },
+        { name: regexInput },
+        { "name.en": { $regex: input, $options: "i" } },
+      ],
+    })
+      .select("_id")
+      .lean();
+  }
+
+  if (!matchedCategories.length) return [];
+
+  const parentIds = matchedCategories.map((c) => String(c._id));
+
+  const childCategories = await Category.find({
+    parentId: { $in: parentIds },
+  })
+    .select("_id")
+    .lean();
+
+  const allCategoryIds = Array.from(
+    new Set([
+      ...parentIds,
+      ...childCategories.map((c) => String(c._id)),
+    ])
+  );
+
+  return allCategoryIds;
+};
+
 const getShowingProducts = async (req, res) => {
   try {
     const products = await Product.find({ status: "show" }).sort({ _id: -1 });
@@ -82,59 +139,58 @@ const getShowingProducts = async (req, res) => {
 const getAllProducts = async (req, res) => {
   const { title, category, price, page, limit } = req.query;
   let queryObject = {};
-  let sortObject = {};
-  if (title) {
-    const titleQueries = languageCodes.map((lang) => ({
-      [`title.${lang}`]: { $regex: `${title}`, $options: "i" },
-    }));
-    queryObject.$or = titleQueries;
-  }
-
-  // if (price === "low") {
-  //   sortObject = {
-  //     "prices.originalPrice": 1,
-  //   };
-  // } else if (price === "high") {
-  //   sortObject = {
-  //     "prices.originalPrice": -1,
-  //   };
-  // } else if (price === "published") {
-  //   queryObject.status = "show";
-  // } else if (price === "unPublished") {
-  //   queryObject.status = "hide";
-  // } else if (price === "status-selling") {
-  //   queryObject.stock = { $gt: 0 };
-  // } else if (price === "status-out-of-stock") {
-  //   queryObject.stock = { $lt: 1 };
-  // } else if (price === "date-added-asc") {
-  //   sortObject.createdAt = 1;
-  // } else if (price === "date-updated-asc") {
-  //   sortObject.updatedAt = 1;
-  // } else if (price === "date-updated-desc") {
-  //   sortObject.updatedAt = -1;
-  // } else {
-  //   sortObject = { _id: -1 };
-  // }
-
-  // Default sorting
-  sortObject = { _id: -1 };
-
-  // console.log('sortObject', sortObject);
+  let sortObject = { _id: -1 };
 
   if (category) {
-    queryObject.categories = category;
+    const categoryIds = await resolveCategoryIds(category);
+    if (categoryIds.length > 0) {
+      const objectIds = categoryIds
+        .filter((id) => mongoose.Types.ObjectId.isValid(id))
+        .map((id) => new mongoose.Types.ObjectId(id));
+      const targetIds = Array.from(new Set([...categoryIds, ...objectIds]));
+      queryObject.$or = [
+        { category: { $in: targetIds } },
+        { categories: { $in: targetIds } },
+      ];
+    } else {
+      const escapedCat = String(category).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      queryObject.$or = [
+        { subCategory: { $regex: escapedCat, $options: "i" } },
+      ];
+    }
   }
 
-  const pages = Number(page);
-  const limits = Number(limit);
+  if (title) {
+    const escapedTitle = String(title).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    const titleRegex = new RegExp(escapedTitle, "i");
+    const titleQueries = [
+      { title: titleRegex },
+      ...languageCodes.map((lang) => ({
+        [`title.${lang}`]: titleRegex,
+      })),
+    ];
+
+    if (queryObject.$or) {
+      queryObject.$and = [
+        { $or: queryObject.$or },
+        { $or: titleQueries },
+      ];
+      delete queryObject.$or;
+    } else {
+      queryObject.$or = titleQueries;
+    }
+  }
+
+  const pages = Number(page) || 1;
+  const limits = Number(limit) || 100;
   const skip = (pages - 1) * limits;
 
   try {
     const totalDoc = await Product.countDocuments(queryObject);
 
     const products = await Product.find(queryObject)
-      .populate({ path: "category", select: "_id name" })
-      .populate({ path: "categories", select: "_id name" })
+      .populate({ path: "category", select: "_id name slug" })
+      .populate({ path: "categories", select: "_id name slug" })
       .sort(sortObject)
       .skip(skip)
       .limit(limits);
@@ -146,7 +202,6 @@ const getAllProducts = async (req, res) => {
       pages,
     });
   } catch (err) {
-    // console.log("error", err);
     res.status(500).send({
       message: err.message,
     });
@@ -154,12 +209,20 @@ const getAllProducts = async (req, res) => {
 };
 
 const getProductBySlug = async (req, res) => {
-  // console.log("slug", req.params.slug);
   try {
-    const product = await Product.findOne({ slug: req.params.slug, status: "show" })
-      .populate({ path: "category", select: "_id name" })
-      .populate({ path: "categories", select: "_id name" });
-    // Return null if not found or unpublished — frontend will redirect gracefully
+    const rawSlug = String(req.params.slug || "").trim();
+    if (!rawSlug) return res.send(null);
+
+    let product = await Product.findOne({ slug: rawSlug, status: "show" })
+      .populate({ path: "category", select: "_id name slug" })
+      .populate({ path: "categories", select: "_id name slug" });
+
+    if (!product) {
+      product = await Product.findOne({ slug: rawSlug.toLowerCase() })
+        .populate({ path: "category", select: "_id name slug" })
+        .populate({ path: "categories", select: "_id name slug" });
+    }
+
     res.send(product || null);
   } catch (err) {
     res.status(500).send({
@@ -170,11 +233,10 @@ const getProductBySlug = async (req, res) => {
 
 const getProductById = async (req, res) => {
   try {
-    const product = await Product.findOne({ _id: req.params.id, status: "show" })
-      .populate({ path: "category", select: "_id, name" })
-      .populate({ path: "categories", select: "_id name" });
+    const product = await Product.findOne({ _id: req.params.id })
+      .populate({ path: "category", select: "_id name slug" })
+      .populate({ path: "categories", select: "_id name slug" });
 
-    // Return null if not found or unpublished — frontend will redirect gracefully
     res.send(product || null);
   } catch (err) {
     res.status(500).send({
@@ -378,14 +440,43 @@ const getShowingStoreProducts = async (req, res) => {
     let queryObject = { status: "show" };
 
     if (category) {
-      queryObject.categories = category;
+      const categoryIds = await resolveCategoryIds(category);
+      if (categoryIds.length > 0) {
+        const objectIds = categoryIds
+          .filter((id) => mongoose.Types.ObjectId.isValid(id))
+          .map((id) => new mongoose.Types.ObjectId(id));
+        const targetIds = Array.from(new Set([...categoryIds, ...objectIds]));
+        queryObject.$or = [
+          { category: { $in: targetIds } },
+          { categories: { $in: targetIds } },
+        ];
+      } else {
+        const escapedCat = String(category).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+        queryObject.$or = [
+          { subCategory: { $regex: escapedCat, $options: "i" } },
+        ];
+      }
     }
 
     if (title) {
-      const titleQueries = languageCodes.map((lang) => ({
-        [`title.${lang}`]: { $regex: `${title}`, $options: "i" },
-      }));
-      queryObject.$or = titleQueries;
+      const escapedTitle = String(title).replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+      const titleRegex = new RegExp(escapedTitle, "i");
+      const titleQueries = [
+        { title: titleRegex },
+        ...languageCodes.map((lang) => ({
+          [`title.${lang}`]: titleRegex,
+        })),
+      ];
+
+      if (queryObject.$or) {
+        queryObject.$and = [
+          { $or: queryObject.$or },
+          { $or: titleQueries },
+        ];
+        delete queryObject.$or;
+      } else {
+        queryObject.$or = titleQueries;
+      }
     }
 
     // If slug is provided, search by main product slug

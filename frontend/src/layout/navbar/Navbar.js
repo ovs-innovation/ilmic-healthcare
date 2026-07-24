@@ -236,7 +236,7 @@ const Navbar = () => {
                   <div className="absolute top-full left-0 mt-2 w-52 bg-white rounded-xl border border-[#e2edf5] shadow-xl py-1.5 z-50">
                     <Link href="/products" className="block px-4 py-2 text-sm font-semibold hover:bg-[#f0f7fc] text-[#1a3a52]" onClick={() => setProductsOpen(false)}>All Products</Link>
                     {ilmicCategories.map((cat) => (
-                      <Link key={cat.name} href={`/products?category=${encodeURIComponent(cat.category)}`} className="block px-4 py-2 text-sm text-[#5a7394] hover:bg-[#f0f7fc]" onClick={() => setProductsOpen(false)}>
+                      <Link key={cat.name} href={`/products?category=${encodeURIComponent(cat.slug || cat.category)}`} className="block px-4 py-2 text-sm text-[#5a7394] hover:bg-[#f0f7fc]" onClick={() => setProductsOpen(false)}>
                         {cat.icon} {cat.name}
                       </Link>
                     ))}
@@ -360,7 +360,7 @@ const Navbar = () => {
               {ilmicCategories.map((cat) => (
                 <Link
                   key={cat.name}
-                  href={`/products?category=${encodeURIComponent(cat.category)}`}
+                  href={`/products?category=${encodeURIComponent(cat.slug || cat.category)}`}
                   onClick={closeMobileMenu}
                   className="llmic-mobile-menu__link !text-sm !font-medium !text-ilmic-muted"
                 >
