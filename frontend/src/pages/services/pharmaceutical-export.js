@@ -88,82 +88,82 @@ const PharmaceuticalExport = () => {
     {
       title: "Prescription Medicines",
       desc: "Wide range of custom prescribed drugs for acute and chronic therapies, packaged under strict batch-code rules.",
-      image: "https://images.pexels.com/photos/139398/thermometer-headache-pain-pills-139398.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_general_pharma.png"
     },
     {
       title: "OTC Medicines",
       desc: "Over-the-counter painkillers, cough syrups, antihistamines, and dermatological creams for direct wholesale supply.",
-      image: "https://images.pexels.com/photos/208518/pexels-photo-208518.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/general_pharma.png"
     },
     {
       title: "Injectables & Vials",
       desc: "Sterile liquid injectables, lyophilized vials, and intravenous infusions prepared under aseptic clean-room environments.",
-      image: "https://images.pexels.com/photos/4047077/pexels-photo-4047077.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_oncology.png"
     },
     {
       title: "Tablets Formulations",
       desc: "Film-coated, enteric-coated, and sustained-release solid tablets manufactured on WHO-GMP compliant compression lines.",
-      image: "https://images.pexels.com/photos/3683074/pexels-photo-3683074.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_general_pharma.png"
     },
     {
       title: "Capsules (Hard & Soft)",
       desc: "Gelatin and vegetarian capsules housing granules, pellets, or oils, optimized for bioavailability.",
-      image: "https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/general_pharma.png"
     },
     {
       title: "Syrups & Suspensions",
       desc: "Oral liquid formulations, pediatric drops, and dry syrups bottled in secure, leakage-proof pharmaceutical containers.",
-      image: "https://images.pexels.com/photos/3602925/pexels-photo-3602925.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_general_pharma.png"
     },
     {
       title: "Antibiotics & Antivirals",
       desc: "Broad-spectrum antibacterial agents, cephalosporins, and antiviral combinations targeting global infectious diseases.",
-      image: "https://images.pexels.com/photos/5863393/pexels-photo-5863393.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/pharmaceutical_export.png"
     },
     {
       title: "Oncology Specialty Care",
       desc: "Critical chemotherapy vials, tyrosine kinase inhibitors, and targeted monoclonal antibodies under validated cold chain transport.",
-      image: "https://images.pexels.com/photos/3844581/pexels-photo-3844581.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_oncology.png"
     },
     {
       title: "Cardiology Medicines",
       desc: "Beta-blockers, statins, anti-hypertensive drugs, and calcium channel blockers supporting chronic cardiovascular care.",
-      image: "https://images.pexels.com/photos/7089401/pexels-photo-7089401.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/general_pharma.png"
     },
     {
       title: "Dermatology Treatments",
       desc: "Topical antifungal creams, corticosteroid ointments, acne gels, and medicated body lotions for global distribution.",
-      image: "https://images.pexels.com/photos/3985163/pexels-photo-3985163.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/im3.jpg"
     },
     {
       title: "Gynecology Formulations",
       desc: "Hormonal therapies, oral contraceptives, iron supplements, and prenatal care medicines configured for women's health.",
-      image: "https://images.pexels.com/photos/7584492/pexels-photo-7584492.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/im4.jpg"
     },
     {
       title: "Pediatrics Solutions",
       desc: "Carefully dosed infant drops, multivitamin liquids, and non-alcoholic soothing syrups for pediatric wards.",
-      image: "https://images.pexels.com/photos/5765827/pexels-photo-5765827.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/im1.jpg"
     },
     {
       title: "Critical Care Vials",
       desc: "Intravenous anesthetics, muscle relaxants, emergency cardiac ampoules, and heparin injections for emergency centers.",
-      image: "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_oncology.png"
     },
     {
       title: "General Medicine",
       desc: "Common analgesics, anti-pyretics, gastric acid reducers, and antacids for daily community clinical needs.",
-      image: "https://images.pexels.com/photos/3683067/pexels-photo-3683067.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_general_pharma.png"
     },
     {
       title: "Nutraceuticals & Vitamins",
       desc: "Premium dietary supplements, antioxidants, protein powders, and complex vitamin pills for daily wellness.",
-      image: "https://images.pexels.com/photos/1650438/pexels-photo-1650438.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/general_pharma.png"
     },
     {
       title: "Medical Consumables",
       desc: "Disposable syringes, cannulas, sterile dressings, surgical gloves, and transfusion lines matching CE standards.",
-      image: "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=600"
+      image: "/visuals/service_hospital_accessories.png"
     }
   ];
 
@@ -376,7 +376,7 @@ const PharmaceuticalExport = () => {
                 className="relative mx-auto max-w-[450px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white bg-slate-200"
               >
                 <Image
-                  src="https://images.pexels.com/photos/3683101/pexels-photo-3683101.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/visuals/service_pharma_export.png"
                   alt="Modern pharmaceutical logistics warehouse"
                   fill
                   className="object-cover"
@@ -427,7 +427,7 @@ const PharmaceuticalExport = () => {
               <div className="absolute -inset-4 bg-ilmic-blue-light/30 rounded-[40px] -z-10" />
               <div className="relative aspect-[3/4] rounded-[30px] overflow-hidden shadow-xl border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.pexels.com/photos/4047077/pexels-photo-4047077.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/visuals/pharmaceutical_export.png"
                   alt="Pharmaceutical export cargo containers"
                   fill
                   className="object-cover"
@@ -741,7 +741,7 @@ const PharmaceuticalExport = () => {
               <div className="absolute -inset-4 bg-slate-100 rounded-[40px] -z-10" />
               <div className="relative aspect-[4/3] rounded-[30px] overflow-hidden shadow-xl border border-slate-200 bg-slate-200">
                 <Image
-                  src="https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/hero-indian-distribution.png"
                   alt="Global trade operations"
                   fill
                   className="object-cover"
@@ -823,7 +823,7 @@ const PharmaceuticalExport = () => {
             <div className="lg:col-span-5 relative order-last lg:order-first">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-200">
                 <Image
-                  src="https://images.pexels.com/photos/3683101/pexels-photo-3683101.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/hero-indian-pharma.png"
                   alt="Warehouse cold storage infrastructure"
                   width={800}
                   height={600}

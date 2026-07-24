@@ -45,7 +45,8 @@ const resolveAboutImage = (value, fallback) => {
     trimmed.includes("dkuwefj17/image/upload") ||
     trimmed.includes("team-1_acjmv7") ||
     trimmed.includes("v7g6gowiju0wanpwx70f") ||
-    trimmed.includes("sl8vzvzm54jgzq6sphn2")
+    trimmed.includes("sl8vzvzm54jgzq6sphn2") ||
+    trimmed.includes("yw3cd2xupqwqpqcbxv9l")
   ) {
     return fallback;
   }
@@ -104,7 +105,7 @@ const AboutUs = () => {
     DEFAULT_HEADER_BG
   );
   const companyProfileImage = resolveAboutImage(
-    aboutSettings.content_right_img,
+    aboutSettings.content_right_img || aboutSettings.founder_one_img,
     DEFAULT_PROFILE_IMG
   );
   const middleImage = resolveAboutImage(
@@ -112,8 +113,20 @@ const AboutUs = () => {
     DEFAULT_MIDDLE_IMG
   );
   const mdImage = resolveAboutImage(
-    aboutSettings.founder_one_img,
+    aboutSettings.founder_one_img || aboutSettings.content_right_img,
     DEFAULT_MD_IMG
+  );
+  const startupIndiaCert = resolveAboutImage(
+    aboutSettings.startup_india_cert,
+    "/img3.jpeg"
+  );
+  const startupIndiaThumb = resolveAboutImage(
+    aboutSettings.startup_india_thumb,
+    "/img2.jpeg"
+  );
+  const udyamCert = resolveAboutImage(
+    aboutSettings.udyam_cert,
+    "/img1.jpeg"
   );
   const mdName =
     showingTranslateValue(aboutSettings.founder_one_name) || "Mr. Maroof Reza";
@@ -183,8 +196,8 @@ const AboutUs = () => {
   ];
 
   const certifications = [
-    { title: "Startup India Recognition Certificate", image: "/img2.jpeg", description: "Recognized as a startup by the Department for Promotion of Industry and Internal Trade (DPIIT), Government of India." },
-    { title: "Udyam Registration Certificate", image: "/img1.jpeg", description: "Registered under the Ministry of Micro, Small and Medium Enterprises (MSME), Government of India." }
+    { title: "Startup India Recognition Certificate", image: startupIndiaThumb, description: "Recognized as a startup by the Department for Promotion of Industry and Internal Trade (DPIIT), Government of India." },
+    { title: "Udyam Registration Certificate", image: udyamCert, description: "Registered under the Ministry of Micro, Small and Medium Enterprises (MSME), Government of India." }
   ];
 
   const whyChooseUsCards = [
@@ -204,7 +217,7 @@ const AboutUs = () => {
       {/* ── SECTION 1: HERO BANNER ── */}
       <section className="relative min-h-[70vh] flex items-center overflow-hidden bg-[#0F3A66]">
         <div
-          className="absolute inset-0 bg-cover bg-center opacity-25"
+          className="absolute inset-0 bg-cover bg-center opacity-30"
           style={{ backgroundImage: `url(${heroBgImage})` }}
           aria-hidden
         />
@@ -669,6 +682,7 @@ const AboutUs = () => {
                     alt={cert.title}
                     fill
                     className="object-contain p-4 group-hover:scale-[1.02] transition-transform duration-500"
+                    unoptimized={cert.image?.startsWith("http") || cert.image?.startsWith("data:")}
                   />
                   <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/5 transition-colors flex items-center justify-center">
                     <div className="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity transform scale-90 group-hover:scale-100 duration-300">
@@ -822,16 +836,17 @@ const AboutUs = () => {
               <div
                 onClick={() => handleOpenCert({
                   title: "Startup India Recognition Certificate",
-                  image: "/img3.jpeg",
+                  image: startupIndiaCert,
                   description: "Officially recognized by the Department for Promotion of Industry and Internal Trade (DPIIT), Government of India under the Startup India initiative."
                 })}
                 className="relative w-full max-w-md aspect-[1.414/1] bg-slate-50 rounded-2xl overflow-hidden border border-slate-200 shadow-md hover:shadow-xl hover:scale-[1.03] transition-all duration-300 cursor-pointer flex items-center justify-center p-4 group"
               >
                 <Image
-                  src="/img3.jpeg"
+                  src={startupIndiaCert}
                   alt="Startup India Recognition Certificate"
                   fill
                   className="object-contain p-4 transition-transform duration-500"
+                  unoptimized={startupIndiaCert?.startsWith("http") || startupIndiaCert?.startsWith("data:")}
                 />
                 {/* Maximize overlay */}
                 <div className="absolute inset-0 bg-slate-950/0 group-hover:bg-slate-950/5 transition-colors flex items-center justify-center">

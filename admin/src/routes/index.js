@@ -13,6 +13,7 @@ const Leads = lazy(() => import("@/pages/Leads"));
 const LeadDetails = lazy(() => import("@/pages/LeadDetails"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const Homepage = lazy(() => import("@/pages/Homepage"));
+const AboutUsSettings = lazy(() => import("@/pages/AboutUsSettings"));
 
 const routes = [
   { path: "/dashboard", component: Dashboard },
@@ -31,6 +32,7 @@ const routes = [
   { path: "/leads/:id", component: LeadDetails },
   { path: "/leads", component: Leads },
   { path: "/settings", component: Homepage },
+  { path: "/about-us-settings", component: AboutUsSettings },
   { path: "/404", component: Page404 },
 ];
 
@@ -44,6 +46,7 @@ const routeAccessList = [
   { label: "FAQ", value: "faq" },
   { label: "Enquiries", value: "leads" },
   { label: "Homepage & Footer", value: "settings" },
+  { label: "About Us Images", value: "about-us-settings" },
   { label: "Edit Profile", value: "edit-profile" },
 ];
 

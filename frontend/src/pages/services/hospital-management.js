@@ -213,7 +213,7 @@ const HospitalManagement = () => {
         after: "18-minute admission wait time, 0.8% inventory variance.",
         improvement: "40% Emergency Queue reduction, 98% billing capture."
       },
-      image: "https://images.pexels.com/photos/3844811/pexels-photo-3844811.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/service_hospital_management.png"
     },
     {
       name: "Luanda Specialty Clinic Chain Digital Transformation",
@@ -224,7 +224,7 @@ const HospitalManagement = () => {
         after: "Centralized EHR cloud database, automated insurance pre-authorization.",
         improvement: "95% insurance claim approval rate, zero database sync delays."
       },
-      image: "https://images.pexels.com/photos/7176026/pexels-photo-7176026.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/hospital_architecture.png"
     },
     {
       name: "Mumbai Multispecialty NABH Certification Preparedness",
@@ -235,7 +235,7 @@ const HospitalManagement = () => {
         after: "Successfully passed final inspection with zero major non-conformances.",
         improvement: "NABH accreditation achieved in 6 months, 99.2% sterilization audit score."
       },
-      image: "https://images.pexels.com/photos/3182781/pexels-photo-3182781.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/partnership_handshake.png"
     }
   ];
 
@@ -321,7 +321,7 @@ const HospitalManagement = () => {
                 className="relative mx-auto max-w-[450px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white bg-slate-200"
               >
                 <Image
-                  src="https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/visuals/hm_hero_main.png"
                   alt="Hospital boardroom meeting planning"
                   fill
                   className="object-cover"
@@ -371,7 +371,7 @@ const HospitalManagement = () => {
               <div className="absolute -inset-4 bg-ilmic-blue-light/40 rounded-[40px] -z-10" />
               <div className="relative aspect-[3/4] rounded-[30px] overflow-hidden shadow-xl border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.pexels.com/photos/8376266/pexels-photo-8376266.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/visuals/hospital_management.png"
                   alt="Hospital leadership planning operational optimization"
                   fill
                   className="object-cover"
@@ -678,7 +678,7 @@ const HospitalManagement = () => {
             <div className="lg:col-span-5 relative">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.pexels.com/photos/4021773/pexels-photo-4021773.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/visuals/hospital_lobby.png"
                   alt="Healthcare Information Systems Integration"
                   width={800}
                   height={600}
@@ -693,7 +693,7 @@ const HospitalManagement = () => {
             <div className="lg:col-span-5 relative order-last lg:order-first">
               <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border border-slate-100 bg-slate-200">
                 <Image
-                  src="https://images.pexels.com/photos/7089401/pexels-photo-7089401.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/about-indian-healthcare.png"
                   alt="Medical Accreditation Auditing"
                   width={800}
                   height={600}
@@ -888,12 +888,12 @@ const HospitalManagement = () => {
               </div>
 
               {/* Side photo */}
-              <div className="relative h-[220px] rounded-2xl overflow-hidden mt-6 bg-slate-200 border border-slate-100">
+              <div className="relative h-[280px] sm:h-[340px] rounded-2xl overflow-hidden mt-6 bg-slate-200 border border-slate-100">
                 <Image
                   src={caseStudies[activeCaseStudy].image}
                   alt={caseStudies[activeCaseStudy].name}
                   fill
-                  className="object-cover animate-fade-in-up"
+                  className="object-cover object-top animate-fade-in-up"
                 />
               </div>
             </div>

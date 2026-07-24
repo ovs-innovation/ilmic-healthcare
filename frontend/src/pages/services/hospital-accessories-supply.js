@@ -86,27 +86,27 @@ const HospitalAccessoriesSupply = () => {
 
   // 2. Product Categories (21 Items)
   const productCategories = [
-    { title: "Hospital Beds", desc: "Standard multi-function manual and semi-electric ward beds built for long-term patient recovery.", image: "https://images.pexels.com/photos/2324837/pexels-photo-2324837.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "ICU Beds", desc: "Five-function electric beds featuring custom remote tilt positioning, emergency CPR levers, and integrated scale rails.", image: "https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Patient Stretchers", desc: "Hydraulic emergency stretchers with central braking systems, oxygen cylinder slots, and collapsible side guards.", image: "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Wheelchairs", desc: "Heavy-duty ergonomic chairs with lightweight aluminum frames, foldable backrests, and anti-tip wheels.", image: "https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Operation Theatre", desc: "Stainless steel surgical tables, ceiling LED OT lights with shadow-reduction optics, and anesthesia stations.", image: "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Medical Trolleys", desc: "Emergency crash carts, anesthesia trolleys, and sterile instrument tables with secure lockable drawers.", image: "https://images.pexels.com/photos/5863388/pexels-photo-5863388.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Infusion Pumps", desc: "Micro-dosing volumetric infusion and syringe pumps featuring sensitive air-in-line alerts and data logs.", image: "https://images.pexels.com/photos/4047077/pexels-photo-4047077.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Patient Monitors", desc: "Multi-parameter monitors tracking ECG, heart rate, SpO2, respiratory rates, and body temperatures.", image: "https://images.pexels.com/photos/3845126/pexels-photo-3845126.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Ventilators", desc: "Microprocessor-controlled ICU ventilators supporting invasive and non-invasive breathing therapy modes.", image: "https://images.pexels.com/photos/7108340/pexels-photo-7108340.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "ECG Machines", desc: "12-lead digital ECG recorders featuring built-in thermal printers and automated clinical analysis reporting.", image: "https://images.pexels.com/photos/7089401/pexels-photo-7089401.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Suction Machines", desc: "High-vacuum electric suction units with double overflow safety bottles, designed for operating wings.", image: "https://images.pexels.com/photos/3844581/pexels-photo-3844581.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Oxygen Concentrators", desc: "Dual-flow 10L oxygen concentrators supplying medical-grade oxygen with active purity indicator alerts.", image: "https://images.pexels.com/photos/6129508/pexels-photo-6129508.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Defibrillators", desc: "Manual and AED defibrillators with thermal printers and active voice guide menus for trauma units.", image: "https://images.pexels.com/photos/3760607/pexels-photo-3760607.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Hospital Furniture", desc: "Stainless steel bedside lockers, overbed tables, ward visitor stools, and IV drip stands with heavy casters.", image: "https://images.pexels.com/photos/247786/pexels-photo-247786.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Medical Lighting", desc: "Mobile LED examination lamps, dental headlights, and shadowless ceiling surgical lighting fixtures.", image: "https://images.pexels.com/photos/5452229/pexels-photo-5452229.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Sterilization Units", desc: "High-pressure vertical autoclaves, vacuum steam sterilizers, and ETO sterilizer chambers for central depots.", image: "https://images.pexels.com/photos/8460157/pexels-photo-8460157.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Medical Cabinets", desc: "Lockable medicine storage cupboards, toxic substance drawers, and temperature-controlled laboratory cabinets.", image: "https://images.pexels.com/photos/3683098/pexels-photo-3683098.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Emergency Equipment", desc: "Trauma spine boards, resuscitator bag valve masks, suction pumps, and mobile first-aid ambulance packs.", image: "https://images.pexels.com/photos/4021773/pexels-photo-4021773.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Examination Tables", desc: "Manual folding patient exam tables, gynecological exam couches, and pediatric beds with soft cushions.", image: "https://images.pexels.com/photos/3825586/pexels-photo-3825586.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Hospital Curtains", desc: "Flame-retardant, anti-microbial medical partition screens and ceiling-mounted track cubicle curtains.", image: "https://images.pexels.com/photos/5215024/pexels-photo-5215024.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Gas Pipeline Supply", desc: "Medical gas pipeline outlet valves, oxygen flowmeters, humidifier bottles, and central alarm manifolds.", image: "https://images.pexels.com/photos/5863393/pexels-photo-5863393.jpeg?auto=compress&cs=tinysrgb&w=600" }
+    { title: "Hospital Beds", desc: "Standard multi-function manual and semi-electric ward beds built for long-term patient recovery.", image: "/visuals/ha_exact_1_hospital_beds.jpg" },
+    { title: "ICU Beds", desc: "Five-function electric beds featuring custom remote tilt positioning, emergency CPR levers, and integrated scale rails.", image: "/visuals/ha_exact_2_icu_beds.jpg" },
+    { title: "Patient Stretchers", desc: "Hydraulic emergency stretchers with central braking systems, oxygen cylinder slots, and collapsible side guards.", image: "/visuals/ha_exact_3_patient_stretchers.jpg" },
+    { title: "Wheelchairs", desc: "Heavy-duty ergonomic chairs with lightweight aluminum frames, foldable backrests, and anti-tip wheels.", image: "/visuals/ha_exact_4_wheelchairs.jpg" },
+    { title: "Operation Theatre", desc: "Stainless steel surgical tables, ceiling LED OT lights with shadow-reduction optics, and anesthesia stations.", image: "/visuals/ha_exact_5_operation_theatre.jpg" },
+    { title: "Medical Trolleys", desc: "Emergency crash carts, anesthesia trolleys, and sterile instrument tables with secure lockable drawers.", image: "/visuals/ha_exact_6_medical_trolleys.jpg" },
+    { title: "Infusion Pumps", desc: "Micro-dosing volumetric infusion and syringe pumps featuring sensitive air-in-line alerts and data logs.", image: "/visuals/ha_exact_7_infusion_pumps.jpg" },
+    { title: "Patient Monitors", desc: "Multi-parameter monitors tracking ECG, heart rate, SpO2, respiratory rates, and body temperatures.", image: "/visuals/ha_exact_8_patient_monitors.jpg" },
+    { title: "Ventilators", desc: "Microprocessor-controlled ICU ventilators supporting invasive and non-invasive breathing therapy modes.", image: "/visuals/ha_exact_9_ventilators.jpg" },
+    { title: "ECG Machines", desc: "12-lead digital ECG recorders featuring built-in thermal printers and automated clinical analysis reporting.", image: "/visuals/ha_exact_10_ecg_machines.jpg" },
+    { title: "Suction Machines", desc: "High-vacuum electric suction units with double overflow safety bottles, designed for operating wings.", image: "/visuals/ha_exact_11_suction_machines.jpg" },
+    { title: "Oxygen Concentrators", desc: "Dual-flow 10L oxygen concentrators supplying medical-grade oxygen with active purity indicator alerts.", image: "/visuals/ha_exact_12_oxygen_concentrators.jpg" },
+    { title: "Defibrillators", desc: "Manual and AED defibrillators with thermal printers and active voice guide menus for trauma units.", image: "/visuals/ha_exact_13_defibrillators.jpg" },
+    { title: "Hospital Furniture", desc: "Stainless steel bedside lockers, overbed tables, ward visitor stools, and IV drip stands with heavy casters.", image: "/visuals/ha_exact_14_hospital_furniture.jpg" },
+    { title: "Medical Lighting", desc: "Mobile LED examination lamps, dental headlights, and shadowless ceiling surgical lighting fixtures.", image: "/visuals/ha_exact_15_medical_lighting.jpg" },
+    { title: "Sterilization Units", desc: "High-pressure vertical autoclaves, vacuum steam sterilizers, and ETO sterilizer chambers for central depots.", image: "/visuals/ha_exact_16_sterilization_units.jpg" },
+    { title: "Medical Cabinets", desc: "Lockable medicine storage cupboards, toxic substance drawers, and temperature-controlled laboratory cabinets.", image: "/visuals/ha_exact_17_medical_cabinets.jpg" },
+    { title: "Emergency Equipment", desc: "Trauma spine boards, resuscitator bag valve masks, suction pumps, and mobile first-aid ambulance packs.", image: "/visuals/ha_exact_18_emergency_equipment.jpg" },
+    { title: "Examination Tables", desc: "Manual folding patient exam tables, gynecological exam couches, and pediatric beds with soft cushions.", image: "/visuals/ha_exact_19_examination_tables.jpg" },
+    { title: "Hospital Curtains", desc: "Flame-retardant, anti-microbial medical partition screens and ceiling-mounted track cubicle curtains.", image: "/visuals/ha_exact_20_hospital_curtains.jpg" },
+    { title: "Gas Pipeline Supply", desc: "Medical gas pipeline outlet valves, oxygen flowmeters, humidifier bottles, and central alarm manifolds.", image: "/visuals/ha_exact_21_gas_pipeline_supply.jpg" }
   ];
 
   // 3. Featured Equipment Spotlight (8 Items)
@@ -117,7 +117,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Prevents pressure ulcers", "Reduces patient movement strains", "Enables quick trauma handovers"],
       applications: "ICU units, cardiac care centers, burn isolation wards.",
       specs: { "Voltage": "220V / 50Hz", "Safeload Capacity": "250 kg", "Tilt Angles": "Backrest (0-75°), Trendelenburg (0-12°)" },
-      image: "https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/hospital_accessories.png"
     },
     {
       name: "Multi-parameter Patient Monitor",
@@ -125,7 +125,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Constant clinical parameter tracking", "Audible alerts protect patient safety", "Clear data syncs to central nurse desk"],
       applications: "Operating theaters, emergency wings, intensive care units.",
       specs: { "Parameters": "ECG, SpO2, NIBP, TEMP, RESP, PR", "Battery backup": "4 hours active run", "Data ports": "RJ45, USB sync" },
-      image: "https://images.pexels.com/photos/3845126/pexels-photo-3845126.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/ha_patient_monitors.jpg"
     },
     {
       name: "Microprocessor ICU Ventilator",
@@ -133,7 +133,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Maintains breath rhythm target", "Adapts parameters based on patient volume", "Alarms flag pressure anomalies"],
       applications: "Neonatal/adult intensive care, trauma respiratory care.",
       specs: { "Tidal Volume": "20 - 2000 mL", "Oxygen Concentration": "21% - 100%", "Pressure limits": "0 - 60 cmH2O" },
-      image: "https://images.pexels.com/photos/7108340/pexels-photo-7108340.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/ha_ventilators.jpg"
     },
     {
       name: "Electro-Hydraulic Surgical Table",
@@ -141,7 +141,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Simplifies intra-operative imaging", "Safe hydraulic load transfers", "Fits ortho, neuro & cardiac surgeries"],
       applications: "Hybrid operating suites, neurosurgical theaters.",
       specs: { "Load Capacity": "220 kg", "Tabletop Length": "2100 mm", "Tilts": "Lateral (20°), Trendelenburg (25°)" },
-      image: "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/ha_operation_theatre.jpg"
     },
     {
       name: "Aluminum Ergonomic Wheelchair",
@@ -149,7 +149,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Allows easy patient transport", "Reduces skin friction sore points", "Fits inside standard vehicle trunks"],
       applications: "Outpatient departments, rehabilitation clinics.",
       specs: { "Self weight": "12.5 kg", "Weight Capacity": "120 kg", "Seat Width": "460 mm" },
-      image: "https://images.pexels.com/photos/6129507/pexels-photo-6129507.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/ha_wheelchairs.jpg"
     },
     {
       name: "12-Lead Digital ECG Recorder",
@@ -157,7 +157,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Accelerates cardiac diagnostic times", "Detailed waveform logs for reports", "Saves records in digital PDF format"],
       applications: "Cardiology clinics, diagnostic labs, OPD checkups.",
       specs: { "Leads": "Standard 12 leads", "Filters": "Muscle tremor, AC interference", "Paper speed": "5, 10, 25, 50 mm/s" },
-      image: "https://images.pexels.com/photos/7089401/pexels-photo-7089401.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/ha_ecg_machines.jpg"
     },
     {
       name: "Shadowless Ceiling Surgical Light",
@@ -165,7 +165,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Reduces head shadows in deep incisions", "Minimizes eye fatigue for surgical staff", "Protects tissue from dry heat exposure"],
       applications: "Cardiac surgical wings, micro-neurosurgery units.",
       specs: { "Lux intensity": "160,000 + 120,000 Lux", "LED Bulb count": "72 + 48 units", "Spot size": "120 - 300 mm" },
-      image: "https://images.pexels.com/photos/5452229/pexels-photo-5452229.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/ha_medical_lighting.jpg"
     },
     {
       name: "Surgical Instrument Set (Major)",
@@ -173,7 +173,7 @@ const HospitalAccessoriesSupply = () => {
       benefits: ["Resists frequent chemical sterilization", "Retains edge sharpness during incisions", "Standard tools packed in single tray"],
       applications: "General surgical wards, major clinical theaters.",
       specs: { "Set Content": "68 instruments total", "Steel Quality": "SS316 surgical grade", "Case Size": "540 x 240 x 120 mm" },
-      image: "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=800"
+      image: "/visuals/service_hospital_accessories.png"
     }
   ];
 
@@ -445,6 +445,7 @@ const HospitalAccessoriesSupply = () => {
                         alt={item.title}
                         fill
                         className="object-cover group-hover:scale-105 transition-transform duration-500"
+                        unoptimized
                       />
                     </div>
                     <div className="p-6 space-y-3">
@@ -570,6 +571,7 @@ const HospitalAccessoriesSupply = () => {
                     alt={featuredEquipment[selectedProductSpotlight].name}
                     fill
                     className="object-cover"
+                    unoptimized
                   />
                 </div>
               </div>
@@ -734,7 +736,7 @@ const HospitalAccessoriesSupply = () => {
                 <div className="absolute -inset-4 bg-slate-100 rounded-[40px] -z-10" />
                 <div className="relative aspect-[4/3] rounded-[30px] overflow-hidden shadow-xl border border-slate-200 bg-slate-200">
                   <Image
-                    src="https://images.pexels.com/photos/4021773/pexels-photo-4021773.jpeg?auto=compress&cs=tinysrgb&w=800"
+                    src="/visuals/service_pharma_export.png"
                     alt="Global shipping containers"
                     fill
                     className="object-cover"
@@ -783,14 +785,14 @@ const HospitalAccessoriesSupply = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
-                "https://images.pexels.com/photos/5863388/pexels-photo-5863388.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3760607/pexels-photo-3760607.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3845126/pexels-photo-3845126.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7108340/pexels-photo-7108340.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/236380/pexels-photo-236380.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/263402/pexels-photo-263402.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/5452229/pexels-photo-5452229.jpeg?auto=compress&cs=tinysrgb&w=600"
+                "/visuals/ha_medical_lighting.jpg",
+                "/visuals/hospital_accessories.png",
+                "/visuals/service_hospital_accessories.png",
+                "/visuals/ha_patient_monitors.jpg",
+                "/visuals/ha_wheelchairs.jpg",
+                "/visuals/hospital_architecture.png",
+                "/visuals/ha_ventilators.jpg",
+                "/visuals/ha_operation_theatre.jpg"
               ].map((img, idx) => (
                 <div key={idx} className="relative h-[220px] rounded-2xl overflow-hidden shadow-sm group bg-slate-200 border border-slate-150">
                   <Image
@@ -798,6 +800,7 @@ const HospitalAccessoriesSupply = () => {
                     alt="Sourcing items gallery"
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    unoptimized
                   />
                 </div>
               ))}
@@ -862,7 +865,7 @@ const HospitalAccessoriesSupply = () => {
               <div className="lg:col-span-5 relative">
                 <div className="aspect-[4/3] rounded-3xl overflow-hidden shadow-lg border border-slate-200 bg-slate-200">
                   <Image
-                    src="https://images.pexels.com/photos/4021775/pexels-photo-4021775.jpeg?auto=compress&cs=tinysrgb&w=800"
+                    src="/visuals/hospital_architecture.png"
                     alt="Medical equipment testing operations"
                     width={800}
                     height={600}

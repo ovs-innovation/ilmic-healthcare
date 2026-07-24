@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from "react";
 
 const PRELOADER_VIDEO = "/preloader/preloadervideo.mp4";
 const CACHE_NAME = "ilmic-preloader-v1";
-const FADE_MS = 400;
-const MAX_SHOW_MS = 14000;
+const FADE_MS = 300;
+const MAX_SHOW_MS = 5200; // Perfect 5.2s timing so all 3 loading dots show completely before reveal
 
 let sharedBlobUrl = null;
 let fetchPromise = null;
@@ -59,9 +59,13 @@ function ensurePlayer() {
   if (player) return player;
 
   const root = document.createElement("div");
-  root.className = "splash-cinema splash-cinema--video";
+  root.className = "splash-cinema splash-cinema--video cursor-pointer";
   root.setAttribute("role", "status");
   root.setAttribute("aria-label", "Loading ILMIC Health Care");
+
+  // Allow clicking anywhere to skip
+  root.addEventListener("click", finishPlayer, { once: true });
+  root.addEventListener("touchstart", finishPlayer, { once: true });
 
   const video = document.createElement("video");
   video.className = "splash-cinema__video";
@@ -151,6 +155,7 @@ async function startPlayer() {
     });
 
     if (!player || player.finished) return;
+    p.video.playbackRate = 1.0; // Normal 1.0x playback speed
     await p.video.play();
   } catch {
     finishPlayer();

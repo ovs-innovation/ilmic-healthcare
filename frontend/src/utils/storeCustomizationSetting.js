@@ -167,6 +167,9 @@ export const storeCustomization = {
     content_right_img: "/maroof.jpeg",
     content_middle_Img: "/about-pharma.png",
     founder_one_img: "/maroof.jpeg",
+    startup_india_cert: "/img3.jpeg",
+    startup_india_thumb: "/img2.jpeg",
+    udyam_cert: "/img1.jpeg",
     founder_two_img:
       "https://res.cloudinary.com/dkuwefj17/image/upload/v1697439689/settings/team-2_dw7zs1.webp",
     founder_three_img:

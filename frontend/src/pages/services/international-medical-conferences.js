@@ -95,18 +95,18 @@ const InternationalMedicalConferences = () => {
 
   // 2. Conference Types (12 Types Grid)
   const conferenceTypes = [
-    { title: "Medical Conferences", desc: "Large-scale annual scientific assemblies presenting peer-reviewed research panels, clinical trials updates, and diagnostic breakthroughs.", image: "https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Healthcare Summits", desc: "High-level roundtables matching hospital owners, administrators, government chiefs, and healthcare groups to analyze system optimization.", image: "https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Scientific Symposiums", desc: "Deep specialized medical focus sessions detailing oncology protocols, molecular diagnostics, precision medicine, and clinical governance.", image: "https://images.pexels.com/photos/7176026/pexels-photo-7176026.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Clinical Workshops", desc: "Hands-on surgical training courses, emergency triage drills, and diagnostic equipment mock checkups in simulation labs.", image: "https://images.pexels.com/photos/4021773/pexels-photo-4021773.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "CME Programs", desc: "Continuing Medical Education modules accredited by national and international medical boards to fulfill doctor licensing rules.", image: "https://images.pexels.com/photos/3844581/pexels-photo-3844581.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Hospital Leadership", desc: "Operational and financial workshops discussing tariff structures, hospital workflows, and patient experience checklists.", image: "https://images.pexels.com/photos/3182781/pexels-photo-3182781.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Medical Technology Expo", desc: "Showcasing advanced diagnostic PACS, cloud EMR databases, robotic surgical arms, and modern hospital accessories.", image: "https://images.pexels.com/photos/5863388/pexels-photo-5863388.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Pharmaceutical Forums", desc: "Connecting wholesale importers, medicine exporters, FDA regulators, and GMP laboratories to analyze global trade paths.", image: "https://images.pexels.com/photos/3683101/pexels-photo-3683101.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Innovation Panels", desc: "Showcasing AI diagnostics, telemedicine software setups, and automated pharmacy stock algorithms.", image: "https://images.pexels.com/photos/3184338/pexels-photo-3184338.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Research Congress", desc: "Academic poster presentations, medical paper readings, and global clinical registry updates for medical students.", image: "https://images.pexels.com/photos/1181396/pexels-photo-1181396.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Education Programs", desc: "Medical curriculum updates, university alliance programs, and postgraduate training paths.", image: "https://images.pexels.com/photos/5452268/pexels-photo-5452268.jpeg?auto=compress&cs=tinysrgb&w=600" },
-    { title: "Global Networking", desc: "Social delegate dinners, regional trade tables, and partnership agreements for international buyers.", image: "https://images.pexels.com/photos/1267697/pexels-photo-1267697.jpeg?auto=compress&cs=tinysrgb&w=600" }
+    { title: "Medical Conferences", desc: "Large-scale annual scientific assemblies presenting peer-reviewed research panels, clinical trials updates, and diagnostic breakthroughs.", image: "/visuals/service_international_conferences.png" },
+    { title: "Healthcare Summits", desc: "High-level roundtables matching hospital owners, administrators, government chiefs, and healthcare groups to analyze system optimization.", image: "/visuals/medical_conferences.png" },
+    { title: "Scientific Symposiums", desc: "Deep specialized medical focus sessions detailing oncology protocols, molecular diagnostics, precision medicine, and clinical governance.", image: "/visuals/service_international_conferences.png" },
+    { title: "Clinical Workshops", desc: "Hands-on surgical training courses, emergency triage drills, and diagnostic equipment mock checkups in simulation labs.", image: "/visuals/surgical.png" },
+    { title: "CME Programs", desc: "Continuing Medical Education modules accredited by national and international medical boards to fulfill doctor licensing rules.", image: "/visuals/medical_conferences.png" },
+    { title: "Hospital Leadership", desc: "Operational and financial workshops discussing tariff structures, hospital workflows, and patient experience checklists.", image: "/visuals/partnership_handshake.png" },
+    { title: "Medical Technology Expo", desc: "Showcasing advanced diagnostic PACS, cloud EMR databases, robotic surgical arms, and modern hospital accessories.", image: "/visuals/hospital_architecture.png" },
+    { title: "Pharmaceutical Forums", desc: "Connecting wholesale importers, medicine exporters, FDA regulators, and GMP laboratories to analyze global trade paths.", image: "/visuals/pharmaceutical_export.png" },
+    { title: "Innovation Panels", desc: "Showcasing AI diagnostics, telemedicine software setups, and automated pharmacy stock algorithms.", image: "/visuals/hospital_management.png" },
+    { title: "Research Congress", desc: "Academic poster presentations, medical paper readings, and global clinical registry updates for medical students.", image: "/visuals/medical_conferences.png" },
+    { title: "Education Programs", desc: "Medical curriculum updates, university alliance programs, and postgraduate training paths.", image: "/visuals/service_international_conferences.png" },
+    { title: "Global Networking", desc: "Social delegate dinners, regional trade tables, and partnership agreements for international buyers.", image: "/visuals/partnership_handshake.png" }
   ];
 
 
@@ -296,7 +296,7 @@ const InternationalMedicalConferences = () => {
                   className="relative mx-auto max-w-[450px] aspect-[4/5] rounded-[32px] overflow-hidden shadow-2xl border-4 border-white bg-slate-200"
                 >
                   <Image
-                    src="https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=800"
+                    src="/visuals/service_international_conferences.png"
                     alt="International medical conference delegates auditorium"
                     fill
                     className="object-cover"
@@ -346,7 +346,7 @@ const InternationalMedicalConferences = () => {
                 <div className="absolute -inset-4 bg-ilmic-blue-light/30 rounded-[40px] -z-10" />
                 <div className="relative aspect-[3/4] rounded-[30px] overflow-hidden shadow-xl border border-slate-100 bg-slate-200">
                   <Image
-                    src="https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=800"
+                    src="/visuals/medical_conferences.png"
                     alt="Doctors networking during medical congress"
                     fill
                     className="object-cover"
@@ -711,14 +711,14 @@ const InternationalMedicalConferences = () => {
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
               {[
-                "https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3182812/pexels-photo-3182812.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/7176026/pexels-photo-7176026.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/4021773/pexels-photo-4021773.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3844581/pexels-photo-3844581.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3182781/pexels-photo-3182781.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/5863388/pexels-photo-5863388.jpeg?auto=compress&cs=tinysrgb&w=600",
-                "https://images.pexels.com/photos/3683101/pexels-photo-3683101.jpeg?auto=compress&cs=tinysrgb&w=600"
+                "/visuals/service_international_conferences.png",
+                "/visuals/medical_conferences.png",
+                "/visuals/partnership_handshake.png",
+                "/visuals/hospital_management.png",
+                "/visuals/service_pharma_export.png",
+                "/visuals/hospital_architecture.png",
+                "/im1.jpg",
+                "/im2.jpg"
               ].map((img, idx) => (
                 <div key={idx} className="relative h-[220px] rounded-2xl overflow-hidden shadow-sm group bg-slate-200 border border-slate-150">
                   <Image

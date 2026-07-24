@@ -197,14 +197,14 @@ const Navbar = () => {
       {/* Main navbar */}
       <header className="sticky top-0 z-50 bg-white border-b border-[#e2edf5] shadow-[0_1px_0_rgba(0,0,0,0.04)]">
         <div className="max-w-[1320px] mx-auto px-4 sm:px-6">
-          <div className="hidden lg:grid lg:grid-cols-[200px_1fr_auto] lg:items-center lg:gap-4 h-[72px]">
+          <div className="hidden lg:grid lg:grid-cols-[250px_1fr_auto] lg:items-center lg:gap-4 h-[84px]">
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center flex-shrink-0"
+              className="flex items-center flex-shrink-0 py-1"
               onMouseEnter={closeDropdownsImmediately}
             >
-              <img src={ILMIC_LOGO} alt="ILMIC Health Care" className="h-[60px] w-auto max-w-[200px] object-contain" />
+              <img src={ILMIC_LOGO} alt="ILMIC Health Care" className="h-[74px] sm:h-[78px] w-auto max-w-[240px] object-contain transition-all" />
             </Link>
 
             {/* Center nav */}
@@ -320,8 +320,8 @@ const Navbar = () => {
           </div>
 
           {/* Mobile row */}
-          <div className="flex lg:hidden items-center justify-between h-16 gap-2">
-            <Link href="/"><img src={ILMIC_LOGO} alt="ILMIC" className="h-12 w-auto max-w-[150px] object-contain" /></Link>
+          <div className="flex lg:hidden items-center justify-between h-20 gap-2">
+            <Link href="/"><img src={ILMIC_LOGO} alt="ILMIC" className="h-16 w-auto max-w-[200px] object-contain" /></Link>
             <div className="flex items-center gap-2">
               <button type="button" onClick={() => setGenericEnquiryOpen(true)} className="text-[11px] font-bold px-3 py-2 rounded-lg bg-ilmic-blue text-white">Enquiry</button>
               <button type="button" onClick={() => setMobileMenuOpen((o) => !o)} className="p-2 rounded-lg border border-[#e2edf5]" aria-label="Menu">
@@ -337,7 +337,7 @@ const Navbar = () => {
           <button type="button" className="llmic-mobile-menu__overlay" onClick={closeMobileMenu} aria-label="Close" />
           <div className="llmic-mobile-menu__panel">
             <div className="llmic-mobile-menu__header">
-              <Link href="/" onClick={closeMobileMenu}><img src={ILMIC_LOGO} alt="ILMIC" className="h-12 w-auto" /></Link>
+              <Link href="/" onClick={closeMobileMenu}><img src={ILMIC_LOGO} alt="ILMIC" className="h-14 w-auto" /></Link>
               <button type="button" className="llmic-mobile-menu__close" onClick={closeMobileMenu}><FiX className="w-6 h-6" /></button>
             </div>
             <nav className="llmic-mobile-menu__nav">

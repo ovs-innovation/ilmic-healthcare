@@ -11,8 +11,6 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/router";
 import { SessionProvider, useSession } from "next-auth/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import TawkMessengerReact from "@tawk.to/tawk-messenger-react";
-
 // Internal imports
 import store from "@redux/store";
 import { handlePageView } from "@lib/analytics";

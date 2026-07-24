@@ -34,19 +34,41 @@ export const getDynamicAuthOptions = async () => {
 
   // console.log("storeSetting", storeSetting);
 
-  const providers = [
-    Google({
-      clientId: storeSetting?.google_id || "",
-      clientSecret: storeSetting?.google_secret || "",
-    }),
-    GitHub({
-      clientId: storeSetting?.github_id || "",
-      clientSecret: storeSetting?.github_secret || "",
-    }),
-    Facebook({
-      clientId: storeSetting?.facebook_id || "",
-      clientSecret: storeSetting?.facebook_secret || "",
-    }),
+  const providers = [];
+
+  if (storeSetting?.google_id && storeSetting?.google_secret) {
+    providers.push(
+      Google({
+        clientId: storeSetting.google_id,
+        clientSecret: storeSetting.google_secret,
+        authorization: {
+          params: {
+            prompt: "select_account",
+          },
+        },
+      })
+    );
+  }
+
+  if (storeSetting?.github_id && storeSetting?.github_secret) {
+    providers.push(
+      GitHub({
+        clientId: storeSetting.github_id,
+        clientSecret: storeSetting.github_secret,
+      })
+    );
+  }
+
+  if (storeSetting?.facebook_id && storeSetting?.facebook_secret) {
+    providers.push(
+      Facebook({
+        clientId: storeSetting.facebook_id,
+        clientSecret: storeSetting.facebook_secret,
+      })
+    );
+  }
+
+  providers.push(
     Credentials({
       name: "Credentials",
       credentials: {
@@ -58,14 +80,13 @@ export const getDynamicAuthOptions = async () => {
           const userInfo = await CustomerServices.loginCustomer(credentials);
           return userInfo;
         } catch (error) {
-          // Handle custom error from backend
           const message =
             error.response?.data?.message || "Login failed! Please try again.";
-          throw new Error(message); // Propagate error to client
+          throw new Error(message);
         }
       },
-    }),
-  ];
+    })
+  );
 
   const authOptions = {
     providers,
